@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conselho de Classe - E.E. Mestra Aurora</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- TELA 1: HUB INICIAL DE ACESSO -->
+  <div id="view-hub" class="view-section active">
+    <div class="hub-container">
+      <img src="https://drive.google.com/uc?export=view&id=1zxLBMqxisyhvuYlTHxQPm3flMms9YceT" style="height: 75px; margin-bottom: 15px; object-fit: contain;" alt="Logo Escola">
+      <h3 class="fw-bold mb-1" style="color: #0f172a;">Portal Master</h3>
+      <h5 class="fw-bold text-primary mb-1" style="font-size: 1rem;">Escola Estadual Mestra Aurora</h5>
+      <p class="text-muted mb-4" style="font-size: 0.85rem;">Sistema Integrado de Conselho de Classe</p>
+      
+      <button class="btn-hub btn-prof" onclick="showView('view-prof')"><i class="fa-solid fa-chalkboard-user"></i> Sou Professor(a)</button>
+      <button class="btn-hub btn-esp" onclick="showView('view-senha')"><i class="fa-solid fa-shield-halved"></i> Sou Especialista</button>
+    </div>
+  </div>
+
+  <!-- TELA 2: SENHA DO ESPECIALISTA -->
+  <div id="view-senha" class="view-section">
+    <div class="hub-container">
+      <i class="fa-solid fa-lock text-primary fa-3x mb-3"></i>
+      <h4 class="fw-bold">Acesso Restrito</h4>
+      <input type="password" id="inputSenha" class="input-textarea mt-3 mb-3 text-center fs-5" placeholder="Digite a senha">
+      <button class="btn-primary-action w-100 py-3" onclick="verificarSenha()">Entrar no Sistema</button>
+      <button class="btn btn-link w-100 mt-2 text-muted fw-bold" onclick="showView('view-hub')">Voltar ao Início</button>
+    </div>
+  </div>
+
+  <!-- TELA 3: MÓDULO DO PROFESSOR -->
+  <div id="view-prof" class="view-section" style="background: #f1f5f9;">
+    <nav class="top-navbar" style="background: white; border-bottom: 1px solid #e2e8f0; box-shadow: none; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center;">
+      <div class="brand-area d-flex align-items-center gap-2">
+        <img src="https://drive.google.com/uc?export=view&id=1zxLBMqxisyhvuYlTHxQPm3flMms9YceT" style="height: 35px;" alt="Logo">
+        <h5 class="m-0 fw-bold text-primary">Diagnóstico Oficial da Turma</h5>
+      </div>
+      <button class="btn btn-sm btn-outline-danger fw-bold" onclick="location.reload()">Sair</button>
+    </nav>
+    
+    <div class="scrollable-area" style="padding: 20px;">
+      <div id="form-prof" class="colored-card container p-4 mx-auto" style="max-width: 900px; border: 2px solid #cbd5e1; background: #fff; border-radius: 10px;">
+        <div class="row g-3 mb-3">
+          <div class="col-md-3"><label class="fw-bold fs-7">Trimestre</label><select id="p_trim" class="input-textarea"><option>1º Trimestre</option><option>2º Trimestre</option><option>3º Trimestre</option></select></div>
+          <div class="col-md-3"><label class="fw-bold fs-7 text-primary">Turma</label><select id="p_turma" class="input-textarea fw-bold" onchange="carregarTabelaProfessor()"></select></div>
+          <div class="col-md-3"><label class="fw-bold fs-7">Componente</label><select id="p_comp" class="input-textarea"><option>Arte</option><option>Ciências</option><option>Educação Física</option><option>Ensino Religioso</option><option>Geografia</option><option>História</option><option>Língua Inglesa</option><option>Língua Portuguesa</option><option>Matemática</option></select></div>
+          <div class="col-md-3"><label class="fw-bold fs-7">Professor(a)</label><input type="text" id="p_nome" class="input-textarea" placeholder="Seu nome"></div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
+          <h6 class="fw-bold m-0"><i class="fa-solid fa-users text-primary me-2"></i>Relação de Estudantes</h6>
+          <span class="badge bg-primary">Total: <span id="p_total_alunos">0</span></span>
+        </div>
+
+        <div id="p_tbody_alunos" class="mb-3" style="max-height: 350px; overflow-y: auto;">
+          <p class="text-muted text-center py-4 fw-bold">Selecione uma Turma para carregar os estudantes.</p>
+        </div>
+
+        <h6 class="fw-bold mt-3 border-bottom pb-1">Prática Pedagógica</h6>
+        <div class="mb-2"><label class="fw-bold fs-7">Características da Turma:</label><textarea id="p_caract" class="input-textarea" rows="2"></textarea></div>
+        <div class="row g-3 mb-3">
+          <div class="col-md-3"><label class="fw-bold fs-7">Houve Intervenção?</label><select id="p_interv" class="input-textarea"><option>Sim</option><option>Não</option></select></div>
+          <div class="col-md-9"><label class="fw-bold fs-7">Metodologias Usadas:</label><input type="text" id="p_metodos" class="input-textarea"></div>
+        </div>
+
+        <button id="btnEnviarProf" class="btn-primary-action w-100 py-3" onclick="enviarDiagnostico()"><i class="fa-solid fa-paper-plane me-2"></i> Gravar Diagnóstico da Turma</button>
+      </div>
+
+      <div id="sucesso-prof" class="colored-card container text-center p-5 mx-auto mt-5" style="max-width: 500px; display: none; background: #fff; border-radius: 10px;">
+        <i class="fa-solid fa-circle-check text-success fa-4x mb-3"></i>
+        <h3 class="fw-bold">Enviado com Sucesso!</h3>
+        <button class="btn-primary-action mt-3 px-4" onclick="location.reload()">Voltar ao Início</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA 4: MÓDULO ESPECIALISTA (DATASHOW) -->
+  <div id="view-especialista" class="view-section">
+    <nav class="top-navbar" style="background-color: #0f172a; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center;">
+      <div class="brand-area d-flex align-items-center gap-2">
+        <img src="https://drive.google.com/uc?export=view&id=1zxLBMqxisyhvuYlTHxQPm3flMms9YceT" class="logo-img" style="height: 38px; background: #fff; padding: 2px; border-radius: 4px;" alt="Logo">
+        <h1 class="app-title text-white fs-5 m-0 fw-bold">Conselho de Classe</h1>
+      </div>
+      <div class="nav-controls d-flex gap-2 align-items-center">
+        <div class="control-pill bg-dark border border-secondary p-1 rounded"><select id="selectTrimestre" class="bg-transparent text-white border-0 fw-bold"><option>1º Trimestre</option><option>2º Trimestre</option><option>3º Trimestre</option></select></div>
+        <div class="control-pill bg-dark border border-secondary p-1 rounded"><select id="selectTurma" class="bg-transparent text-white border-0 fw-bold" onchange="mudarTurmaTopo()"></select></div>
+        <!-- Cronômetro de 3 minutos ativado na tela de alunos -->
+        <div class="control-pill" id="timerBox" style="display:none; color: #facc15; border: 1px solid #facc15; padding: 4px 8px; border-radius: 6px;">
+          <i class="fa-regular fa-clock"></i> <span id="timerText">03:00</span>
+        </div>
+        <button class="btn-primary-action py-1 px-3" onclick="abrirModalPDF()"><i class="fa-solid fa-print me-1"></i> Emissão</button>
+      </div>
+    </nav>
+
+    <div class="scrollable-area" style="padding: 15px;">
+      
+      <!-- ETAPA 1: AVALIAÇÃO COLETIVA DA TURMA -->
+      <div id="panel-turma" style="max-width: 800px; margin: 0 auto; display: block;">
+        <div class="colored-card p-3" style="border: 4px solid #6366f1; background: #fff; border-radius: 10px;">
+          <h4 class="text-center fw-bold mb-3" style="color: #4f46e5;"><i class="fa-solid fa-users-rays me-2"></i>Avaliação Coletiva da Turma</h4>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6"><div class="colored-card" style="border: 2px solid #db2777;"><div class="card-header-icon text-danger fw-bold"><i class="fa-solid fa-comments"></i> Conversa</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_conversa', 'Adequada', 'good')">Adequada</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_conversa', 'No limite', 'warning')">No limite</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_conversa', 'Muita conversa', 'danger')">Muita</button></div></div></div>
+            <div class="col-md-6"><div class="colored-card" style="border: 2px solid #e11d48;"><div class="card-header-icon text-danger fw-bold"><i class="fa-solid fa-user-xmark"></i> Faltas</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_faltas', 'Adequadas', 'good')">Adequadas</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_faltas', 'No limite', 'warning')">No limite</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_faltas', 'Muitas', 'danger')">Muitas</button></div></div></div>
+            <div class="col-md-6"><div class="colored-card" style="border: 2px solid #059669;"><div class="card-header-icon text-success fw-bold"><i class="fa-solid fa-list-check"></i> Atividades</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_atividades', 'A maioria cumpre', 'good')">Cumpre</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_atividades', 'Cumpre parcialmente', 'warning')">Parcial</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_atividades', 'A maioria não cumpre', 'danger')">Não cumpre</button></div></div></div>
+            <div class="col-md-6"><div class="colored-card" style="border: 2px solid #7c3aed;"><div class="card-header-icon text-purple fw-bold"><i class="fa-solid fa-book-open-reader"></i> Trabalhos</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_trabalhos', 'A maioria entrega', 'good')">Entrega</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_trabalhos', 'Entrega parcialmente', 'warning')">Parcial</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_trabalhos', 'A maioria não entrega', 'danger')">Não entrega</button></div></div></div>
+          </div>
+          
+          <label class="fw-bold" style="font-size: 0.8rem; color: #b91c1c;"><i class="fa-solid fa-triangle-exclamation me-1"></i> AEE: Estudantes que NÃO possuem PDI (Exclusivo Especialista)</label>
+          <textarea id="txtAeePdi" class="input-textarea mb-2" rows="1" style="border-color: #fca5a5; background: #fef2f2;" placeholder="Nomes separados por vírgula..."></textarea>
+          
+          <textarea id="txtObsTurma" class="input-textarea mb-3" rows="2" placeholder="Observações coletivas da turma..."></textarea>
+          <button class="btn-primary-action w-100 py-3" style="font-size: 1.1rem;" onclick="salvarTurmaEIniciar()">Registrar Turma e Iniciar Avaliação dos Alunos <i class="fa-solid fa-arrow-right ms-2"></i></button>
+        </div>
+      </div>
+
+      <!-- ETAPA 2: AVALIAÇÃO INDIVIDUAL DOS ESTUDANTES -->
+      <div id="panel-estudantes" style="max-width: 1300px; margin: 0 auto; display: none;">
+        <div class="student-header d-flex justify-content-between align-items-center bg-white p-3 border rounded mb-3 shadow-sm">
+          <button class="back-btn btn btn-dark btn-sm fw-bold" onclick="voltarParaTurma()"><i class="fa-solid fa-arrow-left"></i> Voltar à Turma</button>
+          <div class="text-center">
+            <div style="font-size: 0.75rem; font-weight: 800; color: #4f46e5;">ESTUDANTE <span id="lblIndex">1</span> DE <span id="lblTotal">X</span></div>
+            <h2 class="student-name-display mt-1 fs-3 fw-bold text-dark" id="lblNomeEstudante">CARREGANDO...</h2>
+          </div>
+          <button class="back-btn btn btn-secondary btn-sm fw-bold" onclick="proximoEstudante()">Avançar <i class="fa-solid fa-forward"></i></button>
+        </div>
+
+        <div class="eval-grid row g-2 mb-2">
+          <div class="col-md-4"><div class="colored-card border border-primary p-2 bg-white rounded"><div class="card-header-icon fw-bold text-primary">Disciplina</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-primary w-100" onclick="selecionarSegmento(this, 'disciplina', 'Comporta bem', 'good')">Bom</button><button class="seg-btn btn btn-sm btn-outline-primary w-100" onclick="selecionarSegmento(this, 'disciplina', 'Às vezes', 'warning')">Às vezes</button><button class="seg-btn btn btn-sm btn-outline-primary w-100" onclick="selecionarSegmento(this, 'disciplina', 'Não comporta', 'danger')">Não</button></div></div></div>
+          <div class="col-md-4"><div class="colored-card border border-success p-2 bg-white rounded"><div class="card-header-icon fw-bold text-success">Atenção</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-success w-100" onclick="selecionarSegmento(this, 'atencao', 'Atento(a)', 'good')">Atento</button><button class="seg-btn btn btn-sm btn-outline-success w-100" onclick="selecionarSegmento(this, 'atencao', 'Às vezes', 'warning')">Às vezes</button><button class="seg-btn btn btn-sm btn-outline-success w-100" onclick="selecionarSegmento(this, 'atencao', 'Desatento(a)', 'danger')">Desatento</button></div></div></div>
+          <div class="col-md-4"><div class="colored-card border border-danger p-2 bg-white rounded"><div class="card-header-icon fw-bold text-danger">Conversa</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-danger w-100" onclick="selecionarSegmento(this, 'conversa', 'Não conversa', 'good')">Não</button><button class="seg-btn btn btn-sm btn-outline-danger w-100" onclick="selecionarSegmento(this, 'conversa', 'Pouco', 'warning')">Pouco</button><button class="seg-btn btn btn-sm btn-outline-danger w-100" onclick="selecionarSegmento(this, 'conversa', 'Muito', 'danger')">Muito</button></div></div></div>
+        </div>
+
+        <div class="row g-2">
+          <div class="col-md-4">
+            <div class="colored-card p-3 bg-warning-subtle border border-warning rounded">
+              <div class="card-header-icon fw-bold text-warning-emphasis"><i class="fa-solid fa-star"></i> Veredito</div>
+              <div class="segmented-control d-flex flex-column gap-1 my-2">
+                <button class="seg-btn btn btn-sm btn-light border w-100" onclick="selecionarSegmento(this, 'caracteristica', 'Ótimo/Ótima', 'good', false)">Ótimo</button>
+                <button class="seg-btn btn btn-sm btn-light border w-100" onclick="selecionarSegmento(this, 'caracteristica', 'Bom/Boa', 'good', false)">Bom</button>
+                <button class="seg-btn btn btn-sm btn-danger w-100" onclick="selecionarSegmento(this, 'caracteristica', 'Precisa melhorar', 'danger', true)">Precisa Melhorar</button>
+              </div>
+              <input type="text" id="txtMotivo" class="input-textarea mt-2" placeholder="Qual o motivo exato?" style="display:none;">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="colored-card p-3 bg-white border rounded h-100">
+              <div class="card-header-icon fw-bold"><i class="fa-solid fa-folder-open"></i> Observações e Encaminhamentos</div>
+              <textarea id="txtObs" class="input-textarea flex-grow-1 mt-2" rows="3" placeholder="Insira ou selecione observações..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary-action w-100 mt-3 py-3" style="font-size: 1.1rem;" onclick="salvarEProximo()">
+          <i class="fa-solid fa-floppy-disk me-2"></i> Gravar Prontuário e Ir para Próximo Estudante
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL DE RELATÓRIOS -->
+  <div id="modalRelatorios" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:1000;">
+    <div class="modal-content bg-white p-4 rounded" style="width: 450px;">
+      <h4 class="fw-bold mb-3"><i class="fa-solid fa-print text-success"></i> Central de Emissão</h4>
+      <div class="mb-3 text-start">
+        <label class="form-label fw-bold">1. Turma Alvo:</label>
+        <select id="selectGerarTurma" class="input-textarea fw-bold p-2"></select>
+      </div>
+      <div class="mb-4 text-start">
+        <label class="form-label fw-bold">2. Link do Molde (Google Docs):</label>
+        <input type="text" id="linkMoldeAta" class="input-textarea p-2" placeholder="Cole o link do Molde...">
+      </div>
+      <div class="d-flex gap-2 mb-2">
+        <button class="btn-primary-action w-50 py-2" onclick="iniciarGeracaoPDF('fichas')">Gerar Fichas</button>
+        <button class="btn-primary-action w-50 py-2 bg-dark border-dark" onclick="iniciarGeracaoPDF('ata')">Gerar Ata</button>
+      </div>
+      <div id="loadingArea" style="display:none;" class="text-center my-3">
+        <div class="spinner-border text-success" role="status"></div>
+        <p class="mt-2 fw-bold text-success" id="txtLoading">Compilando dados...</p>
+      </div>
+      <div id="resultArea" style="display:none;" class="my-3">
+        <a id="linkDownload" href="#" target="_blank" class="btn btn-success w-100 py-2 fw-bold"><i class="fa-solid fa-download me-2"></i> Abrir Documento Gerado</a>
+      </div>
+      <button class="btn btn-link w-100 text-muted fw-bold text-decoration-none mt-2" onclick="fecharModalPDF()">Fechar</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
