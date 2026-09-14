@@ -4,6 +4,7 @@ var avaliacaoAtual = {};
 var avaliacaoTurma = {};
 var tempoRestante = 180; 
 var timerInterval = null;
+var equipeTurnoAtual = {};
 
 var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxX1sStFXfdo44S5SWoHAeM1anaxMLTeoKggcNgDGW1Fp9NPMtb79UY66aRTu3N9Ek8/exec";
 
@@ -67,7 +68,6 @@ function iniciarSessaoConselho() {
     return;
   }
 
-  // Define os valores na interface do Datashow e sincroniza com o select interno
   document.getElementById('lblTurmaAtiva').innerText = "- " + turmaSel + " (" + turnoSel + ")";
   var selectTopo = document.getElementById('selectTurma');
   if(selectTopo) selectTopo.value = turmaSel;
@@ -75,11 +75,13 @@ function iniciarSessaoConselho() {
   var selectTrim = document.getElementById('selectTrimestre');
   if(selectTrim) selectTrim.value = trimSel;
 
-  // Alterna os painéis visuais
   document.getElementById('panel-selecao-inicial').style.display = 'none';
   document.getElementById('panel-datashow-principal').style.display = 'block';
   document.getElementById('panel-turma').style.display = 'block';
   document.getElementById('panel-estudantes').style.display = 'none';
+
+  // Carrega os dados da equipe e professores regentes daquele turno
+  carregarEquipeNaTela(turnoSel);
 
   // Carrega os estudantes
   if (typeof google !== 'undefined' && google.script) {
@@ -88,6 +90,53 @@ function iniciarSessaoConselho() {
     }).getEstudantesPorTurma(turmaSel);
   } else {
     listaEstudantes = [{numero: 1, nome: "ALLEXYS EDWARDO"}, {numero: 2, nome: "BIANCA GOMES"}];
+  }
+}
+
+function carregarEquipeNaTela(turno) {
+  if (typeof google !== 'undefined' && google.script) {
+    google.script.run.withSuccessHandler(renderizarMembrosNaTela).carregarEquipePorTurno(turno);
+  } else {
+    var salvo = localStorage.getItem('config_equipe_' + turno);
+    if (salvo) {
+      renderizarMembrosNaTela(JSON.parse(salvo));
+    } else {
+      renderizarMembrosNaTela({diretor: 'Não configurado', regentes: {}});
+    }
+  }
+}
+
+function renderizarMembrosNaTela(dados) {
+  if (!dados) return;
+  equipeTurnoAtual = dados;
+  
+  var containerMembros = document.getElementById('boxMembrosResumo');
+  if (containerMembros) {
+    var regentesStr = "";
+    if (dados.regentes) {
+      for (var comp in dados.regentes) {
+        if(dados.regentes[comp]) regentesStr += `<li><b>${comp}:</b> ${dados.regentes[comp]}</li>`;
+      }
+    }
+    
+    containerMembros.innerHTML = `
+      <div class="p-3 mb-3 bg-light border rounded" style="font-size: 0.85rem; text-align: left;">
+        <h6 class="fw-bold text-primary mb-2"><i class="fa-solid fa-user-tie me-1"></i> Membros e Regentes Atuais (${document.getElementById('espSelectTurno').value})</h6>
+        <div class="row">
+          <div class="col-md-6">
+            <p class="m-1"><b>Direção:</b> ${dados.diretor || 'Não informado'} | <b>Vice:</b> ${dados.vice || '-'}</p>
+            <p class="m-1"><b>Especialista:</b> ${dados.especialista || 'Não informado'} | <b>Apoio:</b> ${dados.apoio || '-'}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="m-1 fw-bold text-secondary">Professores Regentes:</p>
+            <ul class="m-0 ps-3" style="max-height: 80px; overflow-y: auto;">${regentesStr || '<li>Nenhum regente cadastrado.</li>'}</ul>
+          </div>
+        </div>
+        <div class="text-end mt-2">
+          <a href="configuracao-equipe.html" target="_blank" class="text-decoration-none fw-bold" style="font-size: 0.75rem;"><i class="fa-solid fa-pen-to-square"></i> Modificar Membros/Regentes</a>
+        </div>
+      </div>
+    `;
   }
 }
 
