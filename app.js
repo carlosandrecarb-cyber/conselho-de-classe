@@ -32,7 +32,6 @@ function verificarSenha() {
   }
 }
 
-// Comunicação com o Google Sheets / Apps Script
 function carregarTurmasDoGoogle() {
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(preencherSelectsTurmas).getTurmas();
@@ -57,7 +56,6 @@ function preencherSelectsTurmas(turmas) {
   });
 }
 
-// Fluxo de Início do Conselho pelo Especialista
 function iniciarSessaoConselho() {
   var turmaSel = document.getElementById('espSelectTurma').value;
   var turnoSel = document.getElementById('espSelectTurno').value;
@@ -80,10 +78,8 @@ function iniciarSessaoConselho() {
   document.getElementById('panel-turma').style.display = 'block';
   document.getElementById('panel-estudantes').style.display = 'none';
 
-  // Carrega os dados da equipe e professores regentes daquele turno
-  carregarEquipeNaTela(turnoSel);
+  carregarEquipeNaTela(turnoSel, turmaSel);
 
-  // Carrega os estudantes
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(function(alunos) { 
       listaEstudantes = alunos; 
@@ -93,47 +89,58 @@ function iniciarSessaoConselho() {
   }
 }
 
-function carregarEquipeNaTela(turno) {
+function carregarEquipeNaTela(turno, turmaAlvo) {
   if (typeof google !== 'undefined' && google.script) {
-    google.script.run.withSuccessHandler(renderizarMembrosNaTela).carregarEquipePorTurno(turno);
-  } else {
-    var salvo = localStorage.getItem('config_equipe_' + turno);
-    if (salvo) {
-      renderizarMembrosNaTela(JSON.parse(salvo));
-    } else {
-      renderizarMembrosNaTela({diretor: 'Não configurado', regentes: {}});
-    }
+    google.script.run.withSuccessHandler(function(res) {
+      renderizarMembrosNaTela(res, turmaAlvo);
+    }).carregarEquipePorTurno(turno);
   }
 }
 
-function renderizarMembrosNaTela(dados) {
+function renderizarMembrosNaTela(dados, turmaAlvo) {
   if (!dados) return;
   equipeTurnoAtual = dados;
   
   var containerMembros = document.getElementById('boxMembrosResumo');
   if (containerMembros) {
+    var direcaoTxt = "Não informado";
+    var viceTxt = "-";
+    var espTxt = "Não informado";
+    var apoioTxt = "-";
+
+    if (dados.gestao) {
+      dados.gestao.forEach(g => {
+        if (g.cargo === 'Diretor(a)') direcaoTxt = g.nome;
+        if (g.cargo === 'Vice-Diretor(a)') viceTxt = g.nome;
+        if (g.cargo === 'Especialista / EEB') espTxt = g.nome;
+        if (g.cargo === 'Professor(a) de Apoio') apoioTxt = g.nome;
+      });
+    }
+
     var regentesStr = "";
     if (dados.regentes) {
-      for (var comp in dados.regentes) {
-        if(dados.regentes[comp]) regentesStr += `<li><b>${comp}:</b> ${dados.regentes[comp]}</li>`;
-      }
+      dados.regentes.forEach(r => {
+        if (r.turmas && r.turmas.includes(turmaAlvo)) {
+          regentesStr += `<li><b>${r.componentes.join(', ')}:</b> ${r.professor}</li>`;
+        }
+      });
     }
     
     containerMembros.innerHTML = `
       <div class="p-3 mb-3 bg-light border rounded" style="font-size: 0.85rem; text-align: left;">
-        <h6 class="fw-bold text-primary mb-2"><i class="fa-solid fa-user-tie me-1"></i> Membros e Regentes Atuais (${document.getElementById('espSelectTurno').value})</h6>
+        <h6 class="fw-bold text-primary mb-2"><i class="fa-solid fa-user-tie me-1"></i> Equipe e Regentes da Turma ${turmaAlvo} (${document.getElementById('espSelectTurno').value})</h6>
         <div class="row">
           <div class="col-md-6">
-            <p class="m-1"><b>Direção:</b> ${dados.diretor || 'Não informado'} | <b>Vice:</b> ${dados.vice || '-'}</p>
-            <p class="m-1"><b>Especialista:</b> ${dados.especialista || 'Não informado'} | <b>Apoio:</b> ${dados.apoio || '-'}</p>
+            <p class="m-1"><b>Direção:</b> ${direcaoTxt} | <b>Vice:</b> ${viceTxt}</p>
+            <p class="m-1"><b>Especialista:</b> ${espTxt} | <b>Apoio:</b> ${apoioTxt}</p>
           </div>
           <div class="col-md-6">
-            <p class="m-1 fw-bold text-secondary">Professores Regentes:</p>
-            <ul class="m-0 ps-3" style="max-height: 80px; overflow-y: auto;">${regentesStr || '<li>Nenhum regente cadastrado.</li>'}</ul>
+            <p class="m-1 fw-bold text-secondary">Professores Regentes desta Turma:</p>
+            <ul class="m-0 ps-3" style="max-height: 80px; overflow-y: auto;">${regentesStr || '<li>Nenhum regente vinculado a esta turma.</li>'}</ul>
           </div>
         </div>
         <div class="text-end mt-2">
-          <a href="configuracao-equipe.html" target="_blank" class="text-decoration-none fw-bold" style="font-size: 0.75rem;"><i class="fa-solid fa-pen-to-square"></i> Modificar Membros/Regentes</a>
+          <a href="configuracao-equipe.html" target="_blank" class="text-decoration-none fw-bold" style="font-size: 0.75rem;"><i class="fa-solid fa-pen-to-square"></i> Ajustar Configuração Prévia</a>
         </div>
       </div>
     `;
@@ -153,12 +160,6 @@ function carregarTabelaProfessor() {
   
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(renderizarAlunosProfessor).getEstudantesPorTurma(turma);
-  } else {
-    renderizarAlunosProfessor([
-      {numero: 1, nome: "ALLEXYS EDWARDO"},
-      {numero: 2, nome: "BIANCA GOMES"},
-      {numero: 3, nome: "DAVI MOTA"}
-    ]);
   }
 }
 
@@ -227,24 +228,16 @@ function enviarDiagnostico() {
       document.getElementById('form-prof').style.display = 'none';
       document.getElementById('sucesso-prof').style.display = 'block';
     }).salvarPreConselho(dados);
-  } else {
-    setTimeout(function() {
-      document.getElementById('form-prof').style.display = 'none';
-      document.getElementById('sucesso-prof').style.display = 'block';
-    }, 1000);
   }
 }
 
 function mudarTurmaTopo() {
   var turmaSel = document.getElementById('selectTurma').value;
   if(!turmaSel) return;
-  
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(function(alunos) { 
       listaEstudantes = alunos; 
     }).getEstudantesPorTurma(turmaSel);
-  } else {
-    listaEstudantes = [{numero: 1, nome: "ALLEXYS EDWARDO"}, {numero: 2, nome: "BIANCA GOMES"}];
   }
 }
 
@@ -280,10 +273,7 @@ function selecionarSegmento(btn, categoria, valor, tipoCor, showMotivo = false) 
 
 function salvarTurmaEIniciar() {
   var turmaSel = document.getElementById('selectTurma').value;
-  if(!turmaSel) { 
-    alert("Selecione uma turma."); 
-    return; 
-  }
+  if(!turmaSel) { alert("Selecione uma turma."); return; }
   
   avaliacaoTurma.turma = turmaSel; 
   avaliacaoTurma.trimestre = document.getElementById('selectTrimestre').value; 
@@ -305,13 +295,6 @@ function salvarTurmaEIniciar() {
         alert("Atenção: Nenhum estudante cadastrado para esta turma.");
       }
     }).getEstudantesPorTurma(turmaSel);
-  } else {
-    listaEstudantes = [{numero: 1, nome: "ALLEXYS EDWARDO"}, {numero: 2, nome: "BIANCA GOMES"}];
-    document.getElementById('panel-turma').style.display = 'none'; 
-    document.getElementById('panel-estudantes').style.display = 'block';
-    document.getElementById('timerBox').style.display = 'flex'; 
-    indexAtual = 0;
-    exibirEstudante();
   }
 }
 
