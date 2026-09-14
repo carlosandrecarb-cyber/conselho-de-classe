@@ -4,9 +4,6 @@ var avaliacaoAtual = {};
 var avaliacaoTurma = {};
 var tempoRestante = 180; 
 var timerInterval = null;
-var equipeTurnoAtual = {};
-
-var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxX1sStFXfdo44S5SWoHAeM1anaxMLTeoKggcNgDGW1Fp9NPMtb79UY66aRTu3N9Ek8/exec";
 
 window.onload = function() {
   carregarTurmasDoGoogle();
@@ -78,7 +75,7 @@ function iniciarSessaoConselho() {
   document.getElementById('panel-turma').style.display = 'block';
   document.getElementById('panel-estudantes').style.display = 'none';
 
-  carregarEquipeNaTela(turnoSel, turmaSel);
+  carregarEquipeDaTurmaNaTela(turnoSel, turmaSel);
 
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(function(alunos) { 
@@ -89,62 +86,59 @@ function iniciarSessaoConselho() {
   }
 }
 
-function carregarEquipeNaTela(turno, turmaAlvo) {
+function carregarEquipeDaTurmaNaTela(turno, turmaAlvo) {
   if (typeof google !== 'undefined' && google.script) {
-    google.script.run.withSuccessHandler(function(res) {
-      renderizarMembrosNaTela(res, turmaAlvo);
-    }).carregarEquipePorTurno(turno);
+    google.script.run.withSuccessHandler(function(lista) {
+      renderizarMembrosNaTela(lista, turno, turmaAlvo);
+    }).carregarLotacaoGlobal();
   }
 }
 
-function renderizarMembrosNaTela(dados, turmaAlvo) {
-  if (!dados) return;
-  equipeTurnoAtual = dados;
-  
+function renderizarMembrosNaTela(listaProfissionais, turnoAlvo, turmaAlvo) {
   var containerMembros = document.getElementById('boxMembrosResumo');
-  if (containerMembros) {
-    var direcaoTxt = "Não informado";
-    var viceTxt = "-";
-    var espTxt = "Não informado";
-    var apoioTxt = "-";
+  if (!containerMembros) return;
 
-    if (dados.gestao) {
-      dados.gestao.forEach(g => {
-        if (g.cargo === 'Diretor(a)') direcaoTxt = g.nome;
-        if (g.cargo === 'Vice-Diretor(a)') viceTxt = g.nome;
-        if (g.cargo === 'Especialista / EEB') espTxt = g.nome;
-        if (g.cargo === 'Professor(a) de Apoio') apoioTxt = g.nome;
-      });
-    }
+  var direcao = "Não informado";
+  var vice = "-";
+  var especialista = "Não informado";
+  var apoio = "-";
+  var regentesList = [];
 
-    var regentesStr = "";
-    if (dados.regentes) {
-      dados.regentes.forEach(r => {
-        if (r.turmas && r.turmas.includes(turmaAlvo)) {
-          regentesStr += `<li><b>${r.componentes.join(', ')}:</b> ${r.professor}</li>`;
+  if (listaProfissionais && Array.isArray(listaProfissionais)) {
+    listaProfissionais.forEach(p => {
+      // Verifica se o profissional atua no turno selecionado
+      if (p.turnos && p.turnos.includes(turnoAlvo)) {
+        if (p.cargo === 'Diretor(a)') direcao = p.nome;
+        if (p.cargo === 'Vice-Diretor(a)') vice = p.nome;
+        if (p.cargo === 'Especialista / EEB') especialista = p.nome;
+        if (p.cargo === 'Professor(a) de Apoio') apoio = p.nome;
+
+        // Se for professor regente e atende esta turma específica
+        if (p.cargo === 'Professor(a) Regente' && p.turmas && p.turmas.includes(turmaAlvo)) {
+          regentesList.push(`<li><b>${p.componentes.join(', ')}:</b> ${p.nome}</li>`);
         }
-      });
-    }
-    
-    containerMembros.innerHTML = `
-      <div class="p-3 mb-3 bg-light border rounded" style="font-size: 0.85rem; text-align: left;">
-        <h6 class="fw-bold text-primary mb-2"><i class="fa-solid fa-user-tie me-1"></i> Equipe e Regentes da Turma ${turmaAlvo} (${document.getElementById('espSelectTurno').value})</h6>
-        <div class="row">
-          <div class="col-md-6">
-            <p class="m-1"><b>Direção:</b> ${direcaoTxt} | <b>Vice:</b> ${viceTxt}</p>
-            <p class="m-1"><b>Especialista:</b> ${espTxt} | <b>Apoio:</b> ${apoioTxt}</p>
-          </div>
-          <div class="col-md-6">
-            <p class="m-1 fw-bold text-secondary">Professores Regentes desta Turma:</p>
-            <ul class="m-0 ps-3" style="max-height: 80px; overflow-y: auto;">${regentesStr || '<li>Nenhum regente vinculado a esta turma.</li>'}</ul>
-          </div>
+      }
+    });
+  }
+
+  containerMembros.innerHTML = `
+    <div class="p-3 mb-3 bg-light border rounded" style="font-size: 0.85rem; text-align: left;">
+      <h6 class="fw-bold text-primary mb-2"><i class="fa-solid fa-user-tie me-1"></i> Equipe e Regentes da Turma ${turmaAlvo} (${turnoAlvo})</h6>
+      <div class="row">
+        <div class="col-md-6">
+          <p class="m-1"><b>Direção:</b> ${direcao} | <b>Vice:</b> ${vice}</p>
+          <p class="m-1"><b>Especialista:</b> ${especialista} | <b>Apoio:</b> ${apoio}</p>
         </div>
-        <div class="text-end mt-2">
-          <a href="configuracao-equipe.html" target="_blank" class="text-decoration-none fw-bold" style="font-size: 0.75rem;"><i class="fa-solid fa-pen-to-square"></i> Ajustar Configuração Prévia</a>
+        <div class="col-md-6">
+          <p class="m-1 fw-bold text-secondary">Professores Regentes desta Turma:</p>
+          <ul class="m-0 ps-3" style="max-height: 80px; overflow-y: auto;">${regentesList.length > 0 ? regentesList.join('') : '<li>Nenhum regente vinculado a esta turma.</li>'}</ul>
         </div>
       </div>
-    `;
-  }
+      <div class="text-end mt-2">
+        <a href="configuracao-equipe.html" target="_blank" class="text-decoration-none fw-bold" style="font-size: 0.75rem;"><i class="fa-solid fa-pen-to-square"></i> Atualizar Lotação Global</a>
+      </div>
+    </div>
+  `;
 }
 
 function voltarParaSelecaoTurma() {
