@@ -6,7 +6,7 @@ var tempoRestante = 180;
 var timerInterval = null;
 
 // Lembre de substituir pelo URL oficial do seu Web App do Google Apps Script publicado
-var GOOGLE_SCRIPT_URL = "COLE_O_LINK_DO_SEU_WEB_APP_AQUI";
+var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxX1sStFXfdo44S5SWoHAeM1anaxMLTeoKggcNgDGW1Fp9NPMtb79UY66aRTu3N9Ek8/exec";
 
 window.onload = function() {
   carregarTurmasDoGoogle();
