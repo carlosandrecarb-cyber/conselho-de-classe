@@ -11,7 +11,6 @@ window.onload = function() {
   carregarTurmasDoGoogle();
   timerInterval = setInterval(atualizarTimer, 1000);
   
-  // Preencher data e hora atuais automaticamente se houver os campos
   var hoje = new Date();
   var dataIso = hoje.toISOString().split('T')[0];
   if(document.getElementById('inputDataAta')) document.getElementById('inputDataAta').value = dataIso;
@@ -25,7 +24,7 @@ function showView(id) {
 function verificarSenha() {
   if(document.getElementById('inputSenha').value === 'mestra2026') {
     showView('view-especialista');
-    carregarTurmasDoGoogle(); // Garante o carregamento ao entrar
+    carregarTurmasDoGoogle(); 
   } else { 
     alert('Senha Incorreta!'); 
     document.getElementById('inputSenha').value = ''; 
@@ -37,14 +36,13 @@ function carregarTurmasDoGoogle() {
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(preencherSelectsTurmas).getTurmas();
   } else {
-    // Modo de segurança caso abra direto na Vercel sem o injetor do Google
     var turmasExemplo = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
     preencherSelectsTurmas(turmasExemplo);
   }
 }
 
 function preencherSelectsTurmas(turmas) {
-  var selects = ['selectTurma', 'selectGerarTurma', 'p_turma'];
+  var selects = ['selectTurma', 'selectGerarTurma', 'p_turma', 'espSelectTurma'];
   selects.forEach(id => {
     var el = document.getElementById(id);
     if(el) {
@@ -58,6 +56,46 @@ function preencherSelectsTurmas(turmas) {
   });
 }
 
+// Fluxo de Início do Conselho pelo Especialista
+function iniciarSessaoConselho() {
+  var turmaSel = document.getElementById('espSelectTurma').value;
+  var turnoSel = document.getElementById('espSelectTurno').value;
+  var trimSel = document.getElementById('espSelectTrimestre').value;
+  
+  if (!turmaSel) {
+    alert("Por favor, selecione uma turma.");
+    return;
+  }
+
+  // Define os valores na interface do Datashow e sincroniza com o select interno
+  document.getElementById('lblTurmaAtiva').innerText = "- " + turmaSel + " (" + turnoSel + ")";
+  var selectTopo = document.getElementById('selectTurma');
+  if(selectTopo) selectTopo.value = turmaSel;
+
+  var selectTrim = document.getElementById('selectTrimestre');
+  if(selectTrim) selectTrim.value = trimSel;
+
+  // Alterna os painéis visuais
+  document.getElementById('panel-selecao-inicial').style.display = 'none';
+  document.getElementById('panel-datashow-principal').style.display = 'block';
+  document.getElementById('panel-turma').style.display = 'block';
+  document.getElementById('panel-estudantes').style.display = 'none';
+
+  // Carrega os estudantes
+  if (typeof google !== 'undefined' && google.script) {
+    google.script.run.withSuccessHandler(function(alunos) { 
+      listaEstudantes = alunos; 
+    }).getEstudantesPorTurma(turmaSel);
+  } else {
+    listaEstudantes = [{numero: 1, nome: "ALLEXYS EDWARDO"}, {numero: 2, nome: "BIANCA GOMES"}];
+  }
+}
+
+function voltarParaSelecaoTurma() {
+  document.getElementById('panel-datashow-principal').style.display = 'none';
+  document.getElementById('panel-selecao-inicial').style.display = 'flex';
+}
+
 function carregarTabelaProfessor() {
   var turma = document.getElementById('p_turma').value;
   if(!turma) return;
@@ -67,7 +105,6 @@ function carregarTabelaProfessor() {
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(renderizarAlunosProfessor).getEstudantesPorTurma(turma);
   } else {
-    // Alunos fictícios para teste rápido na Vercel
     renderizarAlunosProfessor([
       {numero: 1, nome: "ALLEXYS EDWARDO"},
       {numero: 2, nome: "BIANCA GOMES"},
@@ -195,7 +232,7 @@ function selecionarSegmento(btn, categoria, valor, tipoCor, showMotivo = false) 
 function salvarTurmaEIniciar() {
   var turmaSel = document.getElementById('selectTurma').value;
   if(!turmaSel) { 
-    alert("Selecione uma turma no topo da tela primeiro."); 
+    alert("Selecione uma turma."); 
     return; 
   }
   
