@@ -8,6 +8,12 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .prof-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 14px; padding: 20px; margin-bottom: 15px; position: relative; text-align: left; }
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+    .checkbox-group label { font-size: 0.75rem; font-weight: 700; background: #fff; border: 1px solid #cbd5e1; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+    .checkbox-group input:checked + span { color: #4f46e5; }
+  </style>
 </head>
 <body>
 
@@ -81,26 +87,57 @@
     </div>
   </div>
 
-  <!-- TELA 4: MÓDULO ESPECIALISTA (DATASHOW) -->
+  <!-- TELA 4: MÓDULO ESPECIALISTA (DIVIDIDO EM ETAPAS OBRIGATÓRIAS) -->
   <div id="view-especialista" class="view-section">
     
-    <!-- PAINEL INICIAL DE SELEÇÃO DE TURMA E ACESSO À CONFIGURAÇÃO PRÉVIA -->
-    <div id="panel-selecao-inicial" style="height: 100vh; display: flex; align-items: center; justify-content: center; background: #0f172a;">
-      <div class="colored-card p-4 rounded bg-white shadow" style="max-width: 480px; width: 100%; text-align: left;">
+    <!-- ETAPA 1: PAINEL MESTRE DE LOTAÇÃO (OBRIGATÓRIO ANTES DE ESCOLHER A TURMA) -->
+    <div id="panel-lotacao-mestre" style="padding: 30px; background: #f1f5f9; min-height: 100vh;">
+      <div style="max-width: 900px; margin: 0 auto; background: #ffffff; padding: 35px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+        <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
+          <div class="d-flex align-items-center gap-3">
+            <div style="width: 45px; height: 45px; background: #eef2ff; color: #4f46e5; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+              <i class="fa-solid fa-users-viewfinder"></i>
+            </div>
+            <div>
+              <h4 class="fw-bold m-0" style="font-size: 1.15rem;">Etapa 1: Painel Mestre de Lotação</h4>
+              <p class="text-muted m-0" style="font-size: 0.8rem;">E. E. Mestra Aurora - Cadastre a equipe e regentes antes de iniciar</p>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-outline-danger fw-bold" onclick="location.reload()">Sair</button>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="fw-bold text-primary m-0"><i class="fa-solid fa-list-check me-2"></i>Profissionais da Escola</h6>
+          <button class="btn btn-sm btn-success fw-bold px-3 py-2" onclick="adicionarCardProfissional()"><i class="fa-solid fa-plus me-1"></i> Adicionar Profissional</button>
+        </div>
+
+        <div id="containerProfissionais" class="mb-4"></div>
+
+        <div class="d-flex gap-3">
+          <button class="btn btn-secondary w-50 py-3 fw-bold" onclick="salvarLotacaoGlobal(true)">
+            <i class="fa-solid fa-floppy-disk me-2"></i> Salvar Lotação
+          </button>
+          <button class="btn-primary-action w-50 py-3 fw-bold" style="background: #059669; border-color: #047857;" onclick="irParaSelecaoTurmaEtapa2()">
+            Avançar para Escolha de Turma <i class="fa-solid fa-arrow-right ms-2"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ETAPA 2: SELEÇÃO DE TURMA E TURNO PARA O DATASHOW -->
+    <div id="panel-selecao-inicial" style="height: 100vh; display: none; align-items: center; justify-content: center; background: #0f172a;">
+      <div class="colored-card p-4 rounded bg-white shadow" style="max-width: 450px; width: 100%; text-align: left;">
         <div class="text-center mb-3">
           <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 55px; object-fit: contain; margin-bottom: 10px;" alt="Logo">
-          <h4 class="fw-bold text-dark m-0" style="font-size: 1.1rem;">Painel do Especialista</h4>
-          <p class="text-muted m-0" style="font-size: 0.8rem;">Gerencie a equipe ou inicie o conselho</p>
+          <h4 class="fw-bold text-dark m-0" style="font-size: 1.1rem;">Etapa 2: Seleção de Turma</h4>
+          <p class="text-muted m-0" style="font-size: 0.8rem;">Parâmetros para iniciar a reunião</p>
         </div>
 
-        <!-- Atalho crucial para a configuração prévia antes de entrar nas turmas -->
-        <div class="mb-3 p-2 bg-light border rounded text-center">
-          <a href="configuracao-equipe.html" target="_blank" class="text-decoration-none fw-bold text-primary" style="font-size: 0.85rem;">
-            <i class="fa-solid fa-users-gear me-1"></i> 1º Passo: Configurar Equipe e Regentes por Turno
-          </a>
-        </div>
+        <button class="btn btn-sm btn-outline-secondary w-100 mb-3 fw-bold" onclick="voltarParaLotacaoEtapa1()">
+          <i class="fa-solid fa-arrow-left me-1"></i> Voltar ao Painel Mestre de Lotação
+        </button>
 
-        <div class="mb-2">
+        <div class="mb-3">
           <label class="form-label fw-bold" style="font-size: 0.85rem;">Trimestre Alvo:</label>
           <select id="espSelectTrimestre" class="input-textarea fw-bold p-2">
             <option>1º Trimestre</option>
@@ -109,7 +146,7 @@
           </select>
         </div>
 
-        <div class="mb-2">
+        <div class="mb-3">
           <label class="form-label fw-bold" style="font-size: 0.85rem;">Turno:</label>
           <select id="espSelectTurno" class="input-textarea fw-bold p-2">
             <option value="Matutino">Turno Matutino</option>
@@ -117,15 +154,14 @@
           </select>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-4">
           <label class="form-label fw-bold" style="font-size: 0.85rem;">Turma Alvo:</label>
           <select id="espSelectTurma" class="input-textarea fw-bold p-2"></select>
         </div>
 
         <button class="btn-primary-action w-100 py-3 fw-bold" onclick="iniciarSessaoConselho()">
-          <i class="fa-solid fa-play me-2"></i> 2º Passo: Iniciar Conselho da Turma
+          <i class="fa-solid fa-play me-2"></i> Iniciar Conselho da Turma
         </button>
-        <a href="index.html" class="btn btn-link w-100 text-muted fw-bold text-decoration-none mt-2" style="font-size: 0.85rem;">Voltar ao Início</a>
       </div>
     </div>
 
@@ -152,7 +188,6 @@
           <div class="colored-card p-3" style="border: 4px solid #6366f1; background: #fff; border-radius: 10px;">
             <h4 class="text-center fw-bold mb-3" style="color: #4f46e5;"><i class="fa-solid fa-users-rays me-2"></i>Avaliação Coletiva da Turma</h4>
             
-            <!-- RESUMO DOS MEMBROS E REGENTES DO TURNO -->
             <div id="boxMembrosResumo"></div>
 
             <div class="row g-3 mb-3">
