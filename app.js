@@ -23,6 +23,7 @@ function verificarSenha() {
   if(document.getElementById('inputSenha').value === 'mestra2026') {
     showView('view-especialista');
     carregarTurmasDoGoogle(); 
+    carregarLotacaoNaTelaMestre(); // Carrega os profissionais salvos ao entrar
   } else { 
     alert('Senha Incorreta!'); 
     document.getElementById('inputSenha').value = ''; 
@@ -53,6 +54,132 @@ function preencherSelectsTurmas(turmas) {
   });
 }
 
+// Funções do Painel Mestre de Lotação (Etapa 1)
+var listaTurmasGlobal = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
+var listaComponentesGlobal = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Língua Inglesa", "Língua Portuguesa", "Matemática"];
+var listaCargosGlobal = ["Diretor(a)", "Vice-Diretor(a)", "Especialista / EEB", "Professor(a) de Apoio", "Professor(a) Regente"];
+
+function adicionarCardProfissional(dados = {}) {
+  var container = document.getElementById('containerProfissionais');
+  if(!container) return;
+  var idU = Date.now() + Math.random();
+
+  var cargosHtml = '';
+  listaCargosGlobal.forEach(c => {
+    var sel = dados.cargo === c ? 'selected' : '';
+    cargosHtml += `<option ${sel}>${c}</option>`;
+  });
+
+  var turnosHtml = '';
+  ["Matutino", "Vespertino"].forEach(t => {
+    var chk = dados.turnos && dados.turnos.includes(t) ? 'checked' : '';
+    turnosHtml += `<label><input type="checkbox" class="t_turno_${idU}" value="${t}" ${chk}> <span>${t}</span></label>`;
+  });
+
+  var turmasHtml = '';
+  listaTurmasGlobal.forEach(t => {
+    var chk = dados.turmas && dados.turmas.includes(t) ? 'checked' : '';
+    turmasHtml += `<label><input type="checkbox" class="t_turma_${idU}" value="${t}" ${chk}> <span>${t}</span></label>`;
+  });
+
+  var compHtml = '';
+  listaComponentesGlobal.forEach(c => {
+    var chk = dados.componentes && dados.componentes.includes(c) ? 'checked' : '';
+    compHtml += `<label><input type="checkbox" class="t_comp_${idU}" value="${c}" ${chk}> <span>${c}</span></label>`;
+  });
+
+  var card = document.createElement('div');
+  card.className = 'prof-card';
+  card.id = 'card_' + idU;
+  card.innerHTML = `
+    <button class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-3" onclick="document.getElementById('card_${idU}').remove()"><i class="fa-solid fa-trash"></i> Excluir</button>
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label class="form-label fw-bold fs-7">Nome do Profissional:</label>
+        <input type="text" class="input-field prof-nome" placeholder="Nome Completo" value="${dados.nome || ''}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label fw-bold fs-7">Cargo / Função:</label>
+        <select class="input-field prof-cargo">${cargosHtml}</select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label fw-bold fs-7">Turnos de Atuação:</label>
+        <div class="checkbox-group">${turnosHtml}</div>
+      </div>
+    </div>
+    <div class="mb-2">
+      <label class="form-label fw-bold fs-7 text-primary">Turmas Atendidas (Marque quantas precisar):</label>
+      <div class="checkbox-group">${turmasHtml}</div>
+    </div>
+    <div>
+      <label class="form-label fw-bold fs-7 text-success">Componentes Curriculares (Se aplicável):</label>
+      <div class="checkbox-group">${compHtml}</div>
+    </div>
+    <input type="hidden" class="prof-id" value="${idU}">
+  `;
+  container.appendChild(card);
+}
+
+function carregarLotacaoNaTelaMestre() {
+  if (typeof google !== 'undefined' && google.script) {
+    google.script.run.withSuccessHandler(function(dados) {
+      var container = document.getElementById('containerProfissionais');
+      if(container) container.innerHTML = '';
+      if (dados && dados.length > 0) {
+        dados.forEach(p => adicionarCardProfissional(p));
+      } else {
+        adicionarCardProfissional();
+      }
+    }).carregarLotacaoGlobal();
+  } else {
+    var container = document.getElementById('containerProfissionais');
+    if(container && container.innerHTML === '') adicionarCardProfissional();
+  }
+}
+
+function salvarLotacaoGlobal(mostrarAlerta = false) {
+  var lista = [];
+  document.querySelectorAll('.prof-card').forEach(card => {
+    var nome = card.querySelector('.prof-nome').value;
+    var cargo = card.querySelector('.prof-cargo').value;
+    var idU = card.querySelector('.prof-id').value;
+
+    var turnos = [];
+    card.querySelectorAll('.t_turno_' + idU + ':checked').forEach(el => turnos.push(el.value));
+
+    var turmas = [];
+    card.querySelectorAll('.t_turma_' + idU + ':checked').forEach(el => turmas.push(el.value));
+
+    var componentes = [];
+    card.querySelectorAll('.t_comp_' + idU + ':checked').forEach(el => componentes.push(el.value));
+
+    if (nome) {
+      lista.push({ nome: nome, cargo: cargo, turnos: turnos, turmas: turmas, componentes: componentes });
+    }
+  });
+
+  if (typeof google !== 'undefined' && google.script) {
+    google.script.run.withSuccessHandler(function() {
+      if(mostrarAlerta) alert('Lotação global salva com sucesso!');
+    }).salvarLotacaoGlobal(lista);
+  } else {
+    if(mostrarAlerta) alert('Lotação salva com sucesso!');
+  }
+}
+
+function irParaSelecaoTurmaEtapa2() {
+  salvarLotacaoGlobal(false); // Salva automaticamente antes de avançar
+  document.getElementById('panel-lotacao-mestre').style.display = 'none';
+  document.getElementById('panel-selecao-inicial').style.display = 'flex';
+}
+
+function voltarParaLotacaoEtapa1() {
+  document.getElementById('panel-selecao-inicial').style.display = 'none';
+  document.getElementById('panel-lotacao-mestre').style.display = 'block';
+  carregarLotacaoNaTelaMestre();
+}
+
+// Fluxo de Início do Conselho após Etapa 2
 function iniciarSessaoConselho() {
   var turmaSel = document.getElementById('espSelectTurma').value;
   var turnoSel = document.getElementById('espSelectTurno').value;
@@ -106,14 +233,12 @@ function renderizarMembrosNaTela(listaProfissionais, turnoAlvo, turmaAlvo) {
 
   if (listaProfissionais && Array.isArray(listaProfissionais)) {
     listaProfissionais.forEach(p => {
-      // Verifica se o profissional atua no turno selecionado
       if (p.turnos && p.turnos.includes(turnoAlvo)) {
         if (p.cargo === 'Diretor(a)') direcao = p.nome;
         if (p.cargo === 'Vice-Diretor(a)') vice = p.nome;
         if (p.cargo === 'Especialista / EEB') especialista = p.nome;
         if (p.cargo === 'Professor(a) de Apoio') apoio = p.nome;
 
-        // Se for professor regente e atende esta turma específica
         if (p.cargo === 'Professor(a) Regente' && p.turmas && p.turmas.includes(turmaAlvo)) {
           regentesList.push(`<li><b>${p.componentes.join(', ')}:</b> ${p.nome}</li>`);
         }
@@ -135,7 +260,7 @@ function renderizarMembrosNaTela(listaProfissionais, turnoAlvo, turmaAlvo) {
         </div>
       </div>
       <div class="text-end mt-2">
-        <a href="configuracao-equipe.html" target="_blank" class="text-decoration-none fw-bold" style="font-size: 0.75rem;"><i class="fa-solid fa-pen-to-square"></i> Atualizar Lotação Global</a>
+        <a href="javascript:void(0);" onclick="voltarParaLotacaoEtapa1()" class="text-decoration-none fw-bold" style="font-size: 0.75rem;"><i class="fa-solid fa-pen-to-square"></i> Voltar e Atualizar Painel Mestre</a>
       </div>
     </div>
   `;
