@@ -25,15 +25,15 @@
           <i class="fa-solid fa-users-gear"></i>
         </div>
         <div>
-          <h4 class="fw-bold m-0" style="font-size: 1.15rem;">Configuração Antecipada de Equipe</h4>
-          <p class="text-muted m-0" style="font-size: 0.8rem;">E. E. Mestra Aurora - Dados para Atas e Conselhos</p>
+          <h4 class="fw-bold m-0" style="font-size: 1.15rem;">Configuração e Edição de Equipe por Turno</h4>
+          <p class="text-muted m-0" style="font-size: 0.8rem;">E. E. Mestra Aurora - Puxa e Edita Dados em Tempo Real</p>
         </div>
       </div>
       <a href="index.html" class="btn btn-sm btn-outline-dark fw-bold"><i class="fa-solid fa-arrow-left me-1"></i> Voltar</a>
     </div>
 
     <div class="mb-3">
-      <label class="form-label fw-bold" style="font-size: 0.85rem;">Selecione o Turno:</label>
+      <label class="form-label fw-bold" style="font-size: 0.85rem;">Selecione o Turno para Consultar/Modificar:</label>
       <select id="selectTurnoConfig" class="input-field fw-bold" onchange="carregarDadosTurno()">
         <option value="Matutino">Turno Matutino</option>
         <option value="Vespertino">Turno Vespertino</option>
@@ -74,32 +74,45 @@
     </div>
 
     <button class="btn-action py-3" onclick="salvarConfiguracaoEquipe()">
-      <i class="fa-solid fa-floppy-disk me-2"></i> Salvar Configuração do Turno
+      <i class="fa-solid fa-floppy-disk me-2"></i> Salvar e Atualizar Modificações
     </button>
   </div>
 
   <script>
     function carregarDadosTurno() {
       var turno = document.getElementById('selectTurnoConfig').value;
-      var salvo = localStorage.getItem('config_equipe_' + turno);
-      if (salvo) {
-        var dados = JSON.parse(salvo);
-        document.getElementById('cfgDiretor').value = dados.diretor || '';
-        document.getElementById('cfgVice').value = dados.vice || '';
-        document.getElementById('cfgEspecialista').value = dados.especialista || '';
-        document.getElementById('cfgApoio').value = dados.apoio || '';
-        
-        var inputsRegentes = document.querySelectorAll('.regente-comp');
-        inputsRegentes.forEach(input => {
-          var comp = input.getAttribute('data-comp');
-          input.value = dados.regentes && dados.regentes[comp] ? dados.regentes[comp] : '';
-        });
+      
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run.withSuccessHandler(function(dados) {
+          if (dados) {
+            document.getElementById('cfgDiretor').value = dados.diretor || '';
+            document.getElementById('cfgVice').value = dados.vice || '';
+            document.getElementById('cfgEspecialista').value = dados.especialista || '';
+            document.getElementById('cfgApoio').value = dados.apoio || '';
+            
+            var inputsRegentes = document.querySelectorAll('.regente-comp');
+            inputsRegentes.forEach(input => {
+              var comp = input.getAttribute('data-comp');
+              input.value = dados.regentes && dados.regentes[comp] ? dados.regentes[comp] : '';
+            });
+          }
+        }).carregarEquipePorTurno(turno);
       } else {
-        document.getElementById('cfgDiretor').value = '';
-        document.getElementById('cfgVice').value = '';
-        document.getElementById('cfgEspecialista').value = '';
-        document.getElementById('cfgApoio').value = '';
-        document.querySelectorAll('.regente-comp').forEach(i => i.value = '');
+        // Fallback local caso abra na Vercel sem o injetor
+        var salvo = localStorage.getItem('config_equipe_' + turno);
+        if (salvo) {
+          var dados = JSON.parse(salvo);
+          document.getElementById('cfgDiretor').value = dados.diretor || '';
+          document.getElementById('cfgVice').value = dados.vice || '';
+          document.getElementById('cfgEspecialista').value = dados.especialista || '';
+          document.getElementById('cfgApoio').value = dados.apoio || '';
+          
+          var inputsRegentes = document.querySelectorAll('.regente-comp');
+          inputsRegentes.forEach(input => {
+            var comp = input.getAttribute('data-comp');
+            input.value = dados.regentes && dados.regentes[comp] ? dados.regentes[comp] : '';
+          });
+        }
       }
     }
 
@@ -111,6 +124,7 @@
       });
 
       var config = {
+        turno: turno,
         diretor: document.getElementById('cfgDiretor').value,
         vice: document.getElementById('cfgVice').value,
         especialista: document.getElementById('cfgEspecialista').value,
@@ -119,7 +133,14 @@
       };
 
       localStorage.setItem('config_equipe_' + turno, JSON.stringify(config));
-      alert('Configuração da equipe do turno ' + turno + ' salva com sucesso!');
+
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run.withSuccessHandler(function(res) {
+          alert('Modificações da equipe do turno ' + turno + ' salvas e atualizadas com sucesso!');
+        }).salvarConfiguracaoEquipe(config);
+      } else {
+        alert('Modificações salvas com sucesso!');
+      }
     }
 
     window.onload = function() {
