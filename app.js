@@ -23,7 +23,7 @@ function verificarSenha() {
   if(document.getElementById('inputSenha').value === 'mestra2026') {
     showView('view-especialista');
     carregarTurmasDoGoogle(); 
-    carregarLotacaoNaTelaMestre(); // Carrega os profissionais salvos ao entrar
+    carregarLotacaoNaTelaMestre(); 
   } else { 
     alert('Senha Incorreta!'); 
     document.getElementById('inputSenha').value = ''; 
@@ -54,7 +54,7 @@ function preencherSelectsTurmas(turmas) {
   });
 }
 
-// Funções do Painel Mestre de Lotação (Etapa 1)
+// Banco de Dados Local (localStorage) + Sincronização com Apps Script
 var listaTurmasGlobal = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
 var listaComponentesGlobal = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Língua Inglesa", "Língua Portuguesa", "Matemática"];
 var listaCargosGlobal = ["Diretor(a)", "Vice-Diretor(a)", "Especialista / EEB", "Professor(a) de Apoio", "Professor(a) Regente"];
@@ -121,23 +121,38 @@ function adicionarCardProfissional(dados = {}) {
 }
 
 function carregarLotacaoNaTelaMestre() {
+  // Tenta carregar do Banco Local (localStorage) para resposta imediata
+  var localData = localStorage.getItem('db_lotacao_mestra');
+  if (localData) {
+    try {
+      var dados = JSON.parse(localData);
+      renderizarCardsNaTela(dados);
+    } catch(e) {}
+  }
+
+  // Sincroniza com a planilha do Google Sheets em segundo plano
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(function(dados) {
-      var container = document.getElementById('containerProfissionais');
-      if(container) container.innerHTML = '';
       if (dados && dados.length > 0) {
-        dados.forEach(p => adicionarCardProfissional(p));
-      } else {
-        adicionarCardProfissional();
+        localStorage.setItem('db_lotacao_mestra', JSON.stringify(dados));
+        renderizarCardsNaTela(dados);
       }
     }).carregarLotacaoGlobal();
-  } else {
-    var container = document.getElementById('containerProfissionais');
-    if(container && container.innerHTML === '') adicionarCardProfissional();
   }
 }
 
-function salvarLotacaoGlobal(mostrarAlerta = false) {
+function renderizarCardsNaTela(dados) {
+  var container = document.getElementById('containerProfissionais');
+  if(!container) return;
+  container.innerHTML = '';
+  if (dados && dados.length > 0) {
+    dados.forEach(p => adicionarCardProfissional(p));
+  } else {
+    adicionarCardProfissional();
+  }
+}
+
+function coletarDadosLotacao() {
   var lista = [];
   document.querySelectorAll('.prof-card').forEach(card => {
     var nome = card.querySelector('.prof-nome').value;
@@ -157,18 +172,27 @@ function salvarLotacaoGlobal(mostrarAlerta = false) {
       lista.push({ nome: nome, cargo: cargo, turnos: turnos, turmas: turmas, componentes: componentes });
     }
   });
+  return lista;
+}
 
+function salvarLotacaoGlobal(mostrarAlerta = false) {
+  var lista = coletarDadosLotacao();
+  
+  // Salva no Banco Local do App Web (Instantâneo)
+  localStorage.setItem('db_lotacao_mestra', JSON.stringify(lista));
+
+  // Salva na Planilha do Google Sheets
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(function() {
-      if(mostrarAlerta) alert('Lotação global salva com sucesso!');
+      if (mostrarAlerta) alert('Lotação salva com sucesso no App Web e na Planilha!');
     }).salvarLotacaoGlobal(lista);
   } else {
-    if(mostrarAlerta) alert('Lotação salva com sucesso!');
+    if (mostrarAlerta) alert('Lotação salva com sucesso no App Web!');
   }
 }
 
 function irParaSelecaoTurmaEtapa2() {
-  salvarLotacaoGlobal(false); // Salva automaticamente antes de avançar
+  salvarLotacaoGlobal(false);
   document.getElementById('panel-lotacao-mestre').style.display = 'none';
   document.getElementById('panel-selecao-inicial').style.display = 'flex';
 }
@@ -179,7 +203,6 @@ function voltarParaLotacaoEtapa1() {
   carregarLotacaoNaTelaMestre();
 }
 
-// Fluxo de Início do Conselho após Etapa 2
 function iniciarSessaoConselho() {
   var turmaSel = document.getElementById('espSelectTurma').value;
   var turnoSel = document.getElementById('espSelectTurno').value;
@@ -214,6 +237,16 @@ function iniciarSessaoConselho() {
 }
 
 function carregarEquipeDaTurmaNaTela(turno, turmaAlvo) {
+  // Pega direto do Banco Local para máxima velocidade
+  var localData = localStorage.getItem('db_lotacao_mestra');
+  if (localData) {
+    try {
+      renderizarMembrosNaTela(JSON.parse(localData), turno, turmaAlvo);
+      return;
+    } catch(e) {}
+  }
+
+  // Fallback para a planilha se o local estiver vazio
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(function(lista) {
       renderizarMembrosNaTela(lista, turno, turmaAlvo);
