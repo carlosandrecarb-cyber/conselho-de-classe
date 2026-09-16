@@ -1,5 +1,5 @@
 // ATENÇÃO: COLOQUE A SUA URL GERADA NO APPS SCRIPT AQUI!
-const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbwEE2uiIXRoJJ4CzW7N-YR9Af9mz-qIDqsfFJEgQn6sa4WcxxO-zKBvnYegh8z-WOB-/exec";
+const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbwYaqIn2pL2ePwILxPcjERVFH_oW_eTW_zB8rNKQiSNHrDHG7MqLAFYc6sJOUeoxZ2D/exec";
 
 var listaEstudantes = []; var indexAtual = 0; 
 var avaliacaoAtual = {}; var avaliacaoTurma = {};
