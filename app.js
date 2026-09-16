@@ -92,7 +92,7 @@ function adicionarCardProfissional(dados = {}) {
   card.className = 'prof-card';
   card.id = 'card_' + idU;
   card.innerHTML = `
-    <button class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-3" onclick="document.getElementById('card_${idU}').remove()"><i class="fa-solid fa-trash"></i> Excluir</button>
+    <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-3" onclick="document.getElementById('card_${idU}').remove()"><i class="fa-solid fa-trash"></i> Excluir</button>
     <div class="row g-3 mb-3">
       <div class="col-md-6">
         <label class="form-label fw-bold fs-7">Nome do Profissional:</label>
@@ -121,7 +121,6 @@ function adicionarCardProfissional(dados = {}) {
 }
 
 function carregarLotacaoNaTelaMestre() {
-  // Tenta carregar do Banco Local (localStorage) para resposta imediata
   var localData = localStorage.getItem('db_lotacao_mestra');
   if (localData) {
     try {
@@ -130,7 +129,6 @@ function carregarLotacaoNaTelaMestre() {
     } catch(e) {}
   }
 
-  // Sincroniza com a planilha do Google Sheets em segundo plano
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(function(dados) {
       if (dados && dados.length > 0) {
@@ -154,10 +152,18 @@ function renderizarCardsNaTela(dados) {
 
 function coletarDadosLotacao() {
   var lista = [];
-  document.querySelectorAll('.prof-card').forEach(card => {
-    var nome = card.querySelector('.prof-nome').value;
-    var cargo = card.querySelector('.prof-cargo').value;
-    var idU = card.querySelector('.prof-id').value;
+  var cards = document.querySelectorAll('.prof-card');
+  
+  cards.forEach(card => {
+    var nomeInput = card.querySelector('.prof-nome');
+    var cargoSelect = card.querySelector('.prof-cargo');
+    var idInput = card.querySelector('.prof-id');
+    
+    if (!nomeInput || !cargoSelect || !idInput) return;
+
+    var nome = nomeInput.value.trim();
+    var cargo = cargoSelect.value;
+    var idU = idInput.value;
 
     var turnos = [];
     card.querySelectorAll('.t_turno_' + idU + ':checked').forEach(el => turnos.push(el.value));
@@ -168,7 +174,7 @@ function coletarDadosLotacao() {
     var componentes = [];
     card.querySelectorAll('.t_comp_' + idU + ':checked').forEach(el => componentes.push(el.value));
 
-    if (nome) {
+    if (nome !== "") {
       lista.push({ nome: nome, cargo: cargo, turnos: turnos, turmas: turmas, componentes: componentes });
     }
   });
@@ -178,13 +184,13 @@ function coletarDadosLotacao() {
 function salvarLotacaoGlobal(mostrarAlerta = false) {
   var lista = coletarDadosLotacao();
   
-  // Salva no Banco Local do App Web (Instantâneo)
+  // Salva instantaneamente no Banco Local (localStorage)
   localStorage.setItem('db_lotacao_mestra', JSON.stringify(lista));
 
-  // Salva na Planilha do Google Sheets
+  // Salva de forma assíncrona na Planilha Google Sheets
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(function() {
-      if (mostrarAlerta) alert('Lotação salva com sucesso no App Web e na Planilha!');
+      if (mostrarAlerta) alert('Lotação salva com sucesso na Planilha e no App Web!');
     }).salvarLotacaoGlobal(lista);
   } else {
     if (mostrarAlerta) alert('Lotação salva com sucesso no App Web!');
@@ -237,7 +243,6 @@ function iniciarSessaoConselho() {
 }
 
 function carregarEquipeDaTurmaNaTela(turno, turmaAlvo) {
-  // Pega direto do Banco Local para máxima velocidade
   var localData = localStorage.getItem('db_lotacao_mestra');
   if (localData) {
     try {
@@ -246,7 +251,6 @@ function carregarEquipeDaTurmaNaTela(turno, turmaAlvo) {
     } catch(e) {}
   }
 
-  // Fallback para a planilha se o local estiver vazio
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(function(lista) {
       renderizarMembrosNaTela(lista, turno, turmaAlvo);
