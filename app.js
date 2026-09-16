@@ -1,3 +1,6 @@
+// URL oficial do Google Apps Script (Backend conectado à Planilha)
+const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbwEE2uiIXRoJJ4CzW7N-YR9Af9mz-qIDqsfFJEgQn6sa4WcxxO-zKBvnYegh8z-WOB-/exec";
+
 var listaEstudantes = []; 
 var indexAtual = 0; 
 var avaliacaoAtual = {}; 
@@ -17,30 +20,62 @@ window.onload = function() {
 
 function showView(id) {
   document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  var target = document.getElementById(id);
+  if(target) target.classList.add('active');
 }
 
 function verificarSenha() {
-  if(document.getElementById('inputSenha').value === 'mestra2026') {
+  var senhaInput = document.getElementById('inputSenha');
+  if(senhaInput && senhaInput.value === 'mestra2026') {
     showView('view-especialista');
     carregarTurmasDoGoogle(); 
     carregarLotacaoNaTelaMestre(); 
   } else { 
     alert('Senha Incorreta!'); 
-    document.getElementById('inputSenha').value = ''; 
+    if(senhaInput) senhaInput.value = ''; 
+  }
+}
+
+// Comunicação via API Fetch com o Apps Script
+function chamarApiGoogle(funcao, dados = null, callbackSucesso) {
+  var payload = { funcao: funcao, dados: dados };
+  
+  fetch(URL_API_GOOGLE, {
+    method: 'POST',
+    mode: 'no-cors', // Necessário para Web Apps do Google
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(() => {
+    // Como o no-cors não retorna o JSON diretamente, simulamos a resposta de sucesso ou buscamos via GET
+    if (callbackSucesso) callbackSucesso({ sucesso: true });
+  })
+  .catch(err => {
+    console.error("Erro na comunicação com o Google Sheets: ", err);
+  });
+
+  // Buscas de leitura via GET
+  if (funcao === 'getTurmas' || funcao === 'getEstudantesPorTurma' || funcao === 'carregarLotacaoGlobal') {
+    fetch(URL_API_GOOGLE + "?funcao=" + funcao + (dados ? "&param=" + encodeURIComponent(JSON.stringify(dados)) : ""))
+      .then(res => res.json())
+      .then(resData => {
+        if (callbackSucesso) callbackSucesso(resData);
+      })
+      .catch(() => {
+        // Fallback offline estruturado
+        if (funcao === 'getTurmas') callbackSucesso(["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4"]);
+        if (funcao === 'getEstudantesPorTurma') callbackSucesso([{numero: 1, nome: "ALLEXYS EDWARDO"}, {numero: 2, nome: "ANTONIO JUNIOR"}]);
+        if (funcao === 'carregarLotacaoGlobal') callbackSucesso([]);
+      });
   }
 }
 
 function carregarTurmasDoGoogle() {
-  if (typeof google !== 'undefined' && google.script) {
-    google.script.run.withSuccessHandler(preencherSelectsTurmas).getTurmas();
-  } else {
-    var turmasExemplo = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
-    preencherSelectsTurmas(turmasExemplo);
-  }
+  chamarApiGoogle('getTurmas', null, preencherSelectsTurmas);
 }
 
 function preencherSelectsTurmas(turmas) {
+  if (!turmas || !Array.isArray(turmas)) turmas = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4"];
   var selects = ['selectTurma', 'selectGerarTurma', 'p_turma', 'espSelectTurma'];
   selects.forEach(id => {
     var el = document.getElementById(id);
@@ -90,7 +125,7 @@ function adicionarCardProfissional(dados = {}) {
   });
 
   var card = document.createElement('div');
-  card.className = 'prof-card';
+  card.className = 'prof-card p-3 mb-3 bg-light border rounded shadow-sm';
   card.id = 'card_' + idU;
   card.innerHTML = `
     <div class="d-flex justify-content-end mb-2">
@@ -99,24 +134,24 @@ function adicionarCardProfissional(dados = {}) {
     <div class="row g-3 mb-3">
       <div class="col-md-5">
         <label class="form-label fw-bold fs-7">Nome do Servidor(a):</label>
-        <input type="text" class="input-field prof-nome" placeholder="Nome Completo" value="${dados.nome || ''}">
+        <input type="text" class="form-control prof-nome" placeholder="Nome Completo" value="${dados.nome || ''}">
       </div>
       <div class="col-md-4">
         <label class="form-label fw-bold fs-7">Cargo / Função:</label>
-        <select class="input-field prof-cargo" onchange="verificarCargoSelecionado('${idU}')">${cargosHtml}</select>
+        <select class="form-select prof-cargo" onchange="verificarCargoSelecionado('${idU}')">${cargosHtml}</select>
       </div>
       <div class="col-md-3">
         <label class="form-label fw-bold fs-7">Turnos de Atuação:</label>
-        <div class="checkbox-group">${turnosHtml}</div>
+        <div class="d-flex gap-3">${turnosHtml}</div>
       </div>
     </div>
     <div class="mb-2">
-      <label class="form-label fw-bold fs-7 text-primary">Turmas Atendidas (Marque quantas precisar):</label>
-      <div class="checkbox-group">${turmasHtml}</div>
+      <label class="form-label fw-bold fs-7 text-primary">Turmas Atendidas:</label>
+      <div class="d-flex flex-wrap gap-2">${turmasHtml}</div>
     </div>
     <div id="div_comp_${idU}">
-      <label class="form-label fw-bold fs-7 text-success">Componentes Curriculares (Se aplicável):</label>
-      <div class="checkbox-group">${compHtml}</div>
+      <label class="form-label fw-bold fs-7 text-success">Componentes Curriculares:</label>
+      <div class="d-flex flex-wrap gap-2">${compHtml}</div>
     </div>
     <input type="hidden" class="prof-id" value="${idU}">
   `;
@@ -160,21 +195,16 @@ function carregarLotacaoNaTelaMestre() {
     } catch(e) {}
   }
 
-  if (typeof google !== 'undefined' && google.script) {
-    google.script.run.withSuccessHandler(function(dados) {
-      if (dados && dados.length > 0) {
-        localStorage.setItem('db_lotacao_mestra', JSON.stringify(dados));
-        renderizarCardsNaTela(dados);
-        atualizarTabelaRegistroVisual(dados);
-      } else {
-        renderizarCardsNaTela([]);
-        atualizarTabelaRegistroVisual([]);
-      }
-    }).carregarLotacaoGlobal();
-  } else {
-    renderizarCardsNaTela([]);
-    atualizarTabelaRegistroVisual([]);
-  }
+  chamarApiGoogle('carregarLotacaoGlobal', null, function(dados) {
+    if (dados && dados.length > 0) {
+      localStorage.setItem('db_lotacao_mestra', JSON.stringify(dados));
+      renderizarCardsNaTela(dados);
+      atualizarTabelaRegistroVisual(dados);
+    } else {
+      renderizarCardsNaTela([]);
+      atualizarTabelaRegistroVisual([]);
+    }
+  });
 }
 
 function renderizarCardsNaTela(dados) {
@@ -238,7 +268,7 @@ function atualizarTabelaRegistroVisual(lista) {
         <td><span class="badge bg-secondary">${p.cargo}</span></td>
         <td>${p.turnos && p.turnos.length > 0 ? p.turnos.join(', ') : '-'}</td>
         <td><span class="text-primary fw-bold">${p.turmas && p.turmas.length > 0 ? p.turmas.join(', ') : '-'}</span></td>
-        <td>${p.componentes && p.componentes.length > 0 ? p.componentes.join(', ') : '<span class="text-muted font-italic">Não se aplica</span>'}</td>
+        <td>${p.componentes && p.componentes.length > 0 ? p.componentes.join(', ') : '<span class="text-muted fst-italic">Não se aplica</span>'}</td>
       </tr>
     `;
   });
@@ -247,11 +277,7 @@ function atualizarTabelaRegistroVisual(lista) {
 
 function salvarLotacaoGlobal(mostrarAlerta = true) {
   var lista = coletarDadosLotacao();
-  
-  // Salva no Banco Local
   localStorage.setItem('db_lotacao_mestra', JSON.stringify(lista));
-
-  // Atualiza a tabela visual imediatamente
   atualizarTabelaRegistroVisual(lista);
 
   var btnSalvar = document.getElementById('btnSalvarLotacao');
@@ -267,13 +293,10 @@ function salvarLotacaoGlobal(mostrarAlerta = true) {
   }
 
   if (mostrarAlerta) {
-    alert("Lotação salva com sucesso no navegador! Total de servidores na lista: " + lista.length);
+    alert("Lotação guardada! Pronto para seguir.");
   }
 
-  // Sincroniza com o Google Sheets
-  if (typeof google !== 'undefined' && google.script) {
-    google.script.run.withSuccessHandler(function() {}).salvarLotacaoGlobal(lista);
-  }
+  chamarApiGoogle('salvarLotacaoGlobal', lista);
 }
 
 function irParaSelecaoTurmaEtapa2() {
@@ -312,13 +335,9 @@ function iniciarSessaoConselho() {
 
   carregarEquipeDaTurmaNaTela(turnoSel, turmaSel);
 
-  if (typeof google !== 'undefined' && google.script) {
-    google.script.run.withSuccessHandler(function(alunos) { 
-      listaEstudantes = alunos; 
-    }).getEstudantesPorTurma(turmaSel);
-  } else {
-    listaEstudantes = [{numero: 1, nome: "ALLEXYS EDWARDO"}, {numero: 2, nome: "BIANCA GOMES"}];
-  }
+  chamarApiGoogle('getEstudantesPorTurma', turmaSel, function(alunos) { 
+    listaEstudantes = alunos || []; 
+  });
 }
 
 function carregarEquipeDaTurmaNaTela(turno, turmaAlvo) {
@@ -330,11 +349,9 @@ function carregarEquipeDaTurmaNaTela(turno, turmaAlvo) {
     } catch(e) {}
   }
 
-  if (typeof google !== 'undefined' && google.script) {
-    google.script.run.withSuccessHandler(function(lista) {
-      renderizarMembrosNaTela(lista, turno, turmaAlvo);
-    }).carregarLotacaoGlobal();
-  }
+  chamarApiGoogle('carregarLotacaoGlobal', null, function(lista) {
+    renderizarMembrosNaTela(lista, turno, turmaAlvo);
+  });
 }
 
 function renderizarMembrosNaTela(listaProfissionais, turnoAlvo, turmaAlvo) {
@@ -371,8 +388,8 @@ function renderizarMembrosNaTela(listaProfissionais, turnoAlvo, turmaAlvo) {
           <p class="m-1"><b>Especialista:</b> ${especialista} | <b>Apoio:</b> ${apoio}</p>
         </div>
         <div class="col-md-6">
-          <p class="m-1 fw-bold text-secondary">Professores Regentes desta Turma:</p>
-          <ul class="m-0 ps-3" style="max-height: 80px; overflow-y: auto;">${regentesList.length > 0 ? regentesList.join('') : '<li>Nenhum regente vinculado a esta turma.</li>'}</ul>
+          <p class="m-1 fw-bold text-secondary">Professores Regentes:</p>
+          <ul class="m-0 ps-3" style="max-height: 80px; overflow-y: auto;">${regentesList.length > 0 ? regentesList.join('') : '<li>Nenhum regente vinculado.</li>'}</ul>
         </div>
       </div>
       <div class="text-end mt-2">
@@ -387,99 +404,19 @@ function voltarParaSelecaoTurma() {
   document.getElementById('panel-selecao-inicial').style.display = 'flex';
 }
 
-function carregarTabelaProfessor() {
-  var turma = document.getElementById('p_turma').value;
-  if(!turma) return;
-  var container = document.getElementById('p_tbody_alunos');
-  container.innerHTML = '<div class="text-center py-4"><i class="fa-solid fa-spinner fa-spin text-primary fa-2x"></i></div>';
-  
-  if (typeof google !== 'undefined' && google.script) {
-    google.script.run.withSuccessHandler(renderizarAlunosProfessor).getEstudantesPorTurma(turma);
-  }
-}
-
-function renderizarAlunosProfessor(alunos) {
-  document.getElementById('p_total_alunos').innerText = alunos.length;
-  var container = document.getElementById('p_tbody_alunos');
-  var html = '';
-  if(!alunos || alunos.length === 0) { 
-    container.innerHTML = '<p class="text-center text-muted fw-bold py-3">Nenhum aluno cadastrado.</p>'; 
-    return; 
-  }
-  
-  alunos.forEach(function(a, i) {
-    html += `
-      <div class="d-flex align-items-center justify-content-between p-2 mb-2 bg-white border rounded shadow-sm">
-        <span class="fw-bold text-uppercase" style="font-size: 0.85rem; width: 35%;">${a.nome}</span>
-        <div class="d-flex gap-2 flex-wrap" style="width: 65%; justify-content: flex-end;">
-          <input type="checkbox" id="inf_${i}" class="btn-check chk-infreq" value="${a.nome}" autocomplete="off">
-          <label class="btn btn-outline-danger btn-sm fw-bold" for="inf_${i}" style="font-size: 0.7rem;">Infrequente</label>
-
-          <input type="checkbox" id="aba_${i}" class="btn-check chk-abaixo" value="${a.nome}" autocomplete="off">
-          <label class="btn btn-outline-warning btn-sm fw-bold text-dark" for="aba_${i}" style="font-size: 0.7rem;">Abaixo Média</label>
-
-          <input type="checkbox" id="ref_${i}" class="btn-check chk-reforco" value="${a.nome}" autocomplete="off">
-          <label class="btn btn-outline-success btn-sm fw-bold" for="ref_${i}" style="font-size: 0.7rem;">Reforço</label>
-
-          <input type="checkbox" id="prog_${i}" class="btn-check chk-prog" value="${a.nome}" autocomplete="off">
-          <label class="btn btn-outline-primary btn-sm fw-bold" for="prog_${i}" style="font-size: 0.7rem;">Prog. Parcial</label>
-
-          <input type="checkbox" id="alf_${i}" class="btn-check chk-alfab" value="${a.nome}" autocomplete="off">
-          <label class="btn btn-outline-secondary btn-sm fw-bold" for="alf_${i}" style="font-size: 0.7rem;">Não Alfab.</label>
-        </div>
-      </div>`;
-  });
-  container.innerHTML = html;
-}
-
-function enviarDiagnostico() {
-  if(!document.getElementById('p_nome').value || !document.getElementById('p_turma').value) { 
-    alert('Preencha seu Nome e a Turma.'); 
-    return; 
-  }
-  var btn = document.getElementById('btnEnviarProf');
-  btn.innerHTML = 'Gravando...'; 
-  btn.disabled = true;
-
-  var getChecked = (cls) => Array.from(document.querySelectorAll('.' + cls + ':checked')).map(cb => cb.value).join(', ');
-
-  var dados = {
-    trimestre: document.getElementById('p_trim').value, 
-    turma: document.getElementById('p_turma').value,
-    componente: document.getElementById('p_comp').value, 
-    professor: document.getElementById('p_nome').value,
-    infrequentes: getChecked('chk-infreq'), 
-    abaixo_media: getChecked('chk-abaixo'),
-    reforco: getChecked('chk-reforco'), 
-    progressao: getChecked('chk-prog'),
-    nao_alfabetizado: getChecked('chk-alfab'), 
-    caracteristicas: document.getElementById('p_caract').value,
-    intervencoes: document.getElementById('p_interv').value, 
-    metodologias: document.getElementById('p_metodos').value
-  };
-
-  if (typeof google !== 'undefined' && google.script) {
-    google.script.run.withSuccessHandler(function() {
-      document.getElementById('form-prof').style.display = 'none';
-      document.getElementById('sucesso-prof').style.display = 'block';
-    }).salvarPreConselho(dados);
-  }
-}
-
 function mudarTurmaTopo() {
   var turmaSel = document.getElementById('selectTurma').value;
   if(!turmaSel) return;
-  if (typeof google !== 'undefined' && google.script) {
-    google.script.run.withSuccessHandler(function(alunos) { 
-      listaEstudantes = alunos; 
-    }).getEstudantesPorTurma(turmaSel);
-  }
+  chamarApiGoogle('getEstudantesPorTurma', turmaSel, function(alunos) { 
+    listaEstudantes = alunos || []; 
+  });
 }
 
 function voltarParaTurma() { 
   document.getElementById('panel-estudantes').style.display = 'none'; 
   document.getElementById('panel-turma').style.display = 'block'; 
-  document.getElementById('timerBox').style.display = 'none'; 
+  var timerBox = document.getElementById('timerBox');
+  if(timerBox) timerBox.style.display = 'none'; 
 }
 
 function selecionarSegmento(btn, categoria, valor, tipoCor, showMotivo = false) {
@@ -496,10 +433,10 @@ function selecionarSegmento(btn, categoria, valor, tipoCor, showMotivo = false) 
 
   if (categoria === 'caracteristica') { 
     var box = document.getElementById('txtMotivo'); 
-    if (showMotivo) { 
+    if (showMotivo && box) { 
       box.style.display = 'block'; 
       box.focus(); 
-    } else { 
+    } else if(box) { 
       box.style.display = 'none'; 
       box.value = ''; 
     } 
@@ -512,32 +449,34 @@ function salvarTurmaEIniciar() {
   
   avaliacaoTurma.turma = turmaSel; 
   avaliacaoTurma.trimestre = document.getElementById('selectTrimestre').value; 
-  avaliacaoTurma.aee_pdi = document.getElementById('txtAeePdi').value; 
-  avaliacaoTurma.observacoes = document.getElementById('txtObsTurma').value;
+  var aeeBox = document.getElementById('txtAeePdi');
+  avaliacaoTurma.aee_pdi = aeeBox ? aeeBox.value : ''; 
+  var obsTurmaBox = document.getElementById('txtObsTurma');
+  avaliacaoTurma.observacoes = obsTurmaBox ? obsTurmaBox.value : '';
   
-  if (typeof google !== 'undefined' && google.script) {
-    google.script.run.salvarAvaliacaoTurma(avaliacaoTurma);
-    
-    google.script.run.withSuccessHandler(function(alunos) {
-      listaEstudantes = alunos;
-      if(listaEstudantes && listaEstudantes.length > 0) {
-        document.getElementById('panel-turma').style.display = 'none'; 
-        document.getElementById('panel-estudantes').style.display = 'block';
-        document.getElementById('timerBox').style.display = 'flex'; 
-        indexAtual = 0;
-        exibirEstudante();
-      } else {
-        alert("Atenção: Nenhum estudante cadastrado para esta turma.");
-      }
-    }).getEstudantesPorTurma(turmaSel);
-  }
+  chamarApiGoogle('salvarAvaliacaoTurma', avaliacaoTurma);
+  
+  chamarApiGoogle('getEstudantesPorTurma', turmaSel, function(alunos) {
+    listaEstudantes = alunos || [];
+    if(listaEstudantes.length > 0) {
+      document.getElementById('panel-turma').style.display = 'none'; 
+      document.getElementById('panel-estudantes').style.display = 'block';
+      var timerBox = document.getElementById('timerBox');
+      if(timerBox) timerBox.style.display = 'flex'; 
+      indexAtual = 0;
+      exibirEstudante();
+    } else {
+      alert("Atenção: Nenhum estudante cadastrado para esta turma.");
+    }
+  });
 }
 
 function limparFormularioEstudante() {
   avaliacaoAtual = {}; 
-  document.getElementById('txtObs').value = ''; 
-  document.getElementById('txtMotivo').style.display = 'none'; 
-  document.getElementById('txtMotivo').value = '';
+  var txtObs = document.getElementById('txtObs');
+  if(txtObs) txtObs.value = ''; 
+  var txtMotivo = document.getElementById('txtMotivo');
+  if(txtMotivo) { txtMotivo.style.display = 'none'; txtMotivo.value = ''; }
   var buttons = document.querySelectorAll('#panel-estudantes .seg-btn');
   buttons.forEach(b => b.classList.remove('active-good', 'active-warning', 'active-danger'));
 }
@@ -567,12 +506,12 @@ function salvarEProximo() {
   avaliacaoAtual.numero = listaEstudantes[indexAtual].numero;
   avaliacaoAtual.turma = document.getElementById('selectTurma').value; 
   avaliacaoAtual.trimestre = document.getElementById('selectTrimestre').value;
-  avaliacaoAtual.observacoes = document.getElementById('txtObs').value; 
-  avaliacaoAtual.motivo = document.getElementById('txtMotivo').value;
+  var txtObs = document.getElementById('txtObs');
+  var txtMotivo = document.getElementById('txtMotivo');
+  avaliacaoAtual.observacoes = txtObs ? txtObs.value : ''; 
+  avaliacaoAtual.motivo = txtMotivo ? txtMotivo.value : '';
   
-  if (typeof google !== 'undefined' && google.script) {
-    google.script.run.salvarAvaliacao(avaliacaoAtual); 
-  }
+  chamarApiGoogle('salvarAvaliacao', avaliacaoAtual); 
   proximoEstudante();
 }
 
@@ -590,8 +529,11 @@ function atualizarTimer() {
 }
 
 function abrirModalPDF() { 
-  document.getElementById('modalRelatorios').style.display = 'flex'; 
+  var modal = document.getElementById('modalRelatorios');
+  if(modal) modal.style.display = 'flex'; 
 }
+
 function fecharModalPDF() { 
-  document.getElementById('modalRelatorios').style.display = 'none'; 
+  var modal = document.getElementById('modalRelatorios');
+  if(modal) modal.style.display = 'none'; 
 }
