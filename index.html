@@ -7,103 +7,58 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
   <style>
-    .prof-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 14px; padding: 20px; margin-bottom: 15px; text-align: left; }
+    body { background-color: #f1f5f9; color: #0f172a; font-family: 'Inter', sans-serif; }
+    .view-section { display: none; min-height: 100vh; }
+    .view-section.active { display: block; }
+    .hub-container { max-width: 450px; margin: 80px auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; border: 1px solid #e2e8f0; }
+    .btn-hub { width: 100%; padding: 15px; border-radius: 12px; font-weight: 700; margin-bottom: 12px; border: none; transition: 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-prof { background: #4f46e5; color: white; }
+    .btn-prof:hover { background: #4338ca; }
+    .btn-esp { background: #0f172a; color: white; }
+    .btn-esp:hover { background: #1e293b; }
+    .prof-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 14px; padding: 20px; margin-bottom: 15px; text-align: left; position: relative; }
     .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
     .checkbox-group label { font-size: 0.75rem; font-weight: 700; background: #fff; border: 1px solid #cbd5e1; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
     .checkbox-group input:checked + span { color: #4f46e5; }
+    .input-textarea, .input-field { width: 100%; background: #fff; border: 2px solid #cbd5e1; border-radius: 10px; padding: 10px; font-weight: 600; font-size: 0.9rem; outline: none; }
+    .btn-primary-action { background: #059669; color: white; border: none; border-radius: 10px; padding: 12px; font-weight: 700; width: 100%; cursor: pointer; }
     .tabela-resumo th { background: #1e293b; color: white; font-size: 0.8rem; }
     .tabela-resumo td { font-size: 0.8rem; vertical-align: middle; }
   </style>
 </head>
 <body>
 
-  <!-- TELA 1: HUB INICIAL DE ACESSO -->
+  <!-- TELA 1: HUB INICIAL -->
   <div id="view-hub" class="view-section active">
     <div class="hub-container">
-      <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 75px; margin-bottom: 15px; object-fit: contain;" alt="Logo Escola Mestra Aurora">
-      <h4 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.2rem; letter-spacing: -0.5px;">CONSELHO DE CLASSE</h4>
-      <h5 class="fw-bold text-primary mb-1" style="font-size: 0.95rem;">E E MESTRA AURORA</h5>
-      <p class="text-muted mb-4" style="font-size: 0.8rem;">Sistema Integrado de Gestão Pedagógica</p>
-      
+      <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 70px; margin-bottom: 15px; object-fit: contain;" alt="Logo">
+      <h4 class="fw-bold mb-1" style="font-size: 1.1rem;">CONSELHO DE CLASSE</h4>
+      <h5 class="fw-bold text-primary mb-3" style="font-size: 0.9rem;">E E MESTRA AURORA</h5>
       <button class="btn-hub btn-prof" onclick="showView('view-prof')"><i class="fa-solid fa-chalkboard-user"></i> Sou Professor(a)</button>
       <button class="btn-hub btn-esp" onclick="showView('view-senha')"><i class="fa-solid fa-shield-halved"></i> Sou Especialista</button>
     </div>
   </div>
 
-  <!-- TELA 2: SENHA DO ESPECIALISTA -->
+  <!-- TELA 2: SENHA -->
   <div id="view-senha" class="view-section">
     <div class="hub-container">
       <i class="fa-solid fa-lock text-primary fa-3x mb-3"></i>
       <h4 class="fw-bold">Acesso Restrito</h4>
       <input type="password" id="inputSenha" class="input-textarea mt-3 mb-3 text-center fs-5" placeholder="Digite a senha">
       <button class="btn-primary-action w-100 py-3" onclick="verificarSenha()">Entrar no Sistema</button>
-      <button class="btn btn-link w-100 mt-2 text-muted fw-bold" onclick="showView('view-hub')">Voltar ao Início</button>
+      <button class="btn btn-link w-100 mt-2 text-muted fw-bold" onclick="showView('view-hub')">Voltar</button>
     </div>
   </div>
 
-  <!-- TELA 3: MÓDULO DO PROFESSOR -->
-  <div id="view-prof" class="view-section" style="background: #f1f5f9;">
-    <nav class="top-navbar" style="background: white; border-bottom: 1px solid #e2e8f0; box-shadow: none; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center;">
-      <div class="brand-area d-flex align-items-center gap-2">
-        <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 35px; object-fit: contain;" alt="Logo">
-        <h5 class="m-0 fw-bold text-primary fs-6">Diagnóstico Oficial da Turma</h5>
-      </div>
-      <button class="btn btn-sm btn-outline-danger fw-bold" onclick="location.reload()">Sair</button>
-    </nav>
-    
-    <div class="scrollable-area" style="padding: 20px;">
-      <div id="form-prof" class="colored-card container p-4 mx-auto" style="max-width: 900px; border: 2px solid #cbd5e1; background: #fff; border-radius: 10px;">
-        <div class="row g-3 mb-3">
-          <div class="col-md-3"><label class="fw-bold fs-7">Trimestre</label><select id="p_trim" class="input-textarea"><option>1º Trimestre</option><option>2º Trimestre</option><option>3º Trimestre</option></select></div>
-          <div class="col-md-3"><label class="fw-bold fs-7 text-primary">Turma</label><select id="p_turma" class="input-textarea fw-bold" onchange="carregarTabelaProfessor()"></select></div>
-          <div class="col-md-3"><label class="fw-bold fs-7">Componente</label><select id="p_comp" class="input-textarea"><option>Arte</option><option>Ciências</option><option>Educação Física</option><option>Ensino Religioso</option><option>Geografia</option><option>História</option><option>Língua Inglesa</option><option>Língua Portuguesa</option><option>Matemática</option></select></div>
-          <div class="col-md-3"><label class="fw-bold fs-7">Professor(a)</label><input type="text" id="p_nome" class="input-textarea" placeholder="Seu nome"></div>
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
-          <h6 class="fw-bold m-0"><i class="fa-solid fa-users text-primary me-2"></i>Relação de Estudantes</h6>
-          <span class="badge bg-primary">Total: <span id="p_total_alunos">0</span></span>
-        </div>
-
-        <div id="p_tbody_alunos" class="mb-3" style="max-height: 350px; overflow-y: auto;">
-          <p class="text-muted text-center py-4 fw-bold">Selecione uma Turma para carregar os estudantes.</p>
-        </div>
-
-        <h6 class="fw-bold mt-3 border-bottom pb-1">Prática Pedagógica</h6>
-        <div class="mb-2"><label class="fw-bold fs-7">Características da Turma:</label><textarea id="p_caract" class="input-textarea" rows="2"></textarea></div>
-        <div class="row g-3 mb-3">
-          <div class="col-md-3"><label class="fw-bold fs-7">Houve Intervenção?</label><select id="p_interv" class="input-textarea"><option>Sim</option><option>Não</option></select></div>
-          <div class="col-md-9"><label class="fw-bold fs-7">Metodologias Usadas:</label><input type="text" id="p_metodos" class="input-textarea"></div>
-        </div>
-
-        <button id="btnEnviarProf" class="btn-primary-action w-100 py-3" onclick="enviarDiagnostico()"><i class="fa-solid fa-paper-plane me-2"></i> Gravar Diagnóstico da Turma</button>
-      </div>
-
-      <div id="sucesso-prof" class="colored-card container text-center p-5 mx-auto mt-5" style="max-width: 500px; display: none; background: #fff; border-radius: 10px;">
-        <i class="fa-solid fa-circle-check text-success fa-4x mb-3"></i>
-        <h3 class="fw-bold">Enviado com Sucesso!</h3>
-        <button class="btn-primary-action mt-3 px-4" onclick="location.reload()">Voltar ao Início</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TELA 4: MÓDULO ESPECIALISTA -->
+  <!-- TELA 3: ESPECIALISTA (PAINEL DE LOTAÇÃO) -->
   <div id="view-especialista" class="view-section">
-    
-    <!-- ETAPA 1: PAINEL MESTRE DE LOTAÇÃO -->
-    <div id="panel-lotacao-mestre" style="padding: 30px; background: #f1f5f9; min-height: 100vh;">
-      <div style="max-width: 1000px; margin: 0 auto; background: #ffffff; padding: 35px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+    <div style="padding: 30px; background: #f1f5f9; min-height: 100vh;">
+      <div style="max-width: 1000px; margin: 0 auto; background: #ffffff; padding: 35px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
         <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
-          <div class="d-flex align-items-center gap-3">
-            <div style="width: 45px; height: 45px; background: #eef2ff; color: #4f46e5; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-              <i class="fa-solid fa-users-viewfinder"></i>
-            </div>
-            <div>
-              <h4 class="fw-bold m-0" style="font-size: 1.15rem;">Etapa 1: Painel Mestre de Lotação</h4>
-              <p class="text-muted m-0" style="font-size: 0.8rem;">E. E. Mestra Aurora - Cadastro com Registro Visual Abaixo</p>
-            </div>
+          <div>
+            <h4 class="fw-bold m-0" style="font-size: 1.15rem;">Etapa 1: Painel Mestre de Lotação</h4>
+            <p class="text-muted m-0" style="font-size: 0.8rem;">E. E. Mestra Aurora - Cadastro com Registro Visual Abaixo</p>
           </div>
           <button class="btn btn-sm btn-outline-danger fw-bold" onclick="location.reload()">Sair</button>
         </div>
@@ -119,7 +74,7 @@
           <button id="btnSalvarLotacao" class="btn btn-secondary w-50 py-3 fw-bold" onclick="salvarLotacaoGlobal(true)">
             <i class="fa-solid fa-floppy-disk me-2"></i> Salvar Lotação
           </button>
-          <button class="btn-primary-action w-50 py-3 fw-bold" style="background: #059669; border-color: #047857;" onclick="irParaSelecaoTurmaEtapa2()">
+          <button class="btn-primary-action w-50 py-3 fw-bold" style="background: #059669;" onclick="irParaSelecaoTurmaEtapa2()">
             Avançar para Escolha de Turma <i class="fa-solid fa-arrow-right ms-2"></i>
           </button>
         </div>
@@ -147,161 +102,248 @@
 
       </div>
     </div>
+  </div>
 
-    <!-- ETAPA 2: SELEÇÃO DE TURMA E TURNO -->
-    <div id="panel-selecao-inicial" style="height: 100vh; display: none; align-items: center; justify-content: center; background: #0f172a;">
-      <div class="colored-card p-4 rounded bg-white shadow" style="max-width: 450px; width: 100%; text-align: left;">
-        <div class="text-center mb-3">
-          <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 55px; object-fit: contain; margin-bottom: 10px;" alt="Logo">
-          <h4 class="fw-bold text-dark m-0" style="font-size: 1.1rem;">Etapa 2: Escolha da Turma</h4>
-          <p class="text-muted m-0" style="font-size: 0.8rem;">Parâmetros para iniciar a reunião</p>
+  <script>
+    var listaTurmasGlobal = ["6º REG 1", "6º REG 2", "6º REG 3", "6º REG 4", "7º REG 1", "7º REG 2", "7º REG 3", "7º REG 4"];
+    var listaComponentesGlobal = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Língua Inglesa", "Língua Portuguesa", "Matemática"];
+    var listaCargosGlobal = ["Diretor(a)", "Vice-Diretor(a)", "Especialista / EEB", "Professor(a) de Apoio", "Professor(a) Regente"];
+
+    window.onload = function() {
+      carregarLotacaoNaTelaMestre();
+    };
+
+    function showView(id) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function verificarSenha() {
+      if(document.getElementById('inputSenha').value === 'mestra2026') {
+        showView('view-especialista');
+        carregarLotacaoNaTelaMestre();
+      } else { 
+        alert('Senha Incorreta!'); 
+        document.getElementById('inputSenha').value = ''; 
+      }
+    }
+
+    function adicionarCardProfissional(dados = {}) {
+      var container = document.getElementById('containerProfissionais');
+      if(!container) return;
+      var idU = Math.floor(Math.random() * 900000) + 100000;
+
+      var cargosHtml = '';
+      listaCargosGlobal.forEach(c => {
+        var sel = (dados.cargo === c) ? 'selected' : '';
+        cargosHtml += `<option value="${c}" ${sel}>${c}</option>`;
+      });
+
+      var turnosHtml = '';
+      ["Matutino", "Vespertino"].forEach(t => {
+        var chk = (dados.turnos && dados.turnos.includes(t)) ? 'checked' : '';
+        turnosHtml += `<label><input type="checkbox" class="t_turno_${idU}" value="${t}" ${chk}> <span>${t}</span></label>`;
+      });
+
+      var turmasHtml = '';
+      listaTurmasGlobal.forEach(t => {
+        var chk = (dados.turmas && dados.turmas.includes(t)) ? 'checked' : '';
+        turmasHtml += `<label><input type="checkbox" class="t_turma_${idU}" value="${t}" ${chk}> <span>${t}</span></label>`;
+      });
+
+      var compHtml = '';
+      listaComponentesGlobal.forEach(c => {
+        var chk = (dados.componentes && dados.componentes.includes(c)) ? 'checked' : '';
+        compHtml += `<label><input type="checkbox" class="t_comp_${idU}" value="${c}" ${chk}> <span>${c}</span></label>`;
+      });
+
+      var card = document.createElement('div');
+      card.className = 'prof-card';
+      card.id = 'card_' + idU;
+      card.innerHTML = `
+        <div class="d-flex justify-content-end mb-2">
+          <button type="button" class="btn btn-sm btn-outline-danger fw-bold" onclick="removerCardEAtualizar('${idU}')"><i class="fa-solid fa-trash me-1"></i> Excluir</button>
         </div>
-
-        <button class="btn btn-sm btn-outline-secondary w-100 mb-3 fw-bold" onclick="voltarParaLotacaoEtapa1()">
-          <i class="fa-solid fa-arrow-left me-1"></i> Voltar ao Painel Mestre de Lotação
-        </button>
-
-        <div class="mb-3">
-          <label class="form-label fw-bold" style="font-size: 0.85rem;">Trimestre Alvo:</label>
-          <select id="espSelectTrimestre" class="input-textarea fw-bold p-2">
-            <option>1º Trimestre</option>
-            <option>2º Trimestre</option>
-            <option>3º Trimestre</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label fw-bold" style="font-size: 0.85rem;">Turno:</label>
-          <select id="espSelectTurno" class="input-textarea fw-bold p-2">
-            <option value="Matutino">Turno Matutino</option>
-            <option value="Vespertino">Turno Vespertino</option>
-          </select>
-        </div>
-
-        <div class="mb-4">
-          <label class="form-label fw-bold" style="font-size: 0.85rem;">Turma Alvo:</label>
-          <select id="espSelectTurma" class="input-textarea fw-bold p-2"></select>
-        </div>
-
-        <button class="btn-primary-action w-100 py-3 fw-bold" onclick="iniciarSessaoConselho()">
-          <i class="fa-solid fa-play me-2"></i> Iniciar Conselho da Turma
-        </button>
-      </div>
-    </div>
-
-    <!-- TELA DE DATASHOW / AVALIAÇÃO -->
-    <div id="panel-datashow-principal" style="display: none;">
-      <nav class="top-navbar" style="background-color: #0f172a; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center;">
-        <div class="brand-area d-flex align-items-center gap-2">
-          <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 35px; object-fit: contain; background: #fff; padding: 2px; border-radius: 4px;" alt="Logo">
-          <h1 class="app-title text-white fs-5 m-0 fw-bold">Conselho <span id="lblTurmaAtiva" class="text-warning"></span></h1>
-        </div>
-        <div class="nav-controls d-flex gap-2 align-items-center">
-          <button class="btn btn-sm btn-outline-light fw-bold" onclick="voltarParaSelecaoTurma()"><i class="fa-solid fa-arrow-left"></i> Trocar Turma</button>
-          <div class="control-pill" id="timerBox" style="display:none; color: #facc15; border: 1px solid #facc15; padding: 4px 8px; border-radius: 6px;">
-            <i class="fa-regular fa-clock"></i> <span id="timerText">03:00</span>
+        <div class="row g-3 mb-3">
+          <div class="col-md-5">
+            <label class="form-label fw-bold fs-7">Nome do Servidor(a):</label>
+            <input type="text" class="input-field prof-nome" placeholder="Nome Completo" value="${dados.nome || ''}">
           </div>
-          <button class="btn-primary-action py-1 px-3" onclick="abrirModalPDF()"><i class="fa-solid fa-print me-1"></i> Emissão</button>
+          <div class="col-md-4">
+            <label class="form-label fw-bold fs-7">Cargo / Função:</label>
+            <select class="input-field prof-cargo" onchange="verificarCargoSelecionado('${idU}')">${cargosHtml}</select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold fs-7">Turnos:</label>
+            <div class="checkbox-group">${turnosHtml}</div>
+          </div>
         </div>
-      </nav>
+        <div class="mb-2">
+          <label class="form-label fw-bold fs-7 text-primary">Turmas Atendidas:</label>
+          <div class="checkbox-group">${turmasHtml}</div>
+        </div>
+        <div id="div_comp_${idU}">
+          <label class="form-label fw-bold fs-7 text-success">Componentes Curriculares:</label>
+          <div class="checkbox-group">${compHtml}</div>
+        </div>
+        <input type="hidden" class="prof-id" value="${idU}">
+      `;
+      container.appendChild(card);
+      verificarCargoSelecionado(idU);
+    }
 
-      <div class="scrollable-area" style="padding: 15px;">
+    function verificarCargoSelecionado(idU) {
+      var card = document.getElementById('card_' + idU);
+      if(!card) return;
+      var cargoSelect = card.querySelector('.prof-cargo');
+      var divComp = document.getElementById('div_comp_' + idU);
+      
+      if (cargoSelect && divComp) {
+        var cargo = cargoSelect.value;
+        if (cargo === 'Diretor(a)' || cargo === 'Vice-Diretor(a)' || cargo === 'Especialista / EEB') {
+          divComp.style.display = 'none';
+          card.querySelectorAll('.t_comp_' + idU).forEach(el => el.checked = false);
+        } else {
+          divComp.style.display = 'block';
+        }
+      }
+    }
+
+    function removerCardEAtualizar(idU) {
+      var card = document.getElementById('card_' + idU);
+      if(card) card.remove();
+      salvarLotacaoGlobal(false);
+    }
+
+    function carregarLotacaoNaTelaMestre() {
+      var localData = localStorage.getItem('db_lotacao_mestra');
+      if (localData) {
+        try {
+          var dados = JSON.parse(localData);
+          if (dados && dados.length > 0) {
+            renderizarCardsNaTela(dados);
+            atualizarTabelaRegistroVisual(dados);
+            return;
+          }
+        } catch(e) {}
+      }
+
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run.withSuccessHandler(function(dados) {
+          if (dados && dados.length > 0) {
+            localStorage.setItem('db_lotacao_mestra', JSON.stringify(dados));
+            renderizarCardsNaTela(dados);
+            atualizarTabelaRegistroVisual(dados);
+          } else {
+            renderizarCardsNaTela([]);
+            atualizarTabelaRegistroVisual([]);
+          }
+        }).carregarLotacaoGlobal();
+      } else {
+        renderizarCardsNaTela([]);
+        atualizarTabelaRegistroVisual([]);
+      }
+    }
+
+    function renderizarCardsNaTela(dados) {
+      var container = document.getElementById('containerProfissionais');
+      if(!container) return;
+      container.innerHTML = '';
+      if (dados && dados.length > 0) {
+        dados.forEach(p => adicionarCardProfissional(p));
+      } else {
+        adicionarCardProfissional();
+      }
+    }
+
+    function coletarDadosLotacao() {
+      var lista = [];
+      var cards = document.querySelectorAll('.prof-card');
+      
+      cards.forEach(card => {
+        var nomeInput = card.querySelector('.prof-nome');
+        var cargoSelect = card.querySelector('.prof-cargo');
+        var idInput = card.querySelector('.prof-id');
         
-        <!-- AVALIAÇÃO COLETIVA -->
-        <div id="panel-turma" style="max-width: 800px; margin: 0 auto; display: block;">
-          <div class="colored-card p-3" style="border: 4px solid #6366f1; background: #fff; border-radius: 10px;">
-            <h4 class="text-center fw-bold mb-3" style="color: #4f46e5;"><i class="fa-solid fa-users-rays me-2"></i>Avaliação Coletiva da Turma</h4>
-            
-            <div id="boxMembrosResumo"></div>
+        if (!nomeInput || !cargoSelect || !idInput) return;
 
-            <div class="row g-3 mb-3">
-              <div class="col-md-6"><div class="colored-card" style="border: 2px solid #db2777;"><div class="card-header-icon text-danger fw-bold"><i class="fa-solid fa-comments"></i> Conversa</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_conversa', 'Adequada', 'good')">Adequada</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_conversa', 'No limite', 'warning')">No limite</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_conversa', 'Muita conversa', 'danger')">Muita</button></div></div></div>
-              <div class="col-md-6"><div class="colored-card" style="border: 2px solid #e11d48;"><div class="card-header-icon text-danger fw-bold"><i class="fa-solid fa-user-xmark"></i> Faltas</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_faltas', 'Adequadas', 'good')">Adequadas</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_faltas', 'No limite', 'warning')">No limite</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_faltas', 'Muitas', 'danger')">Muitas</button></div></div></div>
-              <div class="col-md-6"><div class="colored-card" style="border: 2px solid #059669;"><div class="card-header-icon text-success fw-bold"><i class="fa-solid fa-list-check"></i> Atividades</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_atividades', 'A maioria cumpre', 'good')">Cumpre</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_atividades', 'Cumpre parcialmente', 'warning')">Parcial</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_atividades', 'A maioria não cumpre', 'danger')">Não cumpre</button></div></div></div>
-              <div class="col-md-6"><div class="colored-card" style="border: 2px solid #7c3aed;"><div class="card-header-icon text-purple fw-bold"><i class="fa-solid fa-book-open-reader"></i> Trabalhos</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_trabalhos', 'A maioria entrega', 'good')">Entrega</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_trabalhos', 'Entrega parcialmente', 'warning')">Parcial</button><button class="seg-btn btn btn-sm btn-outline-secondary w-100" onclick="selecionarSegmento(this, 'turma_trabalhos', 'A maioria não entrega', 'danger')">Não entrega</button></div></div></div>
-            </div>
-            
-            <label class="fw-bold" style="font-size: 0.8rem; color: #b91c1c;"><i class="fa-solid fa-triangle-exclamation me-1"></i> AEE: Estudantes que NÃO possuem PDI (Exclusivo Especialista)</label>
-            <textarea id="txtAeePdi" class="input-textarea mb-2" rows="1" style="border-color: #fca5a5; background: #fef2f2;" placeholder="Nomes separados por vírgula..."></textarea>
-            
-            <textarea id="txtObsTurma" class="input-textarea mb-3" rows="2" placeholder="Observações coletivas da turma..."></textarea>
-            <button class="btn-primary-action w-100 py-3" style="font-size: 1.1rem;" onclick="salvarTurmaEIniciar()">Registrar Turma e Iniciar Avaliação dos Alunos <i class="fa-solid fa-arrow-right ms-2"></i></button>
-          </div>
-        </div>
+        var nome = nomeInput.value.trim();
+        var cargo = cargoSelect.value;
+        var idU = idInput.value;
 
-        <!-- AVALIAÇÃO INDIVIDUAL -->
-        <div id="panel-estudantes" style="max-width: 1300px; margin: 0 auto; display: none;">
-          <div class="student-header d-flex justify-content-between align-items-center bg-white p-3 border rounded mb-3 shadow-sm">
-            <button class="back-btn btn btn-dark btn-sm fw-bold" onclick="voltarParaTurma()"><i class="fa-solid fa-arrow-left"></i> Voltar à Turma</button>
-            <div class="text-center">
-              <div style="font-size: 0.75rem; font-weight: 800; color: #4f46e5;">ESTUDANTE <span id="lblIndex">1</span> DE <span id="lblTotal">X</span></div>
-              <h2 class="student-name-display mt-1 fs-3 fw-bold text-dark" id="lblNomeEstudante">CARREGANDO...</h2>
-            </div>
-            <button class="back-btn btn btn-secondary btn-sm fw-bold" onclick="proximoEstudante()">Avançar <i class="fa-solid fa-forward"></i></button>
-          </div>
+        var turnos = [];
+        card.querySelectorAll('.t_turno_' + idU + ':checked').forEach(el => turnos.push(el.value));
 
-          <div class="eval-grid row g-2 mb-2">
-            <div class="col-md-4"><div class="colored-card border border-primary p-2 bg-white rounded"><div class="card-header-icon fw-bold text-primary">Disciplina</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-primary w-100" onclick="selecionarSegmento(this, 'disciplina', 'Comporta bem', 'good')">Bom</button><button class="seg-btn btn btn-sm btn-outline-primary w-100" onclick="selecionarSegmento(this, 'disciplina', 'Às vezes', 'warning')">Às vezes</button><button class="seg-btn btn btn-sm btn-outline-primary w-100" onclick="selecionarSegmento(this, 'disciplina', 'Não comporta', 'danger')">Não</button></div></div></div>
-            <div class="col-md-4"><div class="colored-card border border-success p-2 bg-white rounded"><div class="card-header-icon fw-bold text-success">Atenção</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-success w-100" onclick="selecionarSegmento(this, 'atencao', 'Atento(a)', 'good')">Atento</button><button class="seg-btn btn btn-sm btn-outline-success w-100" onclick="selecionarSegmento(this, 'atencao', 'Às vezes', 'warning')">Às vezes</button><button class="seg-btn btn btn-sm btn-outline-success w-100" onclick="selecionarSegmento(this, 'atencao', 'Desatento(a)', 'danger')">Desatento</button></div></div></div>
-            <div class="col-md-4"><div class="colored-card border border-danger p-2 bg-white rounded"><div class="card-header-icon fw-bold text-danger">Conversa</div><div class="segmented-control d-flex gap-1"><button class="seg-btn btn btn-sm btn-outline-danger w-100" onclick="selecionarSegmento(this, 'conversa', 'Não conversa', 'good')">Não</button><button class="seg-btn btn btn-sm btn-outline-danger w-100" onclick="selecionarSegmento(this, 'conversa', 'Pouco', 'warning')">Pouco</button><button class="seg-btn btn btn-sm btn-outline-danger w-100" onclick="selecionarSegmento(this, 'conversa', 'Muito', 'danger')">Muito</button></div></div></div>
-          </div>
+        var turmas = [];
+        card.querySelectorAll('.t_turma_' + idU + ':checked').forEach(el => turmas.push(el.value));
 
-          <div class="row g-2">
-            <div class="col-md-4">
-              <div class="colored-card p-3 bg-warning-subtle border border-warning rounded">
-                <div class="card-header-icon fw-bold text-warning-emphasis"><i class="fa-solid fa-star"></i> Veredito</div>
-                <div class="segmented-control d-flex flex-column gap-1 my-2">
-                  <button class="seg-btn btn btn-sm btn-light border w-100" onclick="selecionarSegmento(this, 'caracteristica', 'Ótimo/Ótima', 'good', false)">Ótimo</button>
-                  <button class="seg-btn btn btn-sm btn-light border w-100" onclick="selecionarSegmento(this, 'caracteristica', 'Bom/Boa', 'good', false)">Bom</button>
-                  <button class="seg-btn btn btn-sm btn-danger w-100" onclick="selecionarSegmento(this, 'caracteristica', 'Precisa melhorar', 'danger', true)">Precisa Melhorar</button>
-                </div>
-                <input type="text" id="txtMotivo" class="input-textarea mt-2" placeholder="Qual o motivo exato?" style="display:none;">
-              </div>
-            </div>
-            <div class="col-md-8">
-              <div class="colored-card p-3 bg-white border rounded h-100">
-                <div class="card-header-icon fw-bold"><i class="fa-solid fa-folder-open"></i> Observações e Encaminhamentos</div>
-                <textarea id="txtObs" class="input-textarea flex-grow-1 mt-2" rows="3" placeholder="Insira ou selecione observações..."></textarea>
-              </div>
-            </div>
-          </div>
+        var componentes = [];
+        if (cargo !== 'Diretor(a)' && cargo !== 'Vice-Diretor(a)' && cargo !== 'Especialista / EEB') {
+          card.querySelectorAll('.t_comp_' + idU + ':checked').forEach(el => componentes.push(el.value));
+        }
 
-          <button class="btn-primary-action w-100 mt-3 py-3" style="font-size: 1.1rem;" onclick="salvarEProximo()">
-            <i class="fa-solid fa-floppy-disk me-2"></i> Gravar Prontuário e Ir para Próximo Estudante
-          </button>
-        </div>
+        if (nome !== "") {
+          lista.push({ nome: nome, cargo: cargo, turnos: turnos, turmas: turmas, componentes: componentes });
+        }
+      });
+      return lista;
+    }
 
-      </div>
-    </div>
-  </div>
+    function atualizarTabelaRegistroVisual(lista) {
+      var tbody = document.getElementById('tabelaRegistroCorpo');
+      if(!tbody) return;
+      
+      if (!lista || lista.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum servidor cadastrado ainda.</td></tr>';
+        return;
+      }
 
-  <!-- MODAL DE RELATÓRIOS -->
-  <div id="modalRelatorios" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:1000;">
-    <div class="modal-content bg-white p-4 rounded" style="width: 450px;">
-      <h4 class="fw-bold mb-3"><i class="fa-solid fa-print text-success"></i> Central de Emissão</h4>
-      <div class="mb-3 text-start">
-        <label class="form-label fw-bold">1. Turma Alvo:</label>
-        <select id="selectGerarTurma" class="input-textarea fw-bold p-2"></select>
-      </div>
-      <div class="mb-4 text-start">
-        <label class="form-label fw-bold">2. Link do Molde (Google Docs):</label>
-        <input type="text" id="linkMoldeAta" class="input-textarea p-2" placeholder="Cole o link do Molde...">
-      </div>
-      <div class="d-flex gap-2 mb-2">
-        <button class="btn-primary-action w-50 py-2" onclick="iniciarGeracaoPDF('fichas')">Gerar Fichas</button>
-        <button class="btn-primary-action w-50 py-2 bg-dark border-dark" onclick="iniciarGeracaoPDF('ata')">Gerar Ata</button>
-      </div>
-      <div id="loadingArea" style="display:none;" class="text-center my-3">
-        <div class="spinner-border text-success" role="status"></div>
-        <p class="mt-2 fw-bold text-success" id="txtLoading">Compilando dados...</p>
-      </div>
-      <div id="resultArea" style="display:none;" class="my-3">
-        <a id="linkDownload" href="#" target="_blank" class="btn btn-success w-100 py-2 fw-bold"><i class="fa-solid fa-download me-2"></i> Abrir Documento Gerado</a>
-      </div>
-      <button class="btn btn-link w-100 text-muted fw-bold text-decoration-none mt-2" onclick="fecharModalPDF()">Fechar</button>
-    </div>
-  </div>
+      var html = '';
+      lista.forEach(p => {
+        html += `
+          <tr>
+            <td class="fw-bold">${p.nome}</td>
+            <td><span class="badge bg-secondary">${p.cargo}</span></td>
+            <td>${p.turnos && p.turnos.length > 0 ? p.turnos.join(', ') : '-'}</td>
+            <td><span class="text-primary fw-bold">${p.turmas && p.turmas.length > 0 ? p.turmas.join(', ') : '-'}</span></td>
+            <td>${p.componentes && p.componentes.length > 0 ? p.componentes.join(', ') : '<span class="text-muted font-italic">Não se aplica</span>'}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
 
-  <script src="app.js"></script>
+    function salvarLotacaoGlobal(mostrarAlerta = true) {
+      var lista = coletarDadosLotacao();
+      
+      localStorage.setItem('db_lotacao_mestra', JSON.stringify(lista));
+      atualizarTabelaRegistroVisual(lista);
+
+      var btnSalvar = document.getElementById('btnSalvarLotacao');
+      if (btnSalvar) {
+        btnSalvar.innerHTML = '<i class="fa-solid fa-check me-2"></i> Salvo com Sucesso!';
+        btnSalvar.classList.remove('btn-secondary');
+        btnSalvar.classList.add('btn-success');
+        setTimeout(function() {
+          btnSalvar.innerHTML = '<i class="fa-solid fa-floppy-disk me-2"></i> Salvar Lotação';
+          btnSalvar.classList.remove('btn-success');
+          btnSalvar.classList.add('btn-secondary');
+        }, 2500);
+      }
+
+      if (mostrarAlerta) {
+        alert("Lotação salva com sucesso! Total de servidores cadastrados: " + lista.length);
+      }
+
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run.withSuccessHandler(function() {}).salvarLotacaoGlobal(lista);
+      }
+    }
+
+    function irParaSelecaoTurmaEtapa2() {
+      salvarLotacaoGlobal(false);
+      alert("Lotação guardada! Pronto para seguir.");
+    }
+  </script>
 </body>
 </html>
