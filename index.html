@@ -57,11 +57,10 @@
     </div>
   </div>
 
-  <!-- MÓDULO PROFESSOR -->
   <div id="view-prof" class="view-section p-4">
     <div class="bg-white p-5 rounded shadow mx-auto text-center" style="max-width: 600px; width: 100%; margin-top: 50px;">
       <h3 class="fw-bold text-primary mb-3">Módulo do Professor</h3>
-      <p class="text-muted">A tela de pré-conselho e diagnóstico será integrada aqui em breve.</p>
+      <p class="text-muted">A tela de pré-conselho será integrada aqui.</p>
       <button class="btn btn-outline-danger fw-bold mt-4" onclick="showView('view-hub')">Voltar ao Início</button>
     </div>
   </div>
@@ -81,7 +80,9 @@
       <button class="btn btn-success fw-bold" onclick="adicionarCardProfissional()"><i class="fa-solid fa-plus me-1"></i> Adicionar Servidor</button>
     </div>
 
-    <div id="containerProfissionais" class="mb-4"></div>
+    <div id="containerProfissionais" class="mb-4">
+      <!-- O Spinner de carregamento aparece aqui! -->
+    </div>
 
     <div class="row g-3 mb-5">
       <div class="col-6">
@@ -113,7 +114,7 @@
       </div>
       <div class="mb-4">
         <label class="form-label fw-bold">Turma Alvo:</label>
-        <select id="espSelectTurma" class="form-select fw-bold border-primary text-primary"><option>Aguardando turmas...</option></select>
+        <select id="espSelectTurma" class="form-select fw-bold border-primary text-primary"><option value="">Carregando...</option></select>
       </div>
 
       <button class="btn btn-primary w-100 py-3 fw-bold fs-5" onclick="iniciarSessaoConselho()"><i class="fa-solid fa-play me-2"></i> Iniciar Datashow</button>
@@ -184,9 +185,8 @@
     </div>
   </div>
 
-  <!-- AQUI COMEÇA O JAVASCRIPT (TUDO NO MESMO LUGAR) -->
   <script>
-    // IMPORTANTE: COLOQUE A SUA URL DA API DO GOOGLE AQUI
+    // AQUI VAI A SUA URL OFICIAL (Substitua se precisar)
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbwEE2uiIXRoJJ4CzW7N-YR9Af9mz-qIDqsfFJEgQn6sa4WcxxO-zKBvnYegh8z-WOB-/exec";
 
     var listaEstudantes = []; var indexAtual = 0; 
@@ -195,68 +195,61 @@
     var listaCargosGlobal = ["Diretor(a)", "Vice-Diretor(a)", "Especialista / EEB", "Professor(a) Regente", "Professor(a) de Apoio"];
     var listaCompGlobal = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Inglês", "Português", "Matemática"];
 
-    window.onload = function() {
-      // Puxa turmas da aba TURMAS
-      chamarApiGoogle('getTurmas', null, function(res) {
-        if (Array.isArray(res) && !res.erro) {
-          listaTurmasGlobal = res;
-          preencherSelectTurmas(listaTurmasGlobal);
-        }
-      });
-      // Puxa servidores da aba SERVIDORES
-      chamarApiGoogle('getServidores', null, function(res) {
-        if (Array.isArray(res) && !res.erro) listaServidoresGlobal = res;
-      });
-    };
-
     function showView(id) {
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+    }
+
+    function chamarApiGoogle(funcao, dados = null, callback) {
+      var isGet = ['getTurmas', 'getServidores', 'getEstudantesPorTurma', 'carregarLotacaoGlobal'].includes(funcao);
+      
+      if (isGet) {
+        var urlGet = URL_API_GOOGLE + "?funcao=" + funcao + (dados ? "&param=" + encodeURIComponent(JSON.stringify(dados)) : "");
+        fetch(urlGet).then(res => res.json()).then(data => { if(callback) callback(data); }).catch(e => console.error(e));
+      } else {
+        fetch(URL_API_GOOGLE, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ funcao: funcao, dados: dados })
+        }).then(res => res.json()).then(data => { if(callback) callback(data); }).catch(e => console.error(e));
+      }
     }
 
     function verificarSenha() {
       var senha = document.getElementById('inputSenha').value;
       if(senha === 'mestra2026') {
         showView('view-lotacao');
-        carregarLotacaoNaTelaMestre(); 
+        
+        // MOSTRA CARREGAMENTO
+        document.getElementById('containerProfissionais').innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary"></div><h5 class="mt-3 fw-bold text-muted">Sincronizando com a Planilha...</h5></div>';
+        
+        // BUSCA EM CASCATA: Turmas -> Servidores -> Lotação
+        chamarApiGoogle('getTurmas', null, function(resT) {
+          listaTurmasGlobal = (!resT.erro && Array.isArray(resT)) ? resT : [];
+          
+          var selTurma = document.getElementById('espSelectTurma');
+          selTurma.innerHTML = '<option value="">Selecione...</option>';
+          listaTurmasGlobal.forEach(t => selTurma.innerHTML += `<option value="${t}">${t}</option>`);
+
+          chamarApiGoogle('getServidores', null, function(resS) {
+            listaServidoresGlobal = (!resS.erro && Array.isArray(resS)) ? resS : [];
+            
+            // Agora sim, monta os cards!
+            chamarApiGoogle('carregarLotacaoGlobal', null, function(dadosLotacao) {
+              var cont = document.getElementById('containerProfissionais');
+              cont.innerHTML = '';
+              if (dadosLotacao && dadosLotacao.length > 0 && !dadosLotacao.erro) { 
+                dadosLotacao.forEach(p => adicionarCardProfissional(p)); 
+              } else { 
+                adicionarCardProfissional(); 
+              }
+            });
+          });
+        });
       } else { 
         alert('Senha Incorreta!'); 
         document.getElementById('inputSenha').value = ''; 
       }
-    }
-
-    // === COMUNICAÇÃO SEGURA VIA POST ===
-    function chamarApiGoogle(funcao, dados = null, callback) {
-      fetch(URL_API_GOOGLE, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ funcao: funcao, dados: dados })
-      })
-      .then(res => res.json())
-      .then(data => { if (callback) callback(data); })
-      .catch(e => console.error("Erro na API:", e));
-    }
-
-    function preencherSelectTurmas(turmas) {
-      var select = document.getElementById('espSelectTurma');
-      if(select) {
-        select.innerHTML = '<option value="">Selecione...</option>';
-        turmas.forEach(t => select.innerHTML += `<option value="${t}">${t}</option>`);
-      }
-    }
-
-    // === ETAPA 1: LOTAÇÃO ===
-    function carregarLotacaoNaTelaMestre() {
-      var container = document.getElementById('containerProfissionais');
-      if(!container) return;
-      chamarApiGoogle('carregarLotacaoGlobal', null, function(dados) {
-        container.innerHTML = '';
-        if (dados && dados.length > 0 && !dados.erro) { 
-          dados.forEach(p => adicionarCardProfissional(p)); 
-        } else { 
-          adicionarCardProfissional(); 
-        }
-      });
     }
 
     function adicionarCardProfissional(dados = {}) {
@@ -273,12 +266,12 @@
       
       var campoNomeHtml = listaServidoresGlobal.length > 0 
         ? `<select class="form-select prof-nome fw-bold border-primary text-primary">${nomesHtml}</select>`
-        : `<input type="text" class="form-control prof-nome" placeholder="Nomes não carregados" value="${dados.nome||''}">`;
+        : `<input type="text" class="form-control prof-nome" placeholder="Planilha SERVIDORES vazia" value="${dados.nome||''}">`;
 
       var cargosHtml = listaCargosGlobal.map(c => `<option value="${c}" ${dados.cargo===c?'selected':''}>${c}</option>`).join('');
       var turmasHtml = listaTurmasGlobal.length > 0 
         ? listaTurmasGlobal.map(t => `<label class="me-3 mb-2"><input type="checkbox" class="chk-turma" value="${t}" ${(dados.turmas||[]).includes(t)?'checked':''}> <span class="badge bg-light text-dark border">${t}</span></label>`).join('')
-        : '<span class="text-danger">Aguarde o carregamento das turmas...</span>';
+        : '<span class="text-danger fw-bold">Planilha TURMAS vazia.</span>';
         
       var compHtml = listaCompGlobal.map(c => `<label class="me-3 mb-1"><input type="checkbox" class="chk-comp" value="${c}" ${(dados.componentes||[]).includes(c)?'checked':''}> ${c}</label>`).join('');
 
@@ -318,7 +311,7 @@
       });
       chamarApiGoogle('salvarLotacaoGlobal', lista);
       var btn = document.getElementById('btnSalvarLotacao');
-      if(btn) { btn.innerHTML = "Lotação Salva!"; setTimeout(() => btn.innerHTML = "Salvar Lotação", 2000); }
+      if(btn) { btn.innerHTML = "Lotação Salva na Planilha!"; setTimeout(() => btn.innerHTML = "Salvar Lotação", 2000); }
     }
 
     function irParaEtapa2() {
@@ -329,7 +322,7 @@
     // === ETAPA 3: DATASHOW ===
     function iniciarSessaoConselho() {
       var turmaSel = document.getElementById('espSelectTurma').value;
-      if(!turmaSel) { alert("Selecione a turma alvo!"); return; }
+      if(!turmaSel) { alert("Selecione a turma alvo antes de iniciar!"); return; }
 
       document.getElementById('lblTurmaAtiva').innerText = turmaSel;
       showView('view-datashow');
@@ -337,7 +330,7 @@
       document.getElementById('panel-estudantes').style.display = 'none';
 
       chamarApiGoogle('getEstudantesPorTurma', turmaSel, function(alunos) { 
-        listaEstudantes = alunos || []; 
+        listaEstudantes = (alunos && !alunos.erro) ? alunos : []; 
       });
     }
 
@@ -363,7 +356,7 @@
         document.getElementById('panel-estudantes').style.display = 'block';
         indexAtual = 0; exibirEstudante();
       } else {
-        alert("Aguarde, os alunos ainda estão carregando ou a aba ESTUDANTES está vazia para esta turma.");
+        alert("A lista de estudantes está vazia na aba ESTUDANTES para esta turma.");
       }
     }
 
