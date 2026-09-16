@@ -3,347 +3,206 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Conselho de Classe - E.E. Mestra Aurora</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <title>Sistema de Governança Escolar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    body { background-color: #f1f5f9; color: #0f172a; font-family: 'Inter', sans-serif; }
-    .view-section { display: none; min-height: 100vh; }
-    .view-section.active { display: block; }
-    .hub-container { max-width: 450px; margin: 80px auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; border: 1px solid #e2e8f0; }
-    .btn-hub { width: 100%; padding: 15px; border-radius: 12px; font-weight: 700; margin-bottom: 12px; border: none; transition: 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .btn-prof { background: #4f46e5; color: white; }
-    .btn-prof:hover { background: #4338ca; }
-    .btn-esp { background: #0f172a; color: white; }
-    .btn-esp:hover { background: #1e293b; }
-    .prof-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 14px; padding: 20px; margin-bottom: 15px; text-align: left; position: relative; }
-    .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
-    .checkbox-group label { font-size: 0.75rem; font-weight: 700; background: #fff; border: 1px solid #cbd5e1; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
-    .checkbox-group input:checked + span { color: #4f46e5; }
-    .input-textarea, .input-field { width: 100%; background: #fff; border: 2px solid #cbd5e1; border-radius: 10px; padding: 10px; font-weight: 600; font-size: 0.9rem; outline: none; }
-    .btn-primary-action { background: #059669; color: white; border: none; border-radius: 10px; padding: 12px; font-weight: 700; width: 100%; cursor: pointer; }
-    .tabela-resumo th { background: #1e293b; color: white; font-size: 0.8rem; }
-    .tabela-resumo td { font-size: 0.8rem; vertical-align: middle; }
+    :root { --bg-color: #f1f5f9; --slate-900: #0f172a; --slate-700: #334155; --slate-200: #cbd5e1; --indigo-600: #4f46e5; }
+    body { background-color: var(--bg-color); font-family: 'Inter', sans-serif; }
+    .panel-view { display: none; }
+    .panel-view.active { display: block; }
+    
+    /* Estilos do Datashow */
+    .colored-card { background: white; border-radius: 10px; padding: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); height: 100%; display: flex; flex-direction: column; }
+    .card-header-icon { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
+    .segmented-control { display: flex; background: #e2e8f0; border-radius: 6px; padding: 3px; gap: 3px; }
+    .seg-btn { flex: 1; border: none; background: transparent; padding: 6px 2px; font-size: 0.7rem; font-weight: 700; color: var(--slate-700); border-radius: 4px; cursor: pointer; transition: 0.1s; }
+    .seg-btn.active-good { background-color: #16a34a !important; color: white !important; }
+    .seg-btn.active-warning { background-color: #ea580c !important; color: white !important; }
+    .seg-btn.active-danger { background-color: #dc2626 !important; color: white !important; }
+    .input-textarea { width: 100%; border: 2px solid var(--slate-200); border-radius: 8px; padding: 10px; font-size: 0.85rem; font-weight: 600; resize: none; outline: none; }
+    .input-textarea:focus { border-color: var(--indigo-600); }
+    .eval-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 10px; }
   </style>
 </head>
 <body>
 
-  <!-- TELA 1: HUB INICIAL -->
-  <div id="view-hub" class="view-section active">
-    <div class="hub-container">
-      <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 70px; margin-bottom: 15px; object-fit: contain;" alt="Logo">
-      <h4 class="fw-bold mb-1" style="font-size: 1.1rem;">CONSELHO DE CLASSE</h4>
-      <h5 class="fw-bold text-primary mb-3" style="font-size: 0.9rem;">E E MESTRA AURORA</h5>
-      <button class="btn-hub btn-prof" onclick="showView('view-prof')"><i class="fa-solid fa-chalkboard-user"></i> Sou Professor(a)</button>
-      <button class="btn-hub btn-esp" onclick="showView('view-senha')"><i class="fa-solid fa-shield-halved"></i> Sou Especialista</button>
+  <!-- ETAPA 1: LOTAÇÃO (Igual à sua imagem) -->
+  <div id="panel-lotacao-mestre" class="panel-view active p-4">
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+      <div>
+        <h3 class="fw-bold text-dark m-0">Etapa 1: Painel Mestre de Lotação</h3>
+        <p class="text-muted m-0">E. E. Mestra Aurora - Cadastro com Registro Visual Abaixo</p>
+      </div>
+      <button class="btn btn-outline-danger fw-bold" onclick="location.reload()">Sair</button>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="fw-bold text-primary m-0"><i class="fa-solid fa-list-check me-2"></i> Formulário de Cadastro / Edição</h5>
+      <button class="btn btn-success fw-bold" onclick="adicionarCardProfissional()"><i class="fa-solid fa-plus me-1"></i> Adicionar Servidor</button>
+    </div>
+
+    <div id="containerProfissionais" class="mb-4"></div>
+
+    <div class="row g-3 mb-5">
+      <div class="col-6">
+        <button id="btnSalvarLotacao" class="btn btn-secondary w-100 py-3 fw-bold fs-5" onclick="salvarLotacaoGlobal()">
+          <i class="fa-solid fa-floppy-disk me-2"></i> Salvar Lotação
+        </button>
+      </div>
+      <div class="col-6">
+        <button class="btn btn-success w-100 py-3 fw-bold fs-5" onclick="irParaSelecaoTurmaEtapa2()">
+          Avançar para Escolha de Turma <i class="fa-solid fa-arrow-right ms-2"></i>
+        </button>
+      </div>
+    </div>
+
+    <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-table-list me-2"></i> Registro Geral da Lotação Cadastrada</h5>
+    <div class="table-responsive bg-white rounded shadow-sm border">
+      <table class="table table-striped table-hover mb-0">
+        <thead class="table-dark">
+          <tr><th>Servidor(a)</th><th>Cargo / Função</th><th>Turnos</th><th>Turmas</th><th>Componentes</th></tr>
+        </thead>
+        <tbody id="tabelaRegistroCorpo">
+          <tr><td colspan="5" class="text-center text-muted">Carregando lotação...</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <!-- TELA 2: SENHA -->
-  <div id="view-senha" class="view-section">
-    <div class="hub-container">
-      <i class="fa-solid fa-lock text-primary fa-3x mb-3"></i>
-      <h4 class="fw-bold">Acesso Restrito</h4>
-      <input type="password" id="inputSenha" class="input-textarea mt-3 mb-3 text-center fs-5" placeholder="Digite a senha">
-      <button class="btn-primary-action w-100 py-3" onclick="verificarSenha()">Entrar no Sistema</button>
-      <button class="btn btn-link w-100 mt-2 text-muted fw-bold" onclick="showView('view-hub')">Voltar</button>
+  <!-- ETAPA 2: SELEÇÃO DA TURMA -->
+  <div id="panel-selecao-inicial" class="panel-view" style="min-height: 100vh; background: #0f172a; padding-top: 100px;">
+    <div class="bg-white p-4 rounded shadow mx-auto" style="max-width: 450px;">
+      <h4 class="fw-bold text-center mb-4">Etapa 2: Seleção de Turma</h4>
+      <button class="btn btn-outline-secondary w-100 mb-4 fw-bold" onclick="voltarParaLotacaoEtapa1()"><i class="fa-solid fa-arrow-left me-1"></i> Voltar à Lotação</button>
+      
+      <div class="mb-3">
+        <label class="form-label fw-bold">Trimestre:</label>
+        <select id="espSelectTrimestre" class="form-select fw-bold"><option>1º Trimestre</option><option>2º Trimestre</option><option>3º Trimestre</option></select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label fw-bold">Turno:</label>
+        <select id="espSelectTurno" class="form-select fw-bold"><option value="Matutino">Matutino</option><option value="Vespertino">Vespertino</option></select>
+      </div>
+      <div class="mb-4">
+        <label class="form-label fw-bold">Turma Alvo:</label>
+        <select id="espSelectTurma" class="form-select fw-bold"><option>Carregando turmas...</option></select>
+      </div>
+
+      <button class="btn btn-primary w-100 py-3 fw-bold fs-5" onclick="iniciarSessaoConselho()"><i class="fa-solid fa-play me-2"></i> Iniciar Conselho</button>
     </div>
   </div>
 
-  <!-- TELA 3: ESPECIALISTA (PAINEL DE LOTAÇÃO) -->
-  <div id="view-especialista" class="view-section">
-    <div style="padding: 30px; background: #f1f5f9; min-height: 100vh;">
-      <div style="max-width: 1000px; margin: 0 auto; background: #ffffff; padding: 35px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
-        <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
-          <div>
-            <h4 class="fw-bold m-0" style="font-size: 1.15rem;">Etapa 1: Painel Mestre de Lotação</h4>
-            <p class="text-muted m-0" style="font-size: 0.8rem;">E. E. Mestra Aurora - Cadastro com Registro Visual Abaixo</p>
+  <!-- ETAPA 3: DATASHOW (O que vai para o projetor) -->
+  <div id="panel-datashow-principal" class="panel-view" style="height: 100vh; overflow: hidden; display: flex; flex-direction: column;">
+    <nav class="p-2 d-flex justify-content-between align-items-center text-white" style="background: #0f172a; z-index: 50; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-sm btn-outline-light fw-bold" onclick="location.reload()"><i class="fa-solid fa-house"></i> Início</button>
+        <h5 class="fw-bold m-0 d-none d-md-block">Conselho de Classe</h5>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <span class="badge border border-light p-2 fs-6">Turma: <span id="lblTurmaAtiva" class="text-warning">...</span></span>
+        <button class="btn btn-sm btn-success fw-bold" onclick="abrirModalPDF()"><i class="fa-solid fa-print me-1"></i> PDF</button>
+      </div>
+    </nav>
+
+    <div class="flex-grow-1 overflow-auto p-3">
+      <!-- AVALIAÇÃO DA TURMA -->
+      <div id="panel-turma" style="display: block;">
+        <div class="colored-card mx-auto" style="max-width: 700px; border: 4px solid #4f46e5;">
+          <h4 class="text-center fw-bold mb-4 text-primary"><i class="fa-solid fa-users-rays me-2"></i>Avaliação Coletiva da Turma</h4>
+          
+          <div class="row g-2 mb-3">
+            <div class="col-6"><div class="border p-2 rounded">
+              <label class="fw-bold mb-1"><i class="fa-solid fa-comments"></i> Conversa</label>
+              <div class="segmented-control">
+                <button class="seg-btn" onclick="selecionarSegmento(this,'turma_conversa','Adequada','good')">Adequada</button>
+                <button class="seg-btn" onclick="selecionarSegmento(this,'turma_conversa','No limite','warning')">No limite</button>
+                <button class="seg-btn" onclick="selecionarSegmento(this,'turma_conversa','Muita conversa','danger')">Muita</button>
+              </div>
+            </div></div>
+            <div class="col-6"><div class="border p-2 rounded">
+              <label class="fw-bold mb-1"><i class="fa-solid fa-user-xmark"></i> Faltas</label>
+              <div class="segmented-control">
+                <button class="seg-btn" onclick="selecionarSegmento(this,'turma_faltas','Adequadas','good')">Adequadas</button>
+                <button class="seg-btn" onclick="selecionarSegmento(this,'turma_faltas','No limite','warning')">No limite</button>
+                <button class="seg-btn" onclick="selecionarSegmento(this,'turma_faltas','Muitas','danger')">Muitas</button>
+              </div>
+            </div></div>
+            <div class="col-6"><div class="border p-2 rounded">
+              <label class="fw-bold mb-1"><i class="fa-solid fa-list-check"></i> Atividades</label>
+              <div class="segmented-control">
+                <button class="seg-btn" onclick="selecionarSegmento(this,'turma_atividades','A maioria cumpre','good')">Cumpre</button>
+                <button class="seg-btn" onclick="selecionarSegmento(this,'turma_atividades','Cumpre parcialmente','warning')">Parcial</button>
+                <button class="seg-btn" onclick="selecionarSegmento(this,'turma_atividades','A maioria não cumpre','danger')">Não cumpre</button>
+              </div>
+            </div></div>
+            <div class="col-6"><div class="border p-2 rounded">
+              <label class="fw-bold mb-1"><i class="fa-solid fa-book-open-reader"></i> Trabalhos</label>
+              <div class="segmented-control">
+                <button class="seg-btn" onclick="selecionarSegmento(this,'turma_trabalhos','A maioria entrega','good')">Entrega</button>
+                <button class="seg-btn" onclick="selecionarSegmento(this,'turma_trabalhos','Entrega parcialmente','warning')">Parcial</button>
+                <button class="seg-btn" onclick="selecionarSegmento(this,'turma_trabalhos','A maioria não entrega','danger')">Não entrega</button>
+              </div>
+            </div></div>
           </div>
-          <button class="btn btn-sm btn-outline-danger fw-bold" onclick="location.reload()">Sair</button>
+          
+          <textarea id="txtObsTurma" class="input-textarea mb-3" rows="2" placeholder="Observações gerais da turma..."></textarea>
+          <button class="btn btn-primary w-100 py-3 fw-bold fs-5" onclick="salvarTurmaEIniciar()">Registrar Turma e Iniciar Estudantes <i class="fa-solid fa-arrow-right ms-2"></i></button>
+        </div>
+      </div>
+
+      <!-- AVALIAÇÃO INDIVIDUAL -->
+      <div id="panel-estudantes" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-3 bg-white p-2 rounded border border-3">
+          <button class="btn btn-dark fw-bold" onclick="voltarParaTurma()"><i class="fa-solid fa-arrow-left me-1"></i> Voltar</button>
+          <div class="text-center">
+            <span class="text-primary fw-bold" style="font-size:0.8rem;">ESTUDANTE <span id="lblIndex">1</span> DE <span id="lblTotal">X</span></span>
+            <h3 class="fw-bold m-0 text-uppercase" id="lblNomeEstudante">CARREGANDO...</h3>
+          </div>
+          <button class="btn btn-secondary fw-bold" onclick="proximoEstudante()">Pular <i class="fa-solid fa-forward"></i></button>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h6 class="fw-bold text-primary m-0"><i class="fa-solid fa-list-check me-2"></i>Formulário de Cadastro / Edição</h6>
-          <button class="btn btn-sm btn-success fw-bold px-3 py-2" onclick="adicionarCardProfissional()"><i class="fa-solid fa-plus me-1"></i> Adicionar Servidor</button>
+        <div class="eval-grid">
+          <div class="colored-card border border-2 border-primary"><div class="card-header-icon text-primary"><i class="fa-solid fa-shield-halved"></i> Disciplina</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'disciplina','Comporta bem','good')">Comporta bem</button><button class="seg-btn" onclick="selecionarSegmento(this,'disciplina','Às vezes','warning')">Às vezes</button><button class="seg-btn" onclick="selecionarSegmento(this,'disciplina','Não comporta','danger')">Não comporta</button></div></div>
+          <div class="colored-card border border-2 border-success"><div class="card-header-icon text-success"><i class="fa-solid fa-eye"></i> Atenção</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'atencao','Atento(a)','good')">Atento(a)</button><button class="seg-btn" onclick="selecionarSegmento(this,'atencao','Às vezes','warning')">Às vezes</button><button class="seg-btn" onclick="selecionarSegmento(this,'atencao','Desatento(a)','danger')">Desatento(a)</button></div></div>
+          <div class="colored-card border border-2 border-danger"><div class="card-header-icon text-danger"><i class="fa-solid fa-comments"></i> Conversa</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'conversa','Não conversa','good')">Não conversa</button><button class="seg-btn" onclick="selecionarSegmento(this,'conversa','Pouco','warning')">Pouco</button><button class="seg-btn" onclick="selecionarSegmento(this,'conversa','Muito','danger')">Muito</button></div></div>
+          <div class="colored-card border border-2 border-warning"><div class="card-header-icon text-warning"><i class="fa-solid fa-lightbulb"></i> Interesse</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'interesse','Muito interesse','good')">Muito interesse</button><button class="seg-btn" onclick="selecionarSegmento(this,'interesse','Pouco interesse','warning')">Pouco interesse</button><button class="seg-btn" onclick="selecionarSegmento(this,'interesse','Sem interesse','danger')">Sem interesse</button></div></div>
+          <div class="colored-card border border-2 border-info"><div class="card-header-icon text-info"><i class="fa-solid fa-hand"></i> Participação</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'participacao','Participa','good')">Participa</button><button class="seg-btn" onclick="selecionarSegmento(this,'participacao','Participa pouco','warning')">Participa pouco</button><button class="seg-btn" onclick="selecionarSegmento(this,'participacao','Não participa','danger')">Não participa</button></div></div>
+          
+          <div class="colored-card border border-2 border-primary"><div class="card-header-icon text-primary"><i class="fa-solid fa-brain"></i> Aprendizagem</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'aprendizagem','Sem dificuldade','good')">Sem dificuldade</button><button class="seg-btn" onclick="selecionarSegmento(this,'aprendizagem','Com dificuldade','warning')">Com dificuldade</button><button class="seg-btn" onclick="selecionarSegmento(this,'aprendizagem','Não quer aprender','danger')">Não quer aprender</button></div></div>
+          <div class="colored-card border border-2 border-success"><div class="card-header-icon text-success"><i class="fa-solid fa-layer-group"></i> Organização</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'organizacao','Organizado(a)','good')">Organizado(a)</button><button class="seg-btn" onclick="selecionarSegmento(this,'organizacao','Parcialmente','warning')">Parcialmente</button><button class="seg-btn" onclick="selecionarSegmento(this,'organizacao','Sem organização','danger')">Sem organização</button></div></div>
+          <div class="colored-card border border-2 border-danger"><div class="card-header-icon text-danger"><i class="fa-solid fa-pen-ruler"></i> Ativ. Sala</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'atividades_sala','Cumpre','good')">Cumpre</button><button class="seg-btn" onclick="selecionarSegmento(this,'atividades_sala','Parcialmente','warning')">Parcialmente</button><button class="seg-btn" onclick="selecionarSegmento(this,'atividades_sala','Não cumpre','danger')">Não cumpre</button></div></div>
+          <div class="colored-card border border-2 border-warning"><div class="card-header-icon text-warning"><i class="fa-solid fa-house-chimney"></i> Tarefa Casa</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'tarefa_casa','Cumpre','good')">Cumpre</button><button class="seg-btn" onclick="selecionarSegmento(this,'tarefa_casa','Parcialmente','warning')">Parcialmente</button><button class="seg-btn" onclick="selecionarSegmento(this,'tarefa_casa','Não cumpre','danger')">Não cumpre</button></div></div>
+          <div class="colored-card border border-2 border-info"><div class="card-header-icon text-info"><i class="fa-solid fa-calendar-check"></i> Presença</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'presenca','Comparece','good')">Comparece</button><button class="seg-btn" onclick="selecionarSegmento(this,'presenca','Muitas faltas','warning')">Muitas faltas</button><button class="seg-btn" onclick="selecionarSegmento(this,'presenca','Não compareceu','danger')">Não compareceu</button></div></div>
         </div>
 
-        <div id="containerProfissionais" class="mb-4"></div>
-
-        <div class="d-flex gap-3 mb-4">
-          <button id="btnSalvarLotacao" class="btn btn-secondary w-50 py-3 fw-bold" onclick="salvarLotacaoGlobal(true)">
-            <i class="fa-solid fa-floppy-disk me-2"></i> Salvar Lotação
-          </button>
-          <button class="btn-primary-action w-50 py-3 fw-bold" style="background: #059669;" onclick="irParaSelecaoTurmaEtapa2()">
-            Avançar para Escolha de Turma <i class="fa-solid fa-arrow-right ms-2"></i>
-          </button>
-        </div>
-
-        <!-- TABELA DE REGISTRO VISUAL ABAIXO -->
-        <div class="border-top pt-4">
-          <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-table-list text-primary me-2"></i>Registro Geral da Lotação Cadastrada na Escola</h6>
-          <div class="table-responsive">
-            <table class="table table-bordered table-striped tabela-resumo">
-              <thead>
-                <tr>
-                  <th>Servidor(a)</th>
-                  <th>Cargo / Função</th>
-                  <th>Turnos</th>
-                  <th>Turmas</th>
-                  <th>Componentes</th>
-                </tr>
-              </thead>
-              <tbody id="tabelaRegistroCorpo">
-                <tr><td colspan="5" class="text-center text-muted">Nenhum servidor cadastrado ainda.</td></tr>
-              </tbody>
-            </table>
+        <div class="row g-2 mb-2">
+          <div class="col-3">
+            <div class="colored-card bg-warning bg-opacity-10 border border-3 border-warning">
+              <div class="card-header-icon text-dark"><i class="fa-solid fa-star"></i> Veredito Final</div>
+              <div class="segmented-control flex-column bg-white">
+                <button class="seg-btn" onclick="selecionarSegmento(this,'caracteristica','Ótimo/Ótima','good',false)">Ótimo/Ótima</button>
+                <button class="seg-btn" onclick="selecionarSegmento(this,'caracteristica','Bom/Boa','good',false)">Bom/Boa</button>
+                <button class="seg-btn" onclick="selecionarSegmento(this,'caracteristica','Precisa melhorar','danger',true)">Precisa melhorar</button>
+              </div>
+              <input type="text" id="txtMotivo" class="input-textarea mt-1 p-1" style="display:none; font-size:0.75rem;" placeholder="Motivo...">
+            </div>
+          </div>
+          <div class="col-9">
+            <div class="colored-card border border-2 border-dark p-0">
+              <div class="card-header-icon p-2 border-bottom bg-light m-0"><i class="fa-solid fa-folder-open"></i> Observações e Encaminhamentos Livres</div>
+              <textarea id="txtObs" class="input-textarea border-0 rounded-0 flex-grow-1" placeholder="Anotações do Conselho..."></textarea>
+            </div>
           </div>
         </div>
 
+        <button class="btn btn-primary w-100 py-3 fw-bold fs-5" onclick="salvarEProximo()"><i class="fa-solid fa-floppy-disk me-2"></i> Gravar e Chamar Próximo</button>
       </div>
     </div>
   </div>
 
-  <script>
-    var listaTurmasGlobal = ["6º REG 1", "6º REG 2", "6º REG 3", "6º REG 4", "7º REG 1", "7º REG 2", "7º REG 3", "7º REG 4"];
-    var listaComponentesGlobal = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Língua Inglesa", "Língua Portuguesa", "Matemática"];
-    var listaCargosGlobal = ["Diretor(a)", "Vice-Diretor(a)", "Especialista / EEB", "Professor(a) de Apoio", "Professor(a) Regente"];
-
-    window.onload = function() {
-      carregarLotacaoNaTelaMestre();
-    };
-
-    function showView(id) {
-      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
-
-    function verificarSenha() {
-      if(document.getElementById('inputSenha').value === 'mestra2026') {
-        showView('view-especialista');
-        carregarLotacaoNaTelaMestre();
-      } else { 
-        alert('Senha Incorreta!'); 
-        document.getElementById('inputSenha').value = ''; 
-      }
-    }
-
-    function adicionarCardProfissional(dados = {}) {
-      var container = document.getElementById('containerProfissionais');
-      if(!container) return;
-      var idU = Math.floor(Math.random() * 900000) + 100000;
-
-      var cargosHtml = '';
-      listaCargosGlobal.forEach(c => {
-        var sel = (dados.cargo === c) ? 'selected' : '';
-        cargosHtml += `<option value="${c}" ${sel}>${c}</option>`;
-      });
-
-      var turnosHtml = '';
-      ["Matutino", "Vespertino"].forEach(t => {
-        var chk = (dados.turnos && dados.turnos.includes(t)) ? 'checked' : '';
-        turnosHtml += `<label><input type="checkbox" class="t_turno_${idU}" value="${t}" ${chk}> <span>${t}</span></label>`;
-      });
-
-      var turmasHtml = '';
-      listaTurmasGlobal.forEach(t => {
-        var chk = (dados.turmas && dados.turmas.includes(t)) ? 'checked' : '';
-        turmasHtml += `<label><input type="checkbox" class="t_turma_${idU}" value="${t}" ${chk}> <span>${t}</span></label>`;
-      });
-
-      var compHtml = '';
-      listaComponentesGlobal.forEach(c => {
-        var chk = (dados.componentes && dados.componentes.includes(c)) ? 'checked' : '';
-        compHtml += `<label><input type="checkbox" class="t_comp_${idU}" value="${c}" ${chk}> <span>${c}</span></label>`;
-      });
-
-      var card = document.createElement('div');
-      card.className = 'prof-card';
-      card.id = 'card_' + idU;
-      card.innerHTML = `
-        <div class="d-flex justify-content-end mb-2">
-          <button type="button" class="btn btn-sm btn-outline-danger fw-bold" onclick="removerCardEAtualizar('${idU}')"><i class="fa-solid fa-trash me-1"></i> Excluir</button>
-        </div>
-        <div class="row g-3 mb-3">
-          <div class="col-md-5">
-            <label class="form-label fw-bold fs-7">Nome do Servidor(a):</label>
-            <input type="text" class="input-field prof-nome" placeholder="Nome Completo" value="${dados.nome || ''}">
-          </div>
-          <div class="col-md-4">
-            <label class="form-label fw-bold fs-7">Cargo / Função:</label>
-            <select class="input-field prof-cargo" onchange="verificarCargoSelecionado('${idU}')">${cargosHtml}</select>
-          </div>
-          <div class="col-md-3">
-            <label class="form-label fw-bold fs-7">Turnos:</label>
-            <div class="checkbox-group">${turnosHtml}</div>
-          </div>
-        </div>
-        <div class="mb-2">
-          <label class="form-label fw-bold fs-7 text-primary">Turmas Atendidas:</label>
-          <div class="checkbox-group">${turmasHtml}</div>
-        </div>
-        <div id="div_comp_${idU}">
-          <label class="form-label fw-bold fs-7 text-success">Componentes Curriculares:</label>
-          <div class="checkbox-group">${compHtml}</div>
-        </div>
-        <input type="hidden" class="prof-id" value="${idU}">
-      `;
-      container.appendChild(card);
-      verificarCargoSelecionado(idU);
-    }
-
-    function verificarCargoSelecionado(idU) {
-      var card = document.getElementById('card_' + idU);
-      if(!card) return;
-      var cargoSelect = card.querySelector('.prof-cargo');
-      var divComp = document.getElementById('div_comp_' + idU);
-      
-      if (cargoSelect && divComp) {
-        var cargo = cargoSelect.value;
-        if (cargo === 'Diretor(a)' || cargo === 'Vice-Diretor(a)' || cargo === 'Especialista / EEB') {
-          divComp.style.display = 'none';
-          card.querySelectorAll('.t_comp_' + idU).forEach(el => el.checked = false);
-        } else {
-          divComp.style.display = 'block';
-        }
-      }
-    }
-
-    function removerCardEAtualizar(idU) {
-      var card = document.getElementById('card_' + idU);
-      if(card) card.remove();
-      salvarLotacaoGlobal(false);
-    }
-
-    function carregarLotacaoNaTelaMestre() {
-      var localData = localStorage.getItem('db_lotacao_mestra');
-      if (localData) {
-        try {
-          var dados = JSON.parse(localData);
-          if (dados && dados.length > 0) {
-            renderizarCardsNaTela(dados);
-            atualizarTabelaRegistroVisual(dados);
-            return;
-          }
-        } catch(e) {}
-      }
-
-      if (typeof google !== 'undefined' && google.script) {
-        google.script.run.withSuccessHandler(function(dados) {
-          if (dados && dados.length > 0) {
-            localStorage.setItem('db_lotacao_mestra', JSON.stringify(dados));
-            renderizarCardsNaTela(dados);
-            atualizarTabelaRegistroVisual(dados);
-          } else {
-            renderizarCardsNaTela([]);
-            atualizarTabelaRegistroVisual([]);
-          }
-        }).carregarLotacaoGlobal();
-      } else {
-        renderizarCardsNaTela([]);
-        atualizarTabelaRegistroVisual([]);
-      }
-    }
-
-    function renderizarCardsNaTela(dados) {
-      var container = document.getElementById('containerProfissionais');
-      if(!container) return;
-      container.innerHTML = '';
-      if (dados && dados.length > 0) {
-        dados.forEach(p => adicionarCardProfissional(p));
-      } else {
-        adicionarCardProfissional();
-      }
-    }
-
-    function coletarDadosLotacao() {
-      var lista = [];
-      var cards = document.querySelectorAll('.prof-card');
-      
-      cards.forEach(card => {
-        var nomeInput = card.querySelector('.prof-nome');
-        var cargoSelect = card.querySelector('.prof-cargo');
-        var idInput = card.querySelector('.prof-id');
-        
-        if (!nomeInput || !cargoSelect || !idInput) return;
-
-        var nome = nomeInput.value.trim();
-        var cargo = cargoSelect.value;
-        var idU = idInput.value;
-
-        var turnos = [];
-        card.querySelectorAll('.t_turno_' + idU + ':checked').forEach(el => turnos.push(el.value));
-
-        var turmas = [];
-        card.querySelectorAll('.t_turma_' + idU + ':checked').forEach(el => turmas.push(el.value));
-
-        var componentes = [];
-        if (cargo !== 'Diretor(a)' && cargo !== 'Vice-Diretor(a)' && cargo !== 'Especialista / EEB') {
-          card.querySelectorAll('.t_comp_' + idU + ':checked').forEach(el => componentes.push(el.value));
-        }
-
-        if (nome !== "") {
-          lista.push({ nome: nome, cargo: cargo, turnos: turnos, turmas: turmas, componentes: componentes });
-        }
-      });
-      return lista;
-    }
-
-    function atualizarTabelaRegistroVisual(lista) {
-      var tbody = document.getElementById('tabelaRegistroCorpo');
-      if(!tbody) return;
-      
-      if (!lista || lista.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum servidor cadastrado ainda.</td></tr>';
-        return;
-      }
-
-      var html = '';
-      lista.forEach(p => {
-        html += `
-          <tr>
-            <td class="fw-bold">${p.nome}</td>
-            <td><span class="badge bg-secondary">${p.cargo}</span></td>
-            <td>${p.turnos && p.turnos.length > 0 ? p.turnos.join(', ') : '-'}</td>
-            <td><span class="text-primary fw-bold">${p.turmas && p.turmas.length > 0 ? p.turmas.join(', ') : '-'}</span></td>
-            <td>${p.componentes && p.componentes.length > 0 ? p.componentes.join(', ') : '<span class="text-muted font-italic">Não se aplica</span>'}</td>
-          </tr>
-        `;
-      });
-      tbody.innerHTML = html;
-    }
-
-    function salvarLotacaoGlobal(mostrarAlerta = true) {
-      var lista = coletarDadosLotacao();
-      
-      localStorage.setItem('db_lotacao_mestra', JSON.stringify(lista));
-      atualizarTabelaRegistroVisual(lista);
-
-      var btnSalvar = document.getElementById('btnSalvarLotacao');
-      if (btnSalvar) {
-        btnSalvar.innerHTML = '<i class="fa-solid fa-check me-2"></i> Salvo com Sucesso!';
-        btnSalvar.classList.remove('btn-secondary');
-        btnSalvar.classList.add('btn-success');
-        setTimeout(function() {
-          btnSalvar.innerHTML = '<i class="fa-solid fa-floppy-disk me-2"></i> Salvar Lotação';
-          btnSalvar.classList.remove('btn-success');
-          btnSalvar.classList.add('btn-secondary');
-        }, 2500);
-      }
-
-      if (mostrarAlerta) {
-        alert("Lotação salva com sucesso! Total de servidores cadastrados: " + lista.length);
-      }
-
-      if (typeof google !== 'undefined' && google.script) {
-        google.script.run.withSuccessHandler(function() {}).salvarLotacaoGlobal(lista);
-      }
-    }
-
-    function irParaSelecaoTurmaEtapa2() {
-      salvarLotacaoGlobal(false);
-      alert("Lotação guardada! Pronto para seguir.");
-    }
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
