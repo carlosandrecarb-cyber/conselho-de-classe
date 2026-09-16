@@ -9,7 +9,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    .prof-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 14px; padding: 20px; margin-bottom: 15px; position: relative; text-align: left; }
+    .prof-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 14px; padding: 20px; margin-bottom: 15px; text-align: left; }
     .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
     .checkbox-group label { font-size: 0.75rem; font-weight: 700; background: #fff; border: 1px solid #cbd5e1; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
     .checkbox-group input:checked + span { color: #4f46e5; }
@@ -87,7 +87,7 @@
     </div>
   </div>
 
-  <!-- TELA 4: MÓDULO ESPECIALISTA (FLUXO OBRIGATÓRIO EM ETAPAS) -->
+  <!-- TELA 4: MÓDULO ESPECIALISTA -->
   <div id="view-especialista" class="view-section">
     
     <!-- ETAPA 1: PAINEL MESTRE DE LOTAÇÃO -->
@@ -114,7 +114,7 @@
         <div id="containerProfissionais" class="mb-4"></div>
 
         <div class="d-flex gap-3">
-          <button class="btn btn-secondary w-50 py-3 fw-bold" onclick="salvarLotacaoGlobal(true)">
+          <button id="btnSalvarLotacao" class="btn btn-secondary w-50 py-3 fw-bold" onclick="salvarLotacaoGlobal(true)">
             <i class="fa-solid fa-floppy-disk me-2"></i> Salvar Lotação
           </button>
           <button class="btn-primary-action w-50 py-3 fw-bold" style="background: #059669; border-color: #047857;" onclick="irParaSelecaoTurmaEtapa2()">
@@ -124,7 +124,7 @@
       </div>
     </div>
 
-    <!-- ETAPA 2: SELEÇÃO DE TURMA E TURNO PARA O DATASHOW -->
+    <!-- ETAPA 2: SELEÇÃO DE TURMA E TURNO -->
     <div id="panel-selecao-inicial" style="height: 100vh; display: none; align-items: center; justify-content: center; background: #0f172a;">
       <div class="colored-card p-4 rounded bg-white shadow" style="max-width: 450px; width: 100%; text-align: left;">
         <div class="text-center mb-3">
@@ -183,7 +183,7 @@
 
       <div class="scrollable-area" style="padding: 15px;">
         
-        <!-- ETAPA 1: AVALIAÇÃO COLETIVA DA TURMA -->
+        <!-- AVALIAÇÃO COLETIVA -->
         <div id="panel-turma" style="max-width: 800px; margin: 0 auto; display: block;">
           <div class="colored-card p-3" style="border: 4px solid #6366f1; background: #fff; border-radius: 10px;">
             <h4 class="text-center fw-bold mb-3" style="color: #4f46e5;"><i class="fa-solid fa-users-rays me-2"></i>Avaliação Coletiva da Turma</h4>
@@ -205,7 +205,7 @@
           </div>
         </div>
 
-        <!-- ETAPA 2: AVALIAÇÃO INDIVIDUAL DOS ESTUDANTES -->
+        <!-- AVALIAÇÃO INDIVIDUAL -->
         <div id="panel-estudantes" style="max-width: 1300px; margin: 0 auto; display: none;">
           <div class="student-header d-flex justify-content-between align-items-center bg-white p-3 border rounded mb-3 shadow-sm">
             <button class="back-btn btn btn-dark btn-sm fw-bold" onclick="voltarParaTurma()"><i class="fa-solid fa-arrow-left"></i> Voltar à Turma</button>
