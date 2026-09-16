@@ -8,6 +8,7 @@ var timerInterval = null;
 window.onload = function() {
   carregarTurmasDoGoogle();
   timerInterval = setInterval(atualizarTimer, 1000);
+  carregarLotacaoNaTelaMestre();
   
   var hoje = new Date();
   var dataIso = hoje.toISOString().split('T')[0];
@@ -120,8 +121,6 @@ function adicionarCardProfissional(dados = {}) {
     <input type="hidden" class="prof-id" value="${idU}">
   `;
   container.appendChild(card);
-  
-  // Executa verificação inicial para ocultar/mostrar componentes se for Diretor/Espec.
   verificarCargoSelecionado(idU);
 }
 
@@ -133,10 +132,8 @@ function verificarCargoSelecionado(idU) {
   
   if (cargoSelect && divComp) {
     var cargo = cargoSelect.value;
-    // Se for Diretor, Vice ou Especialista, oculta componentes curriculares
     if (cargo === 'Diretor(a)' || cargo === 'Vice-Diretor(a)' || cargo === 'Especialista / EEB') {
       divComp.style.display = 'none';
-      // Desmarca todos os componentes para evitar lixo nos dados
       card.querySelectorAll('.t_comp_' + idU).forEach(el => el.checked = false);
     } else {
       divComp.style.display = 'block';
@@ -147,7 +144,7 @@ function verificarCargoSelecionado(idU) {
 function removerCardEAtualizar(idU) {
   var card = document.getElementById('card_' + idU);
   if(card) card.remove();
-  salvarLotacaoGlobal(false); // Atualiza salvamento e tabela abaixo
+  salvarLotacaoGlobal(false);
 }
 
 function carregarLotacaoNaTelaMestre() {
@@ -155,8 +152,11 @@ function carregarLotacaoNaTelaMestre() {
   if (localData) {
     try {
       var dados = JSON.parse(localData);
-      renderizarCardsNaTela(dados);
-      atualizarTabelaRegistroVisual(dados);
+      if (dados && dados.length > 0) {
+        renderizarCardsNaTela(dados);
+        atualizarTabelaRegistroVisual(dados);
+        return;
+      }
     } catch(e) {}
   }
 
@@ -166,8 +166,14 @@ function carregarLotacaoNaTelaMestre() {
         localStorage.setItem('db_lotacao_mestra', JSON.stringify(dados));
         renderizarCardsNaTela(dados);
         atualizarTabelaRegistroVisual(dados);
+      } else {
+        renderizarCardsNaTela([]);
+        atualizarTabelaRegistroVisual([]);
       }
     }).carregarLotacaoGlobal();
+  } else {
+    renderizarCardsNaTela([]);
+    atualizarTabelaRegistroVisual([]);
   }
 }
 
@@ -187,8 +193,8 @@ function coletarDadosLotacao() {
   var cards = document.querySelectorAll('.prof-card');
   
   cards.forEach(card => {
-    var nomeInput = card.querySelector('.prof-nome');
-    var cargoSelect = card.querySelector('.prof-cargo');
+    var nomeInput = card.querySelector('input.prof-nome');
+    var cargoSelect = card.querySelector('select.prof-cargo');
     var idInput = card.querySelector('.prof-id');
     
     if (!nomeInput || !cargoSelect || !idInput) return;
@@ -230,8 +236,8 @@ function atualizarTabelaRegistroVisual(lista) {
       <tr>
         <td class="fw-bold">${p.nome}</td>
         <td><span class="badge bg-secondary">${p.cargo}</span></td>
-        <td>${p.turnos ? p.turnos.join(', ') : '-'}</td>
-        <td><span class="text-primary fw-bold">${p.turmas ? p.turmas.join(', ') : '-'}</span></td>
+        <td>${p.turnos && p.turnos.length > 0 ? p.turnos.join(', ') : '-'}</td>
+        <td><span class="text-primary fw-bold">${p.turmas && p.turmas.length > 0 ? p.turmas.join(', ') : '-'}</span></td>
         <td>${p.componentes && p.componentes.length > 0 ? p.componentes.join(', ') : '<span class="text-muted font-italic">Não se aplica</span>'}</td>
       </tr>
     `;
