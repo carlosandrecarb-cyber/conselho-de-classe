@@ -54,7 +54,7 @@ function preencherSelectsTurmas(turmas) {
   });
 }
 
-// Banco de Dados Local (localStorage) + Sincronização com Apps Script
+// Painel Mestre de Lotação
 var listaTurmasGlobal = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
 var listaComponentesGlobal = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Língua Inglesa", "Língua Portuguesa", "Matemática"];
 var listaCargosGlobal = ["Diretor(a)", "Vice-Diretor(a)", "Especialista / EEB", "Professor(a) de Apoio", "Professor(a) Regente"];
@@ -92,7 +92,9 @@ function adicionarCardProfissional(dados = {}) {
   card.className = 'prof-card';
   card.id = 'card_' + idU;
   card.innerHTML = `
-    <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-3" onclick="document.getElementById('card_${idU}').remove()"><i class="fa-solid fa-trash"></i> Excluir</button>
+    <div class="d-flex justify-content-end mb-2">
+      <button type="button" class="btn btn-sm btn-outline-danger fw-bold" onclick="document.getElementById('card_${idU}').remove()"><i class="fa-solid fa-trash me-1"></i> Excluir Profissional</button>
+    </div>
     <div class="row g-3 mb-3">
       <div class="col-md-6">
         <label class="form-label fw-bold fs-7">Nome do Profissional:</label>
@@ -184,10 +186,22 @@ function coletarDadosLotacao() {
 function salvarLotacaoGlobal(mostrarAlerta = false) {
   var lista = coletarDadosLotacao();
   
-  // Salva instantaneamente no Banco Local (localStorage)
+  // Salva no Banco Local
   localStorage.setItem('db_lotacao_mestra', JSON.stringify(lista));
 
-  // Salva de forma assíncrona na Planilha Google Sheets
+  var btnSalvar = document.getElementById('btnSalvarLotacao');
+  if (btnSalvar) {
+    btnSalvar.innerHTML = '<i class="fa-solid fa-check me-2"></i> Salvo com Sucesso!';
+    btnSalvar.classList.remove('btn-secondary');
+    btnSalvar.classList.add('btn-success');
+    setTimeout(function() {
+      btnSalvar.innerHTML = '<i class="fa-solid fa-floppy-disk me-2"></i> Salvar Lotação';
+      btnSalvar.classList.remove('btn-success');
+      btnSalvar.classList.add('btn-secondary');
+    }, 2500);
+  }
+
+  // Sincroniza com o Google Sheets
   if (typeof google !== 'undefined' && google.script) {
     google.script.run.withSuccessHandler(function() {
       if (mostrarAlerta) alert('Lotação salva com sucesso na Planilha e no App Web!');
