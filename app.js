@@ -1,5 +1,5 @@
-// URL oficial do Google Apps Script (Backend conectado à Planilha)
-const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbwEE2uiIXRoJJ4CzW7N-YR9Af9mz-qIDqsfFJEgQn6sa4WcxxO-zKBvnYegh8z-WOB-/exec";
+// ATENÇÃO: COLOQUE A NOVA URL GERADA NO APPS SCRIPT AQUI DENTRO DAS ASPAS:
+const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbwYaqIn2pL2ePwILxPcjERVFH_oW_eTW_zB8rNKQiSNHrDHG7MqLAFYc6sJOUeoxZ2D/exec";
 
 var listaEstudantes = []; 
 var indexAtual = 0; 
@@ -12,10 +12,6 @@ window.onload = function() {
   carregarTurmasDoGoogle();
   timerInterval = setInterval(atualizarTimer, 1000);
   carregarLotacaoNaTelaMestre();
-  
-  var hoje = new Date();
-  var dataIso = hoje.toISOString().split('T')[0];
-  if(document.getElementById('inputDataAta')) document.getElementById('inputDataAta').value = dataIso;
 };
 
 function showView(id) {
@@ -36,37 +32,31 @@ function verificarSenha() {
   }
 }
 
-// Comunicação via API Fetch com o Apps Script
+// NOVO MOTOR DE COMUNICAÇÃO (À PROVA DE TRAVAMENTOS)
 function chamarApiGoogle(funcao, dados = null, callbackSucesso) {
-  var payload = { funcao: funcao, dados: dados };
-  
-  fetch(URL_API_GOOGLE, {
-    method: 'POST',
-    mode: 'no-cors', // Necessário para Web Apps do Google
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  })
-  .then(() => {
-    // Como o no-cors não retorna o JSON diretamente, simulamos a resposta de sucesso ou buscamos via GET
-    if (callbackSucesso) callbackSucesso({ sucesso: true });
-  })
-  .catch(err => {
-    console.error("Erro na comunicação com o Google Sheets: ", err);
-  });
+  var isGet = (funcao === 'getTurmas' || funcao === 'getEstudantesPorTurma' || funcao === 'carregarLotacaoGlobal');
 
-  // Buscas de leitura via GET
-  if (funcao === 'getTurmas' || funcao === 'getEstudantesPorTurma' || funcao === 'carregarLotacaoGlobal') {
-    fetch(URL_API_GOOGLE + "?funcao=" + funcao + (dados ? "&param=" + encodeURIComponent(JSON.stringify(dados)) : ""))
+  if (isGet) {
+    var urlParams = URL_API_GOOGLE + "?funcao=" + funcao + (dados ? "&param=" + encodeURIComponent(JSON.stringify(dados)) : "");
+    fetch(urlParams)
       .then(res => res.json())
-      .then(resData => {
-        if (callbackSucesso) callbackSucesso(resData);
-      })
-      .catch(() => {
-        // Fallback offline estruturado
-        if (funcao === 'getTurmas') callbackSucesso(["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4"]);
-        if (funcao === 'getEstudantesPorTurma') callbackSucesso([{numero: 1, nome: "ALLEXYS EDWARDO"}, {numero: 2, nome: "ANTONIO JUNIOR"}]);
-        if (funcao === 'carregarLotacaoGlobal') callbackSucesso([]);
+      .then(resData => { if (callbackSucesso) callbackSucesso(resData); })
+      .catch(err => {
+        console.error("Erro ao puxar dados:", err);
+        // Fallback para não travar a tela
+        if (funcao === 'getTurmas' && callbackSucesso) callbackSucesso(["6R1 (Offline)", "6R2 (Offline)"]);
       });
+  } else {
+    var payload = { funcao: funcao, dados: dados };
+    // Usando text/plain para não bloquear o CORS no navegador
+    fetch(URL_API_GOOGLE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(resData => { if (callbackSucesso) callbackSucesso(resData); })
+    .catch(err => console.error("Erro ao salvar dados:", err));
   }
 }
 
@@ -75,7 +65,7 @@ function carregarTurmasDoGoogle() {
 }
 
 function preencherSelectsTurmas(turmas) {
-  if (!turmas || !Array.isArray(turmas)) turmas = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4"];
+  if (!turmas || turmas.length === 0) turmas = ["Nenhuma turma encontrada"];
   var selects = ['selectTurma', 'selectGerarTurma', 'p_turma', 'espSelectTurma'];
   selects.forEach(id => {
     var el = document.getElementById(id);
@@ -90,7 +80,7 @@ function preencherSelectsTurmas(turmas) {
   });
 }
 
-// Configuração dos Arrays globais
+// --- FUNÇÕES DE LOTAÇÃO ---
 var listaTurmasGlobal = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
 var listaComponentesGlobal = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Língua Inglesa", "Língua Portuguesa", "Matemática"];
 var listaCargosGlobal = ["Diretor(a)", "Vice-Diretor(a)", "Especialista / EEB", "Professor(a) de Apoio", "Professor(a) Regente"];
@@ -164,10 +154,8 @@ function verificarCargoSelecionado(idU) {
   if(!card) return;
   var cargoSelect = card.querySelector('.prof-cargo');
   var divComp = document.getElementById('div_comp_' + idU);
-  
   if (cargoSelect && divComp) {
-    var cargo = cargoSelect.value;
-    if (cargo === 'Diretor(a)' || cargo === 'Vice-Diretor(a)' || cargo === 'Especialista / EEB') {
+    if (['Diretor(a)', 'Vice-Diretor(a)', 'Especialista / EEB'].includes(cargoSelect.value)) {
       divComp.style.display = 'none';
       card.querySelectorAll('.t_comp_' + idU).forEach(el => el.checked = false);
     } else {
@@ -183,69 +171,33 @@ function removerCardEAtualizar(idU) {
 }
 
 function carregarLotacaoNaTelaMestre() {
-  var localData = localStorage.getItem('db_lotacao_mestra');
-  if (localData) {
-    try {
-      var dados = JSON.parse(localData);
-      if (dados && dados.length > 0) {
-        renderizarCardsNaTela(dados);
-        atualizarTabelaRegistroVisual(dados);
-        return;
-      }
-    } catch(e) {}
-  }
-
   chamarApiGoogle('carregarLotacaoGlobal', null, function(dados) {
+    var container = document.getElementById('containerProfissionais');
+    if(container) container.innerHTML = '';
+    
     if (dados && dados.length > 0) {
       localStorage.setItem('db_lotacao_mestra', JSON.stringify(dados));
-      renderizarCardsNaTela(dados);
+      dados.forEach(p => adicionarCardProfissional(p));
       atualizarTabelaRegistroVisual(dados);
     } else {
-      renderizarCardsNaTela([]);
+      adicionarCardProfissional();
       atualizarTabelaRegistroVisual([]);
     }
   });
 }
 
-function renderizarCardsNaTela(dados) {
-  var container = document.getElementById('containerProfissionais');
-  if(!container) return;
-  container.innerHTML = '';
-  if (dados && dados.length > 0) {
-    dados.forEach(p => adicionarCardProfissional(p));
-  } else {
-    adicionarCardProfissional();
-  }
-}
-
 function coletarDadosLotacao() {
   var lista = [];
-  var cards = document.querySelectorAll('.prof-card');
-  
-  cards.forEach(card => {
-    var nomeInput = card.querySelector('.prof-nome');
-    var cargoSelect = card.querySelector('.prof-cargo');
-    var idInput = card.querySelector('.prof-id');
+  document.querySelectorAll('.prof-card').forEach(card => {
+    var nome = card.querySelector('.prof-nome').value.trim();
+    var cargo = card.querySelector('.prof-cargo').value;
+    var idU = card.querySelector('.prof-id').value;
     
-    if (!nomeInput || !cargoSelect || !idInput) return;
-
-    var nome = nomeInput.value.trim();
-    var cargo = cargoSelect.value;
-    var idU = idInput.value;
-
-    var turnos = [];
-    card.querySelectorAll('.t_turno_' + idU + ':checked').forEach(el => turnos.push(el.value));
-
-    var turmas = [];
-    card.querySelectorAll('.t_turma_' + idU + ':checked').forEach(el => turmas.push(el.value));
-
-    var componentes = [];
-    if (cargo !== 'Diretor(a)' && cargo !== 'Vice-Diretor(a)' && cargo !== 'Especialista / EEB') {
-      card.querySelectorAll('.t_comp_' + idU + ':checked').forEach(el => componentes.push(el.value));
-    }
-
     if (nome !== "") {
-      lista.push({ nome: nome, cargo: cargo, turnos: turnos, turmas: turmas, componentes: componentes });
+      var turnos = Array.from(card.querySelectorAll('.t_turno_' + idU + ':checked')).map(el => el.value);
+      var turmas = Array.from(card.querySelectorAll('.t_turma_' + idU + ':checked')).map(el => el.value);
+      var componentes = Array.from(card.querySelectorAll('.t_comp_' + idU + ':checked')).map(el => el.value);
+      lista.push({ nome, cargo, turnos, turmas, componentes });
     }
   });
   return lista;
@@ -254,25 +206,19 @@ function coletarDadosLotacao() {
 function atualizarTabelaRegistroVisual(lista) {
   var tbody = document.getElementById('tabelaRegistroCorpo');
   if(!tbody) return;
-  
   if (!lista || lista.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum servidor cadastrado ainda.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum servidor cadastrado.</td></tr>';
     return;
   }
-
-  var html = '';
-  lista.forEach(p => {
-    html += `
-      <tr>
-        <td class="fw-bold">${p.nome}</td>
-        <td><span class="badge bg-secondary">${p.cargo}</span></td>
-        <td>${p.turnos && p.turnos.length > 0 ? p.turnos.join(', ') : '-'}</td>
-        <td><span class="text-primary fw-bold">${p.turmas && p.turmas.length > 0 ? p.turmas.join(', ') : '-'}</span></td>
-        <td>${p.componentes && p.componentes.length > 0 ? p.componentes.join(', ') : '<span class="text-muted fst-italic">Não se aplica</span>'}</td>
-      </tr>
-    `;
-  });
-  tbody.innerHTML = html;
+  tbody.innerHTML = lista.map(p => `
+    <tr>
+      <td class="fw-bold">${p.nome}</td>
+      <td><span class="badge bg-secondary">${p.cargo}</span></td>
+      <td>${p.turnos.length > 0 ? p.turnos.join(', ') : '-'}</td>
+      <td><span class="text-primary fw-bold">${p.turmas.length > 0 ? p.turmas.join(', ') : '-'}</span></td>
+      <td>${p.componentes.length > 0 ? p.componentes.join(', ') : '<span class="text-muted fst-italic">Não se aplica</span>'}</td>
+    </tr>
+  `).join('');
 }
 
 function salvarLotacaoGlobal(mostrarAlerta = true) {
@@ -282,33 +228,48 @@ function salvarLotacaoGlobal(mostrarAlerta = true) {
 
   var btnSalvar = document.getElementById('btnSalvarLotacao');
   if (btnSalvar) {
-    btnSalvar.innerHTML = '<i class="fa-solid fa-check me-2"></i> Salvo com Sucesso!';
-    btnSalvar.classList.remove('btn-secondary');
-    btnSalvar.classList.add('btn-success');
-    setTimeout(function() {
+    btnSalvar.innerHTML = '<i class="fa-solid fa-check me-2"></i> Salvo!';
+    btnSalvar.classList.replace('btn-secondary', 'btn-success');
+    setTimeout(() => {
       btnSalvar.innerHTML = '<i class="fa-solid fa-floppy-disk me-2"></i> Salvar Lotação';
-      btnSalvar.classList.remove('btn-success');
-      btnSalvar.classList.add('btn-secondary');
-    }, 2500);
+      btnSalvar.classList.replace('btn-success', 'btn-secondary');
+    }, 2000);
   }
 
-  if (mostrarAlerta) {
-    alert("Lotação guardada! Pronto para seguir.");
-  }
-
+  if (mostrarAlerta) alert("Lotação guardada!");
+  
+  // Envia em segundo plano
   chamarApiGoogle('salvarLotacaoGlobal', lista);
 }
 
+// CORREÇÃO DO BOTÃO AVANÇAR: AGORA FORÇA A MUDANÇA DE TELA IMEDIATAMENTE
 function irParaSelecaoTurmaEtapa2() {
-  salvarLotacaoGlobal(false);
-  document.getElementById('panel-lotacao-mestre').style.display = 'none';
-  document.getElementById('panel-selecao-inicial').style.display = 'flex';
+  try {
+    salvarLotacaoGlobal(false); // Salva no background
+  } catch(e) {
+    console.error("Erro ao salvar lotação", e);
+  }
+  
+  // Muda as telas na marra, garantindo que o botão funcione
+  var painelLotacao = document.getElementById('panel-lotacao-mestre');
+  var painelSelecao = document.getElementById('panel-selecao-inicial');
+  
+  if (painelLotacao) painelLotacao.style.display = 'none';
+  if (painelSelecao) {
+    painelSelecao.style.display = 'flex';
+    painelSelecao.classList.add('active');
+  }
 }
 
 function voltarParaLotacaoEtapa1() {
-  document.getElementById('panel-selecao-inicial').style.display = 'none';
-  document.getElementById('panel-lotacao-mestre').style.display = 'block';
-  carregarLotacaoNaTelaMestre();
+  var painelLotacao = document.getElementById('panel-lotacao-mestre');
+  var painelSelecao = document.getElementById('panel-selecao-inicial');
+  
+  if (painelSelecao) {
+    painelSelecao.style.display = 'none';
+    painelSelecao.classList.remove('active');
+  }
+  if (painelLotacao) painelLotacao.style.display = 'block';
 }
 
 function iniciarSessaoConselho() {
@@ -316,15 +277,11 @@ function iniciarSessaoConselho() {
   var turnoSel = document.getElementById('espSelectTurno').value;
   var trimSel = document.getElementById('espSelectTrimestre').value;
   
-  if (!turmaSel) {
-    alert("Por favor, selecione uma turma.");
-    return;
-  }
+  if (!turmaSel) { alert("Selecione uma turma."); return; }
 
   document.getElementById('lblTurmaAtiva').innerText = "- " + turmaSel + " (" + turnoSel + ")";
   var selectTopo = document.getElementById('selectTurma');
   if(selectTopo) selectTopo.value = turmaSel;
-
   var selectTrim = document.getElementById('selectTrimestre');
   if(selectTrim) selectTrim.value = trimSel;
 
@@ -343,25 +300,19 @@ function iniciarSessaoConselho() {
 function carregarEquipeDaTurmaNaTela(turno, turmaAlvo) {
   var localData = localStorage.getItem('db_lotacao_mestra');
   if (localData) {
-    try {
-      renderizarMembrosNaTela(JSON.parse(localData), turno, turmaAlvo);
-      return;
-    } catch(e) {}
+    renderizarMembrosNaTela(JSON.parse(localData), turno, turmaAlvo);
+  } else {
+    chamarApiGoogle('carregarLotacaoGlobal', null, function(lista) {
+      renderizarMembrosNaTela(lista, turno, turmaAlvo);
+    });
   }
-
-  chamarApiGoogle('carregarLotacaoGlobal', null, function(lista) {
-    renderizarMembrosNaTela(lista, turno, turmaAlvo);
-  });
 }
 
 function renderizarMembrosNaTela(listaProfissionais, turnoAlvo, turmaAlvo) {
   var containerMembros = document.getElementById('boxMembrosResumo');
   if (!containerMembros) return;
 
-  var direcao = "Não informado";
-  var vice = "-";
-  var especialista = "Não informado";
-  var apoio = "-";
+  var direcao = "Não informado", vice = "-", especialista = "Não informado", apoio = "-";
   var regentesList = [];
 
   if (listaProfissionais && Array.isArray(listaProfissionais)) {
@@ -372,7 +323,7 @@ function renderizarMembrosNaTela(listaProfissionais, turnoAlvo, turmaAlvo) {
         if (p.cargo === 'Especialista / EEB') especialista = p.nome;
         if (p.cargo === 'Professor(a) de Apoio') apoio = p.nome;
 
-        if (p.cargo === 'Professor(a) Regente' && p.turmas && p.turmas.includes(turmaAlvo)) {
+        if (p.cargo === 'Professor(a) Regente' && p.turmas.includes(turmaAlvo)) {
           regentesList.push(`<li><b>${p.componentes.join(', ')}:</b> ${p.nome}</li>`);
         }
       }
@@ -380,8 +331,8 @@ function renderizarMembrosNaTela(listaProfissionais, turnoAlvo, turmaAlvo) {
   }
 
   containerMembros.innerHTML = `
-    <div class="p-3 mb-3 bg-light border rounded" style="font-size: 0.85rem; text-align: left;">
-      <h6 class="fw-bold text-primary mb-2"><i class="fa-solid fa-user-tie me-1"></i> Equipe e Regentes da Turma ${turmaAlvo} (${turnoAlvo})</h6>
+    <div class="p-3 mb-3 bg-light border rounded text-start" style="font-size: 0.85rem;">
+      <h6 class="fw-bold text-primary mb-2"><i class="fa-solid fa-user-tie me-1"></i> Equipe da Turma ${turmaAlvo} (${turnoAlvo})</h6>
       <div class="row">
         <div class="col-md-6">
           <p class="m-1"><b>Direção:</b> ${direcao} | <b>Vice:</b> ${vice}</p>
@@ -392,9 +343,6 @@ function renderizarMembrosNaTela(listaProfissionais, turnoAlvo, turmaAlvo) {
           <ul class="m-0 ps-3" style="max-height: 80px; overflow-y: auto;">${regentesList.length > 0 ? regentesList.join('') : '<li>Nenhum regente vinculado.</li>'}</ul>
         </div>
       </div>
-      <div class="text-end mt-2">
-        <a href="javascript:void(0);" onclick="voltarParaLotacaoEtapa1()" class="text-decoration-none fw-bold" style="font-size: 0.75rem;"><i class="fa-solid fa-pen-to-square"></i> Voltar e Atualizar Painel Mestre</a>
-      </div>
     </div>
   `;
 }
@@ -402,14 +350,6 @@ function renderizarMembrosNaTela(listaProfissionais, turnoAlvo, turmaAlvo) {
 function voltarParaSelecaoTurma() {
   document.getElementById('panel-datashow-principal').style.display = 'none';
   document.getElementById('panel-selecao-inicial').style.display = 'flex';
-}
-
-function mudarTurmaTopo() {
-  var turmaSel = document.getElementById('selectTurma').value;
-  if(!turmaSel) return;
-  chamarApiGoogle('getEstudantesPorTurma', turmaSel, function(alunos) { 
-    listaEstudantes = alunos || []; 
-  });
 }
 
 function voltarParaTurma() { 
@@ -420,26 +360,18 @@ function voltarParaTurma() {
 }
 
 function selecionarSegmento(btn, categoria, valor, tipoCor, showMotivo = false) {
-  if (categoria.startsWith('turma_')) {
-    avaliacaoTurma[categoria] = valor; 
-  } else {
-    avaliacaoAtual[categoria] = valor;
-  }
-  var buttons = btn.parentElement.getElementsByClassName('seg-btn');
-  for (var i = 0; i < buttons.length; i++) {
-    buttons[i].classList.remove('active-good', 'active-warning', 'active-danger');
-  }
+  if (categoria.startsWith('turma_')) { avaliacaoTurma[categoria] = valor; } 
+  else { avaliacaoAtual[categoria] = valor; }
+
+  Array.from(btn.parentElement.getElementsByClassName('seg-btn')).forEach(b => 
+    b.classList.remove('active-good', 'active-warning', 'active-danger')
+  );
   btn.classList.add('active-' + tipoCor);
 
   if (categoria === 'caracteristica') { 
     var box = document.getElementById('txtMotivo'); 
-    if (showMotivo && box) { 
-      box.style.display = 'block'; 
-      box.focus(); 
-    } else if(box) { 
-      box.style.display = 'none'; 
-      box.value = ''; 
-    } 
+    if (showMotivo && box) { box.style.display = 'block'; box.focus(); } 
+    else if(box) { box.style.display = 'none'; box.value = ''; } 
   }
 }
 
@@ -471,19 +403,13 @@ function salvarTurmaEIniciar() {
   });
 }
 
-function limparFormularioEstudante() {
-  avaliacaoAtual = {}; 
-  var txtObs = document.getElementById('txtObs');
-  if(txtObs) txtObs.value = ''; 
-  var txtMotivo = document.getElementById('txtMotivo');
-  if(txtMotivo) { txtMotivo.style.display = 'none'; txtMotivo.value = ''; }
-  var buttons = document.querySelectorAll('#panel-estudantes .seg-btn');
-  buttons.forEach(b => b.classList.remove('active-good', 'active-warning', 'active-danger'));
-}
-
 function exibirEstudante() {
   if(!listaEstudantes || listaEstudantes.length === 0) return;
-  limparFormularioEstudante();
+  avaliacaoAtual = {}; 
+  var txtObs = document.getElementById('txtObs'); if(txtObs) txtObs.value = ''; 
+  var txtMotivo = document.getElementById('txtMotivo'); if(txtMotivo) { txtMotivo.style.display = 'none'; txtMotivo.value = ''; }
+  document.querySelectorAll('#panel-estudantes .seg-btn').forEach(b => b.classList.remove('active-good', 'active-warning', 'active-danger'));
+
   document.getElementById('lblNomeEstudante').innerText = listaEstudantes[indexAtual].nome; 
   document.getElementById('lblIndex').innerText = indexAtual + 1; 
   document.getElementById('lblTotal').innerText = listaEstudantes.length;
@@ -526,14 +452,4 @@ function atualizarTimer() {
     timerBox.style.borderColor = tempoRestante <= 30 ? '#ef4444' : '#facc15';
     timerEl.style.color = tempoRestante <= 30 ? '#ef4444' : '#facc15';
   }
-}
-
-function abrirModalPDF() { 
-  var modal = document.getElementById('modalRelatorios');
-  if(modal) modal.style.display = 'flex'; 
-}
-
-function fecharModalPDF() { 
-  var modal = document.getElementById('modalRelatorios');
-  if(modal) modal.style.display = 'none'; 
 }
