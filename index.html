@@ -13,6 +13,8 @@
     .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
     .checkbox-group label { font-size: 0.75rem; font-weight: 700; background: #fff; border: 1px solid #cbd5e1; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
     .checkbox-group input:checked + span { color: #4f46e5; }
+    .tabela-resumo th { background: #1e293b; color: white; font-size: 0.8rem; }
+    .tabela-resumo td { font-size: 0.8rem; vertical-align: middle; }
   </style>
 </head>
 <body>
@@ -92,7 +94,7 @@
     
     <!-- ETAPA 1: PAINEL MESTRE DE LOTAÇÃO -->
     <div id="panel-lotacao-mestre" style="padding: 30px; background: #f1f5f9; min-height: 100vh;">
-      <div style="max-width: 900px; margin: 0 auto; background: #ffffff; padding: 35px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+      <div style="max-width: 1000px; margin: 0 auto; background: #ffffff; padding: 35px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
         <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
           <div class="d-flex align-items-center gap-3">
             <div style="width: 45px; height: 45px; background: #eef2ff; color: #4f46e5; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
@@ -100,20 +102,20 @@
             </div>
             <div>
               <h4 class="fw-bold m-0" style="font-size: 1.15rem;">Etapa 1: Painel Mestre de Lotação</h4>
-              <p class="text-muted m-0" style="font-size: 0.8rem;">E. E. Mestra Aurora - Banco Local e na Planilha</p>
+              <p class="text-muted m-0" style="font-size: 0.8rem;">E. E. Mestra Aurora - Cadastro com Registro Visual Abaixo</p>
             </div>
           </div>
           <button class="btn btn-sm btn-outline-danger fw-bold" onclick="location.reload()">Sair</button>
         </div>
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h6 class="fw-bold text-primary m-0"><i class="fa-solid fa-list-check me-2"></i>Profissionais da Escola</h6>
-          <button class="btn btn-sm btn-success fw-bold px-3 py-2" onclick="adicionarCardProfissional()"><i class="fa-solid fa-plus me-1"></i> Adicionar Profissional</button>
+          <h6 class="fw-bold text-primary m-0"><i class="fa-solid fa-list-check me-2"></i>Formulário de Cadastro / Edição</h6>
+          <button class="btn btn-sm btn-success fw-bold px-3 py-2" onclick="adicionarCardProfissional()"><i class="fa-solid fa-plus me-1"></i> Adicionar Servidor</button>
         </div>
 
         <div id="containerProfissionais" class="mb-4"></div>
 
-        <div class="d-flex gap-3">
+        <div class="d-flex gap-3 mb-4">
           <button id="btnSalvarLotacao" class="btn btn-secondary w-50 py-3 fw-bold" onclick="salvarLotacaoGlobal(true)">
             <i class="fa-solid fa-floppy-disk me-2"></i> Salvar Lotação
           </button>
@@ -121,6 +123,28 @@
             Avançar para Escolha de Turma <i class="fa-solid fa-arrow-right ms-2"></i>
           </button>
         </div>
+
+        <!-- TABELA DE REGISTRO VISUAL ABAIXO -->
+        <div class="border-top pt-4">
+          <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-table-list text-primary me-2"></i>Registro Geral da Lotação Cadastrada na Escola</h6>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped tabela-resumo">
+              <thead>
+                <tr>
+                  <th>Servidor(a)</th>
+                  <th>Cargo / Função</th>
+                  <th>Turnos</th>
+                  <th>Turmas</th>
+                  <th>Componentes</th>
+                </tr>
+              </thead>
+              <tbody id="tabelaRegistroCorpo">
+                <tr><td colspan="5" class="text-center text-muted">Nenhum servidor cadastrado ainda.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
     </div>
 
