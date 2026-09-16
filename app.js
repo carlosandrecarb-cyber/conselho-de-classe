@@ -93,16 +93,16 @@ function adicionarCardProfissional(dados = {}) {
   card.id = 'card_' + idU;
   card.innerHTML = `
     <div class="d-flex justify-content-end mb-2">
-      <button type="button" class="btn btn-sm btn-outline-danger fw-bold" onclick="document.getElementById('card_${idU}').remove()"><i class="fa-solid fa-trash me-1"></i> Excluir Profissional</button>
+      <button type="button" class="btn btn-sm btn-outline-danger fw-bold" onclick="removerCardEAtualizar('${idU}')"><i class="fa-solid fa-trash me-1"></i> Excluir Servidor</button>
     </div>
     <div class="row g-3 mb-3">
-      <div class="col-md-6">
-        <label class="form-label fw-bold fs-7">Nome do Profissional:</label>
+      <div class="col-md-5">
+        <label class="form-label fw-bold fs-7">Nome do Servidor(a):</label>
         <input type="text" class="input-field prof-nome" placeholder="Nome Completo" value="${dados.nome || ''}">
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <label class="form-label fw-bold fs-7">Cargo / Função:</label>
-        <select class="input-field prof-cargo">${cargosHtml}</select>
+        <select class="input-field prof-cargo" onchange="verificarCargoSelecionado('${idU}')">${cargosHtml}</select>
       </div>
       <div class="col-md-3">
         <label class="form-label fw-bold fs-7">Turnos de Atuação:</label>
@@ -113,13 +113,41 @@ function adicionarCardProfissional(dados = {}) {
       <label class="form-label fw-bold fs-7 text-primary">Turmas Atendidas (Marque quantas precisar):</label>
       <div class="checkbox-group">${turmasHtml}</div>
     </div>
-    <div>
+    <div id="div_comp_${idU}">
       <label class="form-label fw-bold fs-7 text-success">Componentes Curriculares (Se aplicável):</label>
       <div class="checkbox-group">${compHtml}</div>
     </div>
     <input type="hidden" class="prof-id" value="${idU}">
   `;
   container.appendChild(card);
+  
+  // Executa verificação inicial para ocultar/mostrar componentes se for Diretor/Espec.
+  verificarCargoSelecionado(idU);
+}
+
+function verificarCargoSelecionado(idU) {
+  var card = document.getElementById('card_' + idU);
+  if(!card) return;
+  var cargoSelect = card.querySelector('.prof-cargo');
+  var divComp = document.getElementById('div_comp_' + idU);
+  
+  if (cargoSelect && divComp) {
+    var cargo = cargoSelect.value;
+    // Se for Diretor, Vice ou Especialista, oculta componentes curriculares
+    if (cargo === 'Diretor(a)' || cargo === 'Vice-Diretor(a)' || cargo === 'Especialista / EEB') {
+      divComp.style.display = 'none';
+      // Desmarca todos os componentes para evitar lixo nos dados
+      card.querySelectorAll('.t_comp_' + idU).forEach(el => el.checked = false);
+    } else {
+      divComp.style.display = 'block';
+    }
+  }
+}
+
+function removerCardEAtualizar(idU) {
+  var card = document.getElementById('card_' + idU);
+  if(card) card.remove();
+  salvarLotacaoGlobal(false); // Atualiza salvamento e tabela abaixo
 }
 
 function carregarLotacaoNaTelaMestre() {
@@ -128,6 +156,7 @@ function carregarLotacaoNaTelaMestre() {
     try {
       var dados = JSON.parse(localData);
       renderizarCardsNaTela(dados);
+      atualizarTabelaRegistroVisual(dados);
     } catch(e) {}
   }
 
@@ -136,6 +165,7 @@ function carregarLotacaoNaTelaMestre() {
       if (dados && dados.length > 0) {
         localStorage.setItem('db_lotacao_mestra', JSON.stringify(dados));
         renderizarCardsNaTela(dados);
+        atualizarTabelaRegistroVisual(dados);
       }
     }).carregarLotacaoGlobal();
   }
@@ -174,7 +204,9 @@ function coletarDadosLotacao() {
     card.querySelectorAll('.t_turma_' + idU + ':checked').forEach(el => turmas.push(el.value));
 
     var componentes = [];
-    card.querySelectorAll('.t_comp_' + idU + ':checked').forEach(el => componentes.push(el.value));
+    if (cargo !== 'Diretor(a)' && cargo !== 'Vice-Diretor(a)' && cargo !== 'Especialista / EEB') {
+      card.querySelectorAll('.t_comp_' + idU + ':checked').forEach(el => componentes.push(el.value));
+    }
 
     if (nome !== "") {
       lista.push({ nome: nome, cargo: cargo, turnos: turnos, turmas: turmas, componentes: componentes });
@@ -183,11 +215,38 @@ function coletarDadosLotacao() {
   return lista;
 }
 
-function salvarLotacaoGlobal(mostrarAlerta = false) {
+function atualizarTabelaRegistroVisual(lista) {
+  var tbody = document.getElementById('tabelaRegistroCorpo');
+  if(!tbody) return;
+  
+  if (!lista || lista.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum servidor cadastrado ainda.</td></tr>';
+    return;
+  }
+
+  var html = '';
+  lista.forEach(p => {
+    html += `
+      <tr>
+        <td class="fw-bold">${p.nome}</td>
+        <td><span class="badge bg-secondary">${p.cargo}</span></td>
+        <td>${p.turnos ? p.turnos.join(', ') : '-'}</td>
+        <td><span class="text-primary fw-bold">${p.turmas ? p.turmas.join(', ') : '-'}</span></td>
+        <td>${p.componentes && p.componentes.length > 0 ? p.componentes.join(', ') : '<span class="text-muted font-italic">Não se aplica</span>'}</td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = html;
+}
+
+function salvarLotacaoGlobal(mostrarAlerta = true) {
   var lista = coletarDadosLotacao();
   
   // Salva no Banco Local
   localStorage.setItem('db_lotacao_mestra', JSON.stringify(lista));
+
+  // Atualiza a tabela visual abaixo imediatamente
+  atualizarTabelaRegistroVisual(lista);
 
   var btnSalvar = document.getElementById('btnSalvarLotacao');
   if (btnSalvar) {
