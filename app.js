@@ -55,7 +55,7 @@ function preencherSelectsTurmas(turmas) {
   });
 }
 
-// Painel Mestre de Lotação
+// Configuração dos Arrays globais
 var listaTurmasGlobal = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
 var listaComponentesGlobal = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Língua Inglesa", "Língua Portuguesa", "Matemática"];
 var listaCargosGlobal = ["Diretor(a)", "Vice-Diretor(a)", "Especialista / EEB", "Professor(a) de Apoio", "Professor(a) Regente"];
@@ -67,25 +67,25 @@ function adicionarCardProfissional(dados = {}) {
 
   var cargosHtml = '';
   listaCargosGlobal.forEach(c => {
-    var sel = dados.cargo === c ? 'selected' : '';
-    cargosHtml += `<option ${sel}>${c}</option>`;
+    var sel = (dados.cargo === c) ? 'selected' : '';
+    cargosHtml += `<option value="${c}" ${sel}>${c}</option>`;
   });
 
   var turnosHtml = '';
   ["Matutino", "Vespertino"].forEach(t => {
-    var chk = dados.turnos && dados.turnos.includes(t) ? 'checked' : '';
+    var chk = (dados.turnos && dados.turnos.includes(t)) ? 'checked' : '';
     turnosHtml += `<label><input type="checkbox" class="t_turno_${idU}" value="${t}" ${chk}> <span>${t}</span></label>`;
   });
 
   var turmasHtml = '';
   listaTurmasGlobal.forEach(t => {
-    var chk = dados.turmas && dados.turmas.includes(t) ? 'checked' : '';
+    var chk = (dados.turmas && dados.turmas.includes(t)) ? 'checked' : '';
     turmasHtml += `<label><input type="checkbox" class="t_turma_${idU}" value="${t}" ${chk}> <span>${t}</span></label>`;
   });
 
   var compHtml = '';
   listaComponentesGlobal.forEach(c => {
-    var chk = dados.componentes && dados.componentes.includes(c) ? 'checked' : '';
+    var chk = (dados.componentes && dados.componentes.includes(c)) ? 'checked' : '';
     compHtml += `<label><input type="checkbox" class="t_comp_${idU}" value="${c}" ${chk}> <span>${c}</span></label>`;
   });
 
@@ -193,8 +193,8 @@ function coletarDadosLotacao() {
   var cards = document.querySelectorAll('.prof-card');
   
   cards.forEach(card => {
-    var nomeInput = card.querySelector('input.prof-nome');
-    var cargoSelect = card.querySelector('select.prof-cargo');
+    var nomeInput = card.querySelector('.prof-nome');
+    var cargoSelect = card.querySelector('.prof-cargo');
     var idInput = card.querySelector('.prof-id');
     
     if (!nomeInput || !cargoSelect || !idInput) return;
@@ -251,7 +251,7 @@ function salvarLotacaoGlobal(mostrarAlerta = true) {
   // Salva no Banco Local
   localStorage.setItem('db_lotacao_mestra', JSON.stringify(lista));
 
-  // Atualiza a tabela visual abaixo imediatamente
+  // Atualiza a tabela visual imediatamente
   atualizarTabelaRegistroVisual(lista);
 
   var btnSalvar = document.getElementById('btnSalvarLotacao');
@@ -266,13 +266,13 @@ function salvarLotacaoGlobal(mostrarAlerta = true) {
     }, 2500);
   }
 
+  if (mostrarAlerta) {
+    alert("Lotação salva com sucesso no navegador! Total de servidores na lista: " + lista.length);
+  }
+
   // Sincroniza com o Google Sheets
   if (typeof google !== 'undefined' && google.script) {
-    google.script.run.withSuccessHandler(function() {
-      if (mostrarAlerta) alert('Lotação salva com sucesso na Planilha e no App Web!');
-    }).salvarLotacaoGlobal(lista);
-  } else {
-    if (mostrarAlerta) alert('Lotação salva com sucesso no App Web!');
+    google.script.run.withSuccessHandler(function() {}).salvarLotacaoGlobal(lista);
   }
 }
 
