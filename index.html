@@ -435,19 +435,42 @@
        var txtOriginal = btn.innerHTML;
        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando...';
        btn.disabled = true;
+
+       // 1. Abre a aba IMEDIATAMENTE para o navegador não bloquear (Anti Pop-up)
+       var win = window.open('', '_blank');
+       if(win) {
+           win.document.write('<h2 style="font-family: Arial; text-align: center; margin-top: 50px; color: #4f46e5;">⏳ Desenhando bilhetes da turma, por favor aguarde...</h2>');
+       } else {
+           alert("Seu navegador bloqueou a nova aba! Permita os pop-ups lá em cima, perto da barra de endereços.");
+           btn.innerHTML = txtOriginal; btn.disabled = false;
+           return;
+       }
        
        var pacote = { turma: turmaSel, trimestre: trimestreSel };
        
+       // 2. Chama o Google
        chamarApiGoogle('gerarBilhetesHTML', pacote, function(res) {
           btn.innerHTML = txtOriginal; btn.disabled = false;
-          if(res && res.erro) { alert(res.erro); } 
-          else if (res && res.html) {
-             var win = window.open('', '_blank');
+          
+          if(res && res.erro) { 
+              win.close(); 
+              alert(res.erro); 
+          } else if (res && res.html) {
+             win.document.open();
              win.document.write(res.html);
              win.document.close();
+          } else {
+             win.close();
+             alert("Erro de comunicação com o Google. Tente novamente.");
           }
        });
+
+       // 3. Trava de segurança (Destrava o botão se a internet cair)
+       setTimeout(function() {
+           if(btn.disabled) {
+               btn.innerHTML = txtOriginal; btn.disabled = false;
+               if(win) win.close();
+               alert("O Google demorou para responder (internet lenta). Tente clicar de novo!");
+           }
+       }, 15000);
     }
-  </script>
-</body>
-</html>
