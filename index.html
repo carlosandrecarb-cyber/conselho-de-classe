@@ -13,7 +13,7 @@
     .view-section { display: none; min-height: 100vh; }
     .view-section.active { display: flex; flex-direction: column; }
     .hub-container { max-width: 480px; width: 100%; margin: auto; padding: 35px; background: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; text-align: center; }
-    .panel-container { max-width: 1000px; width: 100%; margin: 20px auto; padding: 25px; background: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+    .panel-container { max-width: 1100px; width: 100%; margin: 20px auto; padding: 25px; background: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
     .btn-hub { width: 100%; padding: 14px; font-weight: 700; border-radius: 10px; border: none; font-size: 1rem; margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
     .btn-hub.prof { background: #e0e7ff; color: #4f46e5; border: 2px solid #c7d2fe; }
     .btn-hub.prof:hover { background: #c7d2fe; }
@@ -31,6 +31,10 @@
     .eval-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 10px; }
     .phrase-tag { font-size: 0.7rem; font-weight: 700; background: #f8fafc; border: 1px solid var(--slate-200); color: var(--slate-900); padding: 6px 10px; border-radius: 6px; cursor: pointer; text-align: left; transition: 0.1s; }
     .phrase-tag:hover { background: var(--indigo-600); color: white; border-color: var(--indigo-600); }
+    
+    .turma-checkbox-grid { display: flex; flex-wrap: wrap; gap: 4px; max-width: 320px; }
+    .turma-check-label { font-size: 0.7rem; font-weight: 700; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; }
+    .turma-check-label input { accent-color: #4f46e5; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -67,15 +71,15 @@
     </div>
   </div>
 
-  <!-- ETAPA 1: TABELA INTELIGENTE DE LOTAÇÃO -->
+  <!-- ETAPA 1: TABELA CLICÁVEL DE LOTAÇÃO (COM CONTROLE INTELIGENTE DE CARGOS) -->
   <div id="view-lotacao" class="view-section p-3">
     <div class="panel-container">
       <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
         <div class="d-flex align-items-center gap-3">
           <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 38px; object-fit: contain;">
           <div>
-            <h4 class="fw-bold text-dark m-0" style="font-size: 1.1rem;">Etapa 1: Lotação de Servidores e Professores</h4>
-            <p class="text-muted m-0 fs-7">Definição rápida de cargos, turmas e componentes</p>
+            <h4 class="fw-bold text-dark m-0" style="font-size: 1.1rem;">Etapa 1: Lotação de Servidores e Gestão</h4>
+            <p class="text-muted m-0 fs-7">Atribuição por cliques (cargos, turnos e turmas)</p>
           </div>
         </div>
         <button class="btn btn-outline-danger btn-sm fw-bold" onclick="showView('view-hub')">Sair</button>
@@ -90,17 +94,17 @@
         </div>
       </div>
 
-      <!-- Tabela Dinâmica de Configuração -->
-      <label class="form-label fw-bold text-dark" style="font-size:0.8rem;"><i class="fa-solid fa-table me-1"></i> 2. Configure Cargos, Turmas e Componentes de Cada Servidor:</label>
-      <div class="table-responsive mb-3" style="max-height: 380px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px;">
+      <!-- Tabela Dinâmica -->
+      <label class="form-label fw-bold text-dark" style="font-size:0.8rem;"><i class="fa-solid fa-table me-1"></i> 2. Configure Cargos, Turmas e Componentes de cada Servidor:</label>
+      <div class="table-responsive mb-3" style="max-height: 400px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px;">
         <table class="table table-bordered table-striped m-0 align-middle" style="font-size: 0.8rem;">
           <thead class="table-dark sticky-top">
             <tr>
-              <th style="width: 22%;">Servidor(a)</th>
-              <th style="width: 20%;">Cargo / Função</th>
-              <th style="width: 18%;">Turno</th>
-              <th style="width: 25%;">Turmas Atendidas</th>
-              <th style="width: 15%;">Componente / Apoio</th>
+              <th style="width: 20%;">Servidor(a)</th>
+              <th style="width: 18%;">Cargo / Função</th>
+              <th style="width: 15%;">Turno</th>
+              <th style="width: 32%;">Turmas Atendidas (Clique para marcar várias)</th>
+              <th style="width: 15%;">Componente Curricular</th>
             </tr>
           </thead>
           <tbody id="tabelaLotacaoCorpo">
@@ -260,7 +264,6 @@
       sel.innerHTML = '<option value="">Selecione a Turma...</option>';
       listaTurmasGlobal.forEach(t => sel.innerHTML += `<option value="${t}">${t}</option>`);
       
-      // Carrega servidores salvos na tabela ou coloca exemplo
       var servSalvos = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || 'null');
       if (servSalvos && servSalvos.length > 0) {
         renderizarTabelaLotacao(servSalvos);
@@ -305,19 +308,50 @@
       lista.forEach((s, i) => {
         var cargosOpt = listaCargosGlobal.map(c => `<option ${s.cargo===c?'selected':''}>${c}</option>`).join('');
         var turnosOpt = ["Matutino", "Vespertino", "Ambos"].map(t => `<option ${s.turno===t?'selected':''}>${t}</option>`).join('');
-        var turmasOpt = listaTurmasGlobal.map(t => `<option ${s.turmas && s.turmas.includes(t)?'selected':''}>${t}</option>`).join('');
+        
+        var compDesativado = (s.cargo !== "Professor(a) Regente");
         var compOpt = listaCompGlobal.map(c => `<option ${s.comp===c?'selected':''}>${c}</option>`).join('');
+
+        var turmasCheckboxes = '';
+        listaTurmasGlobal.forEach(t => {
+          var isChecked = s.turmas && s.turmas.includes(t) ? 'checked' : '';
+          turmasCheckboxes += `
+            <label class="turma-check-label">
+              <input type="checkbox" class="turma-chk" value="${t}" ${isChecked}> ${t}
+            </label>
+          `;
+        });
 
         tbody.innerHTML += `
           <tr data-index="${i}">
             <td class="fw-bold text-uppercase name-cell" style="font-size:0.75rem;">${s.nome}</td>
-            <td><select class="form-select form-select-sm cargo-sel">${cargosOpt}</select></td>
+            <td><select class="form-select form-select-sm cargo-sel" onchange="atualizarEstadoCargo(this)">${cargosOpt}</select></td>
             <td><select class="form-select form-select-sm turno-sel">${turnosOpt}</select></td>
-            <td><select class="form-select form-select-sm turma-sel">${turmasOpt}</select></td>
-            <td><select class="form-select form-select-sm comp-sel">${compOpt}</select></td>
+            <td><div class="turma-checkbox-grid">${turmasCheckboxes}</div></td>
+            <td><select class="form-select form-select-sm comp-sel" ${compDesativado ? 'disabled style="background:#e2e8f0;"' : ''}>
+              <option value="">N/A</option>
+              ${compOpt}
+            </select></td>
           </tr>
         `;
       });
+    }
+
+    // Função inteligente: se mudar para Diretor, Vice, Especialista ou Apoio, desativa o componente
+    function atualizarEstadoCargo(selectCargo) {
+      var tr = selectCargo.closest('tr');
+      var compSelect = tr.querySelector('.comp-sel');
+      var cargo = selectCargo.value;
+
+      if (cargo === "Professor(a) Regente") {
+        compSelect.disabled = false;
+        compSelect.style.backgroundColor = "white";
+        if(!compSelect.value) compSelect.value = "Português";
+      } else {
+        compSelect.disabled = true;
+        compSelect.value = "";
+        compSelect.style.backgroundColor = "#e2e8f0";
+      }
     }
 
     function salvarLotacaoTabela() {
@@ -327,12 +361,17 @@
         var nome = tr.querySelector('.name-cell').innerText;
         var cargo = tr.querySelector('.cargo-sel').value;
         var turno = tr.querySelector('.turno-sel').value;
-        var turma = tr.querySelector('.turma-sel').value;
-        var comp = tr.querySelector('.comp-sel').value;
-        listaSalvar.push({ nome: nome, cargo: cargo, turno: turno, turmas: [turma], comp: comp });
+        var comp = tr.querySelector('.comp-sel').value || '';
+        
+        var turmasMarcadas = [];
+        tr.querySelectorAll('.turma-chk:checked').forEach(chk => {
+          turmasMarcadas.push(chk.value);
+        });
+
+        listaSalvar.push({ nome: nome, cargo: cargo, turno: turno, turmas: turmasMarcadas, comp: comp });
       });
       localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(listaSalvar));
-      alert("✅ Lotação da tabela salva com sucesso no sistema!");
+      alert("✅ Lotação salva com sucesso!");
     }
 
     function irParaEtapa2() { 
@@ -685,7 +724,7 @@
           </div>`;
        });
        
-       html += `</body>endif</body></html>`;
+       html += `</body></html>`;
        var win = window.open('', '_blank');
        win.document.write(html);
        win.document.close();
