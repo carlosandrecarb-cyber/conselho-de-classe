@@ -202,7 +202,7 @@
     var timerInterval = null; var tempoRestante = 180;
 
     window.onload = function() {
-      requisicaoGet('carregarTudo', null, function(dados) {
+      requisicaoApi('carregarTudo', null, function(dados) {
         if(dados && !dados.erro) bancoDeDados = dados;
       });
     };
@@ -212,8 +212,8 @@
       document.getElementById(id).classList.add('active');
     }
 
-    // Leitura rápida via GET (Sem problemas de CORS)
-    function requisicaoGet(funcao, paramsObj, callback) {
+    // Comunicação universal via URL GET (Bula o bloqueio de CORS do Google de forma definitiva)
+    function requisicaoApi(funcao, paramsObj, callback) {
       var url = URL_API_GOOGLE + "?funcao=" + funcao;
       if (paramsObj) {
         for (var k in paramsObj) {
@@ -223,19 +223,7 @@
       fetch(url)
         .then(res => res.json())
         .then(data => { if(callback) callback(data); })
-        .catch(e => { console.error("Erro GET:", e); });
-    }
-
-    // Gravação via POST
-    function requisicaoPost(funcao, dadosObj, callback) {
-      fetch(URL_API_GOOGLE, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ funcao: funcao, dados: dadosObj })
-      })
-      .then(res => res.json())
-      .then(data => { if(callback) callback(data); })
-      .catch(e => { console.error("Erro POST:", e); });
+        .catch(e => { console.error("Erro API:", e); });
     }
 
     function verificarSenha() {
@@ -245,7 +233,7 @@
         if (bancoDeDados) { 
           iniciarInterfaceComDados(); 
         } else {
-           requisicaoGet('carregarTudo', null, function(dados) {
+           requisicaoApi('carregarTudo', null, function(dados) {
               if(dados && !dados.erro) { 
                 bancoDeDados = dados; 
                 iniciarInterfaceComDados(); 
@@ -313,7 +301,7 @@
           lista.push({ nome: nome, cargo: c.querySelector('.prof-cargo').value, turnos: Array.from(c.querySelectorAll('.chk-turno:checked')).map(el=>el.value), turmas: Array.from(c.querySelectorAll('.chk-turma:checked')).map(el=>el.value), componentes: Array.from(c.querySelectorAll('.chk-comp:checked')).map(el=>el.value) });
         }
       });
-      requisicaoPost('salvarLotacaoGlobal', lista);
+      requisicaoApi('salvarLotacaoGlobal', { dados: JSON.stringify(lista) });
       var btn = document.getElementById('btnSalvarLotacao');
       if(btn) { btn.innerHTML = "Lotação Salva na Planilha!"; setTimeout(() => btn.innerHTML = "Salvar Lotação", 2000); }
     }
@@ -338,7 +326,7 @@
       limparGrupoBotoes('turma_trabalhos_group');
       document.getElementById('txtObsTurma').value = '';
 
-      requisicaoGet('carregarDadosSalvos', { turma: turmaSel, trimestre: trimestreSel }, function(res) {
+      requisicaoApi('carregarDadosSalvos', { turma: turmaSel, trimestre: trimestreSel }, function(res) {
           dadosRecuperadosCache = res || { turmaColetiva: null, avaliacoesAlunos: {} };
           if(dadosRecuperadosCache.turmaColetiva) {
              var tc = dadosRecuperadosCache.turmaColetiva;
@@ -392,7 +380,15 @@
       avaliacaoTurma.trimestre = document.getElementById('espSelectTrimestre').value;
       avaliacaoTurma.observacoes = document.getElementById('txtObsTurma').value;
       
-      requisicaoPost('salvarAvaliacaoTurma', avaliacaoTurma);
+      requisicaoApi('salvarAvaliacaoTurma', {
+        trimestre: avaliacaoTurma.trimestre,
+        turma: avaliacaoTurma.turma,
+        conversa: avaliacaoTurma.turma_conversa || '',
+        faltas: avaliacaoTurma.turma_faltas || '',
+        atividades: avaliacaoTurma.turma_atividades || '',
+        trabalhos: avaliacaoTurma.turma_trabalhos || '',
+        observacoes: avaliacaoTurma.observacoes || ''
+      });
 
       if(listaEstudantes.length > 0) {
         document.getElementById('panel-turma').style.display = 'none';
@@ -442,7 +438,7 @@
          if(avSalva.disciplina) marcarBotaoPorValor('disc_group', avSalva.disciplina);
          if(avSalva.atencao) marcarBotaoPorValor('atencao_group', avSalva.atencao);
          if(avSalva.conversa) marcarBotaoPorValor('conv_group', avSalva.conversa);
-         if(avSalva.interesse) marcarBotaoPorValor('inter_group', avSalva.interesse);
+         if(avSalva.interesse) marcarBotaoPorValor('interesse_group', avSalva.interesse);
          if(avSalva.participacao) marcarBotaoPorValor('part_group', avSalva.participacao);
          if(avSalva.aprendizagem) marcarBotaoPorValor('aprend_group', avSalva.aprendizagem);
          if(avSalva.organizacao) marcarBotaoPorValor('org_group', avSalva.organizacao);
@@ -484,8 +480,9 @@
       avaliacaoAtual.trimestre = document.getElementById('espSelectTrimestre').value;
       avaliacaoAtual.observacoes = document.getElementById('txtObs').value;
       avaliacaoAtual.motivo = document.getElementById('txtMotivo').value;
+      avaliacaoAtual.numero = listaEstudantes[indexAtual].numero || '';
       
-      requisicaoPost('salvarAvaliacao', avaliacaoAtual);
+      requisicaoApi('salvarAvaliacao', avaliacaoAtual);
       proximoEstudante();
     }
 
@@ -499,7 +496,7 @@
        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando...';
        btn.disabled = true;
 
-       requisicaoPost('gerarBilhetesHTML', { turma: turmaSel, trimestre: trimestreSel }, function(res) {
+       requisicaoApi('gerarBilhetesHTML', { turma: turmaSel, trimestre: trimestreSel }, function(res) {
           btn.innerHTML = txtOriginal; 
           btn.disabled = false;
           if(res && res.erro) { alert(res.erro); } 
