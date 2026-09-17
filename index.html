@@ -97,7 +97,7 @@
       </div>
       <div class="d-flex align-items-center gap-3">
         <span class="badge border border-light p-2 fs-6">Turma Atual: <span id="lblTurmaAtiva" class="text-warning">...</span></span>
-        <button id="btnImprimirBilhetes" class="btn btn-sm btn-info fw-bold text-dark px-3" onclick="imprimirBilhetes()"><i class="fa-solid fa-print me-1"></i> Gerar Bilhetes (PDF/Imprimir)</button>
+        <button id="btnImprimirBilhetes" class="btn btn-sm btn-info fw-bold text-dark px-3" onclick="imprimirBilhetes()"><i class="fa-solid fa-print me-1"></i> Imprimir Bilhetes Completos</button>
       </div>
     </nav>
     <div class="flex-grow-1 overflow-auto p-3">
@@ -199,7 +199,6 @@
     var avaliacaoAtual = {}; var avaliacaoTurma = {};
     var timerInterval = null; var tempoRestante = 180;
 
-    // Banco de estudantes de exemplo inteligentes (caso queira testar na hora)
     var baseEstudantesExemplo = {
       "6R1": [{numero: 1, nome: "ALLEXYS EDWARDO SILVA AMARAL"}, {numero: 2, nome: "BIANCA GOMES DO AMARAL"}, {numero: 3, nome: "DAVI MOTA SANTOS"}],
       "7R1": [{numero: 1, nome: "ESTUDANTE 1 - 7R1"}, {numero: 2, nome: "ESTUDANTE 2 - 7R1"}],
@@ -212,7 +211,6 @@
       sel.innerHTML = '<option value="">Selecione a Turma...</option>';
       listaTurmasGlobal.forEach(t => sel.innerHTML += `<option value="${t}">${t}</option>`);
       
-      // Carrega lotação salva localmente se houver
       var lotacaoSalva = JSON.parse(localStorage.getItem('mestra_lotacao') || '[]');
       if (lotacaoSalva.length > 0) {
         lotacaoSalva.forEach(p => adicionarCardProfissional(p));
@@ -279,10 +277,8 @@
       if(!turmaSel) { alert("Selecione a turma alvo!"); return; }
 
       document.getElementById('lblTurmaAtiva').innerText = turmaSel;
-      
-      // Pega os alunos cadastrados localmente ou do exemplo
       var salvosLocal = JSON.parse(localStorage.getItem('mestra_alunos_' + turmaSel) || 'null');
-      listaEstudantes = salvosLocal || baseEstudantesExemplo[turmaSel] || [{numero: 1, nome: "ESTUDANTE 1 DA TURMA " + turmaSel}, {numero: 2, nome: "ESTUDANTE 2 DA TURMA " + turmaSel}];
+      listaEstudantes = salvosLocal || baseEstudantesExemplo[turmaSel] || [{numero: 1, nome: "ESTUDANTE 1 DA TURMA " + turmaSel}];
 
       showView('view-datashow');
       document.getElementById('panel-turma').style.display = 'block';
@@ -371,7 +367,6 @@
       document.getElementById('lblIndex').innerText = indexAtual + 1;
       document.getElementById('lblTotal').innerText = listaEstudantes.length;
 
-      // Carrega avaliação anterior se houver salva localmente
       var turmaSel = document.getElementById('lblTurmaAtiva').innerText;
       var trimestre = document.getElementById('espSelectTrimestre').value;
       var todasAvaliacoes = JSON.parse(localStorage.getItem('mestra_avs_' + turmaSel + '_' + trimestre) || '{}');
@@ -453,6 +448,7 @@
       proximoEstudante();
     }
 
+    // FUNÇÃO DE IMPRESSÃO COMPLETA E OFICIAL RESTAURADA
     function imprimirBilhetes() {
        var turmaSel = document.getElementById('lblTurmaAtiva').innerText;
        var trimestre = document.getElementById('espSelectTrimestre').value; 
@@ -461,11 +457,45 @@
        var chave = 'mestra_avs_' + turmaSel + '_' + trimestre;
        var todasAvaliacoes = JSON.parse(localStorage.getItem(chave) || '{}');
        
-       var html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Bilhetes ${turmaSel}</title><style>@page{size:A4 portrait;margin:8mm;}body{font-family:Arial;color:#000;}.bilhete{border:2px solid #000;padding:8px;margin-bottom:15px;page-break-inside:avoid;}.title{font-size:12px;font-weight:bold;text-align:center;margin-bottom:5px;}.info{background:#f1f5f9;border:1px solid #000;padding:5px;font-weight:bold;font-size:11px;display:flex;justify-content:space-between;margin-bottom:6px;}.obs{border:1px solid #000;padding:5px;font-size:10px;min-height:25px;margin-top:4px;}</style></head><body>`;
+       function renderBox(valorSalvo, opcao) {
+         var isChecked = false;
+         if (valorSalvo && opcao) {
+           if (valorSalvo.trim().toLowerCase() === opcao.toLowerCase()) isChecked = true;
+           if (opcao === 'Ótimo/Ótima' && valorSalvo.includes('Ótimo')) isChecked = true;
+           if (opcao === 'Bom/Boa' && valorSalvo.includes('Bom')) isChecked = true;
+         }
+         var checked = isChecked ? 'X' : '&nbsp;&nbsp;';
+         var bg = isChecked ? 'background-color: #e2e8f0; font-weight:bold;' : '';
+         return `<div style="display:inline-block; border:1px solid #000; width:10px; height:10px; text-align:center; line-height:10px; font-size:9px; margin-right:3px; ${bg}">${checked}</div><span style="font-size:9px;">${opcao}</span>`;
+       }
+
+       var html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Bilhetes ${turmaSel}</title><style>@page { size: A4 portrait; margin: 8mm; } body { font-family: Arial, sans-serif; margin: 0; color: #000; } .bilhete { width: 100%; border: 2px solid #000; padding: 6px 10px; box-sizing: border-box; margin-bottom: 12px; page-break-inside: avoid; } .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 2px; margin-bottom: 4px; } .title { font-size: 10px; font-weight: 900; text-transform: uppercase; } .student-info { background: #f8fafc; border: 1px solid #000; padding: 3px 6px; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; } .student-name { font-size: 11px; font-weight: 900; text-transform: uppercase; } .label { font-size: 7px; font-weight: bold; } .grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-bottom: 3px; } .card-box { border: 1px solid #000; padding: 2px; } .card-title { font-weight: 900; text-transform: uppercase; border-bottom: 1px solid #000; margin-bottom: 2px; font-size: 7px; text-align: center; background-color: #e2e8f0; } .opt-row { margin-bottom: 1px; display: flex; align-items: center; } .obs-box { font-size: 9px; padding: 3px; border: 1px solid #000; min-height: 14px; margin-top: 1px; }</style></head><body>`;
        
        listaEstudantes.forEach(function(aluno) {
-          var av = todasAvaliacoes[aluno.nome.toUpperCase()] || { caracteristica: 'Nenhum registro', observacoes: 'Sem observações' };
-          html += `<div class="bilhete"><div class="title">CONSELHO DE CLASSE - ${trabalhos = trimestre} | E. E. MESTRA AURORA</div><div class="info"><span>ESTUDANTE: ${aluno.nome}</span><span>TURMA: ${turmaSel}</span></div><div style="font-size:10px;"><b>Perfil/Característica:</b> ${av.caracteristica} ${av.motivo ? '— ' + av.motivo : ''}</div><div class="obs"><b>Observações:</b> ${av.observacoes}</div></div>`;
+          var av = todasAvaliacoes[aluno.nome.toUpperCase()] || {}; 
+          var textoCaracteristica = (av.caracteristica || 'NENHUM REGISTRO') + (av.motivo ? ' — ' + av.motivo : '');
+
+          html += `<div class="bilhete">
+            <div class="header"><div class="title">CONSELHO DE CLASSE - ${trimestre} | E. E. MESTRA AURORA</div></div>
+            <div class="student-info">
+              <div><div class="label">ESTUDANTE:</div><div class="student-name">${aluno.nome}</div></div>
+              <div style="text-align: right;"><div class="label">TURMA:</div><div class="student-name">${turmaSel}</div></div>
+            </div>
+            <div class="grid-container">
+              <div class="card-box"><div class="card-title">Disciplina</div><div class="opt-row">${renderBox(av.disciplina, 'Bom')}</div><div class="opt-row">${renderBox(av.disciplina, 'Às vezes')}</div><div class="opt-row">${renderBox(av.disciplina, 'Não')}</div></div>
+              <div class="card-box"><div class="card-title">Atenção</div><div class="opt-row">${renderBox(av.atencao, 'Atento')}</div><div class="opt-row">${renderBox(av.atencao, 'Às vezes')}</div><div class="opt-row">${renderBox(av.atencao, 'Desatento')}</div></div>
+              <div class="card-box"><div class="card-title">Conversa</div><div class="opt-row">${renderBox(av.conversa, 'Não')}</div><div class="opt-row">${renderBox(av.conversa, 'Pouco')}</div><div class="opt-row">${renderBox(av.conversa, 'Muito')}</div></div>
+              <div class="card-box"><div class="card-title">Interesse</div><div class="opt-row">${renderBox(av.interesse, 'Muito')}</div><div class="opt-row">${renderBox(av.interesse, 'Pouco')}</div><div class="opt-row">${renderBox(av.interesse, 'Sem')}</div></div>
+              <div class="card-box"><div class="card-title">Participação</div><div class="opt-row">${renderBox(av.participacao, 'Participa')}</div><div class="opt-row">${renderBox(av.participacao, 'Pouco')}</div><div class="opt-row">${renderBox(av.participacao, 'Não')}</div></div>
+              <div class="card-box"><div class="card-title">Aprendizagem</div><div class="opt-row">${renderBox(av.aprendizagem, 'Avança')}</div><div class="opt-row">${renderBox(av.aprendizagem, 'Dificuldade')}</div><div class="opt-row">${renderBox(av.aprendizagem, 'Não quer')}</div></div>
+              <div class="card-box"><div class="card-title">Organização</div><div class="opt-row">${renderBox(av.organizacao, 'Organizado')}</div><div class="opt-row">${renderBox(av.organizacao, 'Parcial')}</div><div class="opt-row">${renderBox(av.organizacao, 'Sem')}</div></div>
+              <div class="card-box"><div class="card-title">Ativ. Sala</div><div class="opt-row">${renderBox(av.atividades_sala, 'Cumpre')}</div><div class="opt-row">${renderBox(av.atividades_sala, 'Parcial')}</div><div class="opt-row">${renderBox(av.atividades_sala, 'Não cumpre')}</div></div>
+              <div class="card-box"><div class="card-title">Tarefa Casa</div><div class="opt-row">${renderBox(av.tarefa_casa, 'Cumpre')}</div><div class="opt-row">${renderBox(av.tarefa_casa, 'Parcial')}</div><div class="opt-row">${renderBox(av.tarefa_casa, 'Não cumpre')}</div></div>
+              <div class="card-box"><div class="card-title">Presença</div><div class="opt-row">${renderBox(av.presenca, 'Comparece')}</div><div class="opt-row">${renderBox(av.presenca, 'Faltas')}</div><div class="opt-row">${renderBox(av.presenca, 'Não comp.')}</div></div>
+            </div>
+            <div><div class="label">CARACTERÍSTICA:</div><div class="obs-box" style="font-weight:bold; text-transform: uppercase;">${textoCaracteristica}</div></div>
+            <div style="margin-top: 2px;"><div class="label">OBSERVAÇÕES:</div><div class="obs-box">${av.observacoes || ''}</div></div>
+          </div>`;
        });
        
        html += `</body></html>`;
