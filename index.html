@@ -437,9 +437,11 @@
       proximoEstudante();
     }
 
-    // === GERADOR DE BILHETES ===
+   // === GERADOR DE BILHETES ===
     function imprimirBilhetes() {
        var turmaSel = document.getElementById('lblTurmaAtiva').innerText;
+       var trimestreSel = document.getElementById('espSelectTrimestre').value; // Pega o trimestre selecionado
+       
        if(!turmaSel || turmaSel === '...') { alert('Selecione uma turma na Etapa 2 primeiro.'); return; }
        
        var btn = document.getElementById('btnImprimirBilhetes');
@@ -447,7 +449,10 @@
        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando...';
        btn.disabled = true;
        
-       chamarApiGoogle('gerarBilhetesHTML', turmaSel, function(res) {
+       // Envia a turma e o trimestre juntos para o Google
+       var pacote = { turma: turmaSel, trimestre: trimestreSel };
+       
+       chamarApiGoogle('gerarBilhetesHTML', pacote, function(res) {
           btn.innerHTML = txtOriginal; btn.disabled = false;
           if(res && res.erro) { alert(res.erro); } 
           else if (res && res.html) {
@@ -457,6 +462,3 @@
           }
        });
     }
-  </script>
-</body>
-</html>
