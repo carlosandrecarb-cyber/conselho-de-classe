@@ -78,13 +78,30 @@
     <div id="containerProfissionais" class="mb-4"></div>
   </div>
 
+  <!-- ETAPA 2: SELEÇÃO DE TURMA + GERENCIADOR DE ESTUDANTES (IMPORTADOR RÁPIDO) -->
   <div id="view-selecao" class="view-section justify-content-center align-items-center" style="background: #0f172a;">
-    <div class="bg-white p-4 rounded shadow mx-auto" style="max-width: 450px; width: 100%;">
-      <h4 class="fw-bold text-center mb-4">Etapa 2: Seleção de Turma</h4>
-      <button class="btn btn-outline-secondary w-100 mb-4 fw-bold" onclick="showView('view-lotacao')"><i class="fa-solid fa-arrow-left me-1"></i> Voltar à Lotação</button>
-      <div class="mb-3"><label class="form-label fw-bold">Trimestre:</label><select id="espSelectTrimestre" class="form-select fw-bold"><option value="1º Trimestre">1º Trimestre</option><option value="2º Trimestre" selected>2º Trimestre</option><option value="3º Trimestre">3º Trimestre</option></select></div>
-      <div class="mb-3"><label class="form-label fw-bold">Turno:</label><select id="espSelectTurno" class="form-select fw-bold"><option value="Matutino">Matutino</option><option value="Vespertino">Vespertino</option></select></div>
-      <div class="mb-4"><label class="form-label fw-bold">Turma Alvo:</label><select id="espSelectTurma" class="form-select fw-bold border-primary text-primary"><option value="">Selecione a Turma...</option></select></div>
+    <div class="bg-white p-4 rounded shadow mx-auto" style="max-width: 500px; width: 100%;">
+      <h4 class="fw-bold text-center mb-3">Etapa 2: Seleção de Turma</h4>
+      <button class="btn btn-outline-secondary w-100 mb-3 fw-bold btn-sm" onclick="showView('view-lotacao')"><i class="fa-solid fa-arrow-left me-1"></i> Voltar à Lotação</button>
+      
+      <div class="row g-2 mb-3">
+        <div class="col-6"><label class="form-label fw-bold" style="font-size:0.8rem;">Trimestre:</label><select id="espSelectTrimestre" class="form-select fw-bold"><option value="1º Trimestre">1º Trimestre</option><option value="2º Trimestre" selected>2º Trimestre</option><option value="3º Trimestre">3º Trimestre</option></select></div>
+        <div class="col-6"><label class="form-label fw-bold" style="font-size:0.8rem;">Turno:</label><select id="espSelectTurno" class="form-select fw-bold"><option value="Matutino">Matutino</option><option value="Vespertino">Vespertino</option></select></div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-bold" style="font-size:0.8rem;">Turma Alvo:</label>
+        <select id="espSelectTurma" class="form-select fw-bold border-primary text-primary" onchange="carregarAlunosDaTurmaSelecionada()"><option value="">Selecione a Turma...</option></select>
+      </div>
+
+      <!-- PAINEL DE IMPORTAÇÃO RÁPIDA DE ALUNOS (COPIAR DO PDF/TEXTO) -->
+      <div class="mb-3 p-3 bg-light border rounded">
+        <label class="form-label fw-bold text-primary m-0" style="font-size:0.8rem;"><i class="fa-solid fa-file-lines me-1"></i> Importar / Editar Alunos da Turma:</label>
+        <p class="text-muted mb-2" style="font-size:0.7rem;">Cole abaixo a lista de nomes (um por linha) copiada do PDF da Secretaria:</p>
+        <textarea id="txtListaAlunos" class="input-textarea mb-2" rows="3" placeholder="Ex:&#10;ALLEXYS EDWARDO&#10;BIANCA GOMES&#10;DAVI MOTA" style="font-size:0.75rem;"></textarea>
+        <button class="btn btn-sm btn-outline-primary fw-bold w-100" onclick="salvarAlunosDaTurmaManual()"><i class="fa-solid fa-floppy-disk me-1"></i> Salvar Alunos desta Turma</button>
+      </div>
+
       <button class="btn btn-primary w-100 py-3 fw-bold fs-5" onclick="iniciarSessaoConselho()"><i class="fa-solid fa-play me-2"></i> Iniciar Datashow</button>
     </div>
   </div>
@@ -202,9 +219,7 @@
     var baseEstudantesExemplo = {
       "6R1": [{numero: 1, nome: "ALLEXYS EDWARDO SILVA AMARAL"}, {numero: 2, nome: "BIANCA GOMES DO AMARAL"}, {numero: 3, nome: "DAVI MOTA SANTOS"}],
       "6R2": [{numero: 1, nome: "ESTUDANTE 1 - 6R2"}, {numero: 2, nome: "ESTUDANTE 2 - 6R2"}, {numero: 3, nome: "ESTUDANTE 3 - 6R2"}],
-      "7R1": [{numero: 1, nome: "ESTUDANTE 1 - 7R1"}, {numero: 2, nome: "ESTUDANTE 2 - 7R1"}],
-      "8R1": [{numero: 1, nome: "ESTUDANTE 1 - 8R1"}],
-      "9R1": [{numero: 1, nome: "ESTUDANTE 1 - 9R1"}]
+      "7R1": [{numero: 1, nome: "ESTUDANTE 1 - 7R1"}, {numero: 2, nome: "ESTUDANTE 2 - 7R1"}]
     };
 
     window.onload = function() {
@@ -273,6 +288,47 @@
 
     function irParaEtapa2() { salvarLotacaoGlobal(); showView('view-selecao'); }
 
+    // CARREGA OS ALUNOS DA TURMA AO SELECIONAR NO SELECT
+    function carregarAlunosDaTurmaSelecionada() {
+      var turmaSel = document.getElementById('espSelectTurma').value;
+      if(!turmaSel) {
+        document.getElementById('txtListaAlunos').value = '';
+        return;
+      }
+      var salvosLocal = JSON.parse(localStorage.getItem('mestra_alunos_' + turmaSel) || 'null');
+      var listaAtual = salvosLocal || baseEstudantesExemplo[turmaSel] || [
+        {numero: 1, nome: "ESTUDANTE 01 - " + turmaSel}, 
+        {numero: 2, nome: "ESTUDANTE 02 - " + turmaSel},
+        {numero: 3, nome: "ESTUDANTE 03 - " + turmaSel}
+      ];
+      
+      // Coloca os nomes no textarea um por linha
+      var textoNomes = listaAtual.map(a => a.nome).join('\n');
+      document.getElementById('txtListaAlunos').value = textoNomes;
+    }
+
+    // SALVA OS ALUNOS COLADOS DO PDF/TEXTO
+    function salvarAlunosDaTurmaManual() {
+      var turmaSel = document.getElementById('espSelectTurma').value;
+      if(!turmaSel) { alert("Selecione uma turma primeiro!"); return; }
+      
+      var texto = document.getElementById('txtListaAlunos').value.trim();
+      if(!texto) { alert("A lista de alunos está vazia."); return; }
+
+      var linhas = texto.split('\n');
+      var novosAlunos = [];
+      var num = 1;
+      linhas.forEach(function(linha) {
+        var nomeLimpo = linha.trim();
+        if(nomeLimpo.length > 2) {
+          novosAlunos.push({ numero: num++, nome: nomeLimpo.toUpperCase() });
+        }
+      });
+
+      localStorage.setItem('mestra_alunos_' + turmaSel, JSON.stringify(novosAlunos));
+      alert("✅ " + novosAlunos.length + " estudantes salvos com sucesso para a turma " + turmaSel + "!");
+    }
+
     function iniciarSessaoConselho() {
       var turmaSel = document.getElementById('espSelectTurma').value;
       var trimestreSel = document.getElementById('espSelectTrimestre').value;
@@ -280,14 +336,21 @@
 
       document.getElementById('lblTurmaAtiva').innerText = turmaSel;
       
-      // Puxa estudantes salvos ou cria padrão garantido para a turma selecionada
+      // Puxa do localStorage ou da caixa de texto, ou usa padrão
       var salvosLocal = JSON.parse(localStorage.getItem('mestra_alunos_' + turmaSel) || 'null');
-      listaEstudantes = salvosLocal || baseEstudantesExemplo[turmaSel] || [
-        {numero: 1, nome: "ESTUDANTE 01 - " + turmaSel}, 
-        {numero: 2, nome: "ESTUDANTE 02 - " + turmaSel},
-        {numero: 3, nome: "ESTUDANTE 03 - " + turmaSel},
-        {numero: 4, nome: "ESTUDANTE 04 - " + turmaSel}
-      ];
+      if (salvosLocal && salvosLocal.length > 0) {
+        listaEstudantes = salvosLocal;
+      } else {
+        var textoArea = document.getElementById('txtListaAlunos').value.trim();
+        if (textoArea) {
+           var linhas = textoArea.split('\n');
+           listaEstudantes = [];
+           var n = 1;
+           linhas.forEach(l => { if(l.trim()) listaEstudantes.push({numero: n++, nome: l.trim().toUpperCase()}); });
+        } else {
+           listaEstudantes = baseEstudantesExemplo[turmaSel] || [{numero: 1, nome: "ESTUDANTE 1 - " + turmaSel}];
+        }
+      }
 
       showView('view-datashow');
       document.getElementById('panel-turma').style.display = 'block';
@@ -299,7 +362,6 @@
       limparGrupoBotoes('turma_trabalhos_group');
       document.getElementById('txtObsTurma').value = '';
 
-      // Recupera a avaliação coletiva salva desta turma e trimestre
       var chaveTurmaColetiva = 'mestra_turma_' + turmaSel + '_' + trimestreSel;
       var dadosTurmaSalvos = JSON.parse(localStorage.getItem(chaveTurmaColetiva) || 'null');
       if (dadosTurmaSalvos) {
@@ -468,7 +530,6 @@
       proximoEstudante();
     }
 
-    // IMPRESSÃO MODERNA: 2 ESTUDANTES POR FOLHA, SEM ASSINATURA DA FAMÍLIA E COM BOTÃO DE IMPRESSÃO/SALVAR
     function imprimirBilhetes() {
        var turmaSel = document.getElementById('lblTurmaAtiva').innerText;
        var turnoSel = document.getElementById('espSelectTurno').value;
