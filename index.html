@@ -57,10 +57,11 @@
     </div>
   </div>
 
+  <!-- MÓDULO PROFESSOR -->
   <div id="view-prof" class="view-section p-4">
     <div class="bg-white p-5 rounded shadow mx-auto text-center" style="max-width: 600px; width: 100%; margin-top: 50px;">
       <h3 class="fw-bold text-primary mb-3">Módulo do Professor</h3>
-      <p class="text-muted">A tela de pré-conselho será integrada aqui.</p>
+      <p class="text-muted">A tela de pré-conselho e diagnóstico será integrada aqui em breve.</p>
       <button class="btn btn-outline-danger fw-bold mt-4" onclick="showView('view-hub')">Voltar ao Início</button>
     </div>
   </div>
@@ -80,9 +81,8 @@
       <button class="btn btn-success fw-bold" onclick="adicionarCardProfissional()"><i class="fa-solid fa-plus me-1"></i> Adicionar Servidor</button>
     </div>
 
-    <div id="containerProfissionais" class="mb-4">
-      <!-- O Spinner de carregamento aparece aqui! -->
-    </div>
+    <!-- Container onde os cards e o aviso de carregamento aparecem -->
+    <div id="containerProfissionais" class="mb-4"></div>
 
     <div class="row g-3 mb-5">
       <div class="col-6">
@@ -114,7 +114,7 @@
       </div>
       <div class="mb-4">
         <label class="form-label fw-bold">Turma Alvo:</label>
-        <select id="espSelectTurma" class="form-select fw-bold border-primary text-primary"><option value="">Carregando...</option></select>
+        <select id="espSelectTurma" class="form-select fw-bold border-primary text-primary"><option value="">Aguardando turmas...</option></select>
       </div>
 
       <button class="btn btn-primary w-100 py-3 fw-bold fs-5" onclick="iniciarSessaoConselho()"><i class="fa-solid fa-play me-2"></i> Iniciar Datashow</button>
@@ -130,7 +130,7 @@
       </div>
       <div class="d-flex align-items-center gap-3">
         <span class="badge border border-light p-2 fs-6">Turma: <span id="lblTurmaAtiva" class="text-warning">...</span></span>
-        <button class="btn btn-sm btn-success fw-bold" onclick="alert('Função PDF na planilha')"><i class="fa-solid fa-print me-1"></i> PDF</button>
+        <button class="btn btn-sm btn-success fw-bold" onclick="alert('Ata será gerada diretamente da planilha')"><i class="fa-solid fa-print me-1"></i> PDF</button>
       </div>
     </nav>
 
@@ -185,9 +185,12 @@
     </div>
   </div>
 
+  <!-- AQUI COMEÇA O JAVASCRIPT -->
   <script>
-    // AQUI VAI A SUA URL OFICIAL (Substitua se precisar)
-    const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbwEE2uiIXRoJJ4CzW7N-YR9Af9mz-qIDqsfFJEgQn6sa4WcxxO-zKBvnYegh8z-WOB-/exec";
+    // =========================================================================================
+    // COLE SUA URL AQUI DENTRO DAS ASPAS
+    const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbwYaqIn2pL2ePwILxPcjERVFH_oW_eTW_zB8rNKQiSNHrDHG7MqLAFYc6sJOUeoxZ2D/exec";
+    // =========================================================================================
 
     var listaEstudantes = []; var indexAtual = 0; 
     var avaliacaoAtual = {}; var avaliacaoTurma = {};
@@ -200,19 +203,16 @@
       document.getElementById(id).classList.add('active');
     }
 
+    // COMUNICAÇÃO TOTALMENTE SEGURA VIA POST TEXT/PLAIN
     function chamarApiGoogle(funcao, dados = null, callback) {
-      var isGet = ['getTurmas', 'getServidores', 'getEstudantesPorTurma', 'carregarLotacaoGlobal'].includes(funcao);
-      
-      if (isGet) {
-        var urlGet = URL_API_GOOGLE + "?funcao=" + funcao + (dados ? "&param=" + encodeURIComponent(JSON.stringify(dados)) : "");
-        fetch(urlGet).then(res => res.json()).then(data => { if(callback) callback(data); }).catch(e => console.error(e));
-      } else {
-        fetch(URL_API_GOOGLE, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ funcao: funcao, dados: dados })
-        }).then(res => res.json()).then(data => { if(callback) callback(data); }).catch(e => console.error(e));
-      }
+      fetch(URL_API_GOOGLE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ funcao: funcao, dados: dados })
+      })
+      .then(res => res.json())
+      .then(data => { if(callback) callback(data); })
+      .catch(e => console.error("Erro na conexão com Google:", e));
     }
 
     function verificarSenha() {
@@ -221,23 +221,31 @@
         showView('view-lotacao');
         
         // MOSTRA CARREGAMENTO
-        document.getElementById('containerProfissionais').innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary"></div><h5 class="mt-3 fw-bold text-muted">Sincronizando com a Planilha...</h5></div>';
+        document.getElementById('containerProfissionais').innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary"></div><h5 class="mt-3 fw-bold text-muted">Buscando dados da Planilha...</h5></div>';
         
-        // BUSCA EM CASCATA: Turmas -> Servidores -> Lotação
+        // CASCATA DE DADOS 1: Puxa as turmas da aba 'TURMAS'
         chamarApiGoogle('getTurmas', null, function(resT) {
           listaTurmasGlobal = (!resT.erro && Array.isArray(resT)) ? resT : [];
           
           var selTurma = document.getElementById('espSelectTurma');
-          selTurma.innerHTML = '<option value="">Selecione...</option>';
+          selTurma.innerHTML = '<option value="">Selecione a Turma...</option>';
           listaTurmasGlobal.forEach(t => selTurma.innerHTML += `<option value="${t}">${t}</option>`);
 
+          // CASCATA DE DADOS 2: Puxa nomes já salvos na aba 'EQUIPE_TURNO'
           chamarApiGoogle('getServidores', null, function(resS) {
             listaServidoresGlobal = (!resS.erro && Array.isArray(resS)) ? resS : [];
             
-            // Agora sim, monta os cards!
+            // CASCATA DE DADOS 3: Desenha os cards já cadastrados na 'EQUIPE_TURNO'
             chamarApiGoogle('carregarLotacaoGlobal', null, function(dadosLotacao) {
               var cont = document.getElementById('containerProfissionais');
               cont.innerHTML = '';
+              
+              // Cria a lista oculta de sugestão de nomes (Datalist)
+              var dataList = '<datalist id="listaSugestoes">';
+              listaServidoresGlobal.forEach(s => dataList += `<option value="${s}">`);
+              dataList += '</datalist>';
+              cont.innerHTML += dataList;
+
               if (dadosLotacao && dadosLotacao.length > 0 && !dadosLotacao.erro) { 
                 dadosLotacao.forEach(p => adicionarCardProfissional(p)); 
               } else { 
@@ -247,8 +255,7 @@
           });
         });
       } else { 
-        alert('Senha Incorreta!'); 
-        document.getElementById('inputSenha').value = ''; 
+        alert('Senha Incorreta!'); document.getElementById('inputSenha').value = ''; 
       }
     }
 
@@ -258,20 +265,14 @@
       var card = document.createElement('div');
       card.className = 'p-3 mb-3 border rounded shadow-sm bg-white prof-card';
       
-      var nomesHtml = '<option value="">Selecione o Servidor da Planilha...</option>';
-      listaServidoresGlobal.forEach(s => {
-        var sel = (dados.nome === s) ? 'selected' : '';
-        nomesHtml += `<option value="${s}" ${sel}>${s}</option>`;
-      });
-      
-      var campoNomeHtml = listaServidoresGlobal.length > 0 
-        ? `<select class="form-select prof-nome fw-bold border-primary text-primary">${nomesHtml}</select>`
-        : `<input type="text" class="form-control prof-nome" placeholder="Planilha SERVIDORES vazia" value="${dados.nome||''}">`;
+      // Campo inteligente com Datalist
+      var campoNomeHtml = `<input type="text" class="form-control prof-nome fw-bold border-primary text-primary" placeholder="Digite o nome..." value="${dados.nome||''}" list="listaSugestoes">`;
 
       var cargosHtml = listaCargosGlobal.map(c => `<option value="${c}" ${dados.cargo===c?'selected':''}>${c}</option>`).join('');
+      
       var turmasHtml = listaTurmasGlobal.length > 0 
         ? listaTurmasGlobal.map(t => `<label class="me-3 mb-2"><input type="checkbox" class="chk-turma" value="${t}" ${(dados.turmas||[]).includes(t)?'checked':''}> <span class="badge bg-light text-dark border">${t}</span></label>`).join('')
-        : '<span class="text-danger fw-bold">Planilha TURMAS vazia.</span>';
+        : '<span class="text-danger fw-bold">Planilha TURMAS vazia. Verifique a Coluna A.</span>';
         
       var compHtml = listaCompGlobal.map(c => `<label class="me-3 mb-1"><input type="checkbox" class="chk-comp" value="${c}" ${(dados.componentes||[]).includes(c)?'checked':''}> ${c}</label>`).join('');
 
@@ -282,7 +283,7 @@
           <div class="col-md-4"><label class="fw-bold">Cargo / Função:</label><select class="form-select prof-cargo" onchange="verificarCargo(this, '${id}')">${cargosHtml}</select></div>
           <div class="col-md-3"><label class="fw-bold">Turnos:</label><br><label class="me-2"><input type="checkbox" class="chk-turno" value="Matutino" ${(dados.turnos||[]).includes('Matutino')?'checked':''}> Matutino</label><label><input type="checkbox" class="chk-turno" value="Vespertino" ${(dados.turnos||[]).includes('Vespertino')?'checked':''}> Vespertino</label></div>
         </div>
-        <div class="mt-3 p-2 bg-light border rounded"><label class="fw-bold text-primary mb-2">Turmas Atendidas:</label><br><div class="d-flex flex-wrap">${turmasHtml}</div></div>
+        <div class="mt-3 p-2 bg-light border rounded"><label class="fw-bold text-primary mb-2">Turmas Atendidas (Escolha):</label><br><div class="d-flex flex-wrap">${turmasHtml}</div></div>
         <div class="mt-2 comp-container p-2" id="comp_${id}"><label class="fw-bold text-success mb-2">Componentes (Para Regentes):</label><br><div class="d-flex flex-wrap">${compHtml}</div></div>
       `;
       container.appendChild(card);
@@ -329,6 +330,7 @@
       document.getElementById('panel-turma').style.display = 'block';
       document.getElementById('panel-estudantes').style.display = 'none';
 
+      // Puxa os alunos da aba ESTUDANTES
       chamarApiGoogle('getEstudantesPorTurma', turmaSel, function(alunos) { 
         listaEstudantes = (alunos && !alunos.erro) ? alunos : []; 
       });
@@ -356,7 +358,7 @@
         document.getElementById('panel-estudantes').style.display = 'block';
         indexAtual = 0; exibirEstudante();
       } else {
-        alert("A lista de estudantes está vazia na aba ESTUDANTES para esta turma.");
+        alert("A aba ESTUDANTES está vazia para a turma " + avaliacaoTurma.turma + " ou ainda está carregando.");
       }
     }
 
