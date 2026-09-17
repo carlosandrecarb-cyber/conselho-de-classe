@@ -49,7 +49,6 @@
     </div>
   </div>
 
-  <!-- TELA SENHA ESPECIALISTA -->
   <div id="view-senha" class="view-section justify-content-center align-items-center">
     <div class="hub-container">
       <i class="fa-solid fa-lock text-warning fa-3x mb-3"></i>
@@ -105,7 +104,7 @@
   <div id="view-datashow" class="view-section" style="height: 100vh; overflow: hidden;">
     <nav class="p-2 d-flex justify-content-between align-items-center text-white" style="background: #0f172a; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
       <div class="d-flex align-items-center gap-3">
-        <button class="btn btn-sm btn-outline-light fw-bold" onclick="showView('view-selecao')"><i class="fa-solid fa-arrow-left"></i> Próxima Turma</button>
+        <button class="btn btn-sm btn-outline-light fw-bold" onclick="showView('view-selecao')"><i class="fa-solid fa-arrow-left"></i> Trocar Turma</button>
         <h5 class="fw-bold m-0 d-none d-md-block">Conselho de Classe</h5>
       </div>
       <div class="d-flex align-items-center gap-3">
@@ -131,7 +130,10 @@
 
       <div id="panel-estudantes" style="display: none;">
         <div class="d-flex justify-content-between align-items-center mb-3 bg-white p-2 rounded border border-3">
-          <button class="btn btn-dark fw-bold" onclick="document.getElementById('panel-estudantes').style.display='none'; document.getElementById('panel-turma').style.display='block';"><i class="fa-solid fa-arrow-left me-1"></i> Voltar</button>
+          <div class="d-flex gap-2">
+             <button class="btn btn-dark fw-bold btn-sm" onclick="voltarParaTurma()"><i class="fa-solid fa-arrow-left me-1"></i> Voltar à Turma</button>
+             <button class="btn btn-outline-secondary fw-bold btn-sm" onclick="alunoAnterior()"><i class="fa-solid fa-backward me-1"></i> Anterior</button>
+          </div>
           <div class="text-center">
             <span class="text-primary fw-bold" style="font-size:0.8rem;">ESTUDANTE <span id="lblIndex">1</span> DE <span id="lblTotal">X</span></span>
             <h3 class="fw-bold m-0 text-uppercase" id="lblNomeEstudante">CARREGANDO...</h3>
@@ -140,7 +142,7 @@
              <div id="boxTimer" class="badge bg-dark fs-4 border border-warning text-warning p-2 d-flex align-items-center justify-content-center" style="width: 105px; font-family: monospace;">
                 <i class="fa-regular fa-clock me-2"></i><span id="txtTimer">03:00</span>
              </div>
-             <button class="btn btn-secondary fw-bold py-2" onclick="proximoEstudante()">Pular Aluno <i class="fa-solid fa-forward"></i></button>
+             <button class="btn btn-secondary fw-bold py-2 btn-sm" onclick="proximoEstudante()">Pular Aluno <i class="fa-solid fa-forward"></i></button>
           </div>
         </div>
 
@@ -236,25 +238,35 @@
       })
       .then(res => { if(!res.ok) throw new Error("Erro de Conexão"); return res.json(); })
       .then(data => { if(callback) callback(data); })
-      .catch(e => { console.error("Erro:", e); });
+      .catch(e => { console.error("Erro:", e); alert("Erro de comunicação com o Google."); });
     }
 
     function verificarSenha() {
       var senha = document.getElementById('inputSenha').value;
       if(senha === 'mestra2026') {
         showView('view-lotacao');
-        if (bancoDeDados) { iniciarInterfaceComDados(); } 
-        else {
+        if (bancoDeDados) { 
+          iniciarInterfaceComDados(); 
+        } else {
            chamarApiGoogle('carregarTudo', null, function(dados) {
-              if(dados && !dados.erro) { bancoDeDados = dados; iniciarInterfaceComDados(); } 
-              else { alert("Erro de conexão na Planilha."); }
+              if(dados && !dados.erro) { 
+                bancoDeDados = dados; 
+                iniciarInterfaceComDados(); 
+              } else { 
+                // Fallback de segurança caso a API demore: libera a entrada com dados padrão
+                bancoDeDados = { turmas: ["6R1", "6R2", "7R1", "7R2", "8R1", "8R2", "9R1", "9R2"], servidores: [], lotacao: [], estudantes: {} };
+                iniciarInterfaceComDados(); 
+              }
            });
         }
-      } else { alert('Senha Incorreta!'); document.getElementById('inputSenha').value = ''; }
+      } else { 
+        alert('Senha Incorreta!'); 
+        document.getElementById('inputSenha').value = ''; 
+      }
     }
 
     function iniciarInterfaceComDados() {
-        listaTurmasGlobal = bancoDeDados.turmas || [];
+        listaTurmasGlobal = bancoDeDados.turmas || ["6R1", "6R2", "7R1", "7R2", "8R1", "8R2", "9R1", "9R2"];
         listaServidoresGlobal = bancoDeDados.servidores || [];
         var lotacao = bancoDeDados.lotacao || [];
 
@@ -318,11 +330,20 @@
       if(!turmaSel) { alert("Selecione a turma alvo antes de iniciar!"); return; }
 
       document.getElementById('lblTurmaAtiva').innerText = turmaSel;
-      listaEstudantes = bancoDeDados.estudantes[turmaSel] || [];
+      listaEstudantes = bancoDeDados && bancoDeDados.estudantes ? (bancoDeDados.estudantes[turmaSel] || []) : [];
+
+      showView('view-datashow');
+      document.getElementById('panel-turma').style.display = 'block';
+      document.getElementById('panel-estudantes').style.display = 'none';
+
+      limparGrupoBotoes('turma_conversa_group');
+      limparGrupoBotoes('turma_faltas_group');
+      limparGrupoBotoes('turma_atividades_group');
+      limparGrupoBotoes('turma_trabalhos_group');
+      document.getElementById('txtObsTurma').value = '';
 
       chamarApiGoogle('carregarDadosSalvos', { turma: turmaSel, trimestre: trimestreSel }, function(res) {
           dadosRecuperadosCache = res || { turmaColetiva: null, avaliacoesAlunos: {} };
-          
           if(dadosRecuperadosCache.turmaColetiva) {
              var tc = dadosRecuperadosCache.turmaColetiva;
              if(tc.conversa) marcarBotaoPorValor('turma_conversa_group', tc.conversa);
@@ -330,18 +351,14 @@
              if(tc.atividades) marcarBotaoPorValor('turma_atividades_group', tc.atividades);
              if(tc.trabalhos) marcarBotaoPorValor('turma_trabalhos_group', tc.trabalhos);
              document.getElementById('txtObsTurma').value = tc.observacoes || '';
-          } else {
-             limparGrupoBotoes('turma_conversa_group');
-             limparGrupoBotoes('turma_faltas_group');
-             limparGrupoBotoes('turma_atividades_group');
-             limparGrupoBotoes('turma_trabalhos_group');
-             document.getElementById('txtObsTurma').value = '';
           }
-
-          showView('view-datashow');
-          document.getElementById('panel-turma').style.display = 'block';
-          document.getElementById('panel-estudantes').style.display = 'none';
       });
+    }
+
+    function voltarParaTurma() {
+      document.getElementById('panel-estudantes').style.display = 'none';
+      document.getElementById('panel-turma').style.display = 'block';
+      clearInterval(timerInterval);
     }
 
     function selecionarSegmento(btn, cat, val, cor) {
@@ -444,6 +461,15 @@
       iniciarTimer(); 
     }
 
+    function alunoAnterior() {
+      if (indexAtual > 0) {
+        indexAtual--;
+        exibirEstudante();
+      } else {
+        alert("Você já está no primeiro estudante.");
+      }
+    }
+
     function proximoEstudante() {
       if (indexAtual < listaEstudantes.length - 1) { 
         indexAtual++; exibirEstudante(); 
@@ -467,7 +493,7 @@
       proximoEstudante();
     }
 
-   function imprimirBilhetes() {
+    function imprimirBilhetes() {
        var turmaSel = document.getElementById('lblTurmaAtiva').innerText;
        var trimestreSel = document.getElementById('espSelectTrimestre').value; 
        
@@ -475,7 +501,7 @@
        
        var btn = document.getElementById('btnImprimirBilhetes');
        var txtOriginal = btn.innerHTML;
-       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando PDF...';
+       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando...';
        btn.disabled = true;
 
        var pacote = { turma: turmaSel, trimestre: trimestreSel };
@@ -492,3 +518,6 @@
           }
        });
     }
+  </script>
+</body>
+</html>
