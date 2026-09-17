@@ -467,7 +467,7 @@
       proximoEstudante();
     }
 
-    function imprimirBilhetes() {
+   function imprimirBilhetes() {
        var turmaSel = document.getElementById('lblTurmaAtiva').innerText;
        var trimestreSel = document.getElementById('espSelectTrimestre').value; 
        
@@ -475,30 +475,20 @@
        
        var btn = document.getElementById('btnImprimirBilhetes');
        var txtOriginal = btn.innerHTML;
-       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando...';
+       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando PDF...';
        btn.disabled = true;
 
-       var win = window.open('', '_blank');
-       if(win) { win.document.write('<h2 style="font-family: Arial; text-align: center; margin-top: 50px; color: #4f46e5;">⏳ Desenhando bilhetes da turma, por favor aguarde...</h2>'); }
-       
        var pacote = { turma: turmaSel, trimestre: trimestreSel };
        
        chamarApiGoogle('gerarBilhetesHTML', pacote, function(res) {
-          btn.innerHTML = txtOriginal; btn.disabled = false;
-          if(res && res.erro) { win.close(); alert(res.erro); } 
-          else if (res && res.html) { win.document.open(); win.document.write(res.html); win.document.close(); } 
-          else { win.close(); alert("Erro de comunicação com o Google."); }
+          btn.innerHTML = txtOriginal; 
+          btn.disabled = false;
+          if(res && res.erro) { 
+             alert(res.erro); 
+          } else if (res && res.url) { 
+             window.open(res.url, '_blank'); 
+          } else { 
+             alert("Erro de comunicação com o Google."); 
+          }
        });
-
-       // Timeout estendido para 30 segundos
-       setTimeout(function() {
-           if(btn.disabled) {
-               btn.innerHTML = txtOriginal; btn.disabled = false;
-               if(win) win.close();
-               alert("O Google demorou para responder. Tente clicar de novo!");
-           }
-       }, 30000);
     }
-  </script>
-</body>
-</html>
