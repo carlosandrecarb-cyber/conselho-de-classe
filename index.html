@@ -71,7 +71,7 @@
     </div>
   </div>
 
-  <!-- ETAPA 1: TABELA CLICÁVEL DE LOTAÇÃO (COM CONTROLE INTELIGENTE DE CARGOS) -->
+  <!-- ETAPA 1: TABELA CLICÁVEL DE LOTAÇÃO -->
   <div id="view-lotacao" class="view-section p-3">
     <div class="panel-container">
       <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
@@ -85,7 +85,6 @@
         <button class="btn btn-outline-danger btn-sm fw-bold" onclick="showView('view-hub')">Sair</button>
       </div>
 
-      <!-- Bloco de Colagem Rápida -->
       <div class="mb-3 p-3 bg-light border rounded-3">
         <label class="form-label fw-bold text-primary m-0" style="font-size:0.8rem;"><i class="fa-solid fa-file-lines me-1"></i> 1. Cole os nomes dos servidores (um por linha):</label>
         <div class="input-group mt-1">
@@ -94,7 +93,6 @@
         </div>
       </div>
 
-      <!-- Tabela Dinâmica -->
       <label class="form-label fw-bold text-dark" style="font-size:0.8rem;"><i class="fa-solid fa-table me-1"></i> 2. Configure Cargos, Turmas e Componentes de cada Servidor:</label>
       <div class="table-responsive mb-3" style="max-height: 400px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px;">
         <table class="table table-bordered table-striped m-0 align-middle" style="font-size: 0.8rem;">
@@ -337,7 +335,6 @@
       });
     }
 
-    // Função inteligente: se mudar para Diretor, Vice, Especialista ou Apoio, desativa o componente
     function atualizarEstadoCargo(selectCargo) {
       var tr = selectCargo.closest('tr');
       var compSelect = tr.querySelector('.comp-sel');
@@ -610,6 +607,7 @@
       proximoEstudante();
     }
 
+    // IMPRESSÃO AJUSTADA EXATAMENTE PARA 2 POR FOLHA A4 (ALTURA COMPACTA 44vh)
     function imprimirBilhetes() {
        var turmaSel = document.getElementById('lblTurmaAtiva').innerText;
        var turnoSel = document.getElementById('espSelectTurno').value;
@@ -630,36 +628,40 @@
          }
          var bg = isChecked ? 'background-color: #4f46e5; color: white; font-weight:bold;' : 'background-color: #f8fafc; color: #334155;';
          var symbol = isChecked ? '✓' : '&nbsp;';
-         return `<div style="display:flex; align-items:center; margin-bottom:1px;"><div style="border:1px solid #cbd5e1; border-radius:3px; width:10px; height:10px; text-align:center; line-height:8px; font-size:8px; margin-right:3px; ${bg}">${symbol}</div><span style="font-size:7.5px; ${isChecked ? 'font-weight:bold; color:#0f172a;' : 'color:#64748b;'}">${opcao}</span></div>`;
+         return `<div style="display:flex; align-items:center; margin-bottom:1px;"><div style="border:1px solid #cbd5e1; border-radius:3px; width:9px; height:9px; text-align:center; line-height:7px; font-size:7px; margin-right:3px; ${bg}">${symbol}</div><span style="font-size:7px; ${isChecked ? 'font-weight:bold; color:#0f172a;' : 'color:#64748b;'}">${opcao}</span></div>`;
        }
 
        var html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Bilhetes ${turmaSel} - Mestra Aurora</title><style>
-         @page { size: A4 portrait; margin: 6mm; }
+         @page { size: A4 portrait; margin: 4mm; }
          body { font-family: 'Inter', Arial, sans-serif; margin: 0; color: #0f172a; background: #e2e8f0; }
          .actions-bar { background: #0f172a; padding: 10px; text-align: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
          .btn-action { background: #4f46e5; color: white; border: none; padding: 8px 16px; font-weight: bold; border-radius: 6px; cursor: pointer; margin: 0 5px; font-size: 13px; }
          .btn-action:hover { background: #4338ca; }
-         .bilhete { width: 100%; max-width: 800px; height: 46vh; max-height: 450px; margin: 0 auto 8px auto; background: white; border: 2px solid #cbd5e1; border-radius: 10px; padding: 8px 12px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; page-break-inside: avoid; }
-         .header { display: flex; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 4px; margin-bottom: 4px; }
-         .logo { height: 30px; object-fit: contain; margin-right: 8px; }
+         
+         /* ALTURA RIGOROSAMENTE COMPACTADA PARA CABER EXATAMENTE 2 POR PÁGINA */
+         .bilhete { width: 100%; max-width: 800px; height: 44vh; max-height: 420px; margin: 0 auto 6px auto; background: white; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 6px 10px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; page-break-inside: avoid; }
+         
+         .header { display: flex; align-items: center; border-bottom: 1.5px solid #f1f5f9; padding-bottom: 3px; margin-bottom: 3px; }
+         .logo { height: 26px; object-fit: contain; margin-right: 6px; }
          .title-container { flex-grow: 1; text-align: center; }
-         .school-name { font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase; margin: 0; }
-         .main-title { font-size: 10px; font-weight: 900; color: #1e293b; text-transform: uppercase; margin: 1px 0 0 0; }
-         .student-badge { background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 4px 8px; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
-         .student-name { font-size: 11px; font-weight: 900; color: #0f172a; text-transform: uppercase; }
-         .badge-info { font-size: 8px; font-weight: 700; background: #eef2ff; color: #4f46e5; padding: 2px 6px; border-radius: 4px; border: 1px solid #c7d2fe; }
-         .grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-bottom: 3px; }
-         .card-box { border: 1px solid #e2e8f0; border-radius: 5px; padding: 2px 3px; background: #fafafa; }
-         .card-title { font-weight: 800; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; margin-bottom: 2px; font-size: 6.5px; text-align: center; color: #475569; background-color: #f1f5f9; padding: 1px; border-radius: 2px; }
-         .section-box { border: 1px solid #cbd5e1; border-radius: 5px; padding: 4px 6px; margin-bottom: 3px; background: #fff; }
-         .label { font-size: 7px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 1px; }
-         .obs-content { font-size: 8.5px; color: #1e293b; line-height: 1.15; min-height: 14px; }
-         .signature-area { display: flex; justify-content: flex-end; margin-top: 4px; padding-top: 3px; border-top: 1px dashed #cbd5e1; }
-         .sig-box { width: 45%; text-align: center; font-size: 7.5px; font-weight: bold; color: #64748b; padding-top: 12px; border-top: 1px solid #0f172a; }
+         .school-name { font-size: 7.5px; font-weight: 800; color: #64748b; text-transform: uppercase; margin: 0; }
+         .main-title { font-size: 9.5px; font-weight: 900; color: #1e293b; text-transform: uppercase; margin: 1px 0 0 0; }
+         .student-badge { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 5px; padding: 3px 6px; margin-bottom: 3px; display: flex; justify-content: space-between; align-items: center; }
+         .student-name { font-size: 10px; font-weight: 900; color: #0f172a; text-transform: uppercase; }
+         .badge-info { font-size: 7.5px; font-weight: 700; background: #eef2ff; color: #4f46e5; padding: 2px 5px; border-radius: 4px; border: 1px solid #c7d2fe; }
+         .grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-bottom: 2px; }
+         .card-box { border: 1px solid #e2e8f0; border-radius: 4px; padding: 2px; background: #fafafa; }
+         .card-title { font-weight: 800; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; margin-bottom: 2px; font-size: 6px; text-align: center; color: #475569; background-color: #f1f5f9; padding: 1px; border-radius: 2px; }
+         .section-box { border: 1px solid #cbd5e1; border-radius: 4px; padding: 3px 5px; margin-bottom: 2px; background: #fff; }
+         .label { font-size: 6.5px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 1px; }
+         .obs-content { font-size: 8px; color: #1e293b; line-height: 1.1; min-height: 12px; }
+         .signature-area { display: flex; justify-content: flex-end; margin-top: 3px; padding-top: 2px; border-top: 1px dashed #cbd5e1; }
+         .sig-box { width: 42%; text-align: center; font-size: 7px; font-weight: bold; color: #64748b; padding-top: 10px; border-top: 1px solid #0f172a; }
+         
          @media print {
            body { background: white; }
            .actions-bar { display: none; }
-           .bilhete { border: 1px solid #000; box-shadow: none; margin-bottom: 0; page-break-after: always; height: 48vh; }
+           .bilhete { border: 1px solid #000; box-shadow: none; margin-bottom: 0; page-break-after: always; height: 48vh; max-height: 49vh; }
          }
        </style></head><body>
        
@@ -679,17 +681,17 @@
                 <p class="school-name">E. E. Mestra Aurora — Gestão Pedagógica</p>
                 <h2 class="main-title">Informações da Avaliação do Estudante pelo Conselho de Classe</h2>
               </div>
-              <div style="font-size: 8px; font-weight: 800; background: #fef3c7; color: #b45309; padding: 2px 5px; border-radius: 4px; border: 1px solid #fde68a;">
+              <div style="font-size: 7.5px; font-weight: 800; background: #fef3c7; color: #b45309; padding: 2px 4px; border-radius: 4px; border: 1px solid #fde68a;">
                 ${trimestre} / ${anoCorrente}
               </div>
             </div>
 
             <div class="student-badge">
               <div>
-                <div class="label" style="font-size:6px;">Estudante:</div>
+                <div class="label" style="font-size:5.5px;">Estudante:</div>
                 <div class="student-name">${aluno.nome}</div>
               </div>
-              <div style="display:flex; gap:5px;">
+              <div style="display:flex; gap:4px;">
                 <span class="badge-info">Turma: ${turmaSel}</span>
                 <span class="badge-info">Turno: ${turnoSel}</span>
               </div>
@@ -709,12 +711,12 @@
             </div>
 
             <div class="section-box" style="background:#fefce8; border-color:#fde047;">
-              <div class="label" style="color:#854d0e; font-size:6.5px;">Característica Consolidada do Estudante:</div>
-              <div class="obs-content" style="font-weight: 800; color:#713f12; text-transform: uppercase; font-size:8px;">${textoCaracteristica}</div>
+              <div class="label" style="color:#854d0e; font-size:6px;">Característica Consolidada do Estudante:</div>
+              <div class="obs-content" style="font-weight: 800; color:#713f12; text-transform: uppercase; font-size:7.5px;">${textoCaracteristica}</div>
             </div>
 
             <div class="section-box">
-              <div class="label" style="font-size:6.5px;">Observações e Encaminhamentos Pedagógicos:</div>
+              <div class="label" style="font-size:6px;">Observações e Encaminhamentos Pedagógicos:</div>
               <div class="obs-content">${av.observacoes || 'Nenhum apontamento específico registrado para este estudante.'}</div>
             </div>
 
