@@ -312,9 +312,6 @@
 
     function irParaEtapa2() { salvarLotacaoGlobal(); showView('view-selecao'); }
 
-    // ==========================================
-    // INICIAR SESSÃO E BUSCAR DADOS SALVOS NA NUVEM
-    // ==========================================
     function iniciarSessaoConselho() {
       var turmaSel = document.getElementById('espSelectTurma').value;
       var trimestreSel = document.getElementById('espSelectTrimestre').value;
@@ -323,11 +320,9 @@
       document.getElementById('lblTurmaAtiva').innerText = turmaSel;
       listaEstudantes = bancoDeDados.estudantes[turmaSel] || [];
 
-      // Consulta se já existem dados salvos para preencher na tela
       chamarApiGoogle('carregarDadosSalvos', { turma: turmaSel, trimestre: trimestreSel }, function(res) {
           dadosRecuperadosCache = res || { turmaColetiva: null, avaliacoesAlunos: {} };
           
-          // Preenche avaliação da turma se houver
           if(dadosRecuperadosCache.turmaColetiva) {
              var tc = dadosRecuperadosCache.turmaColetiva;
              if(tc.conversa) marcarBotaoPorValor('turma_conversa_group', tc.conversa);
@@ -422,7 +417,6 @@
       document.getElementById('txtObs').value = '';
       document.getElementById('txtMotivo').value = '';
       
-      // Limpa visualmente todos os botões dos cards
       ['disc_group', 'atencao_group', 'conv_group', 'inter_group', 'part_group', 'aprend_group', 'org_group', 'ativ_group', 'tarefa_group', 'pres_group', 'carac_group'].forEach(id => limparGrupoBotoes(id));
 
       var nomeAluno = listaEstudantes[indexAtual].nome.toUpperCase();
@@ -430,7 +424,6 @@
       document.getElementById('lblIndex').innerText = indexAtual + 1;
       document.getElementById('lblTotal').innerText = listaEstudantes.length;
 
-      // Se já houver dados salvos para este aluno na nuvem, preenche automaticamente!
       var avSalva = dadosRecuperadosCache.avaliacoesAlunos[nomeAluno];
       if(avSalva) {
          if(avSalva.disciplina) marcarBotaoPorValor('disc_group', avSalva.disciplina);
@@ -496,6 +489,15 @@
           else if (res && res.html) { win.document.open(); win.document.write(res.html); win.document.close(); } 
           else { win.close(); alert("Erro de comunicação com o Google."); }
        });
+
+       // Timeout estendido para 30 segundos
+       setTimeout(function() {
+           if(btn.disabled) {
+               btn.innerHTML = txtOriginal; btn.disabled = false;
+               if(win) win.close();
+               alert("O Google demorou para responder. Tente clicar de novo!");
+           }
+       }, 30000);
     }
   </script>
 </body>
