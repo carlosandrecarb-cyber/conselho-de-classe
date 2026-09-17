@@ -27,9 +27,16 @@
     .eval-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 10px; }
     .phrase-tag { font-size: 0.7rem; font-weight: 700; background: white; border: 1px solid var(--slate-500); color: var(--slate-900); padding: 5px 8px; border-radius: 4px; cursor: pointer; text-align: left; }
     .phrase-tag:hover { background: var(--indigo-600); color: white; border-color: var(--indigo-600); }
+    #loadingOverlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); z-index: 9999; display: none; justify-content: center; align-items: center; color: white; flex-direction: column; }
   </style>
 </head>
 <body>
+
+  <!-- INDICADOR GLOBAL DE CARREGAMENTO -->
+  <div id="loadingOverlay">
+    <div class="spinner-border text-warning mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
+    <h5 id="loadingText" class="fw-bold">Conectando à Planilha da Escola...</h5>
+  </div>
 
   <div id="view-hub" class="view-section active justify-content-center align-items-center">
     <div class="hub-container">
@@ -82,7 +89,7 @@
     <div class="bg-white p-4 rounded shadow mx-auto" style="max-width: 450px; width: 100%;">
       <h4 class="fw-bold text-center mb-4">Etapa 2: Seleção de Turma</h4>
       <button class="btn btn-outline-secondary w-100 mb-4 fw-bold" onclick="showView('view-lotacao')"><i class="fa-solid fa-arrow-left me-1"></i> Voltar à Lotação</button>
-      <div class="mb-3"><label class="form-label fw-bold">Trimestre:</label><select id="espSelectTrimestre" class="form-select fw-bold"><option value="1º Trimestre">1º Trimestre</option><option value="2º Trimestre">2º Trimestre</option><option value="3º Trimestre">3º Trimestre</option></select></div>
+      <div class="mb-3"><label class="form-label fw-bold">Trimestre:</label><select id="espSelectTrimestre" class="form-select fw-bold"><option value="1º Trimestre">1º Trimestre</option><option value="2º Trimestre" selected>2º Trimestre</option><option value="3º Trimestre">3º Trimestre</option></select></div>
       <div class="mb-3"><label class="form-label fw-bold">Turno:</label><select id="espSelectTurno" class="form-select fw-bold"><option value="Matutino">Matutino</option><option value="Vespertino">Vespertino</option></select></div>
       <div class="mb-4"><label class="form-label fw-bold">Turma Alvo:</label><select id="espSelectTurma" class="form-select fw-bold border-primary text-primary"><option value="">Aguardando turmas...</option></select></div>
       <button class="btn btn-primary w-100 py-3 fw-bold fs-5" onclick="iniciarSessaoConselho()"><i class="fa-solid fa-play me-2"></i> Iniciar Datashow</button>
@@ -201,18 +208,20 @@
     var listaCompGlobal = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Inglês", "Português", "Matemática"];
     var timerInterval = null; var tempoRestante = 180;
 
-    window.onload = function() {
-      requisicaoApi('carregarTudo', null, function(dados) {
-        if(dados && !dados.erro) bancoDeDados = dados;
-      });
-    };
+    function mostrarLoader(texto) {
+      document.getElementById('loadingText').innerText = texto || 'Processando dados...';
+      document.getElementById('loadingOverlay').style.display = 'flex';
+    }
+
+    function esconderLoader() {
+      document.getElementById('loadingOverlay').style.display = 'none';
+    }
 
     function showView(id) {
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
-    // Comunicação universal via URL GET (Bula o bloqueio de CORS do Google de forma definitiva)
     function requisicaoApi(funcao, paramsObj, callback) {
       var url = URL_API_GOOGLE + "?funcao=" + funcao;
       if (paramsObj) {
@@ -223,26 +232,27 @@
       fetch(url)
         .then(res => res.json())
         .then(data => { if(callback) callback(data); })
-        .catch(e => { console.error("Erro API:", e); });
+        .catch(e => { 
+          esconderLoader();
+          console.error("Erro API:", e); 
+          alert("Erro de comunicação com o Google."); 
+        });
     }
 
     function verificarSenha() {
       var senha = document.getElementById('inputSenha').value;
       if(senha === 'mestra2026') {
-        showView('view-lotacao');
-        if (bancoDeDados) { 
-          iniciarInterfaceComDados(); 
-        } else {
-           requisicaoApi('carregarTudo', null, function(dados) {
-              if(dados && !dados.erro) { 
-                bancoDeDados = dados; 
-                iniciarInterfaceComDados(); 
-              } else { 
-                bancoDeDados = { turmas: ["6R1", "6R2", "7R1", "7R2", "8R1", "8R2", "9R1", "9R2"], servidores: [], lotacao: [], estudantes: {} };
-                iniciarInterfaceComDados(); 
-              }
-           });
-        }
+        mostrarLoader("Carregando base de dados da planilha...");
+        requisicaoApi('carregarTudo', null, function(dados) {
+          esconderLoader();
+          if(dados && !dados.erro) {
+            bancoDeDados = dados;
+            showView('view-lotacao');
+            iniciarInterfaceComDados();
+          } else {
+            alert("Erro ao carregar dados da planilha. Verifique a conexão.");
+          }
+        });
       } else { 
         alert('Senha Incorreta!'); 
         document.getElementById('inputSenha').value = ''; 
@@ -316,18 +326,20 @@
       document.getElementById('lblTurmaAtiva').innerText = turmaSel;
       listaEstudantes = bancoDeDados && bancoDeDados.estudantes ? (bancoDeDados.estudantes[turmaSel] || []) : [];
 
-      showView('view-datashow');
-      document.getElementById('panel-turma').style.display = 'block';
-      document.getElementById('panel-estudantes').style.display = 'none';
-
-      limparGrupoBotoes('turma_conversa_group');
-      limparGrupoBotoes('turma_faltas_group');
-      limparGrupoBotoes('turma_atividades_group');
-      limparGrupoBotoes('turma_trabalhos_group');
-      document.getElementById('txtObsTurma').value = '';
-
+      mostrarLoader("Carregando dados da turma " + turmaSel + "...");
       requisicaoApi('carregarDadosSalvos', { turma: turmaSel, trimestre: trimestreSel }, function(res) {
+          esconderLoader();
           dadosRecuperadosCache = res || { turmaColetiva: null, avaliacoesAlunos: {} };
+          showView('view-datashow');
+          document.getElementById('panel-turma').style.display = 'block';
+          document.getElementById('panel-estudantes').style.display = 'none';
+
+          limparGrupoBotoes('turma_conversa_group');
+          limparGrupoBotoes('turma_faltas_group');
+          limparGrupoBotoes('turma_atividades_group');
+          limparGrupoBotoes('turma_trabalhos_group');
+          document.getElementById('txtObsTurma').value = '';
+
           if(dadosRecuperadosCache.turmaColetiva) {
              var tc = dadosRecuperadosCache.turmaColetiva;
              if(tc.conversa) marcarBotaoPorValor('turma_conversa_group', tc.conversa);
@@ -380,6 +392,7 @@
       avaliacaoTurma.trimestre = document.getElementById('espSelectTrimestre').value;
       avaliacaoTurma.observacoes = document.getElementById('txtObsTurma').value;
       
+      mostrarLoader("Gravando avaliação coletiva...");
       requisicaoApi('salvarAvaliacaoTurma', {
         trimestre: avaliacaoTurma.trimestre,
         turma: avaliacaoTurma.turma,
@@ -388,13 +401,14 @@
         atividades: avaliacaoTurma.turma_atividades || '',
         trabalhos: avaliacaoTurma.turma_trabalhos || '',
         observacoes: avaliacaoTurma.observacoes || ''
+      }, function() {
+        esconderLoader();
+        if(listaEstudantes.length > 0) {
+          document.getElementById('panel-turma').style.display = 'none';
+          document.getElementById('panel-estudantes').style.display = 'block';
+          indexAtual = 0; exibirEstudante();
+        } else { alert("A aba ESTUDANTES está vazia para a turma " + avaliacaoTurma.turma + "."); }
       });
-
-      if(listaEstudantes.length > 0) {
-        document.getElementById('panel-turma').style.display = 'none';
-        document.getElementById('panel-estudantes').style.display = 'block';
-        indexAtual = 0; exibirEstudante();
-      } else { alert("A aba ESTUDANTES está vazia para a turma " + avaliacaoTurma.turma + "."); }
     }
 
     function iniciarTimer() {
@@ -403,10 +417,6 @@
        atualizarTimerUI();
        timerInterval = setInterval(function() {
           if(tempoRestante > 0) { tempoRestante--; atualizarTimerUI(); } 
-          else {
-             var box = document.getElementById('boxTimer');
-             if(box) { box.classList.replace('bg-danger', 'bg-dark'); setTimeout(() => box.classList.replace('bg-dark', 'bg-danger'), 500); }
-          }
        }, 1000);
     }
 
@@ -482,8 +492,11 @@
       avaliacaoAtual.motivo = document.getElementById('txtMotivo').value;
       avaliacaoAtual.numero = listaEstudantes[indexAtual].numero || '';
       
-      requisicaoApi('salvarAvaliacao', avaliacaoAtual);
-      proximoEstudante();
+      mostrarLoader("Salvando aluno na planilha...");
+      requisicaoApi('salvarAvaliacao', avaliacaoAtual, function() {
+        esconderLoader();
+        proximoEstudante();
+      });
     }
 
     function imprimirBilhetes() {
@@ -491,17 +504,12 @@
        var trimestreSel = document.getElementById('espSelectTrimestre').value; 
        if(!turmaSel || turmaSel === '...') { alert('Selecione uma turma na Etapa 2 primeiro.'); return; }
        
-       var btn = document.getElementById('btnImprimirBilhetes');
-       var txtOriginal = btn.innerHTML;
-       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando...';
-       btn.disabled = true;
-
+       mostrarLoader("Gerando documentos dos bilhetes no Google Drive...");
        requisicaoApi('gerarBilhetesHTML', { turma: turmaSel, trimestre: trimestreSel }, function(res) {
-          btn.innerHTML = txtOriginal; 
-          btn.disabled = false;
+          esconderLoader();
           if(res && res.erro) { alert(res.erro); } 
           else if (res && res.url) { window.open(res.url, '_blank'); } 
-          else { alert("Erro de comunicação com o Google."); }
+          else { alert("Erro ao gerar bilhetes."); }
        });
     }
   </script>
