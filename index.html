@@ -236,22 +236,31 @@
   <!-- AQUI COMEÇA O JAVASCRIPT -->
   <script>
     // =========================================================================================
-    // COLE SUA URL AQUI DENTRO DAS ASPAS
+    // COLE A URL DA SUA NOVA VERSÃO AQUI DENTRO DAS ASPAS
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbwYaqIn2pL2ePwILxPcjERVFH_oW_eTW_zB8rNKQiSNHrDHG7MqLAFYc6sJOUeoxZ2D/exec";
     // =========================================================================================
 
+    // MEMÓRIA CACHE DO SISTEMA (VELOCIDADE MÁXIMA)
+    var bancoDeDados = null; 
+    
     var listaEstudantes = []; var indexAtual = 0; 
     var avaliacaoAtual = {}; var avaliacaoTurma = {};
     var listaTurmasGlobal = []; var listaServidoresGlobal = [];
     var listaCargosGlobal = ["Diretor(a)", "Vice-Diretor(a)", "Especialista / EEB", "Professor(a) Regente", "Professor(a) de Apoio"];
     var listaCompGlobal = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Inglês", "Português", "Matemática"];
 
+    // FAZ O DOWNLOAD INVISÍVEL NO MOMENTO QUE O SITE ABRE
+    window.onload = function() {
+      chamarApiGoogle('carregarTudo', null, function(dados) {
+        if(!dados.erro) bancoDeDados = dados;
+      });
+    };
+
     function showView(id) {
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
-    // COMUNICAÇÃO TOTALMENTE SEGURA VIA POST TEXT/PLAIN
     function chamarApiGoogle(funcao, dados = null, callback) {
       fetch(URL_API_GOOGLE, {
         method: 'POST',
@@ -268,35 +277,42 @@
       if(senha === 'mestra2026') {
         showView('view-lotacao');
         
-        document.getElementById('containerProfissionais').innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary"></div><h5 class="mt-3 fw-bold text-muted">Buscando dados da Planilha...</h5></div>';
-        
-        chamarApiGoogle('getTurmas', null, function(resT) {
-          listaTurmasGlobal = (!resT.erro && Array.isArray(resT)) ? resT : [];
-          var selTurma = document.getElementById('espSelectTurma');
-          selTurma.innerHTML = '<option value="">Selecione a Turma...</option>';
-          listaTurmasGlobal.forEach(t => selTurma.innerHTML += `<option value="${t}">${t}</option>`);
-
-          chamarApiGoogle('getServidores', null, function(resS) {
-            listaServidoresGlobal = (!resS.erro && Array.isArray(resS)) ? resS : [];
-            chamarApiGoogle('carregarLotacaoGlobal', null, function(dadosLotacao) {
-              var cont = document.getElementById('containerProfissionais');
-              cont.innerHTML = '';
-              var dataList = '<datalist id="listaSugestoes">';
-              listaServidoresGlobal.forEach(s => dataList += `<option value="${s}">`);
-              dataList += '</datalist>';
-              cont.innerHTML += dataList;
-
-              if (dadosLotacao && dadosLotacao.length > 0 && !dadosLotacao.erro) { 
-                dadosLotacao.forEach(p => adicionarCardProfissional(p)); 
-              } else { 
-                adicionarCardProfissional(); 
-              }
-            });
-          });
-        });
+        // Se a internet for rápida, o banco já baixou em silêncio. Entra instantaneamente!
+        if (bancoDeDados) {
+           iniciarInterfaceComDados();
+        } else {
+           // Se a pessoa digitou a senha muito rápido, aguarda um segundinho e busca
+           document.getElementById('containerProfissionais').innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary"></div><h5 class="mt-3 fw-bold text-muted">Carregando dados da escola...</h5></div>';
+           chamarApiGoogle('carregarTudo', null, function(dados) {
+              if(!dados.erro) {
+                 bancoDeDados = dados;
+                 iniciarInterfaceComDados();
+              } else { alert("Erro de conexão: " + dados.erro); }
+           });
+        }
       } else { 
         alert('Senha Incorreta!'); document.getElementById('inputSenha').value = ''; 
       }
+    }
+
+    function iniciarInterfaceComDados() {
+        listaTurmasGlobal = bancoDeDados.turmas || [];
+        listaServidoresGlobal = bancoDeDados.servidores || [];
+        var lotacao = bancoDeDados.lotacao || [];
+
+        var selTurma = document.getElementById('espSelectTurma');
+        selTurma.innerHTML = '<option value="">Selecione a Turma...</option>';
+        listaTurmasGlobal.forEach(t => selTurma.innerHTML += `<option value="${t}">${t}</option>`);
+
+        var cont = document.getElementById('containerProfissionais');
+        cont.innerHTML = '';
+        var dataList = '<datalist id="listaSugestoes">';
+        listaServidoresGlobal.forEach(s => dataList += `<option value="${s}">`);
+        dataList += '</datalist>';
+        cont.innerHTML += dataList;
+
+        if (lotacao.length > 0) { lotacao.forEach(p => adicionarCardProfissional(p)); } 
+        else { adicionarCardProfissional(); }
     }
 
     function adicionarCardProfissional(dados = {}) {
@@ -365,25 +381,9 @@
       document.getElementById('panel-turma').style.display = 'block';
       document.getElementById('panel-estudantes').style.display = 'none';
 
-      var btnIniciar = document.getElementById('btnRegistrarTurma');
-      if(btnIniciar) {
-        btnIniciar.disabled = true;
-        btnIniciar.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Buscando estudantes...';
-      }
-
-      chamarApiGoogle('getEstudantesPorTurma', turmaSel, function(alunos) { 
-        if(alunos && alunos.erro) {
-            alert("Erro ao buscar alunos: " + alunos.erro);
-            listaEstudantes = [];
-        } else {
-            listaEstudantes = alunos || [];
-        }
-        
-        if(btnIniciar) {
-          btnIniciar.disabled = false;
-          btnIniciar.innerHTML = 'Registrar Turma e Iniciar Estudantes <i class="fa-solid fa-arrow-right ms-2"></i>';
-        }
-      });
+      // TEMPO DE ESPERA ZERO! Pega direto da memória RAM.
+      listaEstudantes = bancoDeDados.estudantes[turmaSel] || [];
+      document.getElementById('btnRegistrarTurma').innerHTML = 'Registrar Turma e Iniciar Estudantes <i class="fa-solid fa-arrow-right ms-2"></i>';
     }
 
     function selecionarSegmento(btn, cat, val, cor) {
@@ -407,6 +407,7 @@
       avaliacaoTurma.trimestre = document.getElementById('espSelectTrimestre').value;
       avaliacaoTurma.observacoes = document.getElementById('txtObsTurma').value;
       
+      // Envia para salvar no Google em segundo plano, sem travar a tela
       chamarApiGoogle('salvarAvaliacaoTurma', avaliacaoTurma);
 
       if(listaEstudantes.length > 0) {
@@ -428,7 +429,6 @@
       document.getElementById('lblTotal').innerText = listaEstudantes.length;
     }
 
-    // A MUDANÇA PARA SELECIONAR A PRÓXIMA TURMA ESTÁ AQUI
     function proximoEstudante() {
       if (indexAtual < listaEstudantes.length - 1) { 
         indexAtual++; 
@@ -448,6 +448,7 @@
       avaliacaoAtual.observacoes = document.getElementById('txtObs').value;
       avaliacaoAtual.motivo = document.getElementById('txtMotivo').value; // Pega o que for digitado no campo Característica
       
+      // Envia para o Google salvar e já puxa o próximo aluno sem esperar a resposta!
       chamarApiGoogle('salvarAvaliacao', avaliacaoAtual);
       proximoEstudante();
     }
