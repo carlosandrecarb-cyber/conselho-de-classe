@@ -12,26 +12,20 @@
     body { background-color: var(--bg-color); font-family: 'Inter', sans-serif; }
     .view-section { display: none; min-height: 100vh; }
     .view-section.active { display: flex; flex-direction: column; }
-    
-    /* Layout Moderno e Clean com Cantos Arredondados */
     .hub-container { max-width: 480px; width: 100%; margin: auto; padding: 35px; background: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; text-align: center; }
-    .panel-container { max-width: 800px; width: 100%; margin: 30px auto; padding: 30px; background: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
-    
+    .panel-container { max-width: 1000px; width: 100%; margin: 20px auto; padding: 25px; background: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
     .btn-hub { width: 100%; padding: 14px; font-weight: 700; border-radius: 10px; border: none; font-size: 1rem; margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
     .btn-hub.prof { background: #e0e7ff; color: #4f46e5; border: 2px solid #c7d2fe; }
     .btn-hub.prof:hover { background: #c7d2fe; }
     .btn-hub.esp { background: #fef9c3; color: #a16207; border: 2px solid #fde047; }
     .btn-hub.esp:hover { background: #fef08a; }
-
     .colored-card { background: white; border-radius: 12px; padding: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; display: flex; flex-direction: column; }
     .card-header-icon { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
-    
     .segmented-control { display: flex; background: #f1f5f9; border-radius: 8px; padding: 3px; gap: 3px; border: 1px solid #e2e8f0; }
     .seg-btn { flex: 1; border: none; background: transparent; padding: 6px 2px; font-size: 0.7rem; font-weight: 700; color: var(--slate-700); border-radius: 6px; cursor: pointer; }
     .seg-btn.active-good { background-color: #16a34a !important; color: white !important; }
     .seg-btn.active-warning { background-color: #ea580c !important; color: white !important; }
     .seg-btn.active-danger { background-color: #dc2626 !important; color: white !important; }
-    
     .input-textarea { width: 100%; border: 2px solid var(--slate-200); border-radius: 8px; padding: 10px; font-size: 0.85rem; font-weight: 600; outline: none; }
     .input-textarea:focus { border-color: var(--indigo-600); }
     .eval-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 10px; }
@@ -41,13 +35,12 @@
 </head>
 <body>
 
-  <!-- 1. PORTAL DE ENTRADA -->
+  <!-- PORTAL DE ENTRADA -->
   <div id="view-hub" class="view-section active justify-content-center align-items-center">
     <div class="hub-container">
       <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 65px; margin-bottom: 15px; object-fit: contain;">
       <h4 class="fw-bold text-dark mb-1">Conselho de Classe</h4>
       <p class="text-muted mb-4 fs-7">E. E. Mestra Aurora — Gestão Pedagógica</p>
-      
       <button class="btn-hub prof" onclick="showView('view-prof')"><i class="fa-solid fa-chalkboard-user me-2"></i> Sou Professor(a)</button>
       <button class="btn-hub esp" onclick="showView('view-senha')"><i class="fa-solid fa-shield-halved me-2"></i> Sou Especialista / Direção</button>
     </div>
@@ -65,7 +58,6 @@
     </div>
   </div>
 
-  <!-- MÓDULO PROFESSOR -->
   <div id="view-prof" class="view-section p-4 justify-content-center align-items-center">
     <div class="hub-container text-center">
       <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 50px; margin-bottom: 12px; object-fit: contain;">
@@ -75,30 +67,52 @@
     </div>
   </div>
 
-  <!-- ETAPA 1: LOTAÇÃO DE SERVIDORES (SIMPLES E VIA TEXTO RÁPIDO) -->
-  <div id="view-lotacao" class="view-section p-4">
-    <div class="panel-container mx-auto my-0">
-      <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+  <!-- ETAPA 1: TABELA INTELIGENTE DE LOTAÇÃO -->
+  <div id="view-lotacao" class="view-section p-3">
+    <div class="panel-container">
+      <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
         <div class="d-flex align-items-center gap-3">
-          <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 40px; object-fit: contain;">
+          <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 38px; object-fit: contain;">
           <div>
-            <h4 class="fw-bold text-dark m-0">Etapa 1: Lotação de Servidores</h4>
-            <p class="text-muted m-0 fs-7">Cadastro rápido da equipe escolar</p>
+            <h4 class="fw-bold text-dark m-0" style="font-size: 1.1rem;">Etapa 1: Lotação de Servidores e Professores</h4>
+            <p class="text-muted m-0 fs-7">Definição rápida de cargos, turmas e componentes</p>
           </div>
         </div>
         <button class="btn btn-outline-danger btn-sm fw-bold" onclick="showView('view-hub')">Sair</button>
       </div>
 
-      <div class="mb-4 p-3 bg-light border rounded">
-        <label class="form-label fw-bold text-primary mb-1" style="font-size:0.85rem;"><i class="fa-solid fa-users-gear me-1"></i> Lista Geral de Servidores / Professores:</label>
-        <p class="text-muted mb-2" style="font-size:0.75rem;">Cole abaixo os nomes dos servidores (um por linha) ou diretores/especialistas:</p>
-        <textarea id="txtListaServidores" class="input-textarea mb-2" rows="5" placeholder="Ex:&#10;MARIA APARECIDA (Diretora)&#10;JOÃO PEDRO (Especialista)&#10;ANA LÚCIA (Português)"></textarea>
-        <button class="btn btn-success fw-bold px-4" onclick="salvarServidoresManual()"><i class="fa-solid fa-floppy-disk me-1"></i> Salvar Lotação no Sistema</button>
+      <!-- Bloco de Colagem Rápida -->
+      <div class="mb-3 p-3 bg-light border rounded-3">
+        <label class="form-label fw-bold text-primary m-0" style="font-size:0.8rem;"><i class="fa-solid fa-file-lines me-1"></i> 1. Cole os nomes dos servidores (um por linha):</label>
+        <div class="input-group mt-1">
+          <textarea id="txtListaServidores" class="input-textarea" rows="2" placeholder="Ex: MARIA APARECIDA (Diretora)&#10;JOÃO PEDRO (Português)"></textarea>
+          <button class="btn btn-success fw-bold px-4" onclick="processarServidoresTexto()">Gerar Tabela</button>
+        </div>
       </div>
 
-      <button class="btn btn-primary w-100 py-3 fw-bold fs-5" onclick="irParaEtapa2()" style="border-radius:10px;">
-        Avançar para Etapa 2: Seleção de Turma <i class="fa-solid fa-arrow-right ms-2"></i>
-      </button>
+      <!-- Tabela Dinâmica de Configuração -->
+      <label class="form-label fw-bold text-dark" style="font-size:0.8rem;"><i class="fa-solid fa-table me-1"></i> 2. Configure Cargos, Turmas e Componentes de Cada Servidor:</label>
+      <div class="table-responsive mb-3" style="max-height: 380px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px;">
+        <table class="table table-bordered table-striped m-0 align-middle" style="font-size: 0.8rem;">
+          <thead class="table-dark sticky-top">
+            <tr>
+              <th style="width: 22%;">Servidor(a)</th>
+              <th style="width: 20%;">Cargo / Função</th>
+              <th style="width: 18%;">Turno</th>
+              <th style="width: 25%;">Turmas Atendidas</th>
+              <th style="width: 15%;">Componente / Apoio</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaLotacaoCorpo">
+            <tr><td colspan="5" class="text-center text-muted py-3">Cole a lista acima e clique em "Gerar Tabela".</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-secondary w-50 py-2.5 fw-bold" onclick="salvarLotacaoTabela()" style="border-radius:8px;"><i class="fa-solid fa-floppy-disk me-2"></i> Salvar Lotação</button>
+        <button class="btn btn-primary w-50 py-2.5 fw-bold" onclick="irParaEtapa2()" style="border-radius:8px;">Avançar para Etapa 2 <i class="fa-solid fa-arrow-right ms-2"></i></button>
+      </div>
     </div>
   </div>
 
@@ -234,6 +248,9 @@
 
   <script>
     var listaTurmasGlobal = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
+    var listaCargosGlobal = ["Professor(a) Regente", "Professor(a) de Apoio", "Especialista / EEB", "Diretor(a)", "Vice-Diretor(a)"];
+    var listaCompGlobal = ["Português", "Matemática", "História", "Geografia", "Ciências", "Inglês", "Arte", "Ed. Física", "Ens. Religioso"];
+    
     var listaEstudantes = []; var indexAtual = 0; 
     var avaliacaoAtual = {}; var avaliacaoTurma = {};
     var timerInterval = null; var tempoRestante = 180;
@@ -243,9 +260,14 @@
       sel.innerHTML = '<option value="">Selecione a Turma...</option>';
       listaTurmasGlobal.forEach(t => sel.innerHTML += `<option value="${t}">${t}</option>`);
       
-      // Carrega servidores salvos localmente
-      var servSalvos = localStorage.getItem('mestra_servidores_texto') || '';
-      document.getElementById('txtListaServidores').value = servSalvos;
+      // Carrega servidores salvos na tabela ou coloca exemplo
+      var servSalvos = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || 'null');
+      if (servSalvos && servSalvos.length > 0) {
+        renderizarTabelaLotacao(servSalvos);
+      } else {
+        document.getElementById('txtListaServidores').value = "MARIA APARECIDA\nJOÃO PEDRO\nANA LÚCIA";
+        processarServidoresTexto();
+      }
     };
 
     function showView(id) {
@@ -263,14 +285,58 @@
       }
     }
 
-    function salvarServidoresManual() {
+    function processarServidoresTexto() {
       var texto = document.getElementById('txtListaServidores').value.trim();
-      localStorage.setItem('mestra_servidores_texto', texto);
-      alert("✅ Lotação de servidores salva com sucesso no sistema!");
+      if(!texto) { alert("Insira os nomes na caixa de texto."); return; }
+      var linhas = texto.split('\n');
+      var lista = [];
+      linhas.forEach(l => {
+        var nome = l.trim();
+        if(nome.length > 1) {
+          lista.push({ nome: nome.toUpperCase(), cargo: "Professor(a) Regente", turno: "Matutino", turmas: ["6R1"], comp: "Português" });
+        }
+      });
+      renderizarTabelaLotacao(lista);
+    }
+
+    function renderizarTabelaLotacao(lista) {
+      var tbody = document.getElementById('tabelaLotacaoCorpo');
+      tbody.innerHTML = '';
+      lista.forEach((s, i) => {
+        var cargosOpt = listaCargosGlobal.map(c => `<option ${s.cargo===c?'selected':''}>${c}</option>`).join('');
+        var turnosOpt = ["Matutino", "Vespertino", "Ambos"].map(t => `<option ${s.turno===t?'selected':''}>${t}</option>`).join('');
+        var turmasOpt = listaTurmasGlobal.map(t => `<option ${s.turmas && s.turmas.includes(t)?'selected':''}>${t}</option>`).join('');
+        var compOpt = listaCompGlobal.map(c => `<option ${s.comp===c?'selected':''}>${c}</option>`).join('');
+
+        tbody.innerHTML += `
+          <tr data-index="${i}">
+            <td class="fw-bold text-uppercase name-cell" style="font-size:0.75rem;">${s.nome}</td>
+            <td><select class="form-select form-select-sm cargo-sel">${cargosOpt}</select></td>
+            <td><select class="form-select form-select-sm turno-sel">${turnosOpt}</select></td>
+            <td><select class="form-select form-select-sm turma-sel">${turmasOpt}</select></td>
+            <td><select class="form-select form-select-sm comp-sel">${compOpt}</select></td>
+          </tr>
+        `;
+      });
+    }
+
+    function salvarLotacaoTabela() {
+      var linhas = document.querySelectorAll('#tabelaLotacaoCorpo tr');
+      var listaSalvar = [];
+      linhas.forEach(tr => {
+        var nome = tr.querySelector('.name-cell').innerText;
+        var cargo = tr.querySelector('.cargo-sel').value;
+        var turno = tr.querySelector('.turno-sel').value;
+        var turma = tr.querySelector('.turma-sel').value;
+        var comp = tr.querySelector('.comp-sel').value;
+        listaSalvar.push({ nome: nome, cargo: cargo, turno: turno, turmas: [turma], comp: comp });
+      });
+      localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(listaSalvar));
+      alert("✅ Lotação da tabela salva com sucesso no sistema!");
     }
 
     function irParaEtapa2() { 
-      salvarServidoresManual(); 
+      salvarLotacaoTabela(); 
       showView('view-selecao'); 
     }
 
@@ -619,7 +685,7 @@
           </div>`;
        });
        
-       html += `</body></html>`;
+       html += `</body>endif</body></html>`;
        var win = window.open('', '_blank');
        win.document.write(html);
        win.document.close();
