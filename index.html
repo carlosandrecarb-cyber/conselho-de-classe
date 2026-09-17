@@ -10,40 +10,32 @@
   <style>
     :root { --bg-color: #f1f5f9; --slate-900: #0f172a; --slate-700: #334155; --slate-200: #cbd5e1; --indigo-600: #4f46e5; }
     body { background-color: var(--bg-color); font-family: 'Inter', sans-serif; }
-    
     .view-section { display: none; min-height: 100vh; }
     .view-section.active { display: flex; flex-direction: column; }
-    
     .hub-container { max-width: 450px; width: 100%; margin: auto; padding: 40px 30px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
-    .btn-hub { width: 100%; padding: 15px; font-weight: 700; border-radius: 12px; border: none; font-size: 1.05rem; margin-bottom: 15px; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer; }
+    .btn-hub { width: 100%; padding: 15px; font-weight: 700; border-radius: 12px; border: none; font-size: 1.05rem; margin-bottom: 15px; cursor: pointer; }
     .btn-hub.prof { background: #e0e7ff; color: #4f46e5; border: 2px solid #c7d2fe; }
-    .btn-hub.prof:hover { background: #c7d2fe; }
     .btn-hub.esp { background: #fef9c3; color: #a16207; border: 2px solid #fde047; }
-    .btn-hub.esp:hover { background: #fef08a; }
-
     .colored-card { background: white; border-radius: 10px; padding: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
     .card-header-icon { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
     .segmented-control { display: flex; background: #e2e8f0; border-radius: 6px; padding: 3px; gap: 3px; }
-    .seg-btn { flex: 1; border: none; background: transparent; padding: 6px 2px; font-size: 0.7rem; font-weight: 700; color: var(--slate-700); border-radius: 4px; transition: 0.1s; cursor: pointer; }
+    .seg-btn { flex: 1; border: none; background: transparent; padding: 6px 2px; font-size: 0.7rem; font-weight: 700; color: var(--slate-700); border-radius: 4px; cursor: pointer; }
     .seg-btn.active-good { background-color: #16a34a !important; color: white !important; }
     .seg-btn.active-warning { background-color: #ea580c !important; color: white !important; }
     .seg-btn.active-danger { background-color: #dc2626 !important; color: white !important; }
     .input-textarea { width: 100%; border: 2px solid var(--slate-200); border-radius: 8px; padding: 10px; font-size: 0.85rem; font-weight: 600; outline: none; }
     .eval-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 10px; }
-
-    .phrase-tag { font-size: 0.7rem; font-weight: 700; background: white; border: 1px solid var(--slate-500); color: var(--slate-900); padding: 5px 8px; border-radius: 4px; cursor: pointer; transition: 0.2s; text-align: left; }
-    .phrase-tag:hover { background: var(--indigo-600); color: white; border-color: var(--indigo-600); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .phrase-tag { font-size: 0.7rem; font-weight: 700; background: white; border: 1px solid var(--slate-500); color: var(--slate-900); padding: 5px 8px; border-radius: 4px; cursor: pointer; text-align: left; }
+    .phrase-tag:hover { background: var(--indigo-600); color: white; border-color: var(--indigo-600); }
   </style>
 </head>
 <body>
 
-  <!-- PORTAL DE ENTRADA (HUB) -->
   <div id="view-hub" class="view-section active justify-content-center align-items-center">
     <div class="hub-container">
       <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 70px; margin-bottom: 15px; object-fit: contain;">
       <h4 class="fw-bold text-dark">Conselho de Classe</h4>
       <p class="text-muted mb-4 fs-7">Selecione seu perfil de acesso</p>
-      
       <button class="btn-hub prof" onclick="showView('view-prof')"><i class="fa-solid fa-chalkboard-user me-2"></i> Sou Professor(a)</button>
       <button class="btn-hub esp" onclick="showView('view-senha')"><i class="fa-solid fa-shield-halved me-2"></i> Sou Especialista / Direção</button>
     </div>
@@ -75,17 +67,14 @@
       </div>
       <button class="btn btn-outline-danger fw-bold" onclick="showView('view-hub')">Sair</button>
     </div>
-
     <div class="row g-3 mb-4">
       <div class="col-6"><button id="btnSalvarLotacao" class="btn btn-secondary w-100 py-3 fw-bold fs-5" onclick="salvarLotacaoGlobal()"><i class="fa-solid fa-floppy-disk me-2"></i> Salvar Lotação</button></div>
       <div class="col-6"><button class="btn btn-primary w-100 py-3 fw-bold fs-5" onclick="irParaEtapa2()">Etapa 2: Seleção de Turma <i class="fa-solid fa-arrow-right ms-2"></i></button></div>
     </div>
-
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h5 class="fw-bold text-primary m-0"><i class="fa-solid fa-list-check me-2"></i> Cadastro de Servidores</h5>
       <button class="btn btn-success fw-bold" onclick="adicionarCardProfissional()"><i class="fa-solid fa-plus me-1"></i> Adicionar Servidor</button>
     </div>
-    
     <div id="containerProfissionais" class="mb-4"></div>
   </div>
 
@@ -100,7 +89,6 @@
     </div>
   </div>
 
-  <!-- MÓDULO ESPECIALISTA (ETAPA 3: DATASHOW) -->
   <div id="view-datashow" class="view-section" style="height: 100vh; overflow: hidden;">
     <nav class="p-2 d-flex justify-content-between align-items-center text-white" style="background: #0f172a; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
       <div class="d-flex align-items-center gap-3">
@@ -112,7 +100,6 @@
         <button id="btnImprimirBilhetes" class="btn btn-sm btn-info fw-bold text-dark px-3" onclick="imprimirBilhetes()"><i class="fa-solid fa-print me-1"></i> Imprimir Bilhetes</button>
       </div>
     </nav>
-
     <div class="flex-grow-1 overflow-auto p-3">
       <div id="panel-turma" style="display: block;">
         <div class="colored-card mx-auto" style="max-width: 700px; border: 4px solid #4f46e5;">
@@ -127,7 +114,6 @@
           <button id="btnRegistrarTurma" class="btn btn-primary w-100 py-3 fw-bold fs-5" onclick="salvarTurmaEIniciar()">Registrar Turma e Iniciar Estudantes <i class="fa-solid fa-arrow-right ms-2"></i></button>
         </div>
       </div>
-
       <div id="panel-estudantes" style="display: none;">
         <div class="d-flex justify-content-between align-items-center mb-3 bg-white p-2 rounded border border-3">
           <div class="d-flex gap-2">
@@ -145,7 +131,6 @@
              <button class="btn btn-secondary fw-bold py-2 btn-sm" onclick="proximoEstudante()">Pular Aluno <i class="fa-solid fa-forward"></i></button>
           </div>
         </div>
-
         <div class="eval-grid">
           <div class="colored-card border border-primary"><div class="card-header-icon text-primary">Disciplina</div><div class="segmented-control flex-column" id="disc_group"><button class="seg-btn" onclick="selecionarSegmento(this,'disciplina','Bom','good')">Bom</button><button class="seg-btn" onclick="selecionarSegmento(this,'disciplina','Às vezes','warning')">Às vezes</button><button class="seg-btn" onclick="selecionarSegmento(this,'disciplina','Não','danger')">Não</button></div></div>
           <div class="colored-card border border-success"><div class="card-header-icon text-success">Atenção</div><div class="segmented-control flex-column" id="atencao_group"><button class="seg-btn" onclick="selecionarSegmento(this,'atencao','Atento','good')">Atento</button><button class="seg-btn" onclick="selecionarSegmento(this,'atencao','Às vezes','warning')">Às vezes</button><button class="seg-btn" onclick="selecionarSegmento(this,'atencao','Desatento','danger')">Desatento</button></div></div>
@@ -158,7 +143,6 @@
           <div class="colored-card border border-warning"><div class="card-header-icon text-warning">Tarefa Casa</div><div class="segmented-control flex-column" id="tarefa_group"><button class="seg-btn" onclick="selecionarSegmento(this,'tarefa_casa','Cumpre','good')">Cumpre</button><button class="seg-btn" onclick="selecionarSegmento(this,'tarefa_casa','Parcial','warning')">Parcial</button><button class="seg-btn" onclick="selecionarSegmento(this,'tarefa_casa','Não cumpre','danger')">Não cumpre</button></div></div>
           <div class="colored-card border border-info"><div class="card-header-icon text-info">Presença</div><div class="segmented-control flex-column" id="pres_group"><button class="seg-btn" onclick="selecionarSegmento(this,'presenca','Comparece','good')">Comparece</button><button class="seg-btn" onclick="selecionarSegmento(this,'presenca','Faltas','warning')">Faltas</button><button class="seg-btn" onclick="selecionarSegmento(this,'presenca','Não comp.','danger')">Não comp.</button></div></div>
         </div>
-
         <div class="row g-2 mb-2" style="height: 165px;">
           <div class="col-3 h-100">
             <div class="colored-card bg-warning bg-opacity-10 border border-3 border-warning h-100 d-flex flex-column">
@@ -200,7 +184,6 @@
             </div>
           </div>
         </div>
-
         <button class="btn btn-primary w-100 py-3 fw-bold fs-5 mt-2" onclick="salvarEProximo()">Gravar Estudante e Chamar Próximo</button>
       </div>
     </div>
@@ -216,11 +199,10 @@
     var listaTurmasGlobal = []; var listaServidoresGlobal = [];
     var listaCargosGlobal = ["Diretor(a)", "Vice-Diretor(a)", "Especialista / EEB", "Professor(a) Regente", "Professor(a) de Apoio"];
     var listaCompGlobal = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Inglês", "Português", "Matemática"];
-    
     var timerInterval = null; var tempoRestante = 180;
 
     window.onload = function() {
-      chamarApiGoogle('carregarTudo', null, function(dados) {
+      requisicaoGet('carregarTudo', null, function(dados) {
         if(dados && !dados.erro) bancoDeDados = dados;
       });
     };
@@ -230,15 +212,30 @@
       document.getElementById(id).classList.add('active');
     }
 
-    function chamarApiGoogle(funcao, dados = null, callback) {
+    // Leitura rápida via GET (Sem problemas de CORS)
+    function requisicaoGet(funcao, paramsObj, callback) {
+      var url = URL_API_GOOGLE + "?funcao=" + funcao;
+      if (paramsObj) {
+        for (var k in paramsObj) {
+          url += "&" + k + "=" + encodeURIComponent(paramsObj[k]);
+        }
+      }
+      fetch(url)
+        .then(res => res.json())
+        .then(data => { if(callback) callback(data); })
+        .catch(e => { console.error("Erro GET:", e); });
+    }
+
+    // Gravação via POST
+    function requisicaoPost(funcao, dadosObj, callback) {
       fetch(URL_API_GOOGLE, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ funcao: funcao, dados: dados })
+        body: JSON.stringify({ funcao: funcao, dados: dadosObj })
       })
-      .then(res => { if(!res.ok) throw new Error("Erro de Conexão"); return res.json(); })
+      .then(res => res.json())
       .then(data => { if(callback) callback(data); })
-      .catch(e => { console.error("Erro:", e); alert("Erro de comunicação com o Google."); });
+      .catch(e => { console.error("Erro POST:", e); });
     }
 
     function verificarSenha() {
@@ -248,12 +245,11 @@
         if (bancoDeDados) { 
           iniciarInterfaceComDados(); 
         } else {
-           chamarApiGoogle('carregarTudo', null, function(dados) {
+           requisicaoGet('carregarTudo', null, function(dados) {
               if(dados && !dados.erro) { 
                 bancoDeDados = dados; 
                 iniciarInterfaceComDados(); 
               } else { 
-                // Fallback de segurança caso a API demore: libera a entrada com dados padrão
                 bancoDeDados = { turmas: ["6R1", "6R2", "7R1", "7R2", "8R1", "8R2", "9R1", "9R2"], servidores: [], lotacao: [], estudantes: {} };
                 iniciarInterfaceComDados(); 
               }
@@ -317,7 +313,7 @@
           lista.push({ nome: nome, cargo: c.querySelector('.prof-cargo').value, turnos: Array.from(c.querySelectorAll('.chk-turno:checked')).map(el=>el.value), turmas: Array.from(c.querySelectorAll('.chk-turma:checked')).map(el=>el.value), componentes: Array.from(c.querySelectorAll('.chk-comp:checked')).map(el=>el.value) });
         }
       });
-      chamarApiGoogle('salvarLotacaoGlobal', lista);
+      requisicaoPost('salvarLotacaoGlobal', lista);
       var btn = document.getElementById('btnSalvarLotacao');
       if(btn) { btn.innerHTML = "Lotação Salva na Planilha!"; setTimeout(() => btn.innerHTML = "Salvar Lotação", 2000); }
     }
@@ -342,7 +338,7 @@
       limparGrupoBotoes('turma_trabalhos_group');
       document.getElementById('txtObsTurma').value = '';
 
-      chamarApiGoogle('carregarDadosSalvos', { turma: turmaSel, trimestre: trimestreSel }, function(res) {
+      requisicaoGet('carregarDadosSalvos', { turma: turmaSel, trimestre: trimestreSel }, function(res) {
           dadosRecuperadosCache = res || { turmaColetiva: null, avaliacoesAlunos: {} };
           if(dadosRecuperadosCache.turmaColetiva) {
              var tc = dadosRecuperadosCache.turmaColetiva;
@@ -396,7 +392,7 @@
       avaliacaoTurma.trimestre = document.getElementById('espSelectTrimestre').value;
       avaliacaoTurma.observacoes = document.getElementById('txtObsTurma').value;
       
-      chamarApiGoogle('salvarAvaliacaoTurma', avaliacaoTurma);
+      requisicaoPost('salvarAvaliacaoTurma', avaliacaoTurma);
 
       if(listaEstudantes.length > 0) {
         document.getElementById('panel-turma').style.display = 'none';
@@ -489,14 +485,13 @@
       avaliacaoAtual.observacoes = document.getElementById('txtObs').value;
       avaliacaoAtual.motivo = document.getElementById('txtMotivo').value;
       
-      chamarApiGoogle('salvarAvaliacao', avaliacaoAtual);
+      requisicaoPost('salvarAvaliacao', avaliacaoAtual);
       proximoEstudante();
     }
 
     function imprimirBilhetes() {
        var turmaSel = document.getElementById('lblTurmaAtiva').innerText;
        var trimestreSel = document.getElementById('espSelectTrimestre').value; 
-       
        if(!turmaSel || turmaSel === '...') { alert('Selecione uma turma na Etapa 2 primeiro.'); return; }
        
        var btn = document.getElementById('btnImprimirBilhetes');
@@ -504,18 +499,12 @@
        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando...';
        btn.disabled = true;
 
-       var pacote = { turma: turmaSel, trimestre: trimestreSel };
-       
-       chamarApiGoogle('gerarBilhetesHTML', pacote, function(res) {
+       requisicaoPost('gerarBilhetesHTML', { turma: turmaSel, trimestre: trimestreSel }, function(res) {
           btn.innerHTML = txtOriginal; 
           btn.disabled = false;
-          if(res && res.erro) { 
-             alert(res.erro); 
-          } else if (res && res.url) { 
-             window.open(res.url, '_blank'); 
-          } else { 
-             alert("Erro de comunicação com o Google."); 
-          }
+          if(res && res.erro) { alert(res.erro); } 
+          else if (res && res.url) { window.open(res.url, '_blank'); } 
+          else { alert("Erro de comunicação com o Google."); }
        });
     }
   </script>
