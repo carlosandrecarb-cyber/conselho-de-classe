@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Governança Escolar</title>
+  <title>Sistema de Governança Escolar - Mestra Aurora</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -15,7 +15,7 @@
     .view-section.active { display: flex; flex-direction: column; }
     
     .hub-container { max-width: 450px; width: 100%; margin: auto; padding: 40px 30px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
-    .btn-hub { width: 100%; padding: 15px; font-weight: 700; border-radius: 12px; border: none; font-size: 1.05rem; margin-bottom: 15px; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .btn-hub { width: 100%; padding: 15px; font-weight: 700; border-radius: 12px; border: none; font-size: 1.05rem; margin-bottom: 15px; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer; }
     .btn-hub.prof { background: #e0e7ff; color: #4f46e5; border: 2px solid #c7d2fe; }
     .btn-hub.prof:hover { background: #c7d2fe; }
     .btn-hub.esp { background: #fef9c3; color: #a16207; border: 2px solid #fde047; }
@@ -24,7 +24,7 @@
     .colored-card { background: white; border-radius: 10px; padding: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
     .card-header-icon { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
     .segmented-control { display: flex; background: #e2e8f0; border-radius: 6px; padding: 3px; gap: 3px; }
-    .seg-btn { flex: 1; border: none; background: transparent; padding: 6px 2px; font-size: 0.7rem; font-weight: 700; color: var(--slate-700); border-radius: 4px; transition: 0.1s; }
+    .seg-btn { flex: 1; border: none; background: transparent; padding: 6px 2px; font-size: 0.7rem; font-weight: 700; color: var(--slate-700); border-radius: 4px; transition: 0.1s; cursor: pointer; }
     .seg-btn.active-good { background-color: #16a34a !important; color: white !important; }
     .seg-btn.active-warning { background-color: #ea580c !important; color: white !important; }
     .seg-btn.active-danger { background-color: #dc2626 !important; color: white !important; }
@@ -54,7 +54,7 @@
     <div class="hub-container">
       <i class="fa-solid fa-lock text-warning fa-3x mb-3"></i>
       <h4 class="fw-bold">Acesso Restrito</h4>
-      <input type="password" id="inputSenha" class="input-textarea mt-3 mb-3 text-center fs-5" placeholder="Digite a senha">
+      <input type="password" id="inputSenha" class="input-textarea mt-3 mb-3 text-center fs-5" placeholder="Digite a senha" onkeypress="if(event.key === 'Enter') verificarSenha()">
       <button class="btn btn-warning w-100 py-3 fw-bold" onclick="verificarSenha()">Entrar no Sistema</button>
       <button class="btn btn-link w-100 mt-2 text-muted fw-bold text-decoration-none" onclick="showView('view-hub')">Voltar ao Início</button>
     </div>
@@ -103,7 +103,6 @@
 
   <!-- MÓDULO ESPECIALISTA (ETAPA 3: DATASHOW) -->
   <div id="view-datashow" class="view-section" style="height: 100vh; overflow: hidden;">
-    
     <nav class="p-2 d-flex justify-content-between align-items-center text-white" style="background: #0f172a; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
       <div class="d-flex align-items-center gap-3">
         <button class="btn btn-sm btn-outline-light fw-bold" onclick="showView('view-selecao')"><i class="fa-solid fa-arrow-left"></i> Próxima Turma</button>
@@ -206,10 +205,8 @@
   </div>
 
   <script>
-    // =========================================================================================
-    // COLE A SUA URL VERDADEIRA DENTRO DAS ASPAS ABAIXO:
+    // URL OFICIAL EMBUTIDA DA PLANILHA GOOGLE
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbwYaqIn2pL2ePwILxPcjERVFH_oW_eTW_zB8rNKQiSNHrDHG7MqLAFYc6sJOUeoxZ2D/exec";
-    // =========================================================================================
 
     var bancoDeDados = null; 
     var listaEstudantes = []; var indexAtual = 0; 
@@ -247,9 +244,6 @@
          console.error("Erro:", e);
          var btn = document.getElementById('btnRegistrarTurma');
          if(btn) { btn.disabled = false; btn.innerHTML = 'Falha. Tentar Novamente.'; }
-         if(document.getElementById('containerProfissionais')) {
-            document.getElementById('containerProfissionais').innerHTML = `<div class="alert alert-danger fw-bold text-center">Erro de Conexão. Você esqueceu de colar a sua URL na linha 158 do GitHub!</div>`;
-         }
       });
     }
 
@@ -436,19 +430,17 @@
        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando...';
        btn.disabled = true;
 
-       // 1. Abre a aba IMEDIATAMENTE para o navegador não bloquear (Anti Pop-up)
        var win = window.open('', '_blank');
        if(win) {
            win.document.write('<h2 style="font-family: Arial; text-align: center; margin-top: 50px; color: #4f46e5;">⏳ Desenhando bilhetes da turma, por favor aguarde...</h2>');
        } else {
-           alert("Seu navegador bloqueou a nova aba! Permita os pop-ups lá em cima, perto da barra de endereços.");
+           alert("Seu navegador bloqueou a nova aba! Permita os pop-ups.");
            btn.innerHTML = txtOriginal; btn.disabled = false;
            return;
        }
        
        var pacote = { turma: turmaSel, trimestre: trimestreSel };
        
-       // 2. Chama o Google
        chamarApiGoogle('gerarBilhetesHTML', pacote, function(res) {
           btn.innerHTML = txtOriginal; btn.disabled = false;
           
@@ -465,12 +457,14 @@
           }
        });
 
-       // 3. Trava de segurança (Destrava o botão se a internet cair)
        setTimeout(function() {
            if(btn.disabled) {
                btn.innerHTML = txtOriginal; btn.disabled = false;
                if(win) win.close();
-               alert("O Google demorou para responder (internet lenta). Tente clicar de novo!");
+               alert("O Google demorou para responder. Tente clicar de novo!");
            }
        }, 15000);
     }
+  </script>
+</body>
+</html>
