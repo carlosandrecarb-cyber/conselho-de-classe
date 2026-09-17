@@ -119,10 +119,10 @@
         <div class="colored-card mx-auto" style="max-width: 700px; border: 4px solid #4f46e5;">
           <h4 class="text-center fw-bold mb-4 text-primary"><i class="fa-solid fa-users-rays me-2"></i>Avaliação Coletiva da Turma</h4>
           <div class="row g-2 mb-3">
-            <div class="col-6"><div class="border p-2 rounded"><label class="fw-bold mb-1">Conversa</label><div class="segmented-control"><button class="seg-btn" onclick="selecionarSegmento(this,'turma_conversa','Adequada','good')">Adequada</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_conversa','No limite','warning')">No limite</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_conversa','Muita','danger')">Muita</button></div></div></div>
-            <div class="col-6"><div class="border p-2 rounded"><label class="fw-bold mb-1">Faltas</label><div class="segmented-control"><button class="seg-btn" onclick="selecionarSegmento(this,'turma_faltas','Adequadas','good')">Adequadas</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_faltas','No limite','warning')">No limite</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_faltas','Muitas','danger')">Muitas</button></div></div></div>
-            <div class="col-6"><div class="border p-2 rounded"><label class="fw-bold mb-1">Atividades</label><div class="segmented-control"><button class="seg-btn" onclick="selecionarSegmento(this,'turma_atividades','Cumpre','good')">Cumpre</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_atividades','Parcial','warning')">Parcial</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_atividades','Não cumpre','danger')">Não cumpre</button></div></div></div>
-            <div class="col-6"><div class="border p-2 rounded"><label class="fw-bold mb-1">Trabalhos</label><div class="segmented-control"><button class="seg-btn" onclick="selecionarSegmento(this,'turma_trabalhos','Entrega','good')">Entrega</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_trabalhos','Parcial','warning')">Parcial</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_trabalhos','Não entrega','danger')">Não entrega</button></div></div></div>
+            <div class="col-6"><div class="border p-2 rounded"><label class="fw-bold mb-1">Conversa</label><div class="segmented-control" id="turma_conversa_group"><button class="seg-btn" onclick="selecionarSegmento(this,'turma_conversa','Adequada','good')">Adequada</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_conversa','No limite','warning')">No limite</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_conversa','Muita','danger')">Muita</button></div></div></div>
+            <div class="col-6"><div class="border p-2 rounded"><label class="fw-bold mb-1">Faltas</label><div class="segmented-control" id="turma_faltas_group"><button class="seg-btn" onclick="selecionarSegmento(this,'turma_faltas','Adequadas','good')">Adequadas</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_faltas','No limite','warning')">No limite</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_faltas','Muitas','danger')">Muitas</button></div></div></div>
+            <div class="col-6"><div class="border p-2 rounded"><label class="fw-bold mb-1">Atividades</label><div class="segmented-control" id="turma_atividades_group"><button class="seg-btn" onclick="selecionarSegmento(this,'turma_atividades','Cumpre','good')">Cumpre</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_atividades','Parcial','warning')">Parcial</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_atividades','Não cumpre','danger')">Não cumpre</button></div></div></div>
+            <div class="col-6"><div class="border p-2 rounded"><label class="fw-bold mb-1">Trabalhos</label><div class="segmented-control" id="turma_trabalhos_group"><button class="seg-btn" onclick="selecionarSegmento(this,'turma_trabalhos','Entrega','good')">Entrega</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_trabalhos','Parcial','warning')">Parcial</button><button class="seg-btn" onclick="selecionarSegmento(this,'turma_trabalhos','Não entrega','danger')">Não entrega</button></div></div></div>
           </div>
           <textarea id="txtObsTurma" class="input-textarea mb-3" rows="2" placeholder="Observações da turma..."></textarea>
           <button id="btnRegistrarTurma" class="btn btn-primary w-100 py-3 fw-bold fs-5" onclick="salvarTurmaEIniciar()">Registrar Turma e Iniciar Estudantes <i class="fa-solid fa-arrow-right ms-2"></i></button>
@@ -145,23 +145,23 @@
         </div>
 
         <div class="eval-grid">
-          <div class="colored-card border border-primary"><div class="card-header-icon text-primary">Disciplina</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'disciplina','Bom','good')">Bom</button><button class="seg-btn" onclick="selecionarSegmento(this,'disciplina','Às vezes','warning')">Às vezes</button><button class="seg-btn" onclick="selecionarSegmento(this,'disciplina','Não','danger')">Não</button></div></div>
-          <div class="colored-card border border-success"><div class="card-header-icon text-success">Atenção</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'atencao','Atento','good')">Atento</button><button class="seg-btn" onclick="selecionarSegmento(this,'atencao','Às vezes','warning')">Às vezes</button><button class="seg-btn" onclick="selecionarSegmento(this,'atencao','Desatento','danger')">Desatento</button></div></div>
-          <div class="colored-card border border-danger"><div class="card-header-icon text-danger">Conversa</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'conversa','Não','good')">Não</button><button class="seg-btn" onclick="selecionarSegmento(this,'conversa','Pouco','warning')">Pouco</button><button class="seg-btn" onclick="selecionarSegmento(this,'conversa','Muito','danger')">Muito</button></div></div>
-          <div class="colored-card border border-warning"><div class="card-header-icon text-warning">Interesse</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'interesse','Muito','good')">Muito</button><button class="seg-btn" onclick="selecionarSegmento(this,'interesse','Pouco','warning')">Pouco</button><button class="seg-btn" onclick="selecionarSegmento(this,'interesse','Sem','danger')">Sem</button></div></div>
-          <div class="colored-card border border-info"><div class="card-header-icon text-info">Participação</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'participacao','Participa','good')">Participa</button><button class="seg-btn" onclick="selecionarSegmento(this,'participacao','Pouco','warning')">Pouco</button><button class="seg-btn" onclick="selecionarSegmento(this,'participacao','Não','danger')">Não</button></div></div>
-          <div class="colored-card border border-primary"><div class="card-header-icon text-primary">Aprendizagem</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'aprendizagem','Avança','good')">Avança</button><button class="seg-btn" onclick="selecionarSegmento(this,'aprendizagem','Dificuldade','warning')">Dificuldade</button><button class="seg-btn" onclick="selecionarSegmento(this,'aprendizagem','Não quer','danger')">Não quer</button></div></div>
-          <div class="colored-card border border-success"><div class="card-header-icon text-success">Organização</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'organizacao','Organizado','good')">Organizado</button><button class="seg-btn" onclick="selecionarSegmento(this,'organizacao','Parcial','warning')">Parcial</button><button class="seg-btn" onclick="selecionarSegmento(this,'organizacao','Sem','danger')">Sem</button></div></div>
-          <div class="colored-card border border-danger"><div class="card-header-icon text-danger">Ativ. Sala</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'atividades_sala','Cumpre','good')">Cumpre</button><button class="seg-btn" onclick="selecionarSegmento(this,'atividades_sala','Parcial','warning')">Parcial</button><button class="seg-btn" onclick="selecionarSegmento(this,'atividades_sala','Não cumpre','danger')">Não cumpre</button></div></div>
-          <div class="colored-card border border-warning"><div class="card-header-icon text-warning">Tarefa Casa</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'tarefa_casa','Cumpre','good')">Cumpre</button><button class="seg-btn" onclick="selecionarSegmento(this,'tarefa_casa','Parcial','warning')">Parcial</button><button class="seg-btn" onclick="selecionarSegmento(this,'tarefa_casa','Não cumpre','danger')">Não cumpre</button></div></div>
-          <div class="colored-card border border-info"><div class="card-header-icon text-info">Presença</div><div class="segmented-control flex-column"><button class="seg-btn" onclick="selecionarSegmento(this,'presenca','Comparece','good')">Comparece</button><button class="seg-btn" onclick="selecionarSegmento(this,'presenca','Faltas','warning')">Faltas</button><button class="seg-btn" onclick="selecionarSegmento(this,'presenca','Não comp.','danger')">Não comp.</button></div></div>
+          <div class="colored-card border border-primary"><div class="card-header-icon text-primary">Disciplina</div><div class="segmented-control flex-column" id="disc_group"><button class="seg-btn" onclick="selecionarSegmento(this,'disciplina','Bom','good')">Bom</button><button class="seg-btn" onclick="selecionarSegmento(this,'disciplina','Às vezes','warning')">Às vezes</button><button class="seg-btn" onclick="selecionarSegmento(this,'disciplina','Não','danger')">Não</button></div></div>
+          <div class="colored-card border border-success"><div class="card-header-icon text-success">Atenção</div><div class="segmented-control flex-column" id="atencao_group"><button class="seg-btn" onclick="selecionarSegmento(this,'atencao','Atento','good')">Atento</button><button class="seg-btn" onclick="selecionarSegmento(this,'atencao','Às vezes','warning')">Às vezes</button><button class="seg-btn" onclick="selecionarSegmento(this,'atencao','Desatento','danger')">Desatento</button></div></div>
+          <div class="colored-card border border-danger"><div class="card-header-icon text-danger">Conversa</div><div class="segmented-control flex-column" id="conv_group"><button class="seg-btn" onclick="selecionarSegmento(this,'conversa','Não','good')">Não</button><button class="seg-btn" onclick="selecionarSegmento(this,'conversa','Pouco','warning')">Pouco</button><button class="seg-btn" onclick="selecionarSegmento(this,'conversa','Muito','danger')">Muito</button></div></div>
+          <div class="colored-card border border-warning"><div class="card-header-icon text-warning">Interesse</div><div class="segmented-control flex-column" id="inter_group"><button class="seg-btn" onclick="selecionarSegmento(this,'interesse','Muito','good')">Muito</button><button class="seg-btn" onclick="selecionarSegmento(this,'interesse','Pouco','warning')">Pouco</button><button class="seg-btn" onclick="selecionarSegmento(this,'interesse','Sem','danger')">Sem</button></div></div>
+          <div class="colored-card border border-info"><div class="card-header-icon text-info">Participação</div><div class="segmented-control flex-column" id="part_group"><button class="seg-btn" onclick="selecionarSegmento(this,'participacao','Participa','good')">Participa</button><button class="seg-btn" onclick="selecionarSegmento(this,'participacao','Pouco','warning')">Pouco</button><button class="seg-btn" onclick="selecionarSegmento(this,'participacao','Não','danger')">Não</button></div></div>
+          <div class="colored-card border border-primary"><div class="card-header-icon text-primary">Aprendizagem</div><div class="segmented-control flex-column" id="aprend_group"><button class="seg-btn" onclick="selecionarSegmento(this,'aprendizagem','Avança','good')">Avança</button><button class="seg-btn" onclick="selecionarSegmento(this,'aprendizagem','Dificuldade','warning')">Dificuldade</button><button class="seg-btn" onclick="selecionarSegmento(this,'aprendizagem','Não quer','danger')">Não quer</button></div></div>
+          <div class="colored-card border border-success"><div class="card-header-icon text-success">Organização</div><div class="segmented-control flex-column" id="org_group"><button class="seg-btn" onclick="selecionarSegmento(this,'organizacao','Organizado','good')">Organizado</button><button class="seg-btn" onclick="selecionarSegmento(this,'organizacao','Parcial','warning')">Parcial</button><button class="seg-btn" onclick="selecionarSegmento(this,'organizacao','Sem','danger')">Sem</button></div></div>
+          <div class="colored-card border border-danger"><div class="card-header-icon text-danger">Ativ. Sala</div><div class="segmented-control flex-column" id="ativ_group"><button class="seg-btn" onclick="selecionarSegmento(this,'atividades_sala','Cumpre','good')">Cumpre</button><button class="seg-btn" onclick="selecionarSegmento(this,'atividades_sala','Parcial','warning')">Parcial</button><button class="seg-btn" onclick="selecionarSegmento(this,'atividades_sala','Não cumpre','danger')">Não cumpre</button></div></div>
+          <div class="colored-card border border-warning"><div class="card-header-icon text-warning">Tarefa Casa</div><div class="segmented-control flex-column" id="tarefa_group"><button class="seg-btn" onclick="selecionarSegmento(this,'tarefa_casa','Cumpre','good')">Cumpre</button><button class="seg-btn" onclick="selecionarSegmento(this,'tarefa_casa','Parcial','warning')">Parcial</button><button class="seg-btn" onclick="selecionarSegmento(this,'tarefa_casa','Não cumpre','danger')">Não cumpre</button></div></div>
+          <div class="colored-card border border-info"><div class="card-header-icon text-info">Presença</div><div class="segmented-control flex-column" id="pres_group"><button class="seg-btn" onclick="selecionarSegmento(this,'presenca','Comparece','good')">Comparece</button><button class="seg-btn" onclick="selecionarSegmento(this,'presenca','Faltas','warning')">Faltas</button><button class="seg-btn" onclick="selecionarSegmento(this,'presenca','Não comp.','danger')">Não comp.</button></div></div>
         </div>
 
         <div class="row g-2 mb-2" style="height: 165px;">
           <div class="col-3 h-100">
             <div class="colored-card bg-warning bg-opacity-10 border border-3 border-warning h-100 d-flex flex-column">
               <div class="card-header-icon text-dark m-0" style="font-size: 0.65rem;">Característica do Estudante</div>
-              <div class="segmented-control flex-column bg-white flex-grow-1 justify-content-center mt-1">
+              <div class="segmented-control flex-column bg-white flex-grow-1 justify-content-center mt-1" id="carac_group">
                 <button class="seg-btn" style="padding: 6px; font-size: 0.7rem;" onclick="selecionarSegmento(this,'caracteristica','Ótimo/Ótima estudante','good')">Ótimo/Ótima</button>
                 <button class="seg-btn mt-1" style="padding: 6px; font-size: 0.7rem;" onclick="selecionarSegmento(this,'caracteristica','Bom/Boa estudante','good')">Bom/Boa</button>
                 <button class="seg-btn mt-1" style="padding: 6px; font-size: 0.7rem;" onclick="selecionarSegmento(this,'caracteristica','Precisa melhorar','danger')">Precisa Melhorar</button>
@@ -205,18 +205,17 @@
   </div>
 
   <script>
-    // URL OFICIAL EMBUTIDA DA PLANILHA GOOGLE
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbwYaqIn2pL2ePwILxPcjERVFH_oW_eTW_zB8rNKQiSNHrDHG7MqLAFYc6sJOUeoxZ2D/exec";
 
     var bancoDeDados = null; 
     var listaEstudantes = []; var indexAtual = 0; 
     var avaliacaoAtual = {}; var avaliacaoTurma = {};
+    var dadosRecuperadosCache = { turmaColetiva: null, avaliacoesAlunos: {} };
     var listaTurmasGlobal = []; var listaServidoresGlobal = [];
     var listaCargosGlobal = ["Diretor(a)", "Vice-Diretor(a)", "Especialista / EEB", "Professor(a) Regente", "Professor(a) de Apoio"];
     var listaCompGlobal = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Inglês", "Português", "Matemática"];
     
-    var timerInterval = null;
-    var tempoRestante = 180;
+    var timerInterval = null; var tempoRestante = 180;
 
     window.onload = function() {
       chamarApiGoogle('carregarTudo', null, function(dados) {
@@ -235,16 +234,9 @@
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ funcao: funcao, dados: dados })
       })
-      .then(res => {
-         if(!res.ok) throw new Error("Erro de Conexão");
-         return res.json();
-      })
+      .then(res => { if(!res.ok) throw new Error("Erro de Conexão"); return res.json(); })
       .then(data => { if(callback) callback(data); })
-      .catch(e => {
-         console.error("Erro:", e);
-         var btn = document.getElementById('btnRegistrarTurma');
-         if(btn) { btn.disabled = false; btn.innerHTML = 'Falha. Tentar Novamente.'; }
-      });
+      .catch(e => { console.error("Erro:", e); });
     }
 
     function verificarSenha() {
@@ -253,7 +245,6 @@
         showView('view-lotacao');
         if (bancoDeDados) { iniciarInterfaceComDados(); } 
         else {
-           document.getElementById('containerProfissionais').innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary"></div><h5 class="mt-3 fw-bold text-muted">Acessando Planilha Oficial...</h5></div>';
            chamarApiGoogle('carregarTudo', null, function(dados) {
               if(dados && !dados.erro) { bancoDeDados = dados; iniciarInterfaceComDados(); } 
               else { alert("Erro de conexão na Planilha."); }
@@ -321,23 +312,66 @@
 
     function irParaEtapa2() { salvarLotacaoGlobal(); showView('view-selecao'); }
 
+    // ==========================================
+    // INICIAR SESSÃO E BUSCAR DADOS SALVOS NA NUVEM
+    // ==========================================
     function iniciarSessaoConselho() {
       var turmaSel = document.getElementById('espSelectTurma').value;
+      var trimestreSel = document.getElementById('espSelectTrimestre').value;
       if(!turmaSel) { alert("Selecione a turma alvo antes de iniciar!"); return; }
 
       document.getElementById('lblTurmaAtiva').innerText = turmaSel;
-      showView('view-datashow');
-      document.getElementById('panel-turma').style.display = 'block';
-      document.getElementById('panel-estudantes').style.display = 'none';
-
       listaEstudantes = bancoDeDados.estudantes[turmaSel] || [];
-      document.getElementById('btnRegistrarTurma').innerHTML = 'Registrar Turma e Iniciar Estudantes <i class="fa-solid fa-arrow-right ms-2"></i>';
+
+      // Consulta se já existem dados salvos para preencher na tela
+      chamarApiGoogle('carregarDadosSalvos', { turma: turmaSel, trimestre: trimestreSel }, function(res) {
+          dadosRecuperadosCache = res || { turmaColetiva: null, avaliacoesAlunos: {} };
+          
+          // Preenche avaliação da turma se houver
+          if(dadosRecuperadosCache.turmaColetiva) {
+             var tc = dadosRecuperadosCache.turmaColetiva;
+             if(tc.conversa) marcarBotaoPorValor('turma_conversa_group', tc.conversa);
+             if(tc.faltas) marcarBotaoPorValor('turma_faltas_group', tc.faltas);
+             if(tc.atividades) marcarBotaoPorValor('turma_atividades_group', tc.atividades);
+             if(tc.trabalhos) marcarBotaoPorValor('turma_trabalhos_group', tc.trabalhos);
+             document.getElementById('txtObsTurma').value = tc.observacoes || '';
+          } else {
+             limparGrupoBotoes('turma_conversa_group');
+             limparGrupoBotoes('turma_faltas_group');
+             limparGrupoBotoes('turma_atividades_group');
+             limparGrupoBotoes('turma_trabalhos_group');
+             document.getElementById('txtObsTurma').value = '';
+          }
+
+          showView('view-datashow');
+          document.getElementById('panel-turma').style.display = 'block';
+          document.getElementById('panel-estudantes').style.display = 'none';
+      });
     }
 
     function selecionarSegmento(btn, cat, val, cor) {
       if (cat.startsWith('turma_')) avaliacaoTurma[cat] = val; else avaliacaoAtual[cat] = val;
       Array.from(btn.parentElement.children).forEach(b => b.className = 'seg-btn');
       btn.classList.add('active-' + cor);
+    }
+
+    function marcarBotaoPorValor(groupId, valorBuscado) {
+       var grupo = document.getElementById(groupId);
+       if(!grupo) return;
+       var botoes = grupo.getElementsByTagName('button');
+       for(var i=0; i<botoes.length; i++) {
+          if(botoes[i].innerText.trim().toLowerCase() === valorBuscado.trim().toLowerCase()) {
+             botoes[i].click();
+             break;
+          }
+       }
+    }
+
+    function limparGrupoBotoes(groupId) {
+       var grupo = document.getElementById(groupId);
+       if(!grupo) return;
+       var botoes = grupo.getElementsByTagName('button');
+       for(var i=0; i<botoes.length; i++) botoes[i].className = 'seg-btn';
     }
 
     function addObs(texto) { 
@@ -384,13 +418,35 @@
     }
 
     function exibirEstudante() {
-      avaliacaoAtual = {}; document.getElementById('txtObs').value = '';
-      document.querySelectorAll('.seg-btn').forEach(b => b.className = 'seg-btn');
+      avaliacaoAtual = {}; 
+      document.getElementById('txtObs').value = '';
       document.getElementById('txtMotivo').value = '';
       
+      // Limpa visualmente todos os botões dos cards
+      ['disc_group', 'atencao_group', 'conv_group', 'inter_group', 'part_group', 'aprend_group', 'org_group', 'ativ_group', 'tarefa_group', 'pres_group', 'carac_group'].forEach(id => limparGrupoBotoes(id));
+
+      var nomeAluno = listaEstudantes[indexAtual].nome.toUpperCase();
       document.getElementById('lblNomeEstudante').innerText = listaEstudantes[indexAtual].nome;
       document.getElementById('lblIndex').innerText = indexAtual + 1;
       document.getElementById('lblTotal').innerText = listaEstudantes.length;
+
+      // Se já houver dados salvos para este aluno na nuvem, preenche automaticamente!
+      var avSalva = dadosRecuperadosCache.avaliacoesAlunos[nomeAluno];
+      if(avSalva) {
+         if(avSalva.disciplina) marcarBotaoPorValor('disc_group', avSalva.disciplina);
+         if(avSalva.atencao) marcarBotaoPorValor('atencao_group', avSalva.atencao);
+         if(avSalva.conversa) marcarBotaoPorValor('conv_group', avSalva.conversa);
+         if(avSalva.interesse) marcarBotaoPorValor('inter_group', avSalva.interesse);
+         if(avSalva.participacao) marcarBotaoPorValor('part_group', avSalva.participacao);
+         if(avSalva.aprendizagem) marcarBotaoPorValor('aprend_group', avSalva.aprendizagem);
+         if(avSalva.organizacao) marcarBotaoPorValor('org_group', avSalva.organizacao);
+         if(avSalva.atividades_sala) marcarBotaoPorValor('ativ_group', avSalva.atividades_sala);
+         if(avSalva.tarefa_casa) marcarBotaoPorValor('tarefa_group', avSalva.tarefa_casa);
+         if(avSalva.presenca) marcarBotaoPorValor('pres_group', avSalva.presenca);
+         if(avSalva.caracteristica) marcarBotaoPorValor('carac_group', avSalva.caracteristica);
+         document.getElementById('txtMotivo').value = avSalva.motivo || '';
+         document.getElementById('txtObs').value = avSalva.observacoes || '';
+      }
       
       iniciarTimer(); 
     }
@@ -418,7 +474,6 @@
       proximoEstudante();
     }
 
-    // === GERADOR DE BILHETES ===
     function imprimirBilhetes() {
        var turmaSel = document.getElementById('lblTurmaAtiva').innerText;
        var trimestreSel = document.getElementById('espSelectTrimestre').value; 
@@ -431,39 +486,16 @@
        btn.disabled = true;
 
        var win = window.open('', '_blank');
-       if(win) {
-           win.document.write('<h2 style="font-family: Arial; text-align: center; margin-top: 50px; color: #4f46e5;">⏳ Desenhando bilhetes da turma, por favor aguarde...</h2>');
-       } else {
-           alert("Seu navegador bloqueou a nova aba! Permita os pop-ups.");
-           btn.innerHTML = txtOriginal; btn.disabled = false;
-           return;
-       }
+       if(win) { win.document.write('<h2 style="font-family: Arial; text-align: center; margin-top: 50px; color: #4f46e5;">⏳ Desenhando bilhetes da turma, por favor aguarde...</h2>'); }
        
        var pacote = { turma: turmaSel, trimestre: trimestreSel };
        
        chamarApiGoogle('gerarBilhetesHTML', pacote, function(res) {
           btn.innerHTML = txtOriginal; btn.disabled = false;
-          
-          if(res && res.erro) { 
-              win.close(); 
-              alert(res.erro); 
-          } else if (res && res.html) {
-             win.document.open();
-             win.document.write(res.html);
-             win.document.close();
-          } else {
-             win.close();
-             alert("Erro de comunicação com o Google. Tente novamente.");
-          }
+          if(res && res.erro) { win.close(); alert(res.erro); } 
+          else if (res && res.html) { win.document.open(); win.document.write(res.html); win.document.close(); } 
+          else { win.close(); alert("Erro de comunicação com o Google."); }
        });
-
-       setTimeout(function() {
-           if(btn.disabled) {
-               btn.innerHTML = txtOriginal; btn.disabled = false;
-               if(win) win.close();
-               alert("O Google demorou para responder. Tente clicar de novo!");
-           }
-       }, 15000);
     }
   </script>
 </body>
