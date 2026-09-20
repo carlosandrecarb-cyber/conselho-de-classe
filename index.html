@@ -9,17 +9,17 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     :root {
-      --bg-main: #f8fafc; --surface: #ffffff; --primary: #4f46e5; --primary-hover: #4338ca;
+      --bg-main: #f8fafc; --surface: #ffffff; --primary: #0f172a; --primary-hover: #1e293b;
       --text-main: #0f172a; --text-muted: #64748b; --border-color: #cbd5e1;
-      --radius-box: 16px; --radius-btn: 12px;
+      --radius-box: 12px; --radius-btn: 8px;
     }
     body { background-color: var(--bg-main); font-family: 'Inter', sans-serif; color: var(--text-main); margin: 0; padding: 0; }
     .app-shell { max-width: 1450px; margin: 0 auto; padding: 15px; min-height: 100vh; display: flex; flex-direction: column; }
     
     .topbar { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-box); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); margin-bottom: 20px; display: none; }
-    .school-badge { font-size: 0.7rem; font-weight: 700; background: #e0e7ff; color: var(--primary); padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 4px; }
+    .school-badge { font-size: 0.7rem; font-weight: 700; background: #e0e7ff; color: #4f46e5; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 4px; }
     
-    .nav-pills-modern { background: #f1f5f9; padding: 6px; border-radius: 14px; display: flex; gap: 6px; border: 1px solid var(--border-color); flex-wrap: wrap; justify-content: center; }
+    .nav-pills-modern { background: #f1f5f9; padding: 6px; border-radius: 10px; display: flex; gap: 6px; border: 1px solid var(--border-color); flex-wrap: wrap; justify-content: center; }
     .pill-btn { border: none; background: transparent; padding: 8px 14px; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); border-radius: var(--radius-btn); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; }
     .pill-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
     .pill-btn:hover:not(.active) { color: var(--primary); background: rgba(255,255,255,0.5); }
@@ -28,41 +28,50 @@
     .view-panel { display: none; } .view-panel.active { display: block; animation: fadeIn 0.2s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
  
-    .btn-mestra { background: var(--primary); color: white; border: none; font-weight: 700; border-radius: var(--radius-btn); padding: 12px 20px; transition: 0.2s; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-mestra:hover { background: var(--primary-hover); color: white; }
-    .input-mestra { border: 2px solid var(--border-color); border-radius: var(--radius-btn); padding: 10px 14px; font-weight: 600; font-size: 0.9rem; outline: none; width: 100%; background: #fff; transition: 0.2s; }
-    .input-mestra:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79,70,229,0.08); }
+    .btn-mestra { background: #10b981; color: white; border: none; font-weight: 700; border-radius: var(--radius-btn); padding: 10px 16px; transition: 0.2s; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-mestra:hover { background: #059669; color: white; }
+    .input-mestra { border: 1px solid var(--border-color); border-radius: var(--radius-btn); padding: 6px 10px; font-weight: 600; font-size: 0.85rem; outline: none; width: 100%; background: #fff; transition: 0.2s; }
+    .input-mestra:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15,23,42,0.08); }
  
     .turma-tag { border: 2px solid var(--border-color); background: white; font-weight: 700; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; color: var(--text-muted); }
-    .turma-tag.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px rgba(79,70,229,0.2); }
+    .turma-tag.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px rgba(15,23,42,0.2); }
     
-    .student-pill-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
-    .student-pill { background: #f8fafc; border: 1.5px solid var(--border-color); padding: 10px 16px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px; }
-    .student-pill:hover { border-color: var(--primary); background: #eef2ff; color: var(--primary); }
+    .student-pill-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+    .student-pill { background: #f8fafc; border: 1px solid var(--border-color); padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+    .student-pill:hover { border-color: #4f46e5; background: #eef2ff; color: #4f46e5; }
  
-    .eval-card { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; height: 100%; }
-    .eval-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; color: var(--text-muted); }
-    .seg-group { display: flex; flex-direction: column; gap: 3px; }
-    .seg-option { border: 1px solid var(--border-color); background: #f8fafc; padding: 5px 8px; font-size: 0.7rem; font-weight: 600; color: var(--text-main); border-radius: 6px; cursor: pointer; text-align: left; transition: 0.15s; }
-    .seg-option.selected-green { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; font-weight: 700; }
-    .seg-option.selected-yellow { background-color: #fef3c7 !important; border-color: #f59e0b !important; color: #92400e !important; font-weight: 700; }
-    .seg-option.selected-red { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; font-weight: 700; }
+    /* DATASHOW FULLSCREEN E SEM SCROLLBAR */
+    #painelAvaliacaoEstudante { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #f1f5f9; z-index: 1050; display: none; flex-direction: column; padding: 10px; overflow: hidden; }
+    .ds-header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px 15px; border-radius: 10px; border: 1px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05); flex-shrink: 0; margin-bottom: 8px; }
+    .ds-content { flex-grow: 1; display: flex; gap: 10px; min-height: 0; }
+    .ds-col-left { flex: 0 0 55%; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+    .ds-col-right { flex: 1; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
     
-    .chk-encaminhamento { font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: flex-start; gap: 6px; margin-bottom: 4px; line-height: 1.2; }
-    .timer-box { background: #0f172a; color: #facc15; border: 2px solid #facc15; padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+    .eval-card { background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 12px; display: flex; flex-direction: column; }
+    .eval-title { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; color: #4f46e5; display: flex; align-items: center; gap: 6px; }
     
-    .grid-projetor { display: flex; gap: 15px; } .grid-projetor-esq { flex: 0 0 55%; } .grid-projetor-dir { flex: 0 0 45%; display: flex; flex-direction: column; gap: 15px; }
-    .sticky-header-datashow { position: sticky; top: 0; z-index: 100; background: var(--surface); padding: 15px; border-bottom: 3px solid var(--primary); box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-radius: 12px 12px 0 0; margin: -20px -20px 20px -20px; }
+    /* Grelha de Critérios Compacta */
+    .criterios-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; overflow-y: auto; padding-right: 4px; }
+    .criterios-grid-2col::-webkit-scrollbar { width: 4px; } .criterios-grid-2col::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .crit-box { border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; background: #f8fafc; }
+    .crit-title { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 4px; }
+    .seg-group { display: flex; flex-direction: column; gap: 2px; }
+    .seg-option { border: 1px solid var(--border-color); background: white; padding: 4px 6px; font-size: 0.65rem; font-weight: 600; color: var(--text-main); border-radius: 4px; cursor: pointer; text-align: left; transition: 0.1s; }
     
-    .table-prof th { font-size: 0.7rem; vertical-align: middle; text-align: center; }
-    .table-prof td { vertical-align: middle; font-size: 0.75rem; }
+    .seg-option.selected-green { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; font-weight: 700; box-shadow: inset 2px 0 0 #059669; }
+    .seg-option.selected-yellow { background-color: #fef3c7 !important; border-color: #f59e0b !important; color: #92400e !important; font-weight: 700; box-shadow: inset 2px 0 0 #d97706; }
+    .seg-option.selected-red { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; font-weight: 700; box-shadow: inset 2px 0 0 #b91c1c; }
+    
+    .chk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; overflow-y: auto; margin-top: 4px; }
+    .chk-grid::-webkit-scrollbar { width: 4px; } .chk-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .chk-encaminhamento { font-size: 0.7rem; font-weight: 600; cursor: pointer; display: flex; align-items: flex-start; gap: 4px; margin-bottom: 0; color: #334155; }
+    
+    .timer-box { background: #0f172a; color: #facc15; padding: 4px 12px; border-radius: 6px; font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 6px; }
     
     /* TAGS DE SINALIZAÇÃO AEE */
-    .tag-aee { font-size: 0.65rem; background: #e0e7ff; color: #4f46e5; padding: 3px 8px; border-radius: 6px; font-weight: 900; margin-left: 6px; border: 1px solid #4f46e5; }
-    .tag-pdi { font-size: 0.65rem; background: #fee2e2; color: #b91c1c; padding: 3px 8px; border-radius: 6px; font-weight: 900; margin-left: 6px; border: 1px solid #b91c1c; }
-    .tag-sigla { font-size: 0.65rem; background: #fef3c7; color: #b45309; padding: 3px 8px; border-radius: 6px; font-weight: 900; margin-left: 6px; border: 1px solid #b45309; }
-    
-    .turma-salva-tag { background: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; border: 1px dashed #cbd5e1; }
+    .tag-aee { font-size: 0.65rem; background: #e0e7ff; color: #4f46e5; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin-left: 6px; }
+    .tag-pdi { font-size: 0.65rem; background: #fee2e2; color: #b91c1c; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin-left: 6px; }
+    .tag-sigla { font-size: 0.65rem; background: #fef3c7; color: #b45309; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin-left: 6px; }
  
     /* CONTROLE DE ACESSO */
     body.role-prof .admin-only { display: none !important; }
@@ -206,12 +215,12 @@
                <tr>
                  <th style="width: 5%;">Nº</th>
                  <th style="width: 25%; text-align: left;">Nome do Estudante</th>
-                 <th style="background:#b91c1c;" title="Aproveitamento abaixo da média">Abaixo<br>Média</th>
-                 <th style="background:#b45309;" title="Relação de estudantes infrequentes">Infre-<br>quente</th>
-                 <th style="background:#b45309;" title="Situação de afastamento hospitalar ou domiciliar">Motivo Afastamento<br>(Hosp/Domiciliar)</th>
-                 <th style="background:#0369a1;" title="Encaminhados para Reforço Escolar">Reforço<br>Escolar</th>
-                 <th style="background:#4338ca;" title="Ainda não finalizaram Progressão Parcial">Prog.<br>Parcial</th>
-                 <th style="background:#475569;" title="Relação de estudantes não Alfabetizados">Não<br>Alfab.</th>
+                 <th style="background:#b91c1c; color:white;" title="Aproveitamento abaixo da média">Abaixo<br>Média</th>
+                 <th style="background:#b45309; color:white;" title="Relação de estudantes infrequentes">Infre-<br>quente</th>
+                 <th style="background:#b45309; color:white;" title="Situação de afastamento hospitalar ou domiciliar">Motivo Afastamento<br>(Hosp/Domiciliar)</th>
+                 <th style="background:#0369a1; color:white;" title="Encaminhados para Reforço Escolar">Reforço<br>Escolar</th>
+                 <th style="background:#4338ca; color:white;" title="Ainda não finalizaram Progressão Parcial">Prog.<br>Parcial</th>
+                 <th style="background:#475569; color:white;" title="Relação de estudantes não Alfabetizados">Não<br>Alfab.</th>
                </tr>
              </thead>
              <tbody id="tabelaProfessorCorpo"></tbody>
@@ -261,7 +270,7 @@
             <h5 class="fw-extrabold text-success border-bottom border-success pb-2 mb-3"><i class="fa-solid fa-universal-access me-2"></i>Educação Especial / Inclusão (Preenchimento Automático)</h5>
             <div class="row g-3">
               <div class="col-md-6"><label class="fw-bold fs-7 text-dark">Relação de estudantes (AEE) que NÃO possuem PDI: <br><span class="text-danger fs-8">(Puxado automático da Gestão de Estudantes)</span></label><textarea id="espSemPdiAuto" class="input-mestra bg-white text-danger fw-bold" rows="3" readonly></textarea></div>
-              <div class="col-md-6"><label class="fw-bold fs-7 text-dark">Estudantes que frequentam a Sala de Recursos: <br><span class="text-primary fs-8">(Puxado automático do Datashow)</span></label><textarea id="espSalaNomes" class="input-mestra bg-white text-primary fw-bold" rows="3" readonly></textarea></div>
+              <div class="col-md-6"><label class="fw-bold fs-7 text-dark">Estudantes que frequentam a Sala de Recursos: <br><span class="text-primary fs-8">(Puxado automático da avaliação do Datashow)</span></label><textarea id="espSalaNomes" class="input-mestra bg-white text-primary fw-bold" rows="3" placeholder="Surgirá automaticamente..." readonly></textarea></div>
               <div class="col-md-12 mt-3"><label class="fw-bold fs-7 text-dark">Relação de estudantes (AEE) que NÃO possuem Intérprete de LIBRAS:</label><input type="text" id="espSemLibras" class="input-mestra border-success" placeholder="Insira os nomes ou digite 'Não existe na turma...'"></div>
            </div>
           </div>
@@ -271,7 +280,7 @@
       </div>
     </section>
  
-    <!-- ABA 5: DATASHOW / REUNIÃO -->
+    <!-- ABA 5: DATASHOW / REUNIÃO (TELA INICIAL DE SELEÇÃO) -->
     <section id="tab-datashow" class="view-panel">
       <div class="card-clean mb-4" id="seletorDatashow">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 border-bottom pb-3">
@@ -284,59 +293,75 @@
         <label class="form-label fw-bold fs-7 text-uppercase text-muted">1. Selecione a Turma Alvo:</label><div id="gridTurmasSessao" class="d-flex flex-wrap gap-2 mb-4"></div>
         <div id="containerAlunosSessao" style="display: none;"><div class="d-flex justify-content-between align-items-center mb-2"><label class="form-label fw-bold fs-7 text-uppercase text-muted m-0">2. Clique no Estudante para Avaliar:</label><span class="badge bg-primary" id="contadorAlunosBadge">0 alunos</span></div><div id="gridAlunosSessao" class="student-pill-grid"></div></div>
       </div>
+    </section>
  
-      <div id="painelAvaliacaoEstudante" class="card-clean admin-lock" style="display: none; border: 2px solid var(--primary); padding-top: 0; position: relative;">
-        <!-- CABEÇALHO CONGELADO (STICKY) -->
-        <div class="sticky-header-datashow d-flex justify-content-between align-items-center">
-          <div>
-            <span class="badge bg-success mb-1" id="lblTurmaTop">Avaliando Turma</span>
-            <h3 class="fw-extrabold m-0 text-uppercase text-dark d-flex align-items-center flex-wrap gap-2" id="nomeAlunoAtivo" style="font-size: 1.4rem;">
-              <span id="nomeAlunoDisplay">NOME DO ESTUDANTE</span>
-              <span id="tagsAlunoDatashow"></span>
-           </h3>
-          </div>
-          <div class="d-flex align-items-center gap-2">
-            <div class="timer-box me-3" id="cronometroDisplay"><i class="fa-regular fa-clock"></i> <span id="tempoRestante">03:00</span></div>
-            <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(-1)"><i class="fa-solid fa-chevron-left me-1"></i> Voltar</button>
-            <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(1)">Próximo <i class="fa-solid fa-chevron-right ms-1"></i></button>
-            <button class="btn btn-dark fw-bold btn-sm py-2 px-3 ms-2" onclick="fecharAvaliacaoAluno()"><i class="fa-solid fa-xmark"></i> Fechar</button>
-            <button class="btn btn-success fw-bold btn-sm py-2 px-4 shadow-sm admin-only" onclick="salvarEAvancarProximo()"><i class="fa-solid fa-floppy-disk me-1"></i> Gravar Tudo e Salvar na Planilha</button>
-          </div>
+    <!-- =============================================================== -->
+    <!-- TELA DE AVALIAÇÃO DO DATASHOW (FULLSCREEN E SEM ROLAGEM)        -->
+    <!-- =============================================================== -->
+    <div id="painelAvaliacaoEstudante">
+      <!-- CABEÇALHO -->
+      <div class="ds-header">
+        <div>
+          <span class="badge bg-success mb-1" id="lblTurmaTop">Avaliando Turma</span>
+          <h3 class="fw-extrabold m-0 text-uppercase text-dark d-flex align-items-center gap-2" id="nomeAlunoAtivo" style="font-size: 1.25rem;">
+            <span id="nomeAlunoDisplay">NOME DO ESTUDANTE</span>
+            <span id="tagsAlunoDatashow"></span>
+          </h3>
         </div>
- 
-        <div class="grid-projetor mt-3">
-          <div class="grid-projetor-esq">
-            <span class="eval-title text-dark d-block mb-2"><i class="fa-solid fa-list-check me-1"></i> Critérios de Avaliação (Clique para marcar)</span>
-            <div class="row g-2" id="criteriosGrid"></div>
-          </div>
-          <div class="grid-projetor-dir">
-            <!-- CAIXA DE CONCLUSÃO E ROBÔ -->
-            <div class="eval-card bg-warning bg-opacity-10 border-warning p-3 mb-3">
-              <span class="eval-title text-dark fw-bold mb-2 d-block"><i class="fa-solid fa-award me-1"></i> Conclusão Geral (Automática aos 10 itens)</span>
-              <div class="d-flex flex-wrap gap-2 mb-2" id="conclusaoGroup">
-               <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="ÓTIMO(A)" onclick="setConclusao('ÓTIMO(A)', this)">🟢 ÓTIMO(A)</button>
-               <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="BOM/BOA" onclick="setConclusao('BOM/BOA', this)">🟢 BOM/BOA</button>
-               <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="PRECISA DE ATENÇÃO" onclick="setConclusao('PRECISA DE ATENÇÃO', this)">🔴 PRECISA DE ATENÇÃO</button>
-             </div>
-              <span class="eval-title text-primary fw-bold mt-2 mb-1 d-block"><i class="fa-solid fa-robot me-1"></i> Parecer Descritivo Visível</span>
-             <textarea id="obsAlunoAtivo" class="input-mestra border bg-white" rows="7" style="resize: none; font-size: 0.85rem;" placeholder="Marque os 10 itens para gerar o texto..."></textarea>
-             <input type="text" id="conclusaoMotivo" class="input-mestra py-1 mt-2 fs-7" placeholder="Motivo/observação extra final..." oninput="atualizarRoboESintese(false)">
-           </div>
-            
-            <!-- CAIXA NOVA: OUTRAS SITUAÇÕES -->
-            <div class="eval-card border-secondary bg-light p-3" style="min-height: auto;">
-              <span class="eval-title text-dark fw-bold d-block m-0"><i class="fa-solid fa-puzzle-piece me-1"></i> Outras Situações / Informações Complementares</span>
-              <textarea id="txtOutrasSituacoes" class="input-mestra mt-2 bg-white" rows="2" placeholder="Ex: Encaminhado ao AEE, Sala de Recursos, Questões Familiares..."></textarea>
-            </div>
-          </div>
-        </div>
- 
-        <div class="row g-3 mt-1">
-          <div class="col-md-6"><div class="eval-card bg-light border"><div class="d-flex justify-content-between align-items-center mb-2"><span class="eval-title text-primary m-0"><i class="fa-solid fa-school me-1"></i> Ações da Escola</span><span class="badge bg-primary fs-8" id="contadorEscola">0</span></div><div id="listaEncEscola" class="mt-1" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px;"></div></div></div>
-          <div class="col-md-6"><div class="eval-card bg-light border"><div class="d-flex justify-content-between align-items-center mb-2"><span class="eval-title text-success m-0"><i class="fa-solid fa-house-chimney me-1"></i> Para a Família</span><span class="badge bg-success fs-8" id="contadorFamilia">0</span></div><div id="listaEncFamilia" class="mt-1" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px;"></div></div></div>
+        <div class="d-flex align-items-center gap-2">
+          <div class="timer-box me-2" id="cronometroDisplay"><i class="fa-regular fa-clock"></i> <span id="tempoRestante">03:00</span></div>
+          <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(-1)"><i class="fa-solid fa-chevron-left me-1"></i> Voltar</button>
+          <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(1)">Próximo <i class="fa-solid fa-chevron-right ms-1"></i></button>
+          <button class="btn btn-dark fw-bold btn-sm py-2 px-3 ms-2" onclick="fecharAvaliacaoAluno()"><i class="fa-solid fa-xmark me-1"></i> Fechar</button>
+          <button class="btn btn-mestra fw-bold btn-sm py-2 px-4 shadow-sm admin-only" onclick="salvarEAvancarProximo()"><i class="fa-solid fa-floppy-disk me-1"></i> Gravar Tudo</button>
         </div>
       </div>
-    </section>
+
+      <!-- CORPO 100% PREENCHIDO (SEM SCROLL) -->
+      <div class="ds-content">
+        <!-- COLUNA ESQUERDA (55%) -->
+        <div class="ds-col-left">
+          <div class="eval-card flex-grow-0" style="padding: 6px 10px;">
+            <span class="eval-title"><i class="fa-solid fa-list-check me-1"></i> Critérios de Avaliação (Clique para marcar)</span>
+            <div class="criterios-grid-2col" id="criteriosGrid">
+              <!-- Renderizado via JS para ficar em 2 colunas -->
+            </div>
+          </div>
+          
+          <div class="eval-card flex-grow-1" style="padding: 6px 10px; min-height: 0;">
+            <span class="eval-title text-primary"><i class="fa-solid fa-school me-1"></i> Ações da Escola <span class="badge bg-primary ms-1" id="contadorEscola">0</span></span>
+            <div id="listaEncEscola" class="chk-grid"></div>
+          </div>
+        </div>
+
+        <!-- COLUNA DIREITA (45%) -->
+        <div class="ds-col-right">
+          <div class="eval-card" style="padding: 6px 10px; background: #fffbeb; border-color: #fcd34d;">
+            <span class="eval-title text-dark"><i class="fa-solid fa-award me-1"></i> Conclusão Geral (Automática aos 10 itens)</span>
+            <div class="d-flex gap-2" id="conclusaoGroup">
+              <button class="seg-option flex-grow-1 py-1 fw-bold text-center" data-conc="ÓTIMO(A)" onclick="setConclusao('ÓTIMO(A)', this)">🟢 ÓTIMO</button>
+              <button class="seg-option flex-grow-1 py-1 fw-bold text-center" data-conc="BOM/BOA" onclick="setConclusao('BOM/BOA', this)">🟢 BOM</button>
+              <button class="seg-option flex-grow-1 py-1 fw-bold text-center" data-conc="PRECISA DE ATENÇÃO" onclick="setConclusao('PRECISA DE ATENÇÃO', this)">🔴 ATENÇÃO</button>
+            </div>
+          </div>
+
+          <div class="eval-card flex-grow-1" style="padding: 6px 10px; min-height: 0;">
+            <span class="eval-title text-primary"><i class="fa-solid fa-robot me-1"></i> Parecer Descritivo</span>
+            <textarea id="obsAlunoAtivo" class="input-mestra border-0 bg-light p-2 w-100 h-100" style="resize: none; font-size: 0.75rem; border-radius: 6px;" placeholder="Marque os 10 itens para gerar o texto..."></textarea>
+          </div>
+
+          <div class="eval-card" style="padding: 6px 10px; background: #f8fafc; border-color: #cbd5e1;">
+            <span class="eval-title text-dark m-0"><i class="fa-solid fa-puzzle-piece me-1"></i> Outros Motivos / Situações Complementares</span>
+            <textarea id="txtOutrasSituacoes" class="input-mestra border bg-white mt-1" rows="1" style="font-size: 0.75rem; resize: none; padding: 4px 6px;" placeholder="Ex: Sala de Recursos, Problema Familiar, AEE..."></textarea>
+          </div>
+
+          <div class="eval-card flex-grow-1" style="padding: 6px 10px; min-height: 0;">
+            <span class="eval-title text-success"><i class="fa-solid fa-house-chimney me-1"></i> Para a Família <span class="badge bg-success ms-1" id="contadorFamilia">0</span></span>
+            <div id="listaEncFamilia" class="chk-grid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
  
     <!-- ABA 6: BANCO DE REGISTROS -->
     <section id="tab-banco" class="view-panel admin-only">
@@ -350,7 +375,6 @@
           </div>
         </div>
 
-        <!-- RADAR GESTÃO -->
         <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-radar"></i> Radar de Ação Imediata</h5>
         <div class="row g-2 mb-4">
             <div class="col-md-3"><button class="btn btn-danger w-100 fw-bold py-2" onclick="filtrarRadarGestao('Faltas')"><i class="fa-solid fa-triangle-exclamation"></i> Faltosos Críticos</button></div>
@@ -401,7 +425,7 @@
   </div>
  
   <script>
-    // A URL DA SUA PLANILHA EXATA (NUVEM)
+    // A URL DA SUA PLANILHA (NUVEM)
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbxIHePqCUCNaNzgz4C-5rz5AwQXh02W2A1KUJz3yx9hf0ofth0dZIGuWaurcmL4FN5i/exec";
 
     var turmasGlobais = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
@@ -430,14 +454,15 @@
     // COMUNICAÇÃO TOTAL COM O GOOGLE SHEETS
     // ===============================================================
     function chamarApiGoogle(funcao, dados = null, callback) {
-      fetch(URL_API_GOOGLE, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ funcao: funcao, dados: dados })
-      })
-      .then(res => res.json())
-      .then(data => { if(callback) callback(data); })
-      .catch(e => console.error("Erro na conexão com Google:", e));
+      fetch(URL_API_GOOGLE, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ funcao: funcao, dados: dados }) })
+      .then(res => res.json()).then(data => { if(callback) callback(data); }).catch(e => console.error("Erro na conexão:", e));
+    }
+
+    function forcarSincronizacaoNuvem() {
+      if(perfilLogado !== 'admin') return;
+      var anoAtual = document.getElementById('globalAno') ? document.getElementById('globalAno').value : '2026';
+      var dadosGerais = { funcao: 'backupGeralLocal', dados: { ano: anoAtual, banco_registros: JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'), lotacao: JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]') } };
+      fetch(URL_API_GOOGLE, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(dadosGerais) }).catch(e => console.log('Sincronização em background.'));
     }
 
     // ===============================================================
@@ -471,7 +496,10 @@
       var gridCrit = document.getElementById('criteriosGrid');
       if(gridCrit) {
         gridCrit.innerHTML = '';
-        criteriosDetalhados.forEach(c => { var optsHtml = c.opcoes.map(opt => `<button class="seg-option" onclick="setCritVal(this, '${c.chave}', '${opt.texto}')">${opt.texto}</button>`).join(''); gridCrit.innerHTML += `<div class="col-md-6"><div class="eval-card p-2" style="border-radius:8px;"><span class="eval-title" style="font-size:0.72rem;">${c.nome}</span><div class="seg-group" id="crit_${c.chave}">${optsHtml}</div></div></div>`; });
+        criteriosDetalhados.forEach(c => { 
+          var optsHtml = c.opcoes.map(opt => `<button class="seg-option" onclick="setCritVal(this, '${c.chave}', '${opt.texto}')">${opt.texto}</button>`).join(''); 
+          gridCrit.innerHTML += `<div class="crit-box"><div class="crit-title">${c.nome}</div><div class="seg-group" id="crit_${c.chave}">${optsHtml}</div></div>`; 
+        });
       }
       var divEscola = document.getElementById('listaEncEscola'); if(divEscola) { divEscola.innerHTML = ''; encEscolaOpcoes.forEach(frase => divEscola.innerHTML += `<label class="chk-encaminhamento"><input type="checkbox" class="chk-escola" value="${frase}" onchange="atualizarRoboESintese(false)"> <span>${frase}</span></label>`); }
       var divFamilia = document.getElementById('listaEncFamilia'); if(divFamilia) { divFamilia.innerHTML = ''; encFamiliaOpcoes.forEach(frase => divFamilia.innerHTML += `<label class="chk-encaminhamento"><input type="checkbox" class="chk-familia" value="${frase}" onchange="atualizarRoboESintese(false)"> <span>${frase}</span></label>`); }
@@ -500,7 +528,7 @@
       if(!turma) { alert("Selecione a turma."); return; } if(!texto) { alert("Cole a lista."); return; }
       var nomes = texto.split('\n').filter(n => n.trim() !== ""); 
       var alunos = nomes.map((nome, index) => { return { numero: index + 1, nome: nome.trim().toUpperCase(), aee: false, pdi: "Não", sigla: "" }; });
-      localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos)); document.getElementById('txtListaEstudantes').value = ''; carregarEstudantesParaEdicao(); atualizarTagsTurmasSalvas();
+      localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos)); document.getElementById('txtListaEstudantes').value = ''; carregarEstudantesParaEdicao(); atualizarTagsTurmasSalvas(); forcarSincronizacaoNuvem(); 
     }
  
     function carregarEstudantesParaEdicao() {
@@ -542,11 +570,7 @@
             d.push({nome: tr.querySelector('.name-cell').innerText, cargo: tr.querySelector('.cargo-sel').value, turno: tr.querySelector('.turno-sel').value, turmas: t, componentes: [tr.querySelector('.comp-sel').value||''] }); 
         }); 
         localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(d)); carregarProfessoresSelect(); 
-        
-        // ENVIA PARA A PLANILHA OFICIAL (NUVEM)
-        chamarApiGoogle('salvarLotacaoGlobal', d, function(res) {
-            alert("✅ Lotação salva com sucesso no sistema e na Planilha!"); 
-        });
+        chamarApiGoogle('salvarLotacaoGlobal', d, function(res) { alert("✅ Lotação salva com sucesso no sistema e na Planilha!"); });
     }
 
     function carregarTabelaLotacaoSalva() { var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || 'null'); if(s) { renderizarTabelaLotacao(s); } carregarProfessoresSelect(); }
@@ -649,8 +673,7 @@
       var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
       var salaNomes = [];
       Object.keys(db).forEach(k => { var reg = db[k]; if(reg.turma === turma && reg.trimestre === trim && reg.salaRecursos === 'Sim') salaNomes.push(reg.estudante); });
-      document.getElementById('espSalaNomes').value = salaNomes.length > 0 ? salaNomes.join(', ') : 'Nenhum estudante marcado na avaliação.';
- 
+      
       var chave = 'mestra_esp_' + turma + '_' + trim;
       var d = JSON.parse(localStorage.getItem(chave) || '{"intP":"","busca":"","prog":"","outros":"","semLibras":""}');
       document.getElementById('espIntPedag').value = d.intP || ''; document.getElementById('espBuscaAtiva').value = d.busca || ''; document.getElementById('espProgParcial').value = d.prog || ''; document.getElementById('espOutrosEnc').value = d.outros || ''; document.getElementById('espSemLibras').value = d.semLibras || ''; 
@@ -666,7 +689,7 @@
       var esp = document.getElementById('espNomeSelect').value; var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value;
       if(!esp || !turma) { alert("Busque a turma primeiro."); return; }
       var d = JSON.parse(localStorage.getItem('mestra_esp_' + turma + '_' + trim) || 'null'); if(!d) { alert("Salve os dados primeiro."); return; }
-      var noPdi = document.getElementById('espSemPdiAuto').value; var sNomes = document.getElementById('espSalaNomes').value;
+      var noPdi = document.getElementById('espSemPdiAuto').value;
       
       var html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Matriz Especialista ${turma}</title><style>
         @page { size: A4 portrait; margin: 8mm; } body { font-family: 'Inter', Arial, sans-serif; margin: 0; background: #e2e8f0; color: #0f172a; } .bar { background: #0f172a; padding: 12px; text-align: center; position: sticky; top:0; z-index:100; }
@@ -686,32 +709,31 @@
       <div class="box-bloco" style="background: #f0fdf4; border-color: #166534;"><div class="box-bloco-titulo" style="color: #166534; border-color: #bbf7d0;">5. Educação Especial / Inclusão</div>
       <div style="margin-bottom: 8px;"><strong style="font-size:9pt;">Estudantes (AEE) que NÃO possuem PDI:</strong><pre style="color:#b91c1c; font-weight:bold;">${noPdi}</pre></div>
       <div style="margin-bottom: 8px;"><strong style="font-size:9pt;">Estudantes (AEE) que NÃO possuem Intérprete LIBRAS:</strong><pre>${d.semLibras||'Não existe na turma nenhum estudante.'}</pre></div>
-     <div><strong style="font-size:9pt;">Estudantes frequentadores da Sala de Recursos:</strong><pre style="color:#0369a1; font-weight:bold;">${sNomes}</pre></div></div>
      </div><div class="rodape-assinatura"><div style="width: 50%; margin: 0 auto; border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 9pt; font-weight: 800;">Assinatura Especialista / Direção</div></div></div></body></html>`;
       var w = window.open('','_blank'); w.document.write(html); w.document.close();
     }
  
     // ===============================================================
-    // ABA DATASHOW / REUNIÃO (REGISTRO TOTAL)
+    // ABA DATASHOW / REUNIÃO (FULLSCREEN, SEM SCROLLBAR)
     // ===============================================================
     function iniciarCronometro() {
      if(timerInterval) clearInterval(timerInterval); segundosRestantes = 180;
-      timerInterval = setInterval(() => { if(segundosRestantes > 0) { segundosRestantes--; var m = Math.floor(segundosRestantes / 60), s = segundosRestantes % 60; document.getElementById('tempoRestante').innerText = (m<10?"0"+m:m)+":"+(s<10?"0"+s:s); var box = document.getElementById('cronometroDisplay'); if(box) box.style.borderColor = segundosRestantes <= 30 ? "#ef4444" : "#facc15"; } }, 1000);
+      timerInterval = setInterval(() => { if(segundosRestantes > 0) { segundosRestantes--; var m = Math.floor(segundosRestantes / 60), s = segundosRestantes % 60; document.getElementById('tempoRestante').innerText = (m<10?"0"+m:m)+":"+(s<10?"0"+s:s); var box = document.getElementById('cronometroDisplay'); if(box) box.style.color = segundosRestantes <= 30 ? "#ef4444" : "#facc15"; } }, 1000);
     }
     function selecionarTurmaDatashow(turma, btn) { document.querySelectorAll('.turma-tag').forEach(b => b.classList.remove('active')); btn.classList.add('active'); turmaAtivaSessao = turma; document.getElementById('containerAlunosSessao').style.display = 'block'; document.getElementById('painelAvaliacaoEstudante').style.display = 'none'; document.getElementById('seletorDatashow').style.display = 'block'; carregarAlunosTurmaDatashow(turma); }
     function carregarAlunosTurmaDatashow(turma) { var grid = document.getElementById('gridAlunosSessao'); var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); document.getElementById('contadorAlunosBadge').innerText = alunos.length + " alunos"; grid.innerHTML = ''; alunos.forEach(a => grid.innerHTML += `<div class="student-pill" onclick="abrirAvaliacaoAluno('${a.nome}')"><i class="fa-solid fa-user-graduate text-primary"></i> ${a.nome}</div>`); }
     
     function abrirAvaliacaoAluno(nomeAluno) {
       alunoAtivoSessao = nomeAluno; document.getElementById('nomeAlunoDisplay').innerText = nomeAluno; document.getElementById('lblTurmaTop').innerText = "Turma " + turmaAtivaSessao;
-     document.getElementById('seletorDatashow').style.display = 'none'; document.getElementById('painelAvaliacaoEstudante').style.display = 'block'; iniciarCronometro();
+     document.getElementById('seletorDatashow').style.display = 'none'; document.getElementById('painelAvaliacaoEstudante').style.display = 'flex'; iniciarCronometro();
       
       var baseAlunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turmaAtivaSessao) || '[]'); var dadosA = baseAlunos.find(x => x.nome === nomeAluno) || {};
-      var tagHtml = (dadosA.aee ? '<span class="tag-aee shadow-sm fs-6">AEE</span>' : '') + (dadosA.pdi==='Sim' ? '<span class="tag-pdi bg-success text-white border-success shadow-sm fs-6">PDI: Sim</span>' : (dadosA.pdi==='Não' && dadosA.aee ? '<span class="tag-pdi shadow-sm fs-6">Sem PDI</span>' : '')) + (dadosA.sigla ? '<span class="tag-sigla shadow-sm fs-6">'+dadosA.sigla+'</span>' : '');
+      var tagHtml = (dadosA.aee ? '<span class="tag-aee shadow-sm">AEE</span>' : '') + (dadosA.pdi==='Sim' ? '<span class="tag-pdi bg-success text-white border-success shadow-sm">PDI: Sim</span>' : (dadosA.pdi==='Não' && dadosA.aee ? '<span class="tag-pdi shadow-sm">Sem PDI</span>' : '')) + (dadosA.sigla ? '<span class="tag-sigla shadow-sm">'+dadosA.sigla+'</span>' : '');
      document.getElementById('tagsAlunoDatashow').innerHTML = tagHtml;
  
      document.querySelectorAll('.seg-option').forEach(b => b.classList.remove('selected-green', 'selected-yellow', 'selected-red'));
      document.querySelectorAll('.chk-escola, .chk-familia').forEach(chk => chk.checked = false);
-     document.getElementById('conclusaoMotivo').value = ''; document.getElementById('obsAlunoAtivo').value = ''; document.getElementById('txtOutrasSituacoes').value = '';
+     document.getElementById('obsAlunoAtivo').value = ''; document.getElementById('txtOutrasSituacoes').value = '';
  
       var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
       var dados = db[turmaAtivaSessao + '_' + nomeAluno.toUpperCase() + '_' + document.getElementById('sessaoTrimestre').value];
@@ -721,10 +743,9 @@
        if(dados.conclusao) { var btnAlvo = document.querySelector(`button[data-conc="${dados.conclusao}"]`); if(btnAlvo) setConclusao(dados.conclusao, btnAlvo, false); }
        if(dados.encEscola) document.querySelectorAll('.chk-escola').forEach(chk => { if(dados.encEscola.includes(chk.value)) chk.checked = true; });
        if(dados.encFamilia) document.querySelectorAll('.chk-familia').forEach(chk => { if(dados.encFamilia.includes(chk.value)) chk.checked = true; });
-       document.getElementById('conclusaoMotivo').value = dados.motivo || ''; document.getElementById('obsAlunoAtivo').value = dados.observacoes || ''; document.getElementById('txtOutrasSituacoes').value = dados.outrasSituacoes || '';
+       document.getElementById('obsAlunoAtivo').value = dados.observacoes || ''; document.getElementById('txtOutrasSituacoes').value = dados.outrasSituacoes || '';
        document.getElementById('contadorEscola').innerText = document.querySelectorAll('.chk-escola:checked').length; document.getElementById('contadorFamilia').innerText = document.querySelectorAll('.chk-familia:checked').length;
       } else { atualizarRoboESintese(true); }
-     window.scrollTo({ top: 0, behavior: 'smooth' });
     }
  
     function navegarEstudante(direcao) {
@@ -738,7 +759,6 @@
       var trim = document.getElementById('sessaoTrimestre').value; var encE = []; document.querySelectorAll('.chk-escola:checked').forEach(c => encE.push(c.value)); var encF = []; document.querySelectorAll('.chk-familia:checked').forEach(c => encF.push(c.value));
       var btnConc = document.querySelector('#conclusaoGroup .selected-green, #conclusaoGroup .selected-red');
       
-      // Captura o que o usuário marcou nos itens
       var critObj = {};
       criteriosDetalhados.forEach(c => { 
         var selBtn = document.querySelector('#crit_' + c.chave + ' .selected-green, #crit_' + c.chave + ' .selected-yellow, #crit_' + c.chave + ' .selected-red'); 
@@ -750,14 +770,12 @@
         criterios: critObj, encEscola: encE, encFamilia: encF, 
         conclusao: btnConc ? btnConc.dataset.conc : 'BOM/BOA', 
         outrasSituacoes: document.getElementById('txtOutrasSituacoes').value, 
-        motivo: document.getElementById('conclusaoMotivo').value, 
         observacoes: document.getElementById('obsAlunoAtivo').value 
       };
       
-      // Salva no Navegador
       var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); db[turmaAtivaSessao + '_' + alunoAtivoSessao.toUpperCase() + '_' + trim] = obj; localStorage.setItem('mestra_banco_registros', JSON.stringify(db));
       
-      // ENVIA PARA A PLANILHA OFICIAL EXPLICITAMENTE (NUVEM)
+      // ENVIA PARA A PLANILHA OFICIAL EXPLICITAMENTE (NUVEM) - ISSO AQUI RESOLVE O ERRO DE NÃO SALVAR NO BANCO
       var payloadPlanilha = {
         trimestre: trim, turma: turmaAtivaSessao, estudante: alunoAtivoSessao,
         disciplina: obj.criterios.convivencia || '', atencao: obj.criterios.atencao || '',
@@ -765,7 +783,7 @@
         participacao: obj.criterios.participacao || '', aprendizagem: obj.criterios.aprendizagem || '',
         organizacao: obj.criterios.organizacao || '', atividades_sala: obj.criterios.ativ_sala || '',
         tarefa_casa: obj.criterios.tarefas_casa || '', presenca: obj.criterios.frequencia || '',
-        caracteristica: obj.conclusao || '', motivo: obj.motivo || '', observacoes: obj.observacoes || '',
+        caracteristica: obj.conclusao || '', observacoes: obj.observacoes || '',
         acoes_escola: encE.join('; '), acoes_familia: encF.join('; '), outras_situacoes: obj.outrasSituacoes || ''
       };
       chamarApiGoogle('salvarAvaliacao', payloadPlanilha);
@@ -793,7 +811,6 @@
       var textoFinal = `O(A) estudante apresenta uma situação geral avaliada como: ${conclusaoLimpa}. `;
       if(greens.length > 0) textoFinal += `No cotidiano escolar, destaca-se positivamente nos seguintes aspectos: ${greens.join('; ')}. `;
      if(yellows.length > 0 || reds.length > 0) textoFinal += `A equipe pedagógica pontuou que o estudante requer acompanhamento nos critérios: ${yellows.concat(reds).join('; ')}.`;
-      var motivo = document.getElementById('conclusaoMotivo').value.trim(); if(motivo) textoFinal += ` Observação: ${motivo}.`;
      document.getElementById('obsAlunoAtivo').value = textoFinal; document.getElementById('contadorEscola').innerText = document.querySelectorAll('.chk-escola:checked').length; document.getElementById('contadorFamilia').innerText = document.querySelectorAll('.chk-familia:checked').length;
     }
  
@@ -829,11 +846,10 @@
     }
  
     // ===============================================================
-    // IMPRESSÃO DE BILHETES A4 - DESIGN ORIGINAL RECUPERADO
+    // IMPRESSÃO DE BILHETES A4 (LAYOUT EXATO DA IMAGEM)
     // ===============================================================
     function imprimirBilhetesOficiais() {
-      var turma = document.getElementById('relTurmaSelect').value; 
-      var trimestre = document.getElementById('sessaoTrimestre').value;
+      var turma = document.getElementById('relTurmaSelect').value; var trimestre = document.getElementById('sessaoTrimestre').value;
       var anoAtual = document.getElementById('globalAno') ? document.getElementById('globalAno').value : '2026';
 
       if(!turma) { alert("Selecione a turma."); return; }
@@ -903,7 +919,7 @@
             </div>
             <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
                 <div style="background:#fef3c7; color:#b45309; font-weight:800; padding:4px 10px; border-radius:6px; font-size:10pt; border:1px solid #fde047;">${trimestre}</div>
-                <div style="font-size: 8pt; font-weight: bold; color: #475569; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; border: 1px solid #cbd5e1;">Ano: ${anoAtual}</div>
+                <div style="font-size: 8pt; font-weight: bold; color: #475569; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; border: 1px solid #cbd5e1;">Ano Letivo: ${anoAtual}</div>
             </div>
         </div>
 
@@ -940,7 +956,7 @@
                 </div>
                 
                 ${reg.outrasSituacoes ? `<div class="box-bloco" style="margin-top:0px; border-top: none; border-top-left-radius: 0; border-top-right-radius: 0; border: 1.5px solid #cbd5e1; padding: 8px 10px;">
-                    <div class="box-bloco-titulo" style="font-size: 8pt; margin-bottom:3px; border:none;">Outras Situações / Info. Complementares:</div>
+                    <div class="box-bloco-titulo" style="font-size: 8pt; margin-bottom:3px; border:none;">Outros Motivos / Situações Complementares:</div>
                     <div style="font-size: 8pt; line-height: 1.3;">${reg.outrasSituacoes}</div>
                 </div>` : ''}
                 
