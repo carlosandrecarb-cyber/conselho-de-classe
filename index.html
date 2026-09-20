@@ -13,7 +13,7 @@
       --text-main: #0f172a; --text-muted: #64748b; --border-color: #cbd5e1;
       --radius-box: 12px; --radius-btn: 8px;
     }
-    body { background-color: var(--bg-main); font-family: 'Inter', sans-serif; color: var(--text-main); margin: 0; padding: 0; }
+    body { background-color: var(--bg-main); font-family: 'Inter', sans-serif; color: var(--text-main); margin: 0; padding: 0; overflow-x: hidden; }
     .app-shell { max-width: 1450px; margin: 0 auto; padding: 15px; min-height: 100vh; display: flex; flex-direction: column; }
     
     .topbar { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-box); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); margin-bottom: 20px; display: none; }
@@ -30,11 +30,10 @@
  
     .btn-mestra { background: #10b981; color: white; border: none; font-weight: 700; border-radius: var(--radius-btn); padding: 10px 16px; transition: 0.2s; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-mestra:hover { background: #059669; color: white; }
-    .input-mestra { border: 1px solid var(--border-color); border-radius: var(--radius-btn); padding: 8px 12px; font-weight: 600; font-size: 0.9rem; outline: none; width: 100%; background: #fff; transition: 0.2s; }
+    .input-mestra { border: 1px solid var(--border-color); border-radius: var(--radius-btn); padding: 6px 10px; font-weight: 600; font-size: 0.9rem; outline: none; width: 100%; background: #fff; transition: 0.2s; }
     .input-mestra:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15,23,42,0.08); }
  
-    /* TEXTAREA AUTO-EXPANSÍVEL */
-    textarea.auto-expand { overflow: hidden; resize: none; min-height: 80px; }
+    textarea.auto-expand { overflow: hidden; resize: none; min-height: 70px; }
  
     .turma-tag { border: 2px solid var(--border-color); background: white; font-weight: 700; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; color: var(--text-muted); }
     .turma-tag.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px rgba(15,23,42,0.2); }
@@ -43,38 +42,41 @@
     .student-pill { background: #f8fafc; border: 1px solid var(--border-color); padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
     .student-pill:hover { border-color: #4f46e5; background: #eef2ff; color: #4f46e5; }
  
-    .eval-card { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; height: 100%; }
-    .eval-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+    .eval-card { background: #fff; border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 12px; display: flex; flex-direction: column; height: 100%; }
+    .eval-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
     
-    /* Layout do Datashow (Original e Fluido) */
-    .crit-box { border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; background: #f8fafc; margin-bottom: 8px; }
-    .crit-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 6px; }
-    .seg-group { display: flex; flex-direction: column; gap: 4px; }
-    .seg-option { border: 1px solid var(--border-color); background: white; padding: 6px 8px; font-size: 0.8rem; font-weight: 600; color: var(--text-main); border-radius: 6px; cursor: pointer; text-align: left; transition: 0.1s; }
-    
-    .seg-option.selected-green { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; font-weight: 700; box-shadow: inset 4px 0 0 #059669; }
-    .seg-option.selected-yellow { background-color: #fef3c7 !important; border-color: #f59e0b !important; color: #92400e !important; font-weight: 700; box-shadow: inset 4px 0 0 #d97706; }
-    .seg-option.selected-red { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; font-weight: 700; box-shadow: inset 4px 0 0 #b91c1c; }
-    
-    .chk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin-top: 8px; }
-    .chk-encaminhamento { font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: flex-start; gap: 8px; margin-bottom: 0; color: #334155; line-height: 1.3; }
-    .chk-encaminhamento input[type="checkbox"] { margin-top: 3px; transform: scale(1.1); }
-    
-    .timer-box { background: #0f172a; color: #facc15; padding: 8px 16px; border-radius: 8px; font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; gap: 8px; }
-    
-    /* CABEÇALHO FIXO COM DESTAQUE MAXIMO */
+    /* Layout do Datashow ULTRA COMPACTO */
     #painelAvaliacaoEstudante { display: none; padding-top: 0; position: relative; }
-    .sticky-header-datashow { 
-        position: sticky; top: 0; z-index: 1050; 
-        background: var(--surface); padding: 15px 20px; 
-        border-bottom: 4px solid var(--primary); 
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-        border-radius: 16px; margin: -20px -20px 20px -20px; 
-    }
+    .sticky-header-datashow { position: sticky; top: 0; z-index: 1050; background: var(--surface); padding: 12px 20px; border-bottom: 4px solid var(--primary); box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-radius: 12px; margin: -20px -20px 10px -20px; }
     
-    .tag-aee { font-size: 0.75rem; background: #e0e7ff; color: #4f46e5; padding: 4px 10px; border-radius: 6px; font-weight: 900; margin-left: 8px; border: 1px solid #4f46e5; }
-    .tag-pdi { font-size: 0.75rem; background: #fee2e2; color: #b91c1c; padding: 4px 10px; border-radius: 6px; font-weight: 900; margin-left: 8px; border: 1px solid #b91c1c; }
-    .tag-sigla { font-size: 0.75rem; background: #fef3c7; color: #b45309; padding: 4px 10px; border-radius: 6px; font-weight: 900; margin-left: 8px; border: 1px solid #b45309; }
+    .ds-grid { display: grid; grid-template-columns: 58% 42%; gap: 15px; }
+    
+    /* Critérios lado a lado */
+    .crit-box { border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; background: #f8fafc; margin-bottom: 6px; }
+    .crit-title { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 4px; }
+    .seg-group-row { display: flex; gap: 4px; }
+    .seg-option-row { flex: 1; border: 1px solid var(--border-color); background: white; padding: 4px; font-size: 0.65rem; font-weight: 700; color: var(--text-main); border-radius: 4px; cursor: pointer; text-align: center; transition: 0.1s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    
+    .seg-option-row.selected-green { background-color: #10b981 !important; border-color: #059669 !important; color: white !important; }
+    .seg-option-row.selected-yellow { background-color: #f59e0b !important; border-color: #d97706 !important; color: white !important; }
+    .seg-option-row.selected-red { background-color: #ef4444 !important; border-color: #b91c1c !important; color: white !important; }
+    
+    /* Conclusão Geral Gigante */
+    .seg-group-col { display: flex; gap: 6px; }
+    .seg-option-col { flex: 1; border: 1px solid var(--border-color); background: white; padding: 12px; font-size: 0.9rem; font-weight: 800; color: var(--text-main); border-radius: 8px; cursor: pointer; text-align: center; transition: 0.1s; }
+    .seg-option-col.selected-green { background-color: #10b981 !important; border-color: #059669 !important; color: white !important; box-shadow: inset 0 0 0 2px #047857; }
+    .seg-option-col.selected-red { background-color: #ef4444 !important; border-color: #b91c1c !important; color: white !important; box-shadow: inset 0 0 0 2px #991b1b; }
+
+    .chk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; margin-top: 4px; }
+    .chk-encaminhamento { font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: flex-start; gap: 6px; margin-bottom: 0; color: #334155; line-height: 1.2; }
+    .chk-encaminhamento input[type="checkbox"] { margin-top: 2px; transform: scale(1.1); }
+    
+    .timer-box { background: #0f172a; color: #facc15; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+    
+    /* TAGS DE SINALIZAÇÃO AEE */
+    .tag-aee { font-size: 0.7rem; background: #e0e7ff; color: #4f46e5; padding: 4px 8px; border-radius: 6px; font-weight: 900; margin-left: 8px; border: 1px solid #4f46e5; }
+    .tag-pdi { font-size: 0.7rem; background: #fee2e2; color: #b91c1c; padding: 4px 8px; border-radius: 6px; font-weight: 900; margin-left: 8px; border: 1px solid #b91c1c; }
+    .tag-sigla { font-size: 0.7rem; background: #fef3c7; color: #b45309; padding: 4px 8px; border-radius: 6px; font-weight: 900; margin-left: 8px; border: 1px solid #b45309; }
     .turma-salva-tag { background: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; border: 1px dashed #cbd5e1; }
  
     /* CONTROLE DE ACESSO */
@@ -297,9 +299,9 @@
         <div id="containerAlunosSessao" style="display: none;"><div class="d-flex justify-content-between align-items-center mb-2"><label class="form-label fw-bold fs-7 text-uppercase text-muted m-0">2. Clique no Estudante para Avaliar:</label><span class="badge bg-primary" id="contadorAlunosBadge">0 alunos</span></div><div id="gridAlunosSessao" class="student-pill-grid"></div></div>
       </div>
  
-      <!-- PAINEL DE AVALIAÇÃO DO DATASHOW (VISUAL CLÁSSICO - SCROLL NATURAL) -->
+      <!-- PAINEL DE AVALIAÇÃO DO DATASHOW (VISUAL COMPACTO - ULTRA DENSO) -->
       <div id="painelAvaliacaoEstudante" class="card-clean admin-lock" style="display: none; border: 2px solid var(--primary); padding-top: 0; position: relative;">
-        <!-- CABEÇALHO FIXO COM DESTAQUE MÁXIMO -->
+        <!-- CABEÇALHO FIXO -->
         <div class="sticky-header-datashow d-flex justify-content-between align-items-center">
           <div>
             <span class="badge bg-success mb-1" id="lblTurmaTop">Avaliando Turma</span>
@@ -317,48 +319,49 @@
           </div>
         </div>
  
-        <div class="row g-4 mt-2">
-          <!-- Coluna Esquerda: Critérios (Visual Original Amplo) -->
-          <div class="col-md-6">
-            <span class="eval-title text-dark d-block mb-3"><i class="fa-solid fa-list-check me-1"></i> Critérios de Avaliação (Clique para marcar)</span>
-            <div id="criteriosGrid" style="display:flex; flex-direction:column; gap:12px;"></div>
+        <div class="ds-grid mt-2">
+          <!-- Coluna Esquerda: Critérios Ultra Compactos (10 Blocos lado a lado) e Encaminhamentos -->
+          <div class="d-flex flex-column gap-3">
+            <div class="eval-card p-2 border-primary shadow-sm" style="background: #f8fafc;">
+              <span class="eval-title text-primary d-block mb-1"><i class="fa-solid fa-list-check me-1"></i> Critérios de Avaliação (Clique)</span>
+              <div id="criteriosGrid"></div>
+            </div>
+
+            <!-- Encaminhamentos na base da Coluna Esquerda -->
+            <div class="eval-card bg-light border p-2">
+                <span class="eval-title text-dark fw-bold d-block m-0 border-bottom pb-1 mb-2">PARECER E ENCAMINHAMENTOS (Auto-Marcados)</span>
+                <div class="row">
+                    <div class="col-6">
+                        <span class="eval-title text-primary m-0"><i class="fa-solid fa-school me-1"></i> Escola <span class="badge bg-primary ms-1" id="contadorEscola">0</span></span>
+                        <div id="listaEncEscola" class="chk-grid mt-1"></div>
+                    </div>
+                    <div class="col-6" style="border-left: 1px solid #cbd5e1;">
+                        <span class="eval-title text-success m-0"><i class="fa-solid fa-house-chimney me-1"></i> Família <span class="badge bg-success ms-1" id="contadorFamilia">0</span></span>
+                        <div id="listaEncFamilia" class="chk-grid mt-1"></div>
+                    </div>
+                </div>
+            </div>
           </div>
 
-          <!-- Coluna Direita: Conclusão, Textos Auto-Expansíveis e Encaminhamentos -->
-          <div class="col-md-6 d-flex flex-column gap-3">
+          <!-- Coluna Direita: Conclusão Gigante e Textos Expansíveis -->
+          <div class="d-flex flex-column gap-3">
             <div class="eval-card bg-warning bg-opacity-10 border-warning p-3">
-              <span class="eval-title text-dark fw-bold mb-3 d-block m-0"><i class="fa-solid fa-award me-1"></i> Conclusão Geral (Automática)</span>
-              <div class="d-flex flex-wrap gap-2" id="conclusaoGroup">
-               <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="ÓTIMO(A)" onclick="setConclusao('ÓTIMO(A)', this)">🟢 ÓTIMO(A)</button>
-               <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="BOM/BOA" onclick="setConclusao('BOM/BOA', this)">🟢 BOM/BOA</button>
-               <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="PRECISA DE ATENÇÃO" onclick="setConclusao('PRECISA DE ATENÇÃO', this)">🔴 PRECISA DE ATENÇÃO</button>
+              <span class="eval-title text-dark fw-bold mb-2 d-block m-0"><i class="fa-solid fa-award me-1"></i> Conclusão Geral (Automática aos 10)</span>
+              <div class="seg-group-col" id="conclusaoGroup">
+               <button class="seg-option-col" data-conc="ÓTIMO(A)" onclick="setConclusao('ÓTIMO(A)', this)">🟢 ÓTIMO</button>
+               <button class="seg-option-col" data-conc="BOM/BOA" onclick="setConclusao('BOM/BOA', this)">🟢 BOM</button>
+               <button class="seg-option-col" data-conc="PRECISA DE ATENÇÃO" onclick="setConclusao('PRECISA DE ATENÇÃO', this)">🔴 ATENÇÃO</button>
              </div>
             </div>
 
-            <!-- Parecer Auto-Expansível -->
-            <div class="eval-card p-3 border-primary shadow-sm">
-              <span class="eval-title text-primary fw-bold mb-2 d-block m-0"><i class="fa-solid fa-robot me-1"></i> Parecer Descritivo</span>
-              <textarea id="obsAlunoAtivo" class="input-mestra border-0 bg-light p-3 auto-expand" oninput="autoExpand(this)" placeholder="Marque os 10 itens para gerar o texto..."></textarea>
+            <div class="eval-card p-3 border-primary shadow-sm flex-grow-1">
+              <span class="eval-title text-primary fw-bold mb-2 d-block m-0"><i class="fa-solid fa-robot me-1"></i> Parecer Descritivo do Robô</span>
+              <textarea id="obsAlunoAtivo" class="input-mestra border-0 bg-light p-3 auto-expand w-100 h-100" oninput="autoExpand(this)" placeholder="Marque os 10 itens para gerar o texto..."></textarea>
             </div>
             
-            <!-- Outros Motivos Auto-Expansível -->
             <div class="eval-card border-secondary bg-light p-3 shadow-sm">
-              <span class="eval-title text-dark fw-bold d-block m-0"><i class="fa-solid fa-puzzle-piece me-1"></i> Outros Motivos / Situações Complementares</span>
-              <textarea id="txtOutrasSituacoes" class="input-mestra mt-2 bg-white auto-expand" oninput="autoExpand(this)" placeholder="Ex: Encaminhado ao AEE, Problema Familiar com os pais..."></textarea>
-            </div>
-
-            <div class="eval-card bg-light border p-3">
-                <span class="eval-title text-dark fw-bold d-block m-0 border-bottom pb-2 mb-3">PARECER E ENCAMINHAMENTOS</span>
-                <div class="row">
-                    <div class="col-6">
-                        <span class="eval-title text-primary m-0"><i class="fa-solid fa-school me-1"></i> Ações da Escola <span class="badge bg-primary ms-1" id="contadorEscola">0</span></span>
-                        <div id="listaEncEscola" class="chk-grid mt-2"></div>
-                    </div>
-                    <div class="col-6" style="border-left: 1px solid #cbd5e1;">
-                        <span class="eval-title text-success m-0"><i class="fa-solid fa-house-chimney me-1"></i> Para a Família <span class="badge bg-success ms-1" id="contadorFamilia">0</span></span>
-                        <div id="listaEncFamilia" class="chk-grid mt-2"></div>
-                    </div>
-                </div>
+              <span class="eval-title text-dark fw-bold d-block m-0"><i class="fa-solid fa-puzzle-piece me-1"></i> Outras Situações Complementares</span>
+              <textarea id="txtOutrasSituacoes" class="input-mestra mt-2 bg-white auto-expand w-100" oninput="autoExpand(this)" placeholder="Ex: Encaminhado ao AEE..."></textarea>
             </div>
           </div>
         </div>
@@ -438,20 +441,20 @@
  
     // FRASES COMPLETAS E EXATAS PARA NÃO QUEBRAR O ROBÔ DE AUTOMARCAÇÃO
     var criteriosDetalhados = [
-      { nome: "Convivência e Comportamento", chave: "convivencia", opcoes: [{ texto: "🟢 Convive bem com todos", escola: [], familia: [] }, { texto: "🟡 Às vezes precisa de orientação", escola: ["Orientar o estudante individualmente."], familia: ["Fortalecer hábitos de estudos em casa."] }, { texto: "🔴 Tem dificuldade de convivência", escola: ["Reforçar os combinados da turma."], familia: ["Fortalecer hábitos de estudos em casa."] }]},
-      { nome: "Atenção", chave: "atencao", opcoes: [{ texto: "🟢 Mantém a atenção", escola: [], familia: [] }, { texto: "🟡 Às vezes se distrai", escola: ["Criar oportunidades de participação."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, { texto: "🔴 Distrai-se com frequência", escola: ["Organizar o mapeamento na sala."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }]},
-      { nome: "Conversa", chave: "conversa", opcoes: [{ texto: "🟢 Não atrapalha as aulas", escola: [], familia: [] }, { texto: "🟡 Às vezes atrapalha", escola: ["Reforçar os combinados da turma."], familia: [] }, { texto: "🔴 Atrapalha as aulas com frequência", escola: ["Reforçar os combinados da turma."], familia: ["Agendar reunião com a família para acompanhamento."] }]},
-      { nome: "Interesse", chave: "interesse", opcoes: [{ texto: "🟢 Demonstra interesse", escola: [], familia: [] }, { texto: "🟡 Demonstra interesse às vezes", escola: ["Propor atividades diferenciadas."], familia: ["Incentivar a leitura em casa."] }, { texto: "🔴 Demonstra pouco interesse", escola: ["Propor atividades diferenciadas."], familia: ["Incentivar a leitura em casa."] }]},
-      { nome: "Participação", chave: "participacao", opcoes: [{ texto: "🟢 Participa das aulas", escola: [], familia: [] }, { texto: "🟡 Participa quando incentivado", escola: ["Criar oportunidades de participação."], familia: [] }, { texto: "🔴 Participa pouco", escola: ["Criar oportunidades de participação."], familia: [] }]},
-      { nome: "Aprendizagem", chave: "aprendizagem", opcoes: [{ texto: "🟢 Aprende conforme esperado", escola: [], familia: [] }, { texto: "🟡 Aprende com apoio", escola: ["Propor atividades de reforço."], familia: ["Acompanhar os cadernos do filho."] }, { texto: "🔴 Apresenta dificuldades", escola: ["Propor atividades de reforço."], familia: ["Acompanhar os cadernos do filho."] }]},
-      { nome: "Organização", chave: "organizacao", opcoes: [{ texto: "🟢 É organizado", escola: [], familia: [] }, { texto: "🟡 Precisa de lembretes", escola: ["Orientar o estudante sobre planejamento e organização."], familia: ["Acompanhar a organização dos materiais."] }, { texto: "🔴 Dificuldade para se organizar", escola: ["Orientar o estudante sobre planejamento e organização."], familia: ["Acompanhar a organização dos materiais."] }]},
-      { nome: "Atividades em Sala", chave: "ativ_sala", opcoes: [{ texto: "🟢 Realiza as atividades", escola: [], familia: [] }, { texto: "🟡 Realiza parte das atividades", escola: ["Orientar o estudante individualmente."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, { texto: "🔴 Deixa as atividades sem fazer", escola: ["Orientar o estudante individualmente."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }]},
-      { nome: "Tarefas de Casa", chave: "tarefas_casa", opcoes: [{ texto: "🟢 Faz as tarefas regularmente", escola: [], familia: [] }, { texto: "🟡 Faz as tarefas às vezes", escola: ["Orientar sobre rotina de estudos."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, { texto: "🔴 Raramente faz as tarefas", escola: ["Orientar sobre rotina de estudos."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }]},
-      { nome: "Frequência", chave: "frequencia", opcoes: [{ texto: "🟢 Comparece regularmente", escola: [], familia: [] }, { texto: "🟡 Tem algumas faltas", escola: ["Acompanhar a frequência escolar."], familia: ["Não deixar o filho faltar sem justificativa."] }, { texto: "🔴 Tem muitas faltas", escola: ["Acompanhar a frequência escolar.", "Agendar reunião com a família para acompanhamento."], familia: ["Não deixar o filho faltar sem justificativa."] }]}
+      { nome: "Convivência e Comport.", chave: "convivencia", opcoes: [{ texto: "🟢 Convive bem", escola: [], familia: [] }, { texto: "🟡 Precisa de orient.", escola: ["Orientar o estudante individualmente."], familia: ["Fortalecer hábitos de estudos em casa."] }, { texto: "🔴 Tem dificuldade", escola: ["Reforçar os combinados da turma."], familia: ["Fortalecer hábitos de estudos em casa."] }]},
+      { nome: "Atenção", chave: "atencao", opcoes: [{ texto: "🟢 Mantém atenção", escola: [], familia: [] }, { texto: "🟡 Às vezes distrai", escola: ["Criar oportunidades de participação."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, { texto: "🔴 Distrai-se muito", escola: ["Organizar o mapeamento na sala."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }]},
+      { nome: "Conversa", chave: "conversa", opcoes: [{ texto: "🟢 Não atrapalha", escola: [], familia: [] }, { texto: "🟡 Às vezes", escola: ["Reforçar os combinados da turma."], familia: [] }, { texto: "🔴 Frequência alta", escola: ["Reforçar os combinados da turma."], familia: ["Agendar reunião com a família para acompanhamento."] }]},
+      { nome: "Interesse", chave: "interesse", opcoes: [{ texto: "🟢 Demonstra interesse", escola: [], familia: [] }, { texto: "🟡 Às vezes", escola: ["Propor atividades diferenciadas."], familia: ["Incentivar a leitura em casa."] }, { texto: "🔴 Pouco interesse", escola: ["Propor atividades diferenciadas."], familia: ["Incentivar a leitura em casa."] }]},
+      { nome: "Participação", chave: "participacao", opcoes: [{ texto: "🟢 Participa das aulas", escola: [], familia: [] }, { texto: "🟡 Se incentivado", escola: ["Criar oportunidades de participação."], familia: [] }, { texto: "🔴 Participa pouco", escola: ["Criar oportunidades de participação."], familia: [] }]},
+      { nome: "Aprendizagem", chave: "aprendizagem", opcoes: [{ texto: "🟢 Aprende esperado", escola: [], familia: [] }, { texto: "🟡 Aprende c/ apoio", escola: ["Propor atividades de reforço."], familia: ["Acompanhar os cadernos do filho."] }, { texto: "🔴 Apresenta dific.", escola: ["Propor atividades de reforço."], familia: ["Acompanhar os cadernos do filho."] }]},
+      { nome: "Organização", chave: "organizacao", opcoes: [{ texto: "🟢 É organizado", escola: [], familia: [] }, { texto: "🟡 Precisa de lembretes", escola: ["Orientar o estudante sobre planejamento e organização."], familia: ["Acompanhar a organização dos materiais."] }, { texto: "🔴 Tem dificuldade", escola: ["Orientar o estudante sobre planejamento e organização."], familia: ["Acompanhar a organização dos materiais."] }]},
+      { nome: "Ativ. em Sala", chave: "ativ_sala", opcoes: [{ texto: "🟢 Realiza todas", escola: [], familia: [] }, { texto: "🟡 Realiza parte", escola: ["Orientar o estudante individualmente."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, { texto: "🔴 Deixa sem fazer", escola: ["Orientar o estudante individualmente."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }]},
+      { nome: "Tarefas de Casa", chave: "tarefas_casa", opcoes: [{ texto: "🟢 Faz regularmente", escola: [], familia: [] }, { texto: "🟡 Faz às vezes", escola: ["Orientar sobre rotina de estudos."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, { texto: "🔴 Raramente faz", escola: ["Orientar sobre rotina de estudos."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }]},
+      { nome: "Frequência", chave: "frequencia", opcoes: [{ texto: "🟢 Comparece reg.", escola: [], familia: [] }, { texto: "🟡 Algumas faltas", escola: ["Acompanhar a frequência escolar."], familia: ["Não deixar o filho faltar sem justificativa."] }, { texto: "🔴 Muitas faltas", escola: ["Acompanhar a frequência escolar.", "Agendar reunião com a família para acompanhamento."], familia: ["Não deixar o filho faltar sem justificativa."] }]}
     ];
  
-    var encEscolaOpcoes = ["Reforçar os combinados da turma.", "Orientar o estudante individualmente.", "Reforçar positivamente os avanços.", "Propor atividades de reforço.", "Realizar agrupamentos temporários.", "Propor atividades diferenciadas.", "Organizar o mapeamento na sala.", "Valorizar as contribuições do estudante.", "Solicitar a presença da família.", "Criar oportunidades de participação.", "Orientar sobre rotina de estudos.", "Orientar o estudante sobre planejamento e organização.", "Acompanhar a frequência escolar.", "Orientar sobre a importância da assiduidade.", "Comunicar a família sobre as faltas.", "Monitorar a frequência do estudante.", "Agendar reunião com a família para acompanhamento."];
-    var encFamiliaOpcoes = ["Acompanhar a organização dos materiais.", "Estabelecer rotina para realização das tarefas de casa.", "Não deixar o filho faltar sem justificativa.", "Acompanhar os cadernos do filho.", "Visitar a escola de vez em quando.", "Fortalecer hábitos de estudos em casa.", "Incentivar a leitura em casa.", "Verificar sempre o uniforme escolar."];
+    var encEscolaOpcoes = ["Reforçar os combinados da turma.", "Orientar o estudante individualmente.", "Propor atividades de reforço.", "Realizar agrupamentos temporários.", "Propor atividades diferenciadas.", "Organizar o mapeamento na sala.", "Criar oportunidades de participação.", "Orientar sobre rotina de estudos.", "Orientar o estudante sobre planejamento e organização.", "Acompanhar a frequência escolar.", "Agendar reunião com a família para acompanhamento."];
+    var encFamiliaOpcoes = ["Acompanhar a organização dos materiais.", "Estabelecer rotina para realização das tarefas de casa.", "Não deixar o filho faltar sem justificativa.", "Acompanhar os cadernos do filho.", "Fortalecer hábitos de estudos em casa.", "Incentivar a leitura em casa."];
  
     // FUNÇÃO MÁGICA: Ajusta a altura da textarea sozinha para não ter scroll
     function autoExpand(field) {
@@ -473,15 +476,8 @@
       .then(res => res.json()).then(data => { if(callback) callback(data); }).catch(e => console.error("Erro na conexão:", e));
     }
 
-    function forcarSincronizacaoNuvem() {
-      if(perfilLogado !== 'admin') return;
-      var anoAtual = document.getElementById('globalAno') ? document.getElementById('globalAno').value : '2026';
-      var dadosGerais = { funcao: 'backupGeralLocal', dados: { ano: anoAtual, banco_registros: JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'), lotacao: JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]') } };
-      fetch(URL_API_GOOGLE, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(dadosGerais) }).catch(e => console.log('Sincronização em background.'));
-    }
-
     // ===============================================================
-    // LOGIN
+    // LOGIN E CARREGAMENTO
     // ===============================================================
     var tipoLoginAtual = '';
     function mostrarSenha(tipo) { tipoLoginAtual = tipo; document.getElementById('loginOptions').style.display = 'none'; document.getElementById('loginPassword').style.display = 'block'; document.getElementById('lblTipoLogin').innerText = tipo === 'admin' ? "Senha Especialista/Direção:" : "Senha Professor(a):"; document.getElementById('inputSenhaAcesso').focus(); }
@@ -499,21 +495,19 @@
       switchTab('tab-dashboard', document.querySelectorAll('.pill-btn')[0]); carregarTudoAoLogar();
     }
  
-    // ===============================================================
-    // CARREGAMENTO GLOBAL
-    // ===============================================================
     function carregarTudoAoLogar() {
       var selectsTurma = ['selEstudanteTurma', 'profTurmaSelect', 'espTurmaSelect', 'relTurmaSelect', 'filtroTurmaBanco'];
       selectsTurma.forEach(id => { var el = document.getElementById(id); if(el) { if(id === 'filtroTurmaBanco') el.innerHTML = '<option value="">Todas as Turmas</option>'; else el.innerHTML = '<option value="">Selecione...</option>'; turmasGlobais.forEach(t => el.innerHTML += `<option value="${t}">${t}</option>`); } });
       
       var gridT = document.getElementById('gridTurmasSessao'); if(gridT) { gridT.innerHTML = ''; turmasGlobais.forEach(t => gridT.innerHTML += `<button class="turma-tag" onclick="selecionarTurmaDatashow('${t}', this)">${t}</button>`); }
       
+      // CRIA OS BLOCOS DE CRITÉRIOS EM 3 COLUNAS INTERNAS!
       var gridCrit = document.getElementById('criteriosGrid');
       if(gridCrit) {
         gridCrit.innerHTML = '';
         criteriosDetalhados.forEach(c => { 
-          var optsHtml = c.opcoes.map(opt => `<button class="seg-option" onclick="setCritVal(this, '${c.chave}', '${opt.texto}')">${opt.texto}</button>`).join(''); 
-          gridCrit.innerHTML += `<div class="crit-box"><div class="crit-title">${c.nome}</div><div class="seg-group" id="crit_${c.chave}">${optsHtml}</div></div>`; 
+          var optsHtml = c.opcoes.map(opt => `<button class="seg-option-row" onclick="setCritVal(this, '${c.chave}', '${opt.texto}')" title="${opt.texto}">${opt.texto.replace(/🟢|🟡|🔴/g, '')}</button>`).join(''); 
+          gridCrit.innerHTML += `<div class="crit-box"><div class="crit-title">${c.nome}</div><div class="seg-group-row" id="crit_${c.chave}">${optsHtml}</div></div>`; 
         });
       }
       var divEscola = document.getElementById('listaEncEscola'); if(divEscola) { divEscola.innerHTML = ''; encEscolaOpcoes.forEach(frase => divEscola.innerHTML += `<label class="chk-encaminhamento"><input type="checkbox" class="chk-escola" value="${frase}" onchange="atualizarRoboESintese(false)"> <span>${frase}</span></label>`); }
@@ -521,7 +515,7 @@
  
       carregarTabelaLotacaoSalva(); atualizarBancoVisual(); atualizarTagsTurmasSalvas();
     }
-    function switchTab(id, btn) { document.querySelectorAll('.view-panel').forEach(el => el.classList.remove('active')); document.querySelectorAll('.pill-btn').forEach(el => el.classList.remove('active')); document.getElementById(id).classList.add('active'); if(btn) btn.classList.add('active'); }
+    function switchTab(id, btn) { document.querySelectorAll('.view-panel').forEach(el => el.classList.remove('active')); document.querySelectorAll('.pill-btn').forEach(el => el.classList.remove('active')); document.getElementById(id).classList.add('active'); if(btn) btn.classList.add('active'); window.scrollTo(0,0); }
  
     // ===============================================================
     // ABA GESTÃO DE ESTUDANTES
@@ -543,7 +537,7 @@
       if(!turma) { alert("Selecione a turma."); return; } if(!texto) { alert("Cole a lista."); return; }
       var nomes = texto.split('\n').filter(n => n.trim() !== ""); 
       var alunos = nomes.map((nome, index) => { return { numero: index + 1, nome: nome.trim().toUpperCase(), aee: false, pdi: "Não", sigla: "" }; });
-      localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos)); document.getElementById('txtListaEstudantes').value = ''; carregarEstudantesParaEdicao(); atualizarTagsTurmasSalvas(); forcarSincronizacaoNuvem(); 
+      localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos)); document.getElementById('txtListaEstudantes').value = ''; carregarEstudantesParaEdicao(); atualizarTagsTurmasSalvas(); 
     }
  
     function carregarEstudantesParaEdicao() {
@@ -637,8 +631,6 @@
       document.querySelectorAll('#tabelaProfessorCorpo tr').forEach(tr => { aval.alunos.push({ nome: tr.querySelector('.prof-nome-aluno').childNodes[0].nodeValue.trim(), abaixoMedia: tr.querySelector('.chk-media').checked, falta: tr.querySelector('.chk-falta').checked, motivoFalta: tr.querySelector('.inp-motivo').value, reforco: tr.querySelector('.chk-reforco').checked, prog: tr.querySelector('.chk-prog').checked, alfab: tr.querySelector('.chk-alfab').checked }); });
       
       localStorage.setItem('mestra_prof_' + turma + '_' + comp + '_' + trim, JSON.stringify(aval)); 
-      
-      // Envia para a Planilha Oficial (Aba Professor)
       chamarApiGoogle('salvarMatrizProfessor', aval);
       alert("✅ Relatório da Disciplina Salvo no Sistema e na Planilha!");
     }
@@ -684,7 +676,7 @@
                 if (dados.metodologia) { textoMetodologias += `- ${componente}: ${dados.metodologia}\n`; achouDados = true; }
             }
         }
-        if(!achouDados) { alert("Nenhum professor enviou relatórios para esta turma neste trimestre ainda no seu navegador."); return; }
+        if(!achouDados) { alert("Nenhum professor enviou relatórios para esta turma neste trimestre."); return; }
         document.getElementById('espIntPedag').value = textoCaracteristicas + "\n" + textoMetodologias;
         autoExpand(document.getElementById('espIntPedag'));
         alert("Textos dos professores consolidados com sucesso!");
@@ -717,8 +709,6 @@
         semLibras: document.getElementById('espSemLibras').value 
       };
       localStorage.setItem('mestra_esp_' + turma + '_' + trim, JSON.stringify(obj)); 
-      
-      // Envia para a Planilha Oficial (Aba Especialista)
       chamarApiGoogle('salvarMatrizEspecialista', obj);
       alert("✅ Matriz do Especialista Salva no Sistema e na Planilha!");
     }
@@ -752,7 +742,7 @@
     }
  
     // ===============================================================
-    // ABA DATASHOW / REUNIÃO (COM ENVIO PARA PLANILHA GLOBAL)
+    // ABA DATASHOW / REUNIÃO (REGISTRO TOTAL)
     // ===============================================================
     function iniciarCronometro() {
      if(timerInterval) clearInterval(timerInterval); segundosRestantes = 180;
@@ -769,7 +759,7 @@
       var tagHtml = (dadosA.aee ? '<span class="tag-aee shadow-sm">AEE</span>' : '') + (dadosA.pdi==='Sim' ? '<span class="tag-pdi bg-success text-white border-success shadow-sm">PDI: Sim</span>' : (dadosA.pdi==='Não' && dadosA.aee ? '<span class="tag-pdi shadow-sm">Sem PDI</span>' : '')) + (dadosA.sigla ? '<span class="tag-sigla shadow-sm">'+dadosA.sigla+'</span>' : '');
      document.getElementById('tagsAlunoDatashow').innerHTML = tagHtml;
  
-     document.querySelectorAll('.seg-option').forEach(b => b.classList.remove('selected-green', 'selected-yellow', 'selected-red'));
+     document.querySelectorAll('.seg-option-row').forEach(b => b.classList.remove('selected-green', 'selected-yellow', 'selected-red'));
      document.querySelectorAll('.chk-escola, .chk-familia').forEach(chk => chk.checked = false);
      document.getElementById('obsAlunoAtivo').value = ''; document.getElementById('txtOutrasSituacoes').value = '';
  
@@ -785,7 +775,6 @@
        document.getElementById('contadorEscola').innerText = document.querySelectorAll('.chk-escola:checked').length; document.getElementById('contadorFamilia').innerText = document.querySelectorAll('.chk-familia:checked').length;
       } else { atualizarRoboESintese(true); }
      
-     // Expande as caixas automaticamente
      autoExpand(document.getElementById('obsAlunoAtivo')); autoExpand(document.getElementById('txtOutrasSituacoes'));
      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -817,7 +806,6 @@
       
       var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); db[turmaAtivaSessao + '_' + alunoAtivoSessao.toUpperCase() + '_' + trim] = obj; localStorage.setItem('mestra_banco_registros', JSON.stringify(db));
       
-      // ENVIA PARA A PLANILHA OFICIAL EXPLICITAMENTE (NUVEM) - Aba AVALIACOES_CONSELHO
       var payloadPlanilha = {
         trimestre: trim, turma: turmaAtivaSessao, estudante: alunoAtivoSessao,
         disciplina: obj.criterios.convivencia || '', atencao: obj.criterios.atencao || '',
@@ -832,7 +820,7 @@
     }
  
     function setCritVal(btn, chave, textoOpcao) {
-      var grupo = btn.parentElement; grupo.querySelectorAll('.seg-option').forEach(b => b.classList.remove('selected-green', 'selected-yellow', 'selected-red'));
+      var grupo = btn.parentElement; grupo.querySelectorAll('.seg-option-row').forEach(b => b.classList.remove('selected-green', 'selected-yellow', 'selected-red'));
      aplicarEstiloBotao(btn, textoOpcao); btn.dataset.value = textoOpcao;
       var crit = criteriosDetalhados.find(c => c.chave === chave);
       if(crit) { var opt = crit.opcoes.find(o => o.texto === textoOpcao); if(opt) { if(opt.escola) document.querySelectorAll('.chk-escola').forEach(chk => { if(opt.escola.includes(chk.value)) chk.checked = true; }); if(opt.familia) document.querySelectorAll('.chk-familia').forEach(chk => { if(opt.familia.includes(chk.value)) chk.checked = true; }); } }
@@ -853,9 +841,10 @@
       var textoFinal = `O(A) estudante apresenta uma situação geral avaliada como: ${conclusaoLimpa}. `;
       if(greens.length > 0) textoFinal += `No cotidiano escolar, destaca-se positivamente nos seguintes aspectos: ${greens.join('; ')}. `;
      if(yellows.length > 0 || reds.length > 0) textoFinal += `A equipe pedagógica pontuou que o estudante requer acompanhamento nos critérios: ${yellows.concat(reds).join('; ')}.`;
+     
      var areaTexto = document.getElementById('obsAlunoAtivo');
      areaTexto.value = textoFinal; 
-     autoExpand(areaTexto); // Expande a caixa
+     autoExpand(areaTexto); 
      document.getElementById('contadorEscola').innerText = document.querySelectorAll('.chk-escola:checked').length; document.getElementById('contadorFamilia').innerText = document.querySelectorAll('.chk-familia:checked').length;
     }
  
@@ -891,7 +880,7 @@
     }
  
     // ===============================================================
-    // IMPRESSÃO DE BILHETES A4 (LAYOUT EXATO DA IMAGEM E COM QUEBRA DE TEXTO)
+    // IMPRESSÃO DE BILHETES A4 
     // ===============================================================
     function imprimirBilhetesOficiais() {
       var turma = document.getElementById('relTurmaSelect').value; 
@@ -933,7 +922,7 @@
         var crit = reg.criterios || {}; 
         var verdesHtml = ''; var atencaoHtml = ''; var criteriosEsqHtml = '';
         
-        var listaCritKeys = [{nome: "Convivência e Comportamento", chave: "convivencia"}, {nome: "Atenção", chave: "atencao"}, {nome: "Conversa", chave: "conversa"}, {nome: "Interesse", chave: "interesse"}, {nome: "Participação", chave: "participacao"}, {nome: "Aprendizagem", chave: "aprendizagem"}, {nome: "Organização", chave: "organizacao"}, {nome: "Atividades em Sala", chave: "ativ_sala"}, {nome: "Tarefas de Casa", chave: "tarefas_casa"}, {nome: "Frequência", chave: "frequencia"}];
+        var listaCritKeys = [{nome: "Convivência e Comport.", chave: "convivencia"}, {nome: "Atenção", chave: "atencao"}, {nome: "Conversa", chave: "conversa"}, {nome: "Interesse", chave: "interesse"}, {nome: "Participação", chave: "participacao"}, {nome: "Aprendizagem", chave: "aprendizagem"}, {nome: "Organização", chave: "organizacao"}, {nome: "Ativ. em Sala", chave: "ativ_sala"}, {nome: "Tarefas de Casa", chave: "tarefas_casa"}, {nome: "Frequência", chave: "frequencia"}];
         
         listaCritKeys.forEach(ck => { 
             var val = crit[ck.chave] || "🟢 Acompanhado(a)"; 
