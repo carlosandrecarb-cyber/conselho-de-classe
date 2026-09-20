@@ -236,7 +236,10 @@
             <h4 class="fw-bold mb-1 text-dark"><i class="fa-solid fa-user-tie text-primary me-2"></i>Matriz de Ações do Especialista</h4>
             <p class="text-muted fs-7 m-0">Painel gerencial para preenchimento das ações macro da turma.</p>
           </div>
-          <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3 shadow-sm" onclick="imprimirMatrizEspecialista()"><i class="fa-solid fa-print me-1"></i> Imprimir Matriz (A4)</button>
+          <div>
+            <button class="btn btn-warning fw-bold btn-sm py-2 px-3 shadow-sm me-2" onclick="consolidarDadosProfessores()"><i class="fa-solid fa-robot me-1"></i> Puxar Textos dos Professores</button>
+            <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3 shadow-sm" onclick="imprimirMatrizEspecialista()"><i class="fa-solid fa-print me-1"></i> Imprimir Matriz (A4)</button>
+          </div>
         </div>
  
         <div class="p-3 border rounded-xl mb-4 row g-3 shadow-sm" style="background: linear-gradient(145deg, #ffffff, #f1f5f9);">
@@ -258,7 +261,7 @@
             <h5 class="fw-extrabold text-success border-bottom border-success pb-2 mb-3"><i class="fa-solid fa-universal-access me-2"></i>Educação Especial / Inclusão (Preenchimento Automático)</h5>
             <div class="row g-3">
               <div class="col-md-6"><label class="fw-bold fs-7 text-dark">Relação de estudantes (AEE) que NÃO possuem PDI: <br><span class="text-danger fs-8">(Puxado automático da Gestão de Estudantes)</span></label><textarea id="espSemPdiAuto" class="input-mestra bg-white text-danger fw-bold" rows="3" readonly></textarea></div>
-              <div class="col-md-6"><label class="fw-bold fs-7 text-dark">Estudantes que frequentam a Sala de Recursos: <br><span class="text-primary fs-8">(Puxado automático da avaliação do Datashow)</span></label><textarea id="espSalaNomes" class="input-mestra bg-white text-primary fw-bold" rows="3" placeholder="Surgirá automaticamente..." readonly></textarea></div>
+              <div class="col-md-6"><label class="fw-bold fs-7 text-dark">Estudantes que frequentam a Sala de Recursos: <br><span class="text-primary fs-8">(Puxado automático do Datashow)</span></label><textarea id="espSalaNomes" class="input-mestra bg-white text-primary fw-bold" rows="3" readonly></textarea></div>
               <div class="col-md-12 mt-3"><label class="fw-bold fs-7 text-dark">Relação de estudantes (AEE) que NÃO possuem Intérprete de LIBRAS:</label><input type="text" id="espSemLibras" class="input-mestra border-success" placeholder="Insira os nomes ou digite 'Não existe na turma...'"></div>
            </div>
           </div>
@@ -283,7 +286,7 @@
       </div>
  
       <div id="painelAvaliacaoEstudante" class="card-clean admin-lock" style="display: none; border: 2px solid var(--primary); padding-top: 0; position: relative;">
-        <!-- CABEÇALHO CONGELADO (STICKY) COM NAVEGAÇÃO E TAGS GIGANTES -->
+        <!-- CABEÇALHO CONGELADO (STICKY) -->
         <div class="sticky-header-datashow d-flex justify-content-between align-items-center">
           <div>
             <span class="badge bg-success mb-1" id="lblTurmaTop">Avaliando Turma</span>
@@ -297,7 +300,7 @@
             <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(-1)"><i class="fa-solid fa-chevron-left me-1"></i> Voltar</button>
             <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(1)">Próximo <i class="fa-solid fa-chevron-right ms-1"></i></button>
             <button class="btn btn-dark fw-bold btn-sm py-2 px-3 ms-2" onclick="fecharAvaliacaoAluno()"><i class="fa-solid fa-xmark"></i> Fechar</button>
-            <button class="btn btn-success fw-bold btn-sm py-2 px-4 shadow-sm admin-only" onclick="salvarEAvancarProximo()"><i class="fa-solid fa-floppy-disk me-1"></i> Gravar Tudo</button>
+            <button class="btn btn-success fw-bold btn-sm py-2 px-4 shadow-sm admin-only" onclick="salvarEAvancarProximo()"><i class="fa-solid fa-floppy-disk me-1"></i> Gravar Tudo e Salvar na Planilha</button>
           </div>
         </div>
  
@@ -315,16 +318,16 @@
                <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="BOM/BOA" onclick="setConclusao('BOM/BOA', this)">🟢 BOM/BOA</button>
                <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="PRECISA DE ATENÇÃO" onclick="setConclusao('PRECISA DE ATENÇÃO', this)">🔴 PRECISA DE ATENÇÃO</button>
              </div>
-              <span class="eval-title text-primary fw-bold mt-2 mb-1 d-block"><i class="fa-solid fa-robot me-1"></i> Parecer Descritivo</span>
-             <textarea id="obsAlunoAtivo" class="input-mestra border bg-white" rows="9" style="resize: none; font-size: 0.85rem;" placeholder="Marque os 10 itens para gerar o texto..."></textarea>
+              <span class="eval-title text-primary fw-bold mt-2 mb-1 d-block"><i class="fa-solid fa-robot me-1"></i> Parecer Descritivo Visível</span>
+             <textarea id="obsAlunoAtivo" class="input-mestra border bg-white" rows="7" style="resize: none; font-size: 0.85rem;" placeholder="Marque os 10 itens para gerar o texto..."></textarea>
              <input type="text" id="conclusaoMotivo" class="input-mestra py-1 mt-2 fs-7" placeholder="Motivo/observação extra final..." oninput="atualizarRoboESintese(false)">
            </div>
             
-            <!-- CAIXA OUTRAS SITUAÇÕES -->
-            <div class="eval-card border-success bg-success bg-opacity-10 p-3" style="min-height: auto;">
+            <!-- CAIXA NOVA: OUTRAS SITUAÇÕES -->
+            <div class="eval-card border-secondary bg-light p-3" style="min-height: auto;">
               <span class="eval-title text-dark fw-bold d-block m-0"><i class="fa-solid fa-puzzle-piece me-1"></i> Outras Situações / Informações Complementares</span>
-              <input type="text" id="txtOutrasSituacoes" class="input-mestra mt-2 bg-white" placeholder="Ex: Sala de Recursos, Problema Familiar...">
-           </div>
+              <textarea id="txtOutrasSituacoes" class="input-mestra mt-2 bg-white" rows="2" placeholder="Ex: Encaminhado ao AEE, Sala de Recursos, Questões Familiares..."></textarea>
+            </div>
           </div>
         </div>
  
@@ -336,16 +339,26 @@
     </section>
  
     <!-- ABA 6: BANCO DE REGISTROS -->
-    <section id="tab-banco" class="view-panel">
+    <section id="tab-banco" class="view-panel admin-only">
       <div class="card-clean">
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-         <div><h4 class="fw-bold m-0 text-dark"><i class="fa-solid fa-database text-primary me-2"></i>Banco de Registros</h4><p class="text-muted m-0 fs-7">Apenas Consulta.</p></div>
+         <div><h4 class="fw-bold m-0 text-dark"><i class="fa-solid fa-database text-primary me-2"></i>Gestão (Banco & Radar)</h4><p class="text-muted m-0 fs-7">Visão executiva da Direção.</p></div>
           <div class="d-flex gap-2">
             <select id="filtroTrimestreBanco" class="form-select" onchange="filtrarBancoAlunos()"><option value="">Todos os Trimestres</option><option>1º Trimestre</option><option>2º Trimestre</option><option>3º Trimestre</option></select>
             <select id="filtroTurmaBanco" class="form-select" onchange="filtrarBancoAlunos()"><option value="">Todas as Turmas</option></select>
             <input type="text" id="filtroNomeAluno" class="input-mestra py-2" placeholder="Pesquisar Estudante..." oninput="filtrarBancoAlunos()">
           </div>
         </div>
+
+        <!-- RADAR GESTÃO -->
+        <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-radar"></i> Radar de Ação Imediata</h5>
+        <div class="row g-2 mb-4">
+            <div class="col-md-3"><button class="btn btn-danger w-100 fw-bold py-2" onclick="filtrarRadarGestao('Faltas')"><i class="fa-solid fa-triangle-exclamation"></i> Faltosos Críticos</button></div>
+            <div class="col-md-3"><button class="btn btn-warning w-100 fw-bold py-2" onclick="filtrarRadarGestao('Tarefas')"><i class="fa-solid fa-book-open-reader"></i> Alerta de Tarefas</button></div>
+            <div class="col-md-3"><button class="btn btn-info w-100 fw-bold py-2 text-white" onclick="filtrarRadarGestao('Familia')"><i class="fa-solid fa-users"></i> Convocação de Família</button></div>
+            <div class="col-md-3"><button class="btn btn-secondary w-100 fw-bold py-2" onclick="filtrarRadarGestao('Todos')"><i class="fa-solid fa-list"></i> Limpar Filtros</button></div>
+        </div>
+
         <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
           <table class="table table-hover align-middle m-0" style="font-size: 0.85rem;">
             <thead class="table-dark sticky-top"><tr><th>Turma</th><th>Estudante</th><th>Trimestre</th><th>Situação Geral (Conselho)</th></tr></thead>
@@ -372,7 +385,7 @@
       </div>
     </section>
  
-    <!-- ABA 8: RELATÓRIOS (IMPRESSÃO DE BILHETES) -->
+    <!-- ABA 8: RELATÓRIOS (IMPRESSÃO DE BILHETES A4) -->
     <section id="tab-relatorios" class="view-panel">
       <div class="card-clean text-center py-5 mx-auto" style="max-width: 650px;">
         <i class="fa-solid fa-print text-primary fa-3x mb-3"></i>
@@ -388,7 +401,7 @@
   </div>
  
   <script>
-    // A URL DA SUA PLANILHA: NUVEM INVISÍVEL
+    // A URL DA SUA PLANILHA EXATA (NUVEM)
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbxIHePqCUCNaNzgz4C-5rz5AwQXh02W2A1KUJz3yx9hf0ofth0dZIGuWaurcmL4FN5i/exec";
 
     var turmasGlobais = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
@@ -414,20 +427,21 @@
     var encFamiliaOpcoes = ["Acompanhar a organização dos materiais.", "Estabelecer rotina para realização das tarefas de casa.", "Não deixar o filho faltar sem justificativa.", "Acompanhar os cadernos do filho.", "Visitar a escola de vez em quando.", "Fortalecer hábitos de estudos em casa.", "Incentivar a leitura em casa.", "Verificar sempre o uniforme escolar."];
  
     // ===============================================================
-    // COMUNICAÇÃO COM O GOOGLE SHEETS (NUVEM INVISÍVEL)
+    // COMUNICAÇÃO TOTAL COM O GOOGLE SHEETS
     // ===============================================================
-    function forcarSincronizacaoNuvem() {
-      if(perfilLogado !== 'admin') return;
-      var anoAtual = document.getElementById('globalAno') ? document.getElementById('globalAno').value : '2026';
-      var dadosGerais = {
-        funcao: 'backupGeralLocal',
-        dados: { ano: anoAtual, banco_registros: JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'), lotacao: JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]') }
-      };
-      fetch(URL_API_GOOGLE, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(dadosGerais) }).catch(e => console.log('Sincronização em background.'));
+    function chamarApiGoogle(funcao, dados = null, callback) {
+      fetch(URL_API_GOOGLE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ funcao: funcao, dados: dados })
+      })
+      .then(res => res.json())
+      .then(data => { if(callback) callback(data); })
+      .catch(e => console.error("Erro na conexão com Google:", e));
     }
 
     // ===============================================================
-    // LOGIN E CARREGAMENTO
+    // LOGIN
     // ===============================================================
     var tipoLoginAtual = '';
     function mostrarSenha(tipo) { tipoLoginAtual = tipo; document.getElementById('loginOptions').style.display = 'none'; document.getElementById('loginPassword').style.display = 'block'; document.getElementById('lblTipoLogin').innerText = tipo === 'admin' ? "Senha Especialista/Direção:" : "Senha Professor(a):"; document.getElementById('inputSenhaAcesso').focus(); }
@@ -445,6 +459,9 @@
       switchTab('tab-dashboard', document.querySelectorAll('.pill-btn')[0]); carregarTudoAoLogar();
     }
  
+    // ===============================================================
+    // CARREGAMENTO GLOBAL
+    // ===============================================================
     function carregarTudoAoLogar() {
       var selectsTurma = ['selEstudanteTurma', 'profTurmaSelect', 'espTurmaSelect', 'relTurmaSelect', 'filtroTurmaBanco'];
       selectsTurma.forEach(id => { var el = document.getElementById(id); if(el) { if(id === 'filtroTurmaBanco') el.innerHTML = '<option value="">Todas as Turmas</option>'; else el.innerHTML = '<option value="">Selecione...</option>'; turmasGlobais.forEach(t => el.innerHTML += `<option value="${t}">${t}</option>`); } });
@@ -483,7 +500,7 @@
       if(!turma) { alert("Selecione a turma."); return; } if(!texto) { alert("Cole a lista."); return; }
       var nomes = texto.split('\n').filter(n => n.trim() !== ""); 
       var alunos = nomes.map((nome, index) => { return { numero: index + 1, nome: nome.trim().toUpperCase(), aee: false, pdi: "Não", sigla: "" }; });
-      localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos)); document.getElementById('txtListaEstudantes').value = ''; carregarEstudantesParaEdicao(); atualizarTagsTurmasSalvas(); forcarSincronizacaoNuvem(); 
+      localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos)); document.getElementById('txtListaEstudantes').value = ''; carregarEstudantesParaEdicao(); atualizarTagsTurmasSalvas();
     }
  
     function carregarEstudantesParaEdicao() {
@@ -524,7 +541,12 @@
             var t=[]; tr.querySelectorAll('.t-chk:checked').forEach(c => t.push(c.value)); 
             d.push({nome: tr.querySelector('.name-cell').innerText, cargo: tr.querySelector('.cargo-sel').value, turno: tr.querySelector('.turno-sel').value, turmas: t, componentes: [tr.querySelector('.comp-sel').value||''] }); 
         }); 
-        localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(d)); carregarProfessoresSelect(); alert("✅ Lotação salva!"); forcarSincronizacaoNuvem();
+        localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(d)); carregarProfessoresSelect(); 
+        
+        // ENVIA PARA A PLANILHA OFICIAL (NUVEM)
+        chamarApiGoogle('salvarLotacaoGlobal', d, function(res) {
+            alert("✅ Lotação salva com sucesso no sistema e na Planilha!"); 
+        });
     }
 
     function carregarTabelaLotacaoSalva() { var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || 'null'); if(s) { renderizarTabelaLotacao(s); } carregarProfessoresSelect(); }
@@ -592,6 +614,29 @@
     // ===============================================================
     // ABA MATRIZ DO ESPECIALISTA
     // ===============================================================
+    function consolidarDadosProfessores() {
+        var turma = document.getElementById('espTurmaSelect').value;
+        var trim = document.getElementById('espTrimSelect').value;
+        if(!turma) { alert("Selecione a turma alvo na lista antes de consolidar!"); return; }
+        
+        var textoCaracteristicas = "RESUMO DAS CARACTERÍSTICAS (Enviado pelos professores):\n";
+        var textoMetodologias = "METODOLOGIAS APLICADAS:\n";
+        var achouDados = false;
+
+        for (var i = 0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            if (key.startsWith('mestra_prof_' + turma + '_') && key.endsWith('_' + trim)) {
+                var dados = JSON.parse(localStorage.getItem(key));
+                var componente = key.split('_')[3];
+                if (dados.caracteristicas) { textoCaracteristicas += `- ${componente}: ${dados.caracteristicas}\n`; achouDados = true; }
+                if (dados.metodologia) { textoMetodologias += `- ${componente}: ${dados.metodologia}\n`; achouDados = true; }
+            }
+        }
+        if(!achouDados) { alert("Nenhum professor enviou relatórios para esta turma neste trimestre ainda no seu navegador."); return; }
+        document.getElementById('espIntPedag').value = textoCaracteristicas + "\n" + textoMetodologias;
+        alert("Textos dos professores consolidados com sucesso!");
+    }
+
     function carregarMatrizEspecialista() {
       var esp = document.getElementById('espNomeSelect').value; var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value;
       if(!esp || !turma) { alert("Selecione Especialista e Turma."); return; }
@@ -711,7 +756,19 @@
       
       // Salva no Navegador
       var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); db[turmaAtivaSessao + '_' + alunoAtivoSessao.toUpperCase() + '_' + trim] = obj; localStorage.setItem('mestra_banco_registros', JSON.stringify(db));
-      forcarSincronizacaoNuvem(); 
+      
+      // ENVIA PARA A PLANILHA OFICIAL EXPLICITAMENTE (NUVEM)
+      var payloadPlanilha = {
+        trimestre: trim, turma: turmaAtivaSessao, estudante: alunoAtivoSessao,
+        disciplina: obj.criterios.convivencia || '', atencao: obj.criterios.atencao || '',
+        conversa: obj.criterios.conversa || '', interesse: obj.criterios.interesse || '',
+        participacao: obj.criterios.participacao || '', aprendizagem: obj.criterios.aprendizagem || '',
+        organizacao: obj.criterios.organizacao || '', atividades_sala: obj.criterios.ativ_sala || '',
+        tarefa_casa: obj.criterios.tarefas_casa || '', presenca: obj.criterios.frequencia || '',
+        caracteristica: obj.conclusao || '', motivo: obj.motivo || '', observacoes: obj.observacoes || '',
+        acoes_escola: encE.join('; '), acoes_familia: encF.join('; '), outras_situacoes: obj.outrasSituacoes || ''
+      };
+      chamarApiGoogle('salvarAvaliacao', payloadPlanilha);
     }
  
     function setCritVal(btn, chave, textoOpcao) {
@@ -744,7 +801,7 @@
     function salvarEAvancarProximo() { salvarDadosSilenciosamente(); navegarEstudante(1); atualizarBancoVisual(); }
  
     // ===============================================================
-    // ABA BANCO DE REGISTROS
+    // ABA BANCO DE REGISTROS (RADAR DA GESTÃO)
     // ===============================================================
     function atualizarBancoVisual() {
       var tbody = document.getElementById('tabelaBancoRegistros'); var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); var chaves = Object.keys(db);
@@ -753,11 +810,32 @@
     }
     function filtrarBancoAlunos() { var termo = document.getElementById('filtroNomeAluno').value.toLowerCase(); var fTrim = document.getElementById('filtroTrimestreBanco').value; var fTurm = document.getElementById('filtroTurmaBanco').value; document.querySelectorAll('.banco-row').forEach(tr => { tr.style.display = (tr.innerText.toLowerCase().includes(termo) && (fTrim === "" || tr.dataset.trim === fTrim) && (fTurm === "" || tr.dataset.turma === fTurm)) ? '' : 'none'; }); }
 
+    function filtrarRadarGestao(tipoFiltro) {
+        var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); var chaves = Object.keys(db);
+        var tbody = document.getElementById('tabelaBancoRegistros'); tbody.innerHTML = '';
+        if(chaves.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">Nenhum registro no banco.</td></tr>'; return; }
+        
+        chaves.forEach(k => {
+            var reg = db[k];
+            var mostrar = false;
+            if (tipoFiltro === 'Todos') mostrar = true;
+            else if (tipoFiltro === 'Faltas' && reg.criterios && reg.criterios['frequencia'] && reg.criterios['frequencia'].includes('🔴')) mostrar = true;
+            else if (tipoFiltro === 'Tarefas' && reg.criterios && reg.criterios['tarefas_casa'] && (reg.criterios['tarefas_casa'].includes('🔴') || reg.criterios['tarefas_casa'].includes('🟡'))) mostrar = true;
+            else if (tipoFiltro === 'Familia' && reg.encFamilia && reg.encFamilia.length > 0) mostrar = true;
+
+            if(mostrar) tbody.innerHTML += `<tr data-turma="${reg.turma}" data-trim="${reg.trimestre}" class="banco-row"><td><span class="badge bg-secondary">${reg.turma}</span></td><td class="fw-bold text-uppercase">${reg.estudante}</td><td class="text-muted" style="font-size:0.75rem;">${reg.trimestre}</td><td><span class="badge bg-info text-dark">${reg.conclusao}</span></td></tr>`;
+        });
+        if(tbody.innerHTML === '') tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-4">Nenhum aluno se encaixa no filtro de ${tipoFiltro}.</td></tr>`;
+    }
+ 
     // ===============================================================
-    // IMPRESSÃO DE BILHETES A4 (DESIGN ORIGINAL RECUPERADO)
+    // IMPRESSÃO DE BILHETES A4 - DESIGN ORIGINAL RECUPERADO
     // ===============================================================
     function imprimirBilhetesOficiais() {
-      var turma = document.getElementById('relTurmaSelect').value; var turno = document.getElementById('relTurnoSelect').value; var trimestre = document.getElementById('sessaoTrimestre').value;
+      var turma = document.getElementById('relTurmaSelect').value; 
+      var trimestre = document.getElementById('sessaoTrimestre').value;
+      var anoAtual = document.getElementById('globalAno') ? document.getElementById('globalAno').value : '2026';
+
       if(!turma) { alert("Selecione a turma."); return; }
       var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); if(alunos.length === 0) { alert("Nenhum aluno cadastrado."); return; }
       var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
@@ -767,30 +845,122 @@
         .pagina-a4 { width: 100%; max-width: 210mm; min-height: 277mm; margin: 0 auto 10mm auto; background: white; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 12mm; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .header-top { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 10px; }
         .logo { height: 45px; object-fit: contain; } .school-title { text-align: center; flex-grow: 1; }
-       .student-banner { background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .grid-layout { display: flex; gap: 12px; flex-grow: 1; margin-bottom: 10px; } .coluna-esquerda { width: 42%; display: flex; flex-direction: column; gap: 4px; } .coluna-direita { width: 58%; display: flex; flex-direction: column; gap: 8px; }
-        .box-criterio { background: #f8fafc; border: 1.2px solid #cbd5e1; border-radius: 5px; padding: 4px 7px; } .box-criterio-titulo { font-size: 7pt; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 1px; } .box-criterio-valor { font-size: 8pt; font-weight: 700; color: #065f46; background: #d1fae5; padding: 2px 5px; border-radius: 4px; display: inline-block; } .amarelo { background: #fef3c7; color: #92400e; } .vermelho { background: #fee2e2; color: #991b1b; }
-        .box-bloco { border: 2px solid #0f172a; border-radius: 8px; padding: 10px; background: white; display: flex; flex-direction: column; } .box-bloco-titulo { font-size: 9.5pt; font-weight: 900; color: #0f172a; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 6px; }
-        .box-dupla { display: flex; gap: 8px; } .box-dupla > div { flex: 1; border: 1.2px solid #cbd5e1; border-radius: 6px; padding: 8px; background: #fafafa; min-height: 85px; } .rodape-assinatura { text-align: center; border-top: 1.5px dashed #64748b; padding-top: 8px; margin-top: 5px; }
+        .student-banner { background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .grid-layout { display: flex; gap: 12px; flex-grow: 1; margin-bottom: 10px; } 
+        .coluna-esquerda { width: 42%; display: flex; flex-direction: column; gap: 4px; } 
+        .coluna-direita { width: 58%; display: flex; flex-direction: column; gap: 8px; }
+        .box-criterio { background: #f8fafc; border: 1.2px solid #cbd5e1; border-radius: 5px; padding: 4px 7px; margin-bottom: 2px; } 
+        .box-criterio-titulo { font-size: 7.5pt; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 1px; } 
+        .box-criterio-valor { font-size: 8pt; font-weight: 700; color: #065f46; background: #d1fae5; padding: 2px 5px; border-radius: 4px; display: inline-block; } 
+        .amarelo { background: #fef3c7; color: #92400e; } .vermelho { background: #fee2e2; color: #991b1b; }
+        .box-bloco { border: 2px solid #0f172a; border-radius: 8px; padding: 10px; background: white; display: flex; flex-direction: column; } 
+        .box-bloco-titulo { font-size: 9.5pt; font-weight: 900; color: #0f172a; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 6px; }
+        .box-dupla { display: flex; gap: 8px; } .box-dupla > div { flex: 1; border: 1.2px solid #cbd5e1; border-radius: 6px; padding: 8px; background: #fafafa; min-height: 85px; } 
+        .rodape-assinatura { text-align: center; border-top: 1.5px dashed #64748b; padding-top: 8px; margin-top: 5px; }
+        
+        .criterio-resumo { font-size: 7.5pt; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+        .criterio-resumo span.bullet { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .bg-green { background-color: #10b981; } .bg-red { background-color: #ef4444; } .bg-yellow { background-color: #f59e0b; }
+
         @media print { .bar { display: none; } body { background: white; } .pagina-a4 { border: none; box-shadow: none; padding: 5mm; height: 100vh; } }
      </style></head><body><div class="bar"><button onclick="window.print()" style="background:#4f46e5; color:white; border:none; padding:10px 20px; font-weight:bold; border-radius:8px; cursor:pointer; font-size:11pt;">Imprimir Comunicados</button></div>`;
  
       alunos.forEach(a => {
         var reg = db[turma + '_' + a.nome.toUpperCase() + '_' + trimestre] || {};
-        var crit = reg.criterios || {}; var criteriosHtml = '';
+        var crit = reg.criterios || {}; 
+        var verdesHtml = ''; var atencaoHtml = ''; var criteriosEsqHtml = '';
         
         var listaCritKeys = [{nome: "Convivência e Comportamento", chave: "convivencia"}, {nome: "Atenção", chave: "atencao"}, {nome: "Conversa", chave: "conversa"}, {nome: "Interesse", chave: "interesse"}, {nome: "Participação", chave: "participacao"}, {nome: "Aprendizagem", chave: "aprendizagem"}, {nome: "Organização", chave: "organizacao"}, {nome: "Atividades em Sala", chave: "ativ_sala"}, {nome: "Tarefas de Casa", chave: "tarefas_casa"}, {nome: "Frequência", chave: "frequencia"}];
-        listaCritKeys.forEach(ck => { var val = crit[ck.chave] || "🟢 Acompanhado(a)"; var classeCor = val.startsWith('🟡') ? "amarelo" : (val.startsWith('🔴') ? "vermelho" : ""); criteriosHtml += `<div class="box-criterio"><div class="box-criterio-titulo">${ck.nome}</div><div class="box-criterio-valor ${classeCor}">${val}</div></div>`; });
+        
+        listaCritKeys.forEach(ck => { 
+            var val = crit[ck.chave] || "🟢 Acompanhado(a)"; 
+            var classeCor = val.startsWith('🟡') ? "amarelo" : (val.startsWith('🔴') ? "vermelho" : ""); 
+            
+            criteriosEsqHtml += `<div class="box-criterio"><div class="box-criterio-titulo">${ck.nome}</div><div class="box-criterio-valor ${classeCor}">${val}</div></div>`; 
+            
+            var bulletColor = val.startsWith('🟢') ? 'bg-green' : (val.startsWith('🟡') ? 'bg-yellow' : 'bg-red');
+            var valLimpo = val.replace(/🟢|🟡|🔴/g, '').trim();
+            var innerItem = `<div class="criterio-resumo"><span class="bullet ${bulletColor}"></span> <span><b>${ck.nome}:</b> ${valLimpo}</span></div>`;
+
+            if (val.startsWith('🟢')) verdesHtml += innerItem; 
+            else atencaoHtml += innerItem;
+        });
+        
+        if(verdesHtml === '') verdesHtml = '<p style="font-size: 7.5pt; margin: 0; color:#64748b;">Nenhum destaque registrado.</p>';
+        if(atencaoHtml === '') atencaoHtml = '<p style="font-size: 7.5pt; margin: 0; color:#64748b;">Nenhum ponto de atenção.</p>';
         
         var concVal = reg.conclusao || "ÓTIMO(A)";
-        var escolaHtml = (reg.encEscola && reg.encEscola.length > 0) ? '<ul style="margin:0; padding-left:14px; font-size:8pt; line-height:1.2;">' + reg.encEscola.map(e => `<li>${e}</li>`).join('') + '</ul>' : '<p style="font-size:8pt; margin:0;">Nenhum.</p>';
-        var familiaHtml = (reg.encFamilia && reg.encFamilia.length > 0) ? '<ul style="margin:0; padding-left:14px; font-size:8pt; line-height:1.2;">' + reg.encFamilia.map(f => `<li>${f}</li>`).join('') + '</ul>' : '<p style="font-size:8pt; margin:0;">Nenhum.</p>';
+        var escolaHtml = (reg.encEscola && reg.encEscola.length > 0) ? '<ul style="margin:0; padding-left:14px; font-size:8pt; line-height:1.3;">' + reg.encEscola.map(e => `<li style="margin-bottom:2px;">${e}</li>`).join('') + '</ul>' : '<p style="font-size:8pt; margin:0; color:#64748b;">Nenhum.</p>';
+        var familiaHtml = (reg.encFamilia && reg.encFamilia.length > 0) ? '<ul style="margin:0; padding-left:14px; font-size:8pt; line-height:1.3;">' + reg.encFamilia.map(f => `<li style="margin-bottom:2px;">${f}</li>`).join('') + '</ul>' : '<p style="font-size:8pt; margin:0; color:#64748b;">Nenhum.</p>';
  
-        html += `<div class="pagina-a4"><div><div class="header-top"><img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" class="logo"><div class="school-title"><div style="font-size: 8pt; font-weight: 800; color: #64748b;">E. E. Mestra Aurora — Gestão Pedagógica</div><h1 style="font-size: 11pt; margin: 2px 0 0 0;">CONSOLIDADO E ENCAMINHAMENTOS DO CONSELHO DE CLASSE</h1></div><div style="background:#fef3c7; color:#b45309; font-weight:800; padding:4px 10px; border-radius:6px; font-size:10pt; border:1px solid #fde047;">${trimestre}</div></div>
-        <div class="student-banner"><div><div style="font-size:7pt; color:#64748b;">ESTUDANTE:</div><div style="font-size:13pt; font-weight:900;">${a.nome}</div></div><div><span style="font-size:9pt; background:#eef2ff; color:#4f46e5; padding:4px 10px; border-radius:6px; font-weight:bold;">Turma: ${turma}</span></div></div>
-        <div class="grid-layout"><div class="col-esquerda" style="width:42%; display:flex; flex-direction:column; gap:4px;">${criteriosHtml}</div><div class="col-direita" style="width:58%; display:flex; flex-direction:column; gap:8px;"><div class="box-bloco" style="border: 1.5px solid #cbd5e1; padding: 10px; margin-bottom: 8px;"><div class="box-bloco-titulo" style="font-size: 9pt;">Situação Geral</div><div class="box-criterio-valor ${concVal.includes('PRECISA') ? 'vermelho' : ''}" style="font-size: 9.5pt; margin-bottom: 6px;">${concVal.includes('PRECISA') ? '🔴 ' : '🟢 '}${concVal}</div><div style="font-size: 9pt; line-height: 1.45; text-align: justify;">${reg.observacoes || 'Nenhum parecer registrado.'}</div></div>
-        <div class="box-bloco" style="border: 1.5px solid #cbd5e1; padding: 10px; margin-bottom: 8px;"><div class="box-bloco-titulo" style="font-size: 9pt;">Outras Situações / Info. Complementares</div><div style="font-size: 9pt; line-height: 1.45;">${reg.outrasSituacoes || 'Nenhum registro extra.'}</div></div>
-        <div class="box-bloco"><div class="box-bloco-titulo">Parecer e Encaminhamentos</div><div class="box-dupla"><div><div style="font-size:7.5pt; font-weight:900; color:#4f46e5; border-bottom:1px solid #cbd5e1; margin-bottom:3px;">AÇÕES DA ESCOLA</div>${escolaHtml}</div><div><div style="font-size:7.5pt; font-weight:900; color:#059669; border-bottom:1px solid #cbd5e1; margin-bottom:3px;">PARA A FAMÍLIA</div>${familiaHtml}</div></div></div></div></div></div><div class="rodape-assinatura"><div style="width: 40%; margin: 0 auto; border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 8pt; font-weight: 700;">Equipe Pedagógica / Especialista</div></div></div>`;
+        html += `<div class="pagina-a4"><div>
+        
+        <div class="header-top">
+            <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" class="logo">
+            <div class="school-title">
+                <div style="font-size: 8pt; font-weight: 800; color: #64748b;">E. E. Mestra Aurora — Gestão Pedagógica</div>
+                <h1 style="font-size: 11pt; margin: 2px 0 0 0;">CONSOLIDADO E ENCAMINHAMENTOS DO CONSELHO DE CLASSE</h1>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
+                <div style="background:#fef3c7; color:#b45309; font-weight:800; padding:4px 10px; border-radius:6px; font-size:10pt; border:1px solid #fde047;">${trimestre}</div>
+                <div style="font-size: 8pt; font-weight: bold; color: #475569; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; border: 1px solid #cbd5e1;">Ano: ${anoAtual}</div>
+            </div>
+        </div>
+
+        <div class="student-banner">
+            <div>
+                <div style="font-size:7pt; color:#64748b;">ESTUDANTE:</div>
+                <div style="font-size:12pt; font-weight:900;">${a.nome}</div>
+            </div>
+            <div>
+                <span style="font-size:9pt; background:#eef2ff; color:#4f46e5; padding:4px 10px; border-radius:6px; font-weight:bold;">Turma: ${turma}</span>
+            </div>
+        </div>
+        
+        <div class="grid-layout">
+            <div class="coluna-esquerda">${criteriosEsqHtml}</div>
+            
+            <div class="coluna-direita">
+                <div class="box-bloco" style="border: 1.5px solid #cbd5e1; padding: 10px; margin-bottom: 0px;">
+                    <div class="box-bloco-titulo" style="font-size: 9.5pt;">SITUAÇÃO GERAL DO(A) ESTUDANTE</div>
+                    <div class="box-criterio-valor ${concVal.includes('PRECISA') ? 'vermelho' : ''}" style="font-size: 9.5pt; margin-bottom: 10px; display:inline-block; padding: 4px 8px;">
+                        ${concVal.includes('PRECISA') ? '🔴 ' : '🟢 '}${concVal}
+                    </div>
+                    
+                    <div style="display: flex; gap: 8px; border-top: 1px solid #e2e8f0; padding-top: 10px; margin-top: 5px;">
+                        <div style="flex:1; background: #f0fdf4; padding: 8px; border-radius: 6px; border: 1px solid #bbf7d0;">
+                            <div style="font-size: 7pt; font-weight: 900; color: #166534; margin-bottom: 6px; text-transform: uppercase;">🟢 Destaca-se Positivamente</div>
+                            ${verdesHtml}
+                        </div>
+                        <div style="flex:1; background: #fef2f2; padding: 8px; border-radius: 6px; border: 1px solid #fecaca;">
+                            <div style="font-size: 7pt; font-weight: 900; color: #991b1b; margin-bottom: 6px; text-transform: uppercase;">🔴 Requer Acompanhamento</div>
+                            ${atencaoHtml}
+                        </div>
+                    </div>
+                </div>
+                
+                ${reg.outrasSituacoes ? `<div class="box-bloco" style="margin-top:0px; border-top: none; border-top-left-radius: 0; border-top-right-radius: 0; border: 1.5px solid #cbd5e1; padding: 8px 10px;">
+                    <div class="box-bloco-titulo" style="font-size: 8pt; margin-bottom:3px; border:none;">Outras Situações / Info. Complementares:</div>
+                    <div style="font-size: 8pt; line-height: 1.3;">${reg.outrasSituacoes}</div>
+                </div>` : ''}
+                
+                <div class="box-bloco" style="margin-top: 5px;">
+                    <div class="box-bloco-titulo">PARECER E ENCAMINHAMENTOS</div>
+                    <div class="box-dupla">
+                        <div>
+                            <div style="font-size:7.5pt; font-weight:900; color:#4f46e5; border-bottom:1px solid #cbd5e1; margin-bottom:6px; padding-bottom:2px;">AÇÕES DA ESCOLA</div>
+                            ${escolaHtml}
+                        </div>
+                        <div>
+                            <div style="font-size:7.5pt; font-weight:900; color:#059669; border-bottom:1px solid #cbd5e1; margin-bottom:6px; padding-bottom:2px;">PARA A FAMÍLIA</div>
+                            ${familiaHtml}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div><div class="rodape-assinatura"><div style="width: 40%; margin: 0 auto; border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 8pt; font-weight: 700;">Equipe Pedagógica / Especialista</div></div></div>`;
       });
       html += `</body></html>`; var w = window.open('', '_blank'); w.document.write(html); w.document.close();
     }
