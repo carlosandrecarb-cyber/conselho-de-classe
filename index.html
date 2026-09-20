@@ -17,10 +17,10 @@
     .app-shell { max-width: 1450px; margin: 0 auto; padding: 15px; min-height: 100vh; display: flex; flex-direction: column; }
     
     .topbar { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-box); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); margin-bottom: 20px; display: none; }
-    .school-badge { font-size: 0.7rem; font-weight: 700; background: #e0e7ff; color: #4f46e5; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 4px; }
+    .school-badge { font-size: 0.75rem; font-weight: 800; background: #e0e7ff; color: #4f46e5; padding: 6px 14px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 4px; border: 1px solid #c7d2fe; }
     
     .nav-pills-modern { background: #f1f5f9; padding: 6px; border-radius: 10px; display: flex; gap: 6px; border: 1px solid var(--border-color); flex-wrap: wrap; justify-content: center; }
-    .pill-btn { border: none; background: transparent; padding: 8px 14px; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); border-radius: var(--radius-btn); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; }
+    .pill-btn { border: none; background: transparent; padding: 8px 14px; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); border-radius: var(--radius-btn); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; }
     .pill-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
     .pill-btn:hover:not(.active) { color: var(--primary); background: rgba(255,255,255,0.5); }
  
@@ -30,48 +30,40 @@
  
     .btn-mestra { background: #10b981; color: white; border: none; font-weight: 700; border-radius: var(--radius-btn); padding: 10px 16px; transition: 0.2s; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-mestra:hover { background: #059669; color: white; }
-    .input-mestra { border: 1px solid var(--border-color); border-radius: var(--radius-btn); padding: 6px 10px; font-weight: 600; font-size: 0.85rem; outline: none; width: 100%; background: #fff; transition: 0.2s; }
+    .input-mestra { border: 1px solid var(--border-color); border-radius: var(--radius-btn); padding: 6px 10px; font-weight: 600; font-size: 0.9rem; outline: none; width: 100%; background: #fff; transition: 0.2s; }
     .input-mestra:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15,23,42,0.08); }
  
     .turma-tag { border: 2px solid var(--border-color); background: white; font-weight: 700; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; color: var(--text-muted); }
     .turma-tag.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px rgba(15,23,42,0.2); }
     
     .student-pill-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
-    .student-pill { background: #f8fafc; border: 1px solid var(--border-color); padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+    .student-pill { background: #f8fafc; border: 1px solid var(--border-color); padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
     .student-pill:hover { border-color: #4f46e5; background: #eef2ff; color: #4f46e5; }
  
-    /* DATASHOW FULLSCREEN E SEM SCROLLBAR */
-    #painelAvaliacaoEstudante { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #f1f5f9; z-index: 1050; display: none; flex-direction: column; padding: 10px; overflow: hidden; }
-    .ds-header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px 15px; border-radius: 10px; border: 1px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05); flex-shrink: 0; margin-bottom: 8px; }
-    .ds-content { flex-grow: 1; display: flex; gap: 10px; min-height: 0; }
-    .ds-col-left { flex: 0 0 55%; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
-    .ds-col-right { flex: 1; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+    .eval-card { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; height: 100%; }
+    .eval-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; color: var(--text-muted); }
     
-    .eval-card { background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 12px; display: flex; flex-direction: column; }
-    .eval-title { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; color: #4f46e5; display: flex; align-items: center; gap: 6px; }
+    /* Layout do Datashow */
+    .ds-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .crit-box { border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; background: #f8fafc; }
+    .crit-title { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 6px; }
+    .seg-group { display: flex; flex-direction: column; gap: 4px; }
+    .seg-option { border: 1px solid var(--border-color); background: white; padding: 6px 8px; font-size: 0.75rem; font-weight: 600; color: var(--text-main); border-radius: 6px; cursor: pointer; text-align: left; transition: 0.1s; }
     
-    /* Grelha de Critérios Compacta */
-    .criterios-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; overflow-y: auto; padding-right: 4px; }
-    .criterios-grid-2col::-webkit-scrollbar { width: 4px; } .criterios-grid-2col::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    .crit-box { border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; background: #f8fafc; }
-    .crit-title { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 4px; }
-    .seg-group { display: flex; flex-direction: column; gap: 2px; }
-    .seg-option { border: 1px solid var(--border-color); background: white; padding: 4px 6px; font-size: 0.65rem; font-weight: 600; color: var(--text-main); border-radius: 4px; cursor: pointer; text-align: left; transition: 0.1s; }
+    .seg-option.selected-green { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; font-weight: 700; box-shadow: inset 3px 0 0 #059669; }
+    .seg-option.selected-yellow { background-color: #fef3c7 !important; border-color: #f59e0b !important; color: #92400e !important; font-weight: 700; box-shadow: inset 3px 0 0 #d97706; }
+    .seg-option.selected-red { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; font-weight: 700; box-shadow: inset 3px 0 0 #b91c1c; }
     
-    .seg-option.selected-green { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; font-weight: 700; box-shadow: inset 2px 0 0 #059669; }
-    .seg-option.selected-yellow { background-color: #fef3c7 !important; border-color: #f59e0b !important; color: #92400e !important; font-weight: 700; box-shadow: inset 2px 0 0 #d97706; }
-    .seg-option.selected-red { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; font-weight: 700; box-shadow: inset 2px 0 0 #b91c1c; }
+    .chk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; margin-top: 4px; }
+    .chk-encaminhamento { font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: flex-start; gap: 6px; margin-bottom: 0; color: #334155; }
     
-    .chk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; overflow-y: auto; margin-top: 4px; }
-    .chk-grid::-webkit-scrollbar { width: 4px; } .chk-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    .chk-encaminhamento { font-size: 0.7rem; font-weight: 600; cursor: pointer; display: flex; align-items: flex-start; gap: 4px; margin-bottom: 0; color: #334155; }
-    
-    .timer-box { background: #0f172a; color: #facc15; padding: 4px 12px; border-radius: 6px; font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 6px; }
+    .timer-box { background: #0f172a; color: #facc15; padding: 6px 14px; border-radius: 8px; font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
     
     /* TAGS DE SINALIZAÇÃO AEE */
-    .tag-aee { font-size: 0.65rem; background: #e0e7ff; color: #4f46e5; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin-left: 6px; }
-    .tag-pdi { font-size: 0.65rem; background: #fee2e2; color: #b91c1c; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin-left: 6px; }
-    .tag-sigla { font-size: 0.65rem; background: #fef3c7; color: #b45309; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin-left: 6px; }
+    .tag-aee { font-size: 0.65rem; background: #e0e7ff; color: #4f46e5; padding: 3px 8px; border-radius: 6px; font-weight: 900; margin-left: 6px; border: 1px solid #4f46e5; }
+    .tag-pdi { font-size: 0.65rem; background: #fee2e2; color: #b91c1c; padding: 3px 8px; border-radius: 6px; font-weight: 900; margin-left: 6px; border: 1px solid #b91c1c; }
+    .tag-sigla { font-size: 0.65rem; background: #fef3c7; color: #b45309; padding: 3px 8px; border-radius: 6px; font-weight: 900; margin-left: 6px; border: 1px solid #b45309; }
+    .turma-salva-tag { background: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; border: 1px dashed #cbd5e1; }
  
     /* CONTROLE DE ACESSO */
     body.role-prof .admin-only { display: none !important; }
@@ -112,7 +104,7 @@
         <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 45px; object-fit: contain;" alt="Logo">
         <div>
           <span class="school-badge"><i class="fa-solid fa-graduation-cap me-1"></i> E.E. Mestra Aurora</span>
-          <h2 class="fw-extrabold m-0" style="font-size: 1.1rem; letter-spacing: -0.5px;">SISTEMA CONSELHO DE CLASSE <span id="tagPerfilLogado" class="badge bg-danger ms-2" style="font-size: 0.6rem;"></span></h2>
+          <h2 class="fw-extrabold m-0" style="font-size: 1.15rem; letter-spacing: -0.5px;">SISTEMA CONSELHO DE CLASSE <span id="tagPerfilLogado" class="badge bg-danger ms-2" style="font-size: 0.65rem;"></span></h2>
         </div>
       </div>
       <nav class="nav-pills-modern">
@@ -280,7 +272,7 @@
       </div>
     </section>
  
-    <!-- ABA 5: DATASHOW / REUNIÃO (TELA INICIAL DE SELEÇÃO) -->
+    <!-- ABA 5: DATASHOW / REUNIÃO -->
     <section id="tab-datashow" class="view-panel">
       <div class="card-clean mb-4" id="seletorDatashow">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 border-bottom pb-3">
@@ -293,75 +285,70 @@
         <label class="form-label fw-bold fs-7 text-uppercase text-muted">1. Selecione a Turma Alvo:</label><div id="gridTurmasSessao" class="d-flex flex-wrap gap-2 mb-4"></div>
         <div id="containerAlunosSessao" style="display: none;"><div class="d-flex justify-content-between align-items-center mb-2"><label class="form-label fw-bold fs-7 text-uppercase text-muted m-0">2. Clique no Estudante para Avaliar:</label><span class="badge bg-primary" id="contadorAlunosBadge">0 alunos</span></div><div id="gridAlunosSessao" class="student-pill-grid"></div></div>
       </div>
-    </section>
  
-    <!-- =============================================================== -->
-    <!-- TELA DE AVALIAÇÃO DO DATASHOW (FULLSCREEN E SEM ROLAGEM)        -->
-    <!-- =============================================================== -->
-    <div id="painelAvaliacaoEstudante">
-      <!-- CABEÇALHO -->
-      <div class="ds-header">
-        <div>
-          <span class="badge bg-success mb-1" id="lblTurmaTop">Avaliando Turma</span>
-          <h3 class="fw-extrabold m-0 text-uppercase text-dark d-flex align-items-center gap-2" id="nomeAlunoAtivo" style="font-size: 1.25rem;">
-            <span id="nomeAlunoDisplay">NOME DO ESTUDANTE</span>
-            <span id="tagsAlunoDatashow"></span>
-          </h3>
+      <!-- PAINEL DE AVALIAÇÃO (VISUAL CLÁSSICO COMPACTO - SEM ROLAGEM) -->
+      <div id="painelAvaliacaoEstudante" class="card-clean admin-lock" style="display: none; border: 2px solid var(--primary); padding-top: 0; position: relative;">
+        <div class="sticky-header-datashow d-flex justify-content-between align-items-center">
+          <div>
+            <span class="badge bg-success mb-1" id="lblTurmaTop">Avaliando Turma</span>
+            <h3 class="fw-extrabold m-0 text-uppercase text-dark d-flex align-items-center flex-wrap gap-2" id="nomeAlunoAtivo" style="font-size: 1.35rem;">
+              <span id="nomeAlunoDisplay">NOME DO ESTUDANTE</span>
+              <span id="tagsAlunoDatashow"></span>
+           </h3>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <div class="timer-box me-3" id="cronometroDisplay"><i class="fa-regular fa-clock"></i> <span id="tempoRestante">03:00</span></div>
+            <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(-1)"><i class="fa-solid fa-chevron-left me-1"></i> Voltar</button>
+            <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(1)">Próximo <i class="fa-solid fa-chevron-right ms-1"></i></button>
+            <button class="btn btn-dark fw-bold btn-sm py-2 px-3 ms-2" onclick="fecharAvaliacaoAluno()"><i class="fa-solid fa-xmark"></i> Fechar</button>
+            <button class="btn btn-success fw-bold btn-sm py-2 px-4 shadow-sm admin-only" onclick="salvarEAvancarProximo()"><i class="fa-solid fa-floppy-disk me-1"></i> Gravar Tudo</button>
+          </div>
         </div>
-        <div class="d-flex align-items-center gap-2">
-          <div class="timer-box me-2" id="cronometroDisplay"><i class="fa-regular fa-clock"></i> <span id="tempoRestante">03:00</span></div>
-          <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(-1)"><i class="fa-solid fa-chevron-left me-1"></i> Voltar</button>
-          <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(1)">Próximo <i class="fa-solid fa-chevron-right ms-1"></i></button>
-          <button class="btn btn-dark fw-bold btn-sm py-2 px-3 ms-2" onclick="fecharAvaliacaoAluno()"><i class="fa-solid fa-xmark me-1"></i> Fechar</button>
-          <button class="btn btn-mestra fw-bold btn-sm py-2 px-4 shadow-sm admin-only" onclick="salvarEAvancarProximo()"><i class="fa-solid fa-floppy-disk me-1"></i> Gravar Tudo</button>
-        </div>
-      </div>
+ 
+        <div class="row g-3 mt-2">
+          <!-- Coluna Esquerda: Critérios em Grelha 2x5 -->
+          <div class="col-md-6">
+            <span class="eval-title text-dark d-block mb-2"><i class="fa-solid fa-list-check me-1"></i> Critérios de Avaliação (Clique para marcar)</span>
+            <div class="ds-grid-2col" id="criteriosGrid"></div>
+          </div>
 
-      <!-- CORPO 100% PREENCHIDO (SEM SCROLL) -->
-      <div class="ds-content">
-        <!-- COLUNA ESQUERDA (55%) -->
-        <div class="ds-col-left">
-          <div class="eval-card flex-grow-0" style="padding: 6px 10px;">
-            <span class="eval-title"><i class="fa-solid fa-list-check me-1"></i> Critérios de Avaliação (Clique para marcar)</span>
-            <div class="criterios-grid-2col" id="criteriosGrid">
-              <!-- Renderizado via JS para ficar em 2 colunas -->
+          <!-- Coluna Direita: Conclusão, Textos e Encaminhamentos -->
+          <div class="col-md-6 d-flex flex-column gap-3">
+            <div class="eval-card bg-warning bg-opacity-10 border-warning p-2">
+              <span class="eval-title text-dark fw-bold mb-2 d-block m-0"><i class="fa-solid fa-award me-1"></i> Conclusão Geral (Automática)</span>
+              <div class="d-flex flex-wrap gap-2" id="conclusaoGroup">
+               <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="ÓTIMO(A)" onclick="setConclusao('ÓTIMO(A)', this)">🟢 ÓTIMO(A)</button>
+               <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="BOM/BOA" onclick="setConclusao('BOM/BOA', this)">🟢 BOM/BOA</button>
+               <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="PRECISA DE ATENÇÃO" onclick="setConclusao('PRECISA DE ATENÇÃO', this)">🔴 PRECISA DE ATENÇÃO</button>
+             </div>
             </div>
-          </div>
-          
-          <div class="eval-card flex-grow-1" style="padding: 6px 10px; min-height: 0;">
-            <span class="eval-title text-primary"><i class="fa-solid fa-school me-1"></i> Ações da Escola <span class="badge bg-primary ms-1" id="contadorEscola">0</span></span>
-            <div id="listaEncEscola" class="chk-grid"></div>
-          </div>
-        </div>
 
-        <!-- COLUNA DIREITA (45%) -->
-        <div class="ds-col-right">
-          <div class="eval-card" style="padding: 6px 10px; background: #fffbeb; border-color: #fcd34d;">
-            <span class="eval-title text-dark"><i class="fa-solid fa-award me-1"></i> Conclusão Geral (Automática aos 10 itens)</span>
-            <div class="d-flex gap-2" id="conclusaoGroup">
-              <button class="seg-option flex-grow-1 py-1 fw-bold text-center" data-conc="ÓTIMO(A)" onclick="setConclusao('ÓTIMO(A)', this)">🟢 ÓTIMO</button>
-              <button class="seg-option flex-grow-1 py-1 fw-bold text-center" data-conc="BOM/BOA" onclick="setConclusao('BOM/BOA', this)">🟢 BOM</button>
-              <button class="seg-option flex-grow-1 py-1 fw-bold text-center" data-conc="PRECISA DE ATENÇÃO" onclick="setConclusao('PRECISA DE ATENÇÃO', this)">🔴 ATENÇÃO</button>
+            <div class="eval-card p-2 flex-grow-1 border-primary">
+              <span class="eval-title text-primary fw-bold mb-1 d-block m-0"><i class="fa-solid fa-robot me-1"></i> Parecer Descritivo</span>
+              <textarea id="obsAlunoAtivo" class="input-mestra border-0 bg-light p-2 h-100" style="resize: none; font-size: 0.8rem;" placeholder="Marque os 10 itens para gerar o texto..."></textarea>
             </div>
-          </div>
+            
+            <div class="eval-card border-secondary bg-light p-2">
+              <span class="eval-title text-dark fw-bold d-block m-0"><i class="fa-solid fa-puzzle-piece me-1"></i> Outros Motivos / Situações Complementares</span>
+              <input type="text" id="txtOutrasSituacoes" class="input-mestra mt-1 bg-white py-1" style="font-size: 0.8rem;" placeholder="Ex: Sala de Recursos, Problema Familiar, AEE...">
+            </div>
 
-          <div class="eval-card flex-grow-1" style="padding: 6px 10px; min-height: 0;">
-            <span class="eval-title text-primary"><i class="fa-solid fa-robot me-1"></i> Parecer Descritivo</span>
-            <textarea id="obsAlunoAtivo" class="input-mestra border-0 bg-light p-2 w-100 h-100" style="resize: none; font-size: 0.75rem; border-radius: 6px;" placeholder="Marque os 10 itens para gerar o texto..."></textarea>
-          </div>
-
-          <div class="eval-card" style="padding: 6px 10px; background: #f8fafc; border-color: #cbd5e1;">
-            <span class="eval-title text-dark m-0"><i class="fa-solid fa-puzzle-piece me-1"></i> Outros Motivos / Situações Complementares</span>
-            <textarea id="txtOutrasSituacoes" class="input-mestra border bg-white mt-1" rows="1" style="font-size: 0.75rem; resize: none; padding: 4px 6px;" placeholder="Ex: Sala de Recursos, Problema Familiar, AEE..."></textarea>
-          </div>
-
-          <div class="eval-card flex-grow-1" style="padding: 6px 10px; min-height: 0;">
-            <span class="eval-title text-success"><i class="fa-solid fa-house-chimney me-1"></i> Para a Família <span class="badge bg-success ms-1" id="contadorFamilia">0</span></span>
-            <div id="listaEncFamilia" class="chk-grid"></div>
+            <div class="eval-card bg-light border p-2">
+                <div class="row">
+                    <div class="col-6">
+                        <span class="eval-title text-primary m-0"><i class="fa-solid fa-school me-1"></i> Ações da Escola <span class="badge bg-primary ms-1" id="contadorEscola">0</span></span>
+                        <div id="listaEncEscola" class="chk-grid mt-2"></div>
+                    </div>
+                    <div class="col-6" style="border-left: 1px solid #cbd5e1;">
+                        <span class="eval-title text-success m-0"><i class="fa-solid fa-house-chimney me-1"></i> Para a Família <span class="badge bg-success ms-1" id="contadorFamilia">0</span></span>
+                        <div id="listaEncFamilia" class="chk-grid mt-2"></div>
+                    </div>
+                </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
  
     <!-- ABA 6: BANCO DE REGISTROS -->
     <section id="tab-banco" class="view-panel admin-only">
@@ -435,7 +422,7 @@
     var turmaAtivaSessao = ""; var alunoAtivoSessao = null; var timerInterval = null; var segundosRestantes = 180; var perfilLogado = ""; 
  
     var criteriosDetalhados = [
-      { nome: "Convivência e Comportamento", chave: "convivencia", opcoes: [{ texto: "🟢 Convive bem com todos", escola: [], familia: [] }, { texto: "🟡 Às vezes precisa de orientação", escola: ["Orientar o estudante individualmente."], familia: ["Fortalecer hábitos de estudos em casa."] }, { texto: "🔴 Tem dificuldade de convivência", escola: ["Reforçar os combinados da turma."], familia: ["Fortalecer hábitos de estudos em casa."] }]},
+      { nome: "Convivência", chave: "convivencia", opcoes: [{ texto: "🟢 Convive bem com todos", escola: [], familia: [] }, { texto: "🟡 Às vezes precisa de orientação", escola: ["Orientar o estudante individualmente."], familia: ["Fortalecer hábitos de estudos em casa."] }, { texto: "🔴 Tem dificuldade de convivência", escola: ["Reforçar os combinados da turma."], familia: ["Fortalecer hábitos de estudos em casa."] }]},
       { nome: "Atenção", chave: "atencao", opcoes: [{ texto: "🟢 Mantém a atenção", escola: [], familia: [] }, { texto: "🟡 Às vezes se distrai", escola: ["Criar oportunidades de participação."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, { texto: "🔴 Distrai-se com frequência", escola: ["Organizar o mapeamento na sala."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }]},
       { nome: "Conversa", chave: "conversa", opcoes: [{ texto: "🟢 Não atrapalha as aulas", escola: [], familia: [] }, { texto: "🟡 Às vezes atrapalha", escola: ["Reforçar os combinados da turma."], familia: [] }, { texto: "🔴 Atrapalha as aulas com frequência", escola: ["Reforçar os combinados da turma."], familia: ["Agendar reunião com a família para acompanhamento."] }]},
       { nome: "Interesse", chave: "interesse", opcoes: [{ texto: "🟢 Demonstra interesse", escola: [], familia: [] }, { texto: "🟡 Demonstra interesse às vezes", escola: ["Propor atividades diferenciadas."], familia: ["Incentivar a leitura em casa."] }, { texto: "🔴 Demonstra pouco interesse", escola: ["Propor atividades diferenciadas."], familia: ["Incentivar a leitura em casa."] }]},
@@ -447,8 +434,8 @@
       { nome: "Frequência", chave: "frequencia", opcoes: [{ texto: "🟢 Comparece regularmente", escola: [], familia: [] }, { texto: "🟡 Tem algumas faltas", escola: ["Acompanhar a frequência escolar."], familia: ["Não deixar o filho faltar sem justificativa."] }, { texto: "🔴 Tem muitas faltas", escola: ["Acompanhar a frequência escolar.", "Agendar reunião com a família para acompanhamento."], familia: ["Não deixar o filho faltar sem justificativa."] }]}
     ];
  
-    var encEscolaOpcoes = ["Reforçar os combinados da turma.", "Orientar o estudante individualmente.", "Reforçar positivamente os avanços.", "Propor atividades de reforço.", "Realizar agrupamentos temporários.", "Propor atividades diferenciadas.", "Organizar o mapeamento na sala.", "Valorizar as contribuições do estudante.", "Solicitar a presença da família.", "Criar oportunidades de participação.", "Orientar sobre rotina de estudos.", "Orientar o estudante sobre planejamento e organização.", "Acompanhar a frequência escolar.", "Orientar sobre a importância da assiduidade.", "Comunicar a família sobre as faltas.", "Monitorar a frequência do estudante.", "Agendar reunião com a família para acompanhamento."];
-    var encFamiliaOpcoes = ["Acompanhar a organização dos materiais.", "Estabelecer rotina para realização das tarefas de casa.", "Não deixar o filho faltar sem justificativa.", "Acompanhar os cadernos do filho.", "Visitar a escola de vez em quando.", "Fortalecer hábitos de estudos em casa.", "Incentivar a leitura em casa.", "Verificar sempre o uniforme escolar."];
+    var encEscolaOpcoes = ["Reforçar combinados.", "Orientar individualmente.", "Propor reforço.", "Realizar agrupamentos.", "Propor atividades dif.", "Mapeamento na sala.", "Valorizar estudante.", "Criar participação.", "Orientar planejamento.", "Acompanhar faltas.", "Agendar família."];
+    var encFamiliaOpcoes = ["Acompanhar cadernos.", "Rotina de tarefas.", "Não faltar sem aviso.", "Acompanhar material.", "Visitar a escola.", "Hábitos de estudos.", "Incentivar leitura.", "Verificar uniforme."];
  
     // ===============================================================
     // COMUNICAÇÃO TOTAL COM O GOOGLE SHEETS
@@ -456,13 +443,6 @@
     function chamarApiGoogle(funcao, dados = null, callback) {
       fetch(URL_API_GOOGLE, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ funcao: funcao, dados: dados }) })
       .then(res => res.json()).then(data => { if(callback) callback(data); }).catch(e => console.error("Erro na conexão:", e));
-    }
-
-    function forcarSincronizacaoNuvem() {
-      if(perfilLogado !== 'admin') return;
-      var anoAtual = document.getElementById('globalAno') ? document.getElementById('globalAno').value : '2026';
-      var dadosGerais = { funcao: 'backupGeralLocal', dados: { ano: anoAtual, banco_registros: JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'), lotacao: JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]') } };
-      fetch(URL_API_GOOGLE, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(dadosGerais) }).catch(e => console.log('Sincronização em background.'));
     }
 
     // ===============================================================
@@ -528,7 +508,7 @@
       if(!turma) { alert("Selecione a turma."); return; } if(!texto) { alert("Cole a lista."); return; }
       var nomes = texto.split('\n').filter(n => n.trim() !== ""); 
       var alunos = nomes.map((nome, index) => { return { numero: index + 1, nome: nome.trim().toUpperCase(), aee: false, pdi: "Não", sigla: "" }; });
-      localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos)); document.getElementById('txtListaEstudantes').value = ''; carregarEstudantesParaEdicao(); atualizarTagsTurmasSalvas(); forcarSincronizacaoNuvem(); 
+      localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos)); document.getElementById('txtListaEstudantes').value = ''; carregarEstudantesParaEdicao(); atualizarTagsTurmasSalvas();
     }
  
     function carregarEstudantesParaEdicao() {
@@ -714,7 +694,7 @@
     }
  
     // ===============================================================
-    // ABA DATASHOW / REUNIÃO (FULLSCREEN, SEM SCROLLBAR)
+    // ABA DATASHOW / REUNIÃO (REGISTRO TOTAL)
     // ===============================================================
     function iniciarCronometro() {
      if(timerInterval) clearInterval(timerInterval); segundosRestantes = 180;
@@ -725,7 +705,7 @@
     
     function abrirAvaliacaoAluno(nomeAluno) {
       alunoAtivoSessao = nomeAluno; document.getElementById('nomeAlunoDisplay').innerText = nomeAluno; document.getElementById('lblTurmaTop').innerText = "Turma " + turmaAtivaSessao;
-     document.getElementById('seletorDatashow').style.display = 'none'; document.getElementById('painelAvaliacaoEstudante').style.display = 'flex'; iniciarCronometro();
+     document.getElementById('seletorDatashow').style.display = 'none'; document.getElementById('painelAvaliacaoEstudante').style.display = 'block'; iniciarCronometro();
       
       var baseAlunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turmaAtivaSessao) || '[]'); var dadosA = baseAlunos.find(x => x.nome === nomeAluno) || {};
       var tagHtml = (dadosA.aee ? '<span class="tag-aee shadow-sm">AEE</span>' : '') + (dadosA.pdi==='Sim' ? '<span class="tag-pdi bg-success text-white border-success shadow-sm">PDI: Sim</span>' : (dadosA.pdi==='Não' && dadosA.aee ? '<span class="tag-pdi shadow-sm">Sem PDI</span>' : '')) + (dadosA.sigla ? '<span class="tag-sigla shadow-sm">'+dadosA.sigla+'</span>' : '');
@@ -746,6 +726,7 @@
        document.getElementById('obsAlunoAtivo').value = dados.observacoes || ''; document.getElementById('txtOutrasSituacoes').value = dados.outrasSituacoes || '';
        document.getElementById('contadorEscola').innerText = document.querySelectorAll('.chk-escola:checked').length; document.getElementById('contadorFamilia').innerText = document.querySelectorAll('.chk-familia:checked').length;
       } else { atualizarRoboESintese(true); }
+     window.scrollTo({ top: 0, behavior: 'smooth' });
     }
  
     function navegarEstudante(direcao) {
@@ -759,6 +740,7 @@
       var trim = document.getElementById('sessaoTrimestre').value; var encE = []; document.querySelectorAll('.chk-escola:checked').forEach(c => encE.push(c.value)); var encF = []; document.querySelectorAll('.chk-familia:checked').forEach(c => encF.push(c.value));
       var btnConc = document.querySelector('#conclusaoGroup .selected-green, #conclusaoGroup .selected-red');
       
+      // Captura o que o usuário marcou nos itens
       var critObj = {};
       criteriosDetalhados.forEach(c => { 
         var selBtn = document.querySelector('#crit_' + c.chave + ' .selected-green, #crit_' + c.chave + ' .selected-yellow, #crit_' + c.chave + ' .selected-red'); 
@@ -773,9 +755,10 @@
         observacoes: document.getElementById('obsAlunoAtivo').value 
       };
       
+      // Salva no Navegador
       var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); db[turmaAtivaSessao + '_' + alunoAtivoSessao.toUpperCase() + '_' + trim] = obj; localStorage.setItem('mestra_banco_registros', JSON.stringify(db));
       
-      // ENVIA PARA A PLANILHA OFICIAL EXPLICITAMENTE (NUVEM) - ISSO AQUI RESOLVE O ERRO DE NÃO SALVAR NO BANCO
+      // ENVIA PARA A PLANILHA OFICIAL EXPLICITAMENTE (NUVEM)
       var payloadPlanilha = {
         trimestre: trim, turma: turmaAtivaSessao, estudante: alunoAtivoSessao,
         disciplina: obj.criterios.convivencia || '', atencao: obj.criterios.atencao || '',
@@ -846,10 +829,11 @@
     }
  
     // ===============================================================
-    // IMPRESSÃO DE BILHETES A4 (LAYOUT EXATO DA IMAGEM)
+    // IMPRESSÃO DE BILHETES A4 (LAYOUT EXATO DA IMAGEM E COM QUEBRA DE TEXTO)
     // ===============================================================
     function imprimirBilhetesOficiais() {
-      var turma = document.getElementById('relTurmaSelect').value; var trimestre = document.getElementById('sessaoTrimestre').value;
+      var turma = document.getElementById('relTurmaSelect').value; 
+      var trimestre = document.getElementById('sessaoTrimestre').value;
       var anoAtual = document.getElementById('globalAno') ? document.getElementById('globalAno').value : '2026';
 
       if(!turma) { alert("Selecione a turma."); return; }
@@ -857,6 +841,7 @@
       var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
  
       var html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Comunicados ${turma}</title><style>
+        * { word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; } /* ISSO IMPEDE O TEXTO DE CORTAR */
         @page { size: A4 portrait; margin: 8mm; } body { font-family: 'Inter', Arial, sans-serif; margin: 0; background: #e2e8f0; color: #0f172a; } .bar { background: #0f172a; padding: 12px; text-align: center; position: sticky; top:0; z-index:100; }
         .pagina-a4 { width: 100%; max-width: 210mm; min-height: 277mm; margin: 0 auto 10mm auto; background: white; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 12mm; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .header-top { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 10px; }
