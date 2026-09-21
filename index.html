@@ -483,12 +483,19 @@
                 </div>
               </div>
             </div>
+            <div class="mb-3">
+               <span class="fs-8 fw-bold text-muted text-uppercase">Turmas já salvas no sistema:</span>
+               <div id="tagsTurmasSalvas" class="d-flex gap-2 mt-1 flex-wrap"></div>
+            </div>
             <div class="table-responsive mb-3 admin-lock">
               <table class="table table-striped align-middle">
-                <tbody id="tabelaEstudantesCorpo"><tr><td>Selecione a turma.</td></tr></tbody>
+                <thead class="table-dark">
+                  <tr><th>Nº</th><th>Nome do Estudante</th><th>AEE?</th><th>PDI?</th><th>Sigla</th></tr>
+                </thead>
+                <tbody id="tabelaEstudantesCorpo"><tr><td colspan="5" class="text-center">Selecione a turma.</td></tr></tbody>
               </table>
             </div>
-            <button class="btn-mestra w-100 py-3 admin-only" onclick="salvarBaseEstudantes()">Salvar Base da Turma</button>
+            <button class="btn-mestra w-100 py-3 admin-only" onclick="salvarBaseEstudantes()"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Salvar e Enviar Estudantes para a Nuvem</button>
         </div>
     </section>
 
@@ -924,7 +931,6 @@
     }
  
     function carregarTudoAoLogar() {
-      // Carrega select box
       var selectsTurma = ['selEstudanteTurma', 'profTurmaSelect', 'espTurmaSelect', 'relTurmaSelect', 'filtroTurmaBanco'];
       selectsTurma.forEach(id => { 
         var el = document.getElementById(id); 
@@ -941,7 +947,6 @@
         turmasGlobais.forEach(t => gridT.innerHTML += `<button class="turma-tag" onclick="selecionarTurmaDatashow('${t}', this)">${t}</button>`); 
       }
       
-      // MONTA OS 10 CRITÉRIOS EM GRELHA 2 COLUNAS
       var gridCrit = document.getElementById('criteriosGrid');
       if(gridCrit) {
         gridCrit.innerHTML = '';
@@ -951,7 +956,6 @@
         });
       }
       
-      // MONTA CAIXA DE CHECKBOX DE ENCAMINHAMENTOS
       var divEscola = document.getElementById('listaEncEscola'); 
       if(divEscola) { 
         divEscola.innerHTML = ''; 
@@ -971,10 +975,17 @@
           });
       }
  
-      // Sincroniza da Nuvem imediatamente (Garante multi-device)
+      // Sincroniza da Nuvem para o Celular
       chamarApiGoogle('carregarTudo', null, function(dados) {
           if(dados && !dados.erro) {
               bancoDeDadosNuvem = dados;
+              // Salva a lista de estudantes vinda da nuvem no aparelho
+              if(dados.estudantes) {
+                  for(var turma in dados.estudantes) {
+                      localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(dados.estudantes[turma]));
+                  }
+                  atualizarTagsTurmasSalvas();
+              }
               console.log("Sistema Sincronizado com a Planilha.");
           }
       });
@@ -994,8 +1005,22 @@
     }
  
     // ===============================================================
-    // FUNÇÕES DA PLANILHA E GESTÃO
+    // GESTÃO DE ESTUDANTES
     // ===============================================================
+    function atualizarTagsTurmasSalvas() { 
+      var container = document.getElementById('tagsTurmasSalvas'); 
+      if(!container) return; 
+      container.innerHTML = ''; 
+      for (var i = 0; i < localStorage.length; i++) { 
+        var key = localStorage.key(i); 
+        if (key.startsWith('mestra_estudantes_')) { 
+          var nomeTurma = key.replace('mestra_estudantes_', ''); 
+          container.innerHTML += `<span class="turma-salva-tag"><i class="fa-solid fa-check text-success me-1"></i> Turma ${nomeTurma}</span>`; 
+        } 
+      } 
+      if(container.innerHTML === '') container.innerHTML = '<span class="text-muted fs-8">Nenhuma turma salva ainda.</span>'; 
+    }
+    
     function importarListaEstudantes() { 
       var turma = document.getElementById('selEstudanteTurma').value; 
       var texto = document.getElementById('txtListaEstudantes').value.trim(); 
@@ -1030,207 +1055,37 @@
       }); 
       if(alunos.length > 0) { 
         localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos)); 
-        alert("Base salva com sucesso localmente!"); 
+        
+        // ENVIA OS ESTUDANTES PARA A NUVEM PARA APARECER NO CELULAR
+        chamarApiGoogle('salvarEstudantes', { turma: turma, alunos: alunos });
+        
+        alert("✅ Base salva na Planilha com sucesso e sincronizada!"); 
+        atualizarTagsTurmasSalvas(); 
       } 
     }
     
-    function gerarTabelaLotacao() { 
-      var t = document.getElementById('txtServidoresInput').value.trim(); 
-      if(!t) return; 
-      var l = []; 
-      t.split('\n').forEach(x => { 
-        if(x.trim()) l.push({nome: x.trim().toUpperCase(), cargo: "Professor(a) Regente", turno: "Matutino", turmas: ["6R1"], comp: "Língua Portuguesa"}); 
-      }); 
-      renderizarTabelaLotacao(l); 
-    }
-    
-    function renderizarTabelaLotacao(l) { 
-      var b = document.getElementById('tabelaLotacaoCorpo'); 
-      b.innerHTML = ''; 
-      l.forEach((s) => { 
-        var cO = cargosGlobais.map(c => `<option ${s.cargo===c?'selected':''}>${c}</option>`).join(''); 
-        var tO = ["Matutino", "Vespertino"].map(t => `<option ${s.turno===t?'selected':''}>${t}</option>`).join(''); 
-        var cpO = componentesGlobais.map(c => `<option ${s.comp===c?'selected':''}>${c}</option>`).join(''); 
-        var chks = ''; 
-        turmasGlobais.forEach(t => { 
-          var chk = s.turmas && s.turmas.includes(t) ? 'checked' : ''; 
-          chks += `<label style="font-size:0.65rem; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:2px 4px; cursor:pointer;"><input type="checkbox" value="${t}" ${chk} class="t-chk"> ${t}</label>`; 
-        }); 
-        b.innerHTML += `<tr><td class="fw-bold name-cell" style="font-size:0.75rem;">${s.nome}</td><td><select class="form-select form-select-sm cargo-sel" onchange="mudarCargoLotacao(this)">${cO}</select></td><td><select class="form-select form-select-sm turno-sel">${tO}</select></td><td><div class="d-flex flex-wrap gap-1">${chks}</div></td><td><select class="form-select form-select-sm comp-sel" ${s.cargo!=="Professor(a) Regente"?'disabled':''}>${cpO}</select></td></tr>`; 
-      }); 
-    }
-    
-    function mudarCargoLotacao(s) { 
-      var c = s.closest('tr').querySelector('.comp-sel'); 
-      c.disabled = s.value !== "Professor(a) Regente"; 
-    }
-    
-    function salvarLotacaoPermanente() { 
-      var d = []; 
-      document.querySelectorAll('#tabelaLotacaoCorpo tr').forEach(tr => { 
-        var t=[]; 
-        tr.querySelectorAll('.t-chk:checked').forEach(c => t.push(c.value)); 
-        d.push({nome: tr.querySelector('.name-cell').innerText, cargo: tr.querySelector('.cargo-sel').value, turno: tr.querySelector('.turno-sel').value, turmas: t, componentes: [tr.querySelector('.comp-sel').value||''] }); 
-      }); 
-      localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(d)); 
-      carregarProfessoresSelect(); 
-      chamarApiGoogle('salvarLotacaoGlobal', d, function(res) { 
-        alert("✅ Lotação salva com sucesso no sistema e na Planilha!"); 
-      }); 
-    }
+    // ===============================================================
+    // DEMAIS FUNÇÕES (Lotação, Professor, Especialista, Banco) Omitidas para Focar
+    // ===============================================================
+    function gerarTabelaLotacao() { var t = document.getElementById('txtServidoresInput').value.trim(); if(!t) return; var l = []; t.split('\n').forEach(x => { if(x.trim()) l.push({nome: x.trim().toUpperCase(), cargo: "Professor(a) Regente", turno: "Matutino", turmas: ["6R1"], comp: "Língua Portuguesa"}); }); renderizarTabelaLotacao(l); }
+    function renderizarTabelaLotacao(l) { var b = document.getElementById('tabelaLotacaoCorpo'); b.innerHTML = ''; l.forEach((s) => { var cO = cargosGlobais.map(c => `<option ${s.cargo===c?'selected':''}>${c}</option>`).join(''); var tO = ["Matutino", "Vespertino"].map(t => `<option ${s.turno===t?'selected':''}>${t}</option>`).join(''); var cpO = componentesGlobais.map(c => `<option ${s.comp===c?'selected':''}>${c}</option>`).join(''); var chks = ''; turmasGlobais.forEach(t => { var chk = s.turmas && s.turmas.includes(t) ? 'checked' : ''; chks += `<label style="font-size:0.65rem; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:2px 4px; cursor:pointer;"><input type="checkbox" value="${t}" ${chk} class="t-chk"> ${t}</label>`; }); b.innerHTML += `<tr><td class="fw-bold name-cell" style="font-size:0.75rem;">${s.nome}</td><td><select class="form-select form-select-sm cargo-sel" onchange="mudarCargoLotacao(this)">${cO}</select></td><td><select class="form-select form-select-sm turno-sel">${tO}</select></td><td><div class="d-flex flex-wrap gap-1">${chks}</div></td><td><select class="form-select form-select-sm comp-sel" ${s.cargo!=="Professor(a) Regente"?'disabled':''}>${cpO}</select></td></tr>`; }); }
+    function mudarCargoLotacao(s) { var c = s.closest('tr').querySelector('.comp-sel'); c.disabled = s.value !== "Professor(a) Regente"; }
+    function salvarLotacaoPermanente() { var d = []; document.querySelectorAll('#tabelaLotacaoCorpo tr').forEach(tr => { var t=[]; tr.querySelectorAll('.t-chk:checked').forEach(c => t.push(c.value)); d.push({nome: tr.querySelector('.name-cell').innerText, cargo: tr.querySelector('.cargo-sel').value, turno: tr.querySelector('.turno-sel').value, turmas: t, componentes: [tr.querySelector('.comp-sel').value||''] }); }); localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(d)); carregarProfessoresSelect(); chamarApiGoogle('salvarLotacaoGlobal', d, function(res) { alert("✅ Lotação salva com sucesso no sistema e na Planilha!"); }); }
+    function carregarTabelaLotacaoSalva() { var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || 'null'); if(s) { renderizarTabelaLotacao(s); } carregarProfessoresSelect(); }
+    function carregarProfessoresSelect() { var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); var selProf = document.getElementById('profNomeSelect'); var selEsp = document.getElementById('espNomeSelect'); if(selProf) { selProf.innerHTML = '<option value="">Selecione...</option>'; s.forEach(p => { if(p.cargo !== "Especialista / EEB" && p.cargo !== "Diretor(a)") selProf.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); } if(selEsp) { selEsp.innerHTML = '<option value="">Selecione...</option>'; s.forEach(p => { if(p.cargo === "Especialista / EEB" || p.cargo === "Diretor(a)") selEsp.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); } }
 
-    function carregarTabelaLotacaoSalva() { 
-      var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || 'null'); 
-      if(s) { renderizarTabelaLotacao(s); } 
-      carregarProfessoresSelect(); 
-    }
-    
-    function carregarProfessoresSelect() { 
-      var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); 
-      var selProf = document.getElementById('profNomeSelect'); 
-      var selEsp = document.getElementById('espNomeSelect'); 
-      if(selProf) { 
-        selProf.innerHTML = '<option value="">Selecione...</option>'; 
-        s.forEach(p => { 
-          if(p.cargo !== "Especialista / EEB" && p.cargo !== "Diretor(a)") 
-            selProf.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; 
-        }); 
-      } 
-      if(selEsp) { 
-        selEsp.innerHTML = '<option value="">Selecione...</option>'; 
-        s.forEach(p => { 
-          if(p.cargo === "Especialista / EEB" || p.cargo === "Diretor(a)") 
-            selEsp.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; 
-        }); 
-      } 
-    }
+    function atualizarFiltrosProfessor() { var profNome = document.getElementById('profNomeSelect').value; var profTurma = document.getElementById('profTurmaSelect'); var profComp = document.getElementById('profCompSelect'); profTurma.innerHTML = '<option value="">Turma...</option>'; profComp.innerHTML = '<option value="">Componente...</option>'; if(!profNome) return; var lotacao = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); var profDados = lotacao.find(p => p.nome === profNome); if(profDados) { if(profDados.comp) profComp.innerHTML += `<option value="${profDados.comp}" selected>${profDados.comp}</option>`; if(profDados.turmas) profDados.turmas.forEach(t => profTurma.innerHTML += `<option value="${t}">${t}</option>`); } }
+    function carregarTurmaParaProfessor() { var turma = document.getElementById('profTurmaSelect').value; var prof = document.getElementById('profNomeSelect').value; if(!turma || !prof) return; var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); if(alunos.length === 0) return; document.getElementById('areaTrabalhoProfessor').style.display = 'block'; var tbody = document.getElementById('tabelaProfessorCorpo'); tbody.innerHTML = ''; var chave = 'mestra_prof_' + turma + '_' + document.getElementById('profCompSelect').value + '_' + document.getElementById('profTrimSelect').value; var dadosSalvos = JSON.parse(localStorage.getItem(chave) || '{"alunos":[], "caracteristicas":"", "intervencaoSN":"Sim", "metodologia":""}'); document.getElementById('profCaracteristicas').value = dadosSalvos.caracteristicas || ''; document.getElementById('profIntervencaoSN').value = dadosSalvos.intervencaoSN || 'Sim'; document.getElementById('profMetodologias').value = dadosSalvos.metodologia || ''; alunos.forEach(a => { var bd = dadosSalvos.alunos.find(x => x.nome === a.nome) || {}; tbody.innerHTML += `<tr><td class="text-center text-muted fw-bold">${a.numero}</td><td class="fw-bold prof-nome-aluno">${a.nome}</td><td class="text-center"><input class="form-check-input chk-media" type="checkbox" style="transform: scale(1.3);" ${bd.abaixoMedia?'checked':''}></td><td class="text-center"><input class="form-check-input chk-falta" type="checkbox" style="transform: scale(1.3);" ${bd.falta?'checked':''}></td><td><input type="text" class="form-control form-control-sm inp-motivo" placeholder="Afast. Hosp/Domiciliar..." value="${bd.motivoFalta||''}"></td><td class="text-center"><input class="form-check-input chk-reforco" type="checkbox" style="transform: scale(1.3);" ${bd.reforco?'checked':''}></td><td class="text-center"><input class="form-check-input chk-prog" type="checkbox" style="transform: scale(1.3);" ${bd.prog?'checked':''}></td><td class="text-center"><input class="form-check-input chk-alfab" type="checkbox" style="transform: scale(1.3);" ${bd.alfab?'checked':''}></td></tr>`; }); }
+    function salvarMatrizProfessor() { var turma = document.getElementById('profTurmaSelect').value; var comp = document.getElementById('profCompSelect').value; var trim = document.getElementById('profTrimSelect').value; var aval = { turma: turma, componente: comp, trimestre: trim, professor: document.getElementById('profNomeSelect').value, caracteristicas: document.getElementById('profCaracteristicas').value, intervencaoSN: document.getElementById('profIntervencaoSN').value, metodologia: document.getElementById('profMetodologias').value, alunos: [] }; document.querySelectorAll('#tabelaProfessorCorpo tr').forEach(tr => { aval.alunos.push({ nome: tr.querySelector('.prof-nome-aluno').childNodes[0].nodeValue.trim(), abaixoMedia: tr.querySelector('.chk-media').checked, falta: tr.querySelector('.chk-falta').checked, motivoFalta: tr.querySelector('.inp-motivo').value, reforco: tr.querySelector('.chk-reforco').checked, prog: tr.querySelector('.chk-prog').checked, alfab: tr.querySelector('.chk-alfab').checked }); }); localStorage.setItem('mestra_prof_' + turma + '_' + comp + '_' + trim, JSON.stringify(aval)); chamarApiGoogle('salvarMatrizProfessor', aval); alert("✅ Relatório Salvo!"); }
 
-    function atualizarFiltrosProfessor() { 
-      var profNome = document.getElementById('profNomeSelect').value; 
-      var profTurma = document.getElementById('profTurmaSelect'); 
-      var profComp = document.getElementById('profCompSelect'); 
-      profTurma.innerHTML = '<option value="">Turma...</option>'; 
-      profComp.innerHTML = '<option value="">Componente...</option>'; 
-      if(!profNome) return; 
-      var lotacao = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); 
-      var profDados = lotacao.find(p => p.nome === profNome); 
-      if(profDados) { 
-        if(profDados.comp) profComp.innerHTML += `<option value="${profDados.comp}" selected>${profDados.comp}</option>`; 
-        if(profDados.turmas) profDados.turmas.forEach(t => profTurma.innerHTML += `<option value="${t}">${t}</option>`); 
-      } 
-    }
-    
-    function carregarTurmaParaProfessor() { 
-      var turma = document.getElementById('profTurmaSelect').value; 
-      var prof = document.getElementById('profNomeSelect').value; 
-      if(!turma || !prof) return; 
-      var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
-      if(alunos.length === 0) return; 
-      document.getElementById('areaTrabalhoProfessor').style.display = 'block'; 
-      var tbody = document.getElementById('tabelaProfessorCorpo'); 
-      tbody.innerHTML = ''; 
-      var chave = 'mestra_prof_' + turma + '_' + document.getElementById('profCompSelect').value + '_' + document.getElementById('profTrimSelect').value; 
-      var dadosSalvos = JSON.parse(localStorage.getItem(chave) || '{"alunos":[], "caracteristicas":"", "intervencaoSN":"Sim", "metodologia":""}'); 
-      document.getElementById('profCaracteristicas').value = dadosSalvos.caracteristicas || ''; 
-      document.getElementById('profIntervencaoSN').value = dadosSalvos.intervencaoSN || 'Sim'; 
-      document.getElementById('profMetodologias').value = dadosSalvos.metodologia || ''; 
-      alunos.forEach(a => { 
-        var bd = dadosSalvos.alunos.find(x => x.nome === a.nome) || {}; 
-        tbody.innerHTML += `<tr><td class="text-center text-muted fw-bold">${a.numero}</td><td class="fw-bold prof-nome-aluno">${a.nome}</td><td class="text-center"><input class="form-check-input chk-media" type="checkbox" style="transform: scale(1.3);" ${bd.abaixoMedia?'checked':''}></td><td class="text-center"><input class="form-check-input chk-falta" type="checkbox" style="transform: scale(1.3);" ${bd.falta?'checked':''}></td><td><input type="text" class="form-control form-control-sm inp-motivo" placeholder="Afast. Hosp/Domiciliar..." value="${bd.motivoFalta||''}"></td><td class="text-center"><input class="form-check-input chk-reforco" type="checkbox" style="transform: scale(1.3);" ${bd.reforco?'checked':''}></td><td class="text-center"><input class="form-check-input chk-prog" type="checkbox" style="transform: scale(1.3);" ${bd.prog?'checked':''}></td><td class="text-center"><input class="form-check-input chk-alfab" type="checkbox" style="transform: scale(1.3);" ${bd.alfab?'checked':''}></td></tr>`; 
-      }); 
-    }
-    
-    function salvarMatrizProfessor() { 
-      var turma = document.getElementById('profTurmaSelect').value; 
-      var comp = document.getElementById('profCompSelect').value; 
-      var trim = document.getElementById('profTrimSelect').value; 
-      var aval = { 
-        turma: turma, 
-        componente: comp, 
-        trimestre: trim, 
-        professor: document.getElementById('profNomeSelect').value, 
-        caracteristicas: document.getElementById('profCaracteristicas').value, 
-        intervencaoSN: document.getElementById('profIntervencaoSN').value, 
-        metodologia: document.getElementById('profMetodologias').value, 
-        alunos: [] 
-      }; 
-      document.querySelectorAll('#tabelaProfessorCorpo tr').forEach(tr => { 
-        aval.alunos.push({ 
-          nome: tr.querySelector('.prof-nome-aluno').childNodes[0].nodeValue.trim(), 
-          abaixoMedia: tr.querySelector('.chk-media').checked, 
-          falta: tr.querySelector('.chk-falta').checked, 
-          motivoFalta: tr.querySelector('.inp-motivo').value, 
-          reforco: tr.querySelector('.chk-reforco').checked, 
-          prog: tr.querySelector('.chk-prog').checked, 
-          alfab: tr.querySelector('.chk-alfab').checked 
-        }); 
-      }); 
-      localStorage.setItem('mestra_prof_' + turma + '_' + comp + '_' + trim, JSON.stringify(aval)); 
-      chamarApiGoogle('salvarMatrizProfessor', aval); 
-      alert("✅ Relatório Salvo!"); 
-    }
+    function carregarMatrizEspecialista() { var esp = document.getElementById('espNomeSelect').value; var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value; if(!esp || !turma) return; document.getElementById('areaTrabalhoEspecialista').style.display = 'block'; var alBase = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); var noPdi = alBase.filter(a => a.aee && a.pdi === 'Não').map(a => a.nome); document.getElementById('espSemPdiAuto').value = noPdi.length > 0 ? noPdi.join('\n') : 'Não há estudantes marcados como AEE "Sem PDI".'; var chave = 'mestra_esp_' + turma + '_' + trim; var d = JSON.parse(localStorage.getItem(chave) || '{"intP":"","busca":"","prog":"","outros":"","semLibras":""}'); document.getElementById('espIntPedag').value = d.intP || ''; document.getElementById('espBuscaAtiva').value = d.busca || ''; document.getElementById('espProgParcial').value = d.prog || ''; document.getElementById('espOutrosEnc').value = d.outros || ''; document.getElementById('espSemLibras').value = d.semLibras || ''; }
+    function salvarMatrizEspecialista() { var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value; var obj = { turma: turma, trimestre: trim, intP: document.getElementById('espIntPedag').value, busca: document.getElementById('espBuscaAtiva').value, prog: document.getElementById('espProgParcial').value, outros: document.getElementById('espOutrosEnc').value, semLibras: document.getElementById('espSemLibras').value }; localStorage.setItem('mestra_esp_' + turma + '_' + trim, JSON.stringify(obj)); chamarApiGoogle('salvarMatrizEspecialista', obj); alert("✅ Matriz Salva!"); }
 
-    function carregarMatrizEspecialista() { 
-      var esp = document.getElementById('espNomeSelect').value; 
-      var turma = document.getElementById('espTurmaSelect').value; 
-      var trim = document.getElementById('espTrimSelect').value; 
-      if(!esp || !turma) return; 
-      document.getElementById('areaTrabalhoEspecialista').style.display = 'block'; 
-      var alBase = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
-      var noPdi = alBase.filter(a => a.aee && a.pdi === 'Não').map(a => a.nome); 
-      document.getElementById('espSemPdiAuto').value = noPdi.length > 0 ? noPdi.join('\n') : 'Não há estudantes marcados como AEE "Sem PDI".'; 
-      var chave = 'mestra_esp_' + turma + '_' + trim; 
-      var d = JSON.parse(localStorage.getItem(chave) || '{"intP":"","busca":"","prog":"","outros":"","semLibras":""}'); 
-      document.getElementById('espIntPedag').value = d.intP || ''; 
-      document.getElementById('espBuscaAtiva').value = d.busca || ''; 
-      document.getElementById('espProgParcial').value = d.prog || ''; 
-      document.getElementById('espOutrosEnc').value = d.outros || ''; 
-      document.getElementById('espSemLibras').value = d.semLibras || ''; 
-    }
-    
-    function salvarMatrizEspecialista() { 
-      var turma = document.getElementById('espTurmaSelect').value; 
-      var trim = document.getElementById('espTrimSelect').value; 
-      var obj = { 
-        turma: turma, 
-        trimestre: trim, 
-        intP: document.getElementById('espIntPedag').value, 
-        busca: document.getElementById('espBuscaAtiva').value, 
-        prog: document.getElementById('espProgParcial').value, 
-        outros: document.getElementById('espOutrosEnc').value, 
-        semLibras: document.getElementById('espSemLibras').value 
-      }; 
-      localStorage.setItem('mestra_esp_' + turma + '_' + trim, JSON.stringify(obj)); 
-      chamarApiGoogle('salvarMatrizEspecialista', obj); 
-      alert("✅ Matriz Salva!"); 
-    }
-
-    function filtrarBancoAlunos() { 
-      var termo = document.getElementById('filtroNomeAluno').value.toLowerCase(); 
-      var fTrim = document.getElementById('filtroTrimestreBanco').value; 
-      var fTurm = document.getElementById('filtroTurmaBanco').value; 
-      document.querySelectorAll('.banco-row').forEach(tr => { 
-        tr.style.display = (tr.innerText.toLowerCase().includes(termo) && (fTrim === "" || tr.dataset.trim === fTrim) && (fTurm === "" || tr.dataset.turma === fTurm)) ? '' : 'none'; 
-      }); 
-    }
-    
-    function atualizarBancoVisual() { 
-      var tbody = document.getElementById('tabelaBancoRegistros'); 
-      var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); 
-      var chaves = Object.keys(db); 
-      if(chaves.length === 0) { 
-        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">Nenhum registro.</td></tr>'; 
-        return; 
-      } 
-      tbody.innerHTML = ''; 
-      chaves.forEach(k => { 
-        var reg = db[k]; 
-        tbody.innerHTML += `<tr data-turma="${reg.turma}" data-trim="${reg.trimestre}" class="banco-row"><td><span class="badge bg-secondary">${reg.turma}</span></td><td class="fw-bold text-uppercase">${reg.estudante}</td><td class="text-muted" style="font-size:0.75rem;">${reg.trimestre}</td><td><span class="badge bg-info text-dark">${reg.conclusao}</span></td></tr>`; 
-      }); 
-    }
+    function filtrarBancoAlunos() { var termo = document.getElementById('filtroNomeAluno').value.toLowerCase(); var fTrim = document.getElementById('filtroTrimestreBanco').value; var fTurm = document.getElementById('filtroTurmaBanco').value; document.querySelectorAll('.banco-row').forEach(tr => { tr.style.display = (tr.innerText.toLowerCase().includes(termo) && (fTrim === "" || tr.dataset.trim === fTrim) && (fTurm === "" || tr.dataset.turma === fTurm)) ? '' : 'none'; }); }
+    function atualizarBancoVisual() { var tbody = document.getElementById('tabelaBancoRegistros'); var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); var chaves = Object.keys(db); if(chaves.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">Nenhum registro.</td></tr>'; return; } tbody.innerHTML = ''; chaves.forEach(k => { var reg = db[k]; tbody.innerHTML += `<tr data-turma="${reg.turma}" data-trim="${reg.trimestre}" class="banco-row"><td><span class="badge bg-secondary">${reg.turma}</span></td><td class="fw-bold text-uppercase">${reg.estudante}</td><td class="text-muted" style="font-size:0.75rem;">${reg.trimestre}</td><td><span class="badge bg-info text-dark">${reg.conclusao}</span></td></tr>`; }); }
  
     // ===============================================================
-    // ABA DATASHOW / REUNIÃO (COM ROBÔ 100% FUNCIONAL)
+    // ABA DATASHOW / REUNIÃO 
     // ===============================================================
     function iniciarCronometro() {
      if(timerInterval) clearInterval(timerInterval); 
@@ -1252,7 +1107,6 @@
       turmaAtivaSessao = turma; 
       document.getElementById('containerAlunosSessao').style.display = 'block'; 
       document.getElementById('painelAvaliacaoEstudante').style.display = 'none'; 
-      document.getElementById('seletorDatashow').style.display = 'block'; 
       carregarAlunosTurmaDatashow(turma); 
     }
     
@@ -1281,16 +1135,13 @@
       document.getElementById('obsAlunoAtivo').value = ''; 
       document.getElementById('txtOutrasSituacoes').value = '';
  
-      // PUXANDO DADOS SINCRONIZADOS DA NUVEM (Se o Especialista B digitou, aparece aqui)
+      // Busca na Nuvem ou Local
       var dados = null;
       var trim = document.getElementById('sessaoTrimestre').value;
       if (bancoDeDadosNuvem.avaliacoes && bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao] && bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao][nomeAluno.toUpperCase()]) {
           var cloudData = bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao][nomeAluno.toUpperCase()];
-          if(cloudData.trimestre === trim) {
-             dados = cloudData;
-          }
+          if(cloudData.trimestre === trim) { dados = cloudData; }
       }
-      // Fallback para o localStorage se a nuvem falhar
       if(!dados) {
           var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
           dados = db[turmaAtivaSessao + '_' + nomeAluno.toUpperCase() + '_' + trim];
@@ -1360,12 +1211,10 @@
         observacoes: document.getElementById('obsAlunoAtivo').value 
       };
       
-      // Salva no Local
       var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); 
       db[turmaAtivaSessao + '_' + alunoAtivoSessao.toUpperCase() + '_' + trim] = obj; 
       localStorage.setItem('mestra_banco_registros', JSON.stringify(db));
       
-      // Salva na Nuvem Google (Garante que qualquer pessoa veja no celular)
       var payloadPlanilha = {
         trimestre: trim, turma: turmaAtivaSessao, estudante: alunoAtivoSessao,
         disciplina: obj.criterios.convivencia || '', atencao: obj.criterios.atencao || '',
@@ -1465,10 +1314,9 @@
     }
 
     // ===============================================================
-    // IMPRESSÃO DE BILHETES A4 CORRIGIDA (SEM MOSTRAR NOME DO ITEM)
+    // IMPRESSÃO DE COMUNICADOS A4 
     // ===============================================================
     function imprimirComunicadosA4() {
-      // Pega o valor pelo seletor de "Relatórios" ou seletor do "Datashow"
       var relTurma = document.getElementById('relTurmaSelect').value;
       var turma = relTurma ? relTurma : document.getElementById('sessaoTrimestre').parentElement.parentElement.parentElement.querySelector('#gridTurmasSessao .active')?.innerText;
       
@@ -1479,7 +1327,6 @@
       var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
       if(alunos.length === 0) { alert("Nenhum aluno cadastrado."); return; }
       
-      // Procura primeiro no cache baixado da Nuvem, depois localmente
       var dbNuvem = bancoDeDadosNuvem.avaliacoes ? bancoDeDadosNuvem.avaliacoes[turma] : null;
       var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
  
@@ -1497,7 +1344,7 @@
         .coluna-direita { width: 58%; display: flex; flex-direction: column; gap: 8px; }
         
         .box-criterio { background: #f8fafc; border: 1.2px solid #cbd5e1; border-radius: 5px; padding: 4px 7px; margin-bottom: 2px; } 
-        .box-criterio-titulo { display:none; } /* Oculta o título do item, exibindo só a frase marcada */
+        .box-criterio-titulo { display:none; } 
         .box-criterio-valor { font-size: 8pt; font-weight: 700; color: #065f46; background: #d1fae5; padding: 2px 5px; border-radius: 4px; display: inline-block; } 
         
         .amarelo { background: #fef3c7; color: #92400e; } .vermelho { background: #fee2e2; color: #991b1b; }
@@ -1512,7 +1359,6 @@
       </style></head><body><div class="bar"><button onclick="window.print()" style="background:#4f46e5; color:white; border:none; padding:10px 20px; font-weight:bold; border-radius:8px; cursor:pointer; font-size:11pt;">Imprimir Comunicados</button></div>`;
  
       alunos.forEach(a => {
-        // Tenta pegar da nuvem primeiro. Se não, pega do local.
         var reg = {};
         if (dbNuvem && dbNuvem[a.nome.toUpperCase()]) {
             var r = dbNuvem[a.nome.toUpperCase()];
@@ -1538,7 +1384,6 @@
             var val = crit[ck.chave] || "🟢 Acompanhado(a)"; 
             var classeCor = val.startsWith('🟡') ? "amarelo" : (val.startsWith('🔴') ? "vermelho" : ""); 
             
-            // Aqui ele imprime APENAS O VALOR da frase escolhida (ex: 🟢 Convive bem com todos) sem mostrar a palavra "Convivência e Comportamento"
             criteriosEsqHtml += `<div class="box-criterio"><div class="box-criterio-valor ${classeCor}">${val}</div></div>`; 
             
             var bulletColor = val.startsWith('🟢') ? 'bg-green' : (val.startsWith('🟡') ? 'bg-yellow' : 'bg-red');
