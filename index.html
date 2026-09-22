@@ -967,7 +967,6 @@
         });
       }
       
-      // AJUSTE CRÍTICO: Agora, ao clicar numa caixinha manualmente, ele SALVA NA HORA.
       var divEscola = document.getElementById('listaEncEscola'); 
       if(divEscola) { 
         divEscola.innerHTML = ''; 
@@ -977,7 +976,6 @@
       var divFamilia = document.getElementById('listaEncFamilia'); 
       if(divFamilia) { 
         divFamilia.innerHTML = ''; 
-        // Os botões da família já nascem marcados por padrão, e se alterar, salva na hora.
         encFamiliaOpcoes.forEach(frase => divFamilia.innerHTML += `<label class="chk-encaminhamento"><input type="checkbox" class="chk-familia" value="${frase}" onchange="atualizarRoboESintese(false); salvarDadosSilenciosamente();" checked> <span>${frase}</span></label>`); 
       }
       
@@ -1172,7 +1170,8 @@
           for(var key in dados.criterios) { 
             var grupoCrit = document.getElementById('crit_' + key); 
             if(grupoCrit) grupoCrit.querySelectorAll('button').forEach(bc => { 
-              if(bc.dataset.value === dados.criterios[key]) aplicarEstiloBotao(bc, dados.criterios[key]); 
+              // VERIFICAÇÃO CIRÚRGICA: Leitura através do innerText
+              if(bc.innerText.trim() === dados.criterios[key].trim()) aplicarEstiloBotao(bc, dados.criterios[key]); 
             }); 
           }
         }
@@ -1208,7 +1207,6 @@
       autoExpand(document.getElementById('txtOutrasSituacoes'));
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
-      // Tira uma foto e salva assim que a tela abre, garantindo a impressão instantânea
       salvarDadosSilenciosamente();
     }
  
