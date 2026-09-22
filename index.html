@@ -967,17 +967,18 @@
         });
       }
       
+      // AJUSTE CRÍTICO: Agora, ao clicar numa caixinha manualmente, ele SALVA NA HORA.
       var divEscola = document.getElementById('listaEncEscola'); 
       if(divEscola) { 
         divEscola.innerHTML = ''; 
-        encEscolaOpcoes.forEach(frase => divEscola.innerHTML += `<label class="chk-encaminhamento"><input type="checkbox" class="chk-escola" value="${frase}" onchange="atualizarRoboESintese(false)"> <span>${frase}</span></label>`); 
+        encEscolaOpcoes.forEach(frase => divEscola.innerHTML += `<label class="chk-encaminhamento"><input type="checkbox" class="chk-escola" value="${frase}" onchange="atualizarRoboESintese(false); salvarDadosSilenciosamente();"> <span>${frase}</span></label>`); 
       }
       
       var divFamilia = document.getElementById('listaEncFamilia'); 
       if(divFamilia) { 
         divFamilia.innerHTML = ''; 
-        // Os botões da família já nascem marcados por padrão aqui (checked)
-        encFamiliaOpcoes.forEach(frase => divFamilia.innerHTML += `<label class="chk-encaminhamento"><input type="checkbox" class="chk-familia" value="${frase}" onchange="atualizarRoboESintese(false)" checked> <span>${frase}</span></label>`); 
+        // Os botões da família já nascem marcados por padrão, e se alterar, salva na hora.
+        encFamiliaOpcoes.forEach(frase => divFamilia.innerHTML += `<label class="chk-encaminhamento"><input type="checkbox" class="chk-familia" value="${frase}" onchange="atualizarRoboESintese(false); salvarDadosSilenciosamente();" checked> <span>${frase}</span></label>`); 
       }
       
       var painelFrases = document.getElementById('frasesRapidasPainel');
@@ -1013,10 +1014,9 @@
         txt.value = texto; 
       }
       autoExpand(txt);
-      salvarDadosSilenciosamente(); // Garante o salvamento imediato ao clicar
+      salvarDadosSilenciosamente(); 
     }
  
-    // GESTÃO DE ESTUDANTES
     function atualizarTagsTurmasSalvas() { 
       var container = document.getElementById('tagsTurmasSalvas'); 
       if(!container) return; 
@@ -1088,7 +1088,7 @@
     function atualizarBancoVisual() { var tbody = document.getElementById('tabelaBancoRegistros'); var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); var chaves = Object.keys(db); if(chaves.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">Nenhum registro.</td></tr>'; return; } tbody.innerHTML = ''; chaves.forEach(k => { var reg = db[k]; tbody.innerHTML += `<tr data-turma="${reg.turma}" data-trim="${reg.trimestre}" class="banco-row"><td><span class="badge bg-secondary">${reg.turma}</span></td><td class="fw-bold text-uppercase">${reg.estudante}</td><td class="text-muted" style="font-size:0.75rem;">${reg.trimestre}</td><td><span class="badge bg-info text-dark">${reg.conclusao}</span></td></tr>`; }); }
  
     // ===============================================================
-    // ABA DATASHOW / REUNIÃO (AGORA 100% PERSISTENTE E MEMÓRIA BLINDADA)
+    // ABA DATASHOW / REUNIÃO 
     // ===============================================================
     function iniciarCronometro() {
      if(timerInterval) clearInterval(timerInterval); 
@@ -1135,7 +1135,6 @@
  
       document.querySelectorAll('.seg-option').forEach(b => b.classList.remove('selected-green', 'selected-yellow', 'selected-red'));
       
-      // Limpa as opções da escola e FORÇA TODAS DA FAMÍLIA A COMEÇAREM MARCADAS
       document.querySelectorAll('.chk-escola').forEach(chk => chk.checked = false);
       document.querySelectorAll('.chk-familia').forEach(chk => chk.checked = true); 
       
@@ -1182,16 +1181,14 @@
           if(btnAlvo) setConclusao((dados.conclusao || dados.caracteristica), btnAlvo, false); 
         }
         
-        // Puxa as caixinhas salvas da escola
         var escArr = dados.encEscola || [];
         document.querySelectorAll('.chk-escola').forEach(chk => { 
             var cleanVal = chk.value.replace(/\.$/, '').trim();
             if(escArr.some(e => e.replace(/\.$/, '').trim() === cleanVal)) chk.checked = true; 
         });
         
-        // Se a família tem salvamento explícito, aplica. Senão, eles já estão marcados como true lá em cima.
         if (dados.encFamilia && dados.encFamilia.length > 0) {
-            document.querySelectorAll('.chk-familia').forEach(chk => chk.checked = false); // Limpa para puxar as escolhas do usuário
+            document.querySelectorAll('.chk-familia').forEach(chk => chk.checked = false); 
             var famArr = dados.encFamilia || [];
             document.querySelectorAll('.chk-familia').forEach(chk => { 
                 var cleanVal = chk.value.replace(/\.$/, '').trim();
@@ -1210,17 +1207,19 @@
       autoExpand(document.getElementById('obsAlunoAtivo')); 
       autoExpand(document.getElementById('txtOutrasSituacoes'));
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Tira uma foto e salva assim que a tela abre, garantindo a impressão instantânea
+      salvarDadosSilenciosamente();
     }
  
     function navegarEstudante(direcao) {
       if(!alunoAtivoSessao) return;
-      salvarDadosSilenciosamente(); // AGORA SALVA SEMPRE ANTES DE PULAR PARA O PRÓXIMO/ANTERIOR
+      salvarDadosSilenciosamente(); 
       var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turmaAtivaSessao) || '[]'); 
       var idx = alunos.findIndex(a => a.nome === alunoAtivoSessao);
       if(idx + direcao >= 0 && idx + direcao < alunos.length) abrirAvaliacaoAluno(alunos[idx + direcao].nome);
     }
  
-    // AGORA ESTA FUNÇÃO RODA SEMPRE QUE VOCÊ CLICAR EM VOLTAR, PRÓXIMO, GRAVAR TUDO OU FECHAR
     function salvarDadosSilenciosamente() {
       var trim = document.getElementById('sessaoTrimestre').value; 
       var encE = []; document.querySelectorAll('.chk-escola:checked').forEach(c => encE.push(c.value)); 
@@ -1245,12 +1244,10 @@
         observacoes: document.getElementById('obsAlunoAtivo').value 
       };
       
-      // Salva no Local para visualização imediata se você voltar a tela
       var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); 
       db[turmaAtivaSessao + '_' + alunoAtivoSessao.toUpperCase() + '_' + trim] = obj; 
       localStorage.setItem('mestra_banco_registros', JSON.stringify(db));
 
-      // Atualiza o cache da Nuvem no seu aparelho para manter a sincronização perfeita
       if (!bancoDeDadosNuvem.avaliacoes) bancoDeDadosNuvem.avaliacoes = {};
       if (!bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao]) bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao] = {};
       bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao][alunoAtivoSessao.toUpperCase()] = {
@@ -1262,7 +1259,6 @@
           acoes_escola: encE.join('; '), acoes_familia: encF.join('; ')
       };
       
-      // Envia para o Banco do Google
       var payloadPlanilha = {
         trimestre: trim, turma: turmaAtivaSessao, estudante: alunoAtivoSessao,
         disciplina: obj.criterios.convivencia || '', atencao: obj.criterios.atencao || '',
@@ -1301,7 +1297,7 @@
         } 
       }
       atualizarRoboESintese(true);
-      salvarDadosSilenciosamente(); // Salva logo no momento em que você clica
+      salvarDadosSilenciosamente(); 
     }
     
     function aplicarEstiloBotao(btn, val) { 
@@ -1316,7 +1312,7 @@
       if(val === 'PRECISA DE ATENÇÃO') btn.classList.add('selected-red'); 
       else btn.classList.add('selected-green'); 
       if(autoRecalculate) atualizarRoboESintese(false); 
-      salvarDadosSilenciosamente(); // Salva na hora
+      salvarDadosSilenciosamente(); 
     }
  
     function atualizarRoboESintese(permitirCalculoAutomatico = true) {
@@ -1363,7 +1359,7 @@
     }
  
     function fecharAvaliacaoAluno() { 
-      salvarDadosSilenciosamente(); // Garante o salvamento antes de fechar a tela
+      salvarDadosSilenciosamente(); 
       document.getElementById('painelAvaliacaoEstudante').style.display = 'none'; 
       document.getElementById('seletorDatashow').style.display = 'block'; 
     }
@@ -1375,7 +1371,7 @@
     }
 
     // ===============================================================
-    // IMPRESSÃO DE COMUNICADOS A4 (INCLUINDO TODOS OS MARCADOS)
+    // IMPRESSÃO DE COMUNICADOS A4 
     // ===============================================================
     function imprimirComunicadosA4() {
       var relTurma = document.getElementById('relTurmaSelect').value;
@@ -1460,10 +1456,7 @@
         
         var concVal = reg.conclusao || "ÓTIMO(A)";
         
-        // IMPRESSÃO DE TUDO O QUE ESTÁ MARCADO (Automático + Manuais)
         var escolaHtml = (reg.encEscola && reg.encEscola.length > 0) ? '<ul style="margin:0; padding-left:14px; font-size:8pt; line-height:1.3;">' + reg.encEscola.map(e => `<li style="margin-bottom:2px;">${e.trim()}</li>`).join('') + '</ul>' : '<p style="font-size:8pt; margin:0; color:#64748b;">Nenhum.</p>';
-        
-        // Se a familia estiver em branco (por ex, aluno nunca aberto), imprime todos da família por padrão
         var famArrForPrint = (reg.encFamilia && reg.encFamilia.length > 0) ? reg.encFamilia : encFamiliaOpcoes;
         var familiaHtml = '<ul style="margin:0; padding-left:14px; font-size:8pt; line-height:1.3;">' + famArrForPrint.map(f => `<li style="margin-bottom:2px;">${f.trim()}</li>`).join('') + '</ul>';
  
