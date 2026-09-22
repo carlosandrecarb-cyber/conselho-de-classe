@@ -1141,6 +1141,7 @@
       } 
     }
 
+    // AJUSTE: AGORA LÊ TODOS OS COMPONENTES DO PROFESSOR (ARRAY)
     function atualizarFiltrosProfessor() { 
       var profNome = document.getElementById('profNomeSelect').value; 
       var profTurma = document.getElementById('profTurmaSelect'); 
@@ -1148,12 +1149,19 @@
       profTurma.innerHTML = '<option value="">Turma...</option>'; 
       profComp.innerHTML = '<option value="">Componente...</option>'; 
       if(!profNome) return; 
+      
       var lotacao = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); 
       var profDados = lotacao.find(p => p.nome === profNome); 
+      
       if(profDados) { 
-        var comps = profDados.componentes || (profDados.comp ? [profDados.comp] : []);
+        var comps = profDados.componentes || [];
+        if(comps.length === 0 && profDados.comp) comps.push(profDados.comp); // fallback
+        
         comps.forEach(c => profComp.innerHTML += `<option value="${c}">${c}</option>`);
-        if(profDados.turmas) profDados.turmas.forEach(t => profTurma.innerHTML += `<option value="${t}">${t}</option>`); 
+        
+        if(profDados.turmas) {
+            profDados.turmas.forEach(t => profTurma.innerHTML += `<option value="${t}">${t}</option>`); 
+        }
       } 
     }
     
