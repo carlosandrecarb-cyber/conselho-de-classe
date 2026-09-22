@@ -487,7 +487,6 @@
                <div id="tagsTurmasSalvas" class="d-flex gap-2 mt-1 flex-wrap"></div>
             </div>
 
-            <!-- LEGENDA DE SIGLAS ADICIONADA -->
             <div class="alert alert-secondary py-2 mb-3" style="font-size: 0.85rem; border: 1px solid #cbd5e1;">
                 <strong><i class="fa-solid fa-circle-info text-primary me-1"></i> LEGENDA DE SIGLAS (AEE/Inclusão):</strong><br>
                 <span class="badge bg-dark ms-1">CL</span> Com Laudo &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -495,7 +494,6 @@
                 <span class="badge bg-dark ms-1">CLA</span> Com Laudo em Andamento
             </div>
 
-            <!-- TABELA COM O CABEÇALHO PERFEITO -->
             <div class="table-responsive mb-3 admin-lock">
               <table class="table table-striped align-middle border">
                 <thead class="table-dark">
@@ -996,7 +994,6 @@
       chamarApiGoogle('carregarTudo', null, function(dados) {
           if(dados && !dados.erro) {
               bancoDeDadosNuvem = dados;
-              // Salva a lista de estudantes vinda da nuvem no aparelho
               if(dados.estudantes) {
                   for(var turma in dados.estudantes) {
                       localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(dados.estudantes[turma]));
@@ -1098,7 +1095,7 @@
     function atualizarBancoVisual() { var tbody = document.getElementById('tabelaBancoRegistros'); var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); var chaves = Object.keys(db); if(chaves.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">Nenhum registro.</td></tr>'; return; } tbody.innerHTML = ''; chaves.forEach(k => { var reg = db[k]; tbody.innerHTML += `<tr data-turma="${reg.turma}" data-trim="${reg.trimestre}" class="banco-row"><td><span class="badge bg-secondary">${reg.turma}</span></td><td class="fw-bold text-uppercase">${reg.estudante}</td><td class="text-muted" style="font-size:0.75rem;">${reg.trimestre}</td><td><span class="badge bg-info text-dark">${reg.conclusao}</span></td></tr>`; }); }
  
     // ===============================================================
-    // ABA DATASHOW / REUNIÃO (COM AUTO-SYNC DOS ENCAMINHAMENTOS)
+    // ABA DATASHOW / REUNIÃO (AGORA 100% PERSISTENTE)
     // ===============================================================
     function iniciarCronometro() {
      if(timerInterval) clearInterval(timerInterval); 
@@ -1144,19 +1141,39 @@
       document.getElementById('tagsAlunoDatashow').innerHTML = tagHtml;
  
       document.querySelectorAll('.seg-option').forEach(b => b.classList.remove('selected-green', 'selected-yellow', 'selected-red'));
-      document.querySelectorAll('.chk-escola, .chk-familia').forEach(chk => chk.checked = false);
+      
+      // AJUSTE 1: Limpa as opções da escola e MARCA TODAS AS DA FAMÍLIA automaticamente.
+      document.querySelectorAll('.chk-escola').forEach(chk => chk.checked = false);
+      document.querySelectorAll('.chk-familia').forEach(chk => chk.checked = true);
+      
       document.getElementById('obsAlunoAtivo').value = ''; 
       document.getElementById('txtOutrasSituacoes').value = '';
  
+      // AJUSTE 3: Lógica blindada para puxar os dados, preservando o estado local em navegação
       var dados = null;
       var trim = document.getElementById('sessaoTrimestre').value;
-      if (bancoDeDadosNuvem.avaliacoes && bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao] && bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao][nomeAluno.toUpperCase()]) {
+      var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
+      var keyLocal = turmaAtivaSessao + '_' + nomeAluno.toUpperCase() + '_' + trim;
+
+      if (dbLocal[keyLocal]) {
+          dados = dbLocal[keyLocal];
+      } else if (bancoDeDadosNuvem.avaliacoes && bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao] && bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao][nomeAluno.toUpperCase()]) {
           var cloudData = bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao][nomeAluno.toUpperCase()];
-          if(cloudData.trimestre === trim) { dados = cloudData; }
-      }
-      if(!dados) {
-          var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
-          dados = db[turmaAtivaSessao + '_' + nomeAluno.toUpperCase() + '_' + trim];
+          if(cloudData.trimestre === trim) {
+              dados = {
+                  criterios: {
+                      convivencia: cloudData.disciplina, atencao: cloudData.atencao, conversa: cloudData.conversa,
+                      interesse: cloudData.interesse, participacao: cloudData.participacao, aprendizagem: cloudData.aprendizagem,
+                      organizacao: cloudData.organizacao, ativ_sala: cloudData.atividades_sala, tarefas_casa: cloudData.tarefa_casa,
+                      frequencia: cloudData.presenca
+                  },
+                  conclusao: cloudData.caracteristica,
+                  observacoes: cloudData.observacoes,
+                  outrasSituacoes: cloudData.outras_situacoes || cloudData.motivo,
+                  encEscola: cloudData.acoes_escola ? cloudData.acoes_escola.split(';').map(x=>x.trim()) : [],
+                  encFamilia: cloudData.acoes_familia ? cloudData.acoes_familia.split(';').map(x=>x.trim()) : []
+              };
+          }
       }
       
       if(dados) {
@@ -1172,14 +1189,25 @@
           var btnAlvo = document.querySelector(`button[data-conc="${dados.conclusao || dados.caracteristica}"]`); 
           if(btnAlvo) setConclusao((dados.conclusao || dados.caracteristica), btnAlvo, false); 
         }
-        var escArr = dados.encEscola || (dados.acoes_escola ? dados.acoes_escola.split(';') : []);
-        if(escArr) document.querySelectorAll('.chk-escola').forEach(chk => { if(escArr.includes(chk.value.trim())) chk.checked = true; });
         
-        var famArr = dados.encFamilia || (dados.acoes_familia ? dados.acoes_familia.split(';') : []);
-        if(famArr) document.querySelectorAll('.chk-familia').forEach(chk => { if(famArr.includes(chk.value.trim())) chk.checked = true; });
+        // Puxa as caixinhas salvas (ignora pontuação final)
+        var escArr = dados.encEscola || [];
+        document.querySelectorAll('.chk-escola').forEach(chk => { 
+            var cleanVal = chk.value.replace(/\.$/, '').trim();
+            if(escArr.some(e => e.replace(/\.$/, '').trim() === cleanVal)) chk.checked = true; 
+        });
+        
+        if (dados.encFamilia) {
+            document.querySelectorAll('.chk-familia').forEach(chk => chk.checked = false); // Limpa para puxar as salvas
+            var famArr = dados.encFamilia || [];
+            document.querySelectorAll('.chk-familia').forEach(chk => { 
+                var cleanVal = chk.value.replace(/\.$/, '').trim();
+                if(famArr.some(e => e.replace(/\.$/, '').trim() === cleanVal)) chk.checked = true; 
+            });
+        }
         
         document.getElementById('obsAlunoAtivo').value = dados.observacoes || ''; 
-        document.getElementById('txtOutrasSituacoes').value = dados.outrasSituacoes || dados.outras_situacoes || '';
+        document.getElementById('txtOutrasSituacoes').value = dados.outrasSituacoes || '';
         document.getElementById('contadorEscola').innerText = document.querySelectorAll('.chk-escola:checked').length; 
         document.getElementById('contadorFamilia').innerText = document.querySelectorAll('.chk-familia:checked').length;
       } else { 
@@ -1223,10 +1251,24 @@
         observacoes: document.getElementById('obsAlunoAtivo').value 
       };
       
+      // Salva no Local 
       var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); 
       db[turmaAtivaSessao + '_' + alunoAtivoSessao.toUpperCase() + '_' + trim] = obj; 
       localStorage.setItem('mestra_banco_registros', JSON.stringify(db));
+
+      // Atualiza o Objeto da Nuvem que está no navegador (para evitar perda entre telas)
+      if (!bancoDeDadosNuvem.avaliacoes) bancoDeDadosNuvem.avaliacoes = {};
+      if (!bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao]) bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao] = {};
+      bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao][alunoAtivoSessao.toUpperCase()] = {
+          trimestre: trim,
+          disciplina: obj.criterios.convivencia, atencao: obj.criterios.atencao, conversa: obj.criterios.conversa,
+          interesse: obj.criterios.interesse, participacao: obj.criterios.participacao, aprendizagem: obj.criterios.aprendizagem,
+          organizacao: obj.criterios.organizacao, atividades_sala: obj.criterios.ativ_sala, tarefa_casa: obj.criterios.tarefas_casa, presenca: obj.criterios.frequencia,
+          caracteristica: obj.conclusao, observacoes: obj.observacoes, outras_situacoes: obj.outrasSituacoes,
+          acoes_escola: encE.join('; '), acoes_familia: encF.join('; ')
+      };
       
+      // Salva na Nuvem Google 
       var payloadPlanilha = {
         trimestre: trim, turma: turmaAtivaSessao, estudante: alunoAtivoSessao,
         disciplina: obj.criterios.convivencia || '', atencao: obj.criterios.atencao || '',
@@ -1240,7 +1282,6 @@
       chamarApiGoogle('salvarAvaliacao', payloadPlanilha);
     }
  
-    // FUNÇÃO REFINADA PARA SINCRONIZAR CAIXINHAS (Ignora pontos finais)
     function setCritVal(btn, chave, textoOpcao) {
       var grupo = btn.parentElement; 
       grupo.querySelectorAll('.seg-option').forEach(b => b.classList.remove('selected-green', 'selected-yellow', 'selected-red'));
@@ -1251,14 +1292,14 @@
       if(crit) { 
         var opt = crit.opcoes.find(o => o.texto === textoOpcao); 
         if(opt) { 
-          // Sincroniza Ações da Escola
+          // Sincroniza Ações da Escola (Ignorando Ponto Final para garantir funcionamento)
           if(opt.escola) {
               document.querySelectorAll('.chk-escola').forEach(chk => { 
-                  var valClean = chk.value.replace(/\.$/, '').trim(); // Tira o ponto final invisível se houver
+                  var valClean = chk.value.replace(/\.$/, '').trim();
                   if(opt.escola.some(e => e.replace(/\.$/, '').trim() === valClean)) chk.checked = true; 
               }); 
           }
-          // Sincroniza Ações da Família
+          // Sincroniza Ações da Família (Ignorando Ponto Final para garantir funcionamento)
           if(opt.familia) {
               document.querySelectorAll('.chk-familia').forEach(chk => { 
                   var valClean = chk.value.replace(/\.$/, '').trim();
@@ -1394,8 +1435,8 @@
                     ativ_sala: r.atividades_sala, tarefas_casa: r.tarefa_casa, frequencia: r.presenca
                 },
                 conclusao: r.caracteristica, observacoes: r.observacoes,
-                encEscola: r.acoes_escola ? r.acoes_escola.split(';') : [],
-                encFamilia: r.acoes_familia ? r.acoes_familia.split(';') : [],
+                encEscola: r.acoes_escola ? r.acoes_escola.split(';').filter(x => x.trim() !== '') : [],
+                encFamilia: r.acoes_familia ? r.acoes_familia.split(';').filter(x => x.trim() !== '') : [],
                 outrasSituacoes: r.outras_situacoes || r.motivo
             };
         } else {
@@ -1423,6 +1464,7 @@
         if(atencaoHtml === '') atencaoHtml = '<p style="font-size: 7.5pt; margin: 0; color:#64748b;">Nenhum ponto de atenção.</p>';
         
         var concVal = reg.conclusao || "ÓTIMO(A)";
+        // AJUSTE 2: Impressão Fiel de todas as caixinhas marcadas.
         var escolaHtml = (reg.encEscola && reg.encEscola.length > 0) ? '<ul style="margin:0; padding-left:14px; font-size:8pt; line-height:1.3;">' + reg.encEscola.map(e => `<li style="margin-bottom:2px;">${e.trim()}</li>`).join('') + '</ul>' : '<p style="font-size:8pt; margin:0; color:#64748b;">Nenhum.</p>';
         var familiaHtml = (reg.encFamilia && reg.encFamilia.length > 0) ? '<ul style="margin:0; padding-left:14px; font-size:8pt; line-height:1.3;">' + reg.encFamilia.map(f => `<li style="margin-bottom:2px;">${f.trim()}</li>`).join('') + '</ul>' : '<p style="font-size:8pt; margin:0; color:#64748b;">Nenhum.</p>';
  
