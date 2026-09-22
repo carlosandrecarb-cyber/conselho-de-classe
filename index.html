@@ -557,11 +557,11 @@
         </div>
     </section>
 
-    <!-- ABA 7: LOTAÇÃO -->
+    <!-- ABA 7: LOTAÇÃO COM MÚLTIPLOS COMPONENTES -->
     <section id="tab-equipe" class="view-panel admin-only">
         <div class="card-clean">
             <h4 class="fw-bold mb-3">Lotação</h4>
-            <textarea id="txtServidoresInput" class="input-mestra mb-2" placeholder="Nomes"></textarea>
+            <textarea id="txtServidoresInput" class="input-mestra mb-2" placeholder="Nomes (Um por linha)"></textarea>
             <button class="btn btn-success mb-3" onclick="gerarTabelaLotacao()">Gerar Tabela</button>
             <div class="table-responsive mb-3"><table class="table"><tbody id="tabelaLotacaoCorpo"></tbody></table></div>
             <button class="btn-mestra w-100 py-3" onclick="salvarLotacaoPermanente()">Salvar Lotação</button>
@@ -1069,14 +1069,94 @@
       } 
     }
     
-    function gerarTabelaLotacao() { var t = document.getElementById('txtServidoresInput').value.trim(); if(!t) return; var l = []; t.split('\n').forEach(x => { if(x.trim()) l.push({nome: x.trim().toUpperCase(), cargo: "Professor(a) Regente", turno: "Matutino", turmas: ["6R1"], comp: "Língua Portuguesa"}); }); renderizarTabelaLotacao(l); }
-    function renderizarTabelaLotacao(l) { var b = document.getElementById('tabelaLotacaoCorpo'); b.innerHTML = ''; l.forEach((s) => { var cO = cargosGlobais.map(c => `<option ${s.cargo===c?'selected':''}>${c}</option>`).join(''); var tO = ["Matutino", "Vespertino"].map(t => `<option ${s.turno===t?'selected':''}>${t}</option>`).join(''); var cpO = componentesGlobais.map(c => `<option ${s.comp===c?'selected':''}>${c}</option>`).join(''); var chks = ''; turmasGlobais.forEach(t => { var chk = s.turmas && s.turmas.includes(t) ? 'checked' : ''; chks += `<label style="font-size:0.65rem; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:2px 4px; cursor:pointer;"><input type="checkbox" value="${t}" ${chk} class="t-chk"> ${t}</label>`; }); b.innerHTML += `<tr><td class="fw-bold name-cell" style="font-size:0.75rem;">${s.nome}</td><td><select class="form-select form-select-sm cargo-sel" onchange="mudarCargoLotacao(this)">${cO}</select></td><td><select class="form-select form-select-sm turno-sel">${tO}</select></td><td><div class="d-flex flex-wrap gap-1">${chks}</div></td><td><select class="form-select form-select-sm comp-sel" ${s.cargo!=="Professor(a) Regente"?'disabled':''}>${cpO}</select></td></tr>`; }); }
-    function mudarCargoLotacao(s) { var c = s.closest('tr').querySelector('.comp-sel'); c.disabled = s.value !== "Professor(a) Regente"; }
-    function salvarLotacaoPermanente() { var d = []; document.querySelectorAll('#tabelaLotacaoCorpo tr').forEach(tr => { var t=[]; tr.querySelectorAll('.t-chk:checked').forEach(c => t.push(c.value)); d.push({nome: tr.querySelector('.name-cell').innerText, cargo: tr.querySelector('.cargo-sel').value, turno: tr.querySelector('.turno-sel').value, turmas: t, componentes: [tr.querySelector('.comp-sel').value||''] }); }); localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(d)); carregarProfessoresSelect(); chamarApiGoogle('salvarLotacaoGlobal', d, function(res) { alert("✅ Lotação salva com sucesso no sistema e na Planilha!"); }); }
-    function carregarTabelaLotacaoSalva() { var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || 'null'); if(s) { renderizarTabelaLotacao(s); } carregarProfessoresSelect(); }
-    function carregarProfessoresSelect() { var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); var selProf = document.getElementById('profNomeSelect'); var selEsp = document.getElementById('espNomeSelect'); if(selProf) { selProf.innerHTML = '<option value="">Selecione...</option>'; s.forEach(p => { if(p.cargo !== "Especialista / EEB" && p.cargo !== "Diretor(a)") selProf.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); } if(selEsp) { selEsp.innerHTML = '<option value="">Selecione...</option>'; s.forEach(p => { if(p.cargo === "Especialista / EEB" || p.cargo === "Diretor(a)") selEsp.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); } }
+    function gerarTabelaLotacao() { 
+      var t = document.getElementById('txtServidoresInput').value.trim(); 
+      if(!t) return; 
+      var l = []; 
+      t.split('\n').forEach(x => { 
+        if(x.trim()) l.push({nome: x.trim().toUpperCase(), cargo: "Professor(a) Regente", turno: "Matutino", turmas: ["6R1"], componentes: ["Língua Portuguesa"]}); 
+      }); 
+      renderizarTabelaLotacao(l); 
+    }
+    
+    function renderizarTabelaLotacao(l) { 
+      var b = document.getElementById('tabelaLotacaoCorpo'); 
+      b.innerHTML = ''; 
+      l.forEach((s) => { 
+        var cO = cargosGlobais.map(c => `<option ${s.cargo===c?'selected':''}>${c}</option>`).join(''); 
+        var tO = ["Matutino", "Vespertino", "Ambos"].map(t => `<option ${s.turno===t?'selected':''}>${t}</option>`).join(''); 
+        
+        var chks = ''; 
+        turmasGlobais.forEach(t => { 
+          var chk = s.turmas && s.turmas.includes(t) ? 'checked' : ''; 
+          chks += `<label style="font-size:0.65rem; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:2px 4px; cursor:pointer;"><input type="checkbox" value="${t}" ${chk} class="t-chk"> ${t}</label>`; 
+        }); 
+        
+        var cpChks = ''; 
+        var sComps = s.componentes || (s.comp ? [s.comp] : []);
+        componentesGlobais.forEach(c => { 
+           var chk = sComps.includes(c) ? 'checked' : ''; 
+           var dis = s.cargo !== "Professor(a) Regente" ? 'disabled' : ''; 
+           cpChks += `<label style="font-size:0.65rem; font-weight:700; background:#fef3c7; border:1px solid #fde68a; border-radius:4px; padding:2px 4px; cursor:pointer;"><input type="checkbox" value="${c}" ${chk} ${dis} class="cp-chk"> ${c}</label>`; 
+        });
 
-    function atualizarFiltrosProfessor() { var profNome = document.getElementById('profNomeSelect').value; var profTurma = document.getElementById('profTurmaSelect'); var profComp = document.getElementById('profCompSelect'); profTurma.innerHTML = '<option value="">Turma...</option>'; profComp.innerHTML = '<option value="">Componente...</option>'; if(!profNome) return; var lotacao = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); var profDados = lotacao.find(p => p.nome === profNome); if(profDados) { if(profDados.comp) profComp.innerHTML += `<option value="${profDados.comp}" selected>${profDados.comp}</option>`; if(profDados.turmas) profDados.turmas.forEach(t => profTurma.innerHTML += `<option value="${t}">${t}</option>`); } }
+        b.innerHTML += `<tr><td class="fw-bold name-cell" style="font-size:0.75rem;">${s.nome}</td><td><select class="form-select form-select-sm cargo-sel" onchange="mudarCargoLotacao(this)">${cO}</select></td><td><select class="form-select form-select-sm turno-sel">${tO}</select></td><td><div class="d-flex flex-wrap gap-1">${chks}</div></td><td><div class="d-flex flex-wrap gap-1 cp-container">${cpChks}</div></td></tr>`; 
+      }); 
+    }
+    
+    function mudarCargoLotacao(s) { 
+      var isRegente = s.value === "Professor(a) Regente";
+      s.closest('tr').querySelectorAll('.cp-chk').forEach(c => c.disabled = !isRegente); 
+    }
+    
+    function salvarLotacaoPermanente() { 
+      var d = []; 
+      document.querySelectorAll('#tabelaLotacaoCorpo tr').forEach(tr => { 
+        var t=[]; tr.querySelectorAll('.t-chk:checked').forEach(c => t.push(c.value)); 
+        var cp=[]; tr.querySelectorAll('.cp-chk:checked').forEach(c => cp.push(c.value)); 
+        d.push({nome: tr.querySelector('.name-cell').innerText, cargo: tr.querySelector('.cargo-sel').value, turno: tr.querySelector('.turno-sel').value, turmas: t, componentes: cp }); 
+      }); 
+      localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(d)); 
+      carregarProfessoresSelect(); 
+      chamarApiGoogle('salvarLotacaoGlobal', d, function(res) { alert("✅ Lotação salva com sucesso no sistema e na Planilha!"); }); 
+    }
+    
+    function carregarTabelaLotacaoSalva() { 
+      var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || 'null'); 
+      if(s) { renderizarTabelaLotacao(s); } 
+      carregarProfessoresSelect(); 
+    }
+    
+    function carregarProfessoresSelect() { 
+      var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); 
+      var selProf = document.getElementById('profNomeSelect'); 
+      var selEsp = document.getElementById('espNomeSelect'); 
+      if(selProf) { 
+        selProf.innerHTML = '<option value="">Selecione...</option>'; 
+        s.forEach(p => { if(p.cargo !== "Especialista / EEB" && p.cargo !== "Diretor(a)") selProf.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); 
+      } 
+      if(selEsp) { 
+        selEsp.innerHTML = '<option value="">Selecione...</option>'; 
+        s.forEach(p => { if(p.cargo === "Especialista / EEB" || p.cargo === "Diretor(a)") selEsp.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); 
+      } 
+    }
+
+    function atualizarFiltrosProfessor() { 
+      var profNome = document.getElementById('profNomeSelect').value; 
+      var profTurma = document.getElementById('profTurmaSelect'); 
+      var profComp = document.getElementById('profCompSelect'); 
+      profTurma.innerHTML = '<option value="">Turma...</option>'; 
+      profComp.innerHTML = '<option value="">Componente...</option>'; 
+      if(!profNome) return; 
+      var lotacao = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); 
+      var profDados = lotacao.find(p => p.nome === profNome); 
+      if(profDados) { 
+        var comps = profDados.componentes || (profDados.comp ? [profDados.comp] : []);
+        comps.forEach(c => profComp.innerHTML += `<option value="${c}">${c}</option>`);
+        if(profDados.turmas) profDados.turmas.forEach(t => profTurma.innerHTML += `<option value="${t}">${t}</option>`); 
+      } 
+    }
+    
     function carregarTurmaParaProfessor() { var turma = document.getElementById('profTurmaSelect').value; var prof = document.getElementById('profNomeSelect').value; if(!turma || !prof) return; var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); if(alunos.length === 0) return; document.getElementById('areaTrabalhoProfessor').style.display = 'block'; var tbody = document.getElementById('tabelaProfessorCorpo'); tbody.innerHTML = ''; var chave = 'mestra_prof_' + turma + '_' + document.getElementById('profCompSelect').value + '_' + document.getElementById('profTrimSelect').value; var dadosSalvos = JSON.parse(localStorage.getItem(chave) || '{"alunos":[], "caracteristicas":"", "intervencaoSN":"Sim", "metodologia":""}'); document.getElementById('profCaracteristicas').value = dadosSalvos.caracteristicas || ''; document.getElementById('profIntervencaoSN').value = dadosSalvos.intervencaoSN || 'Sim'; document.getElementById('profMetodologias').value = dadosSalvos.metodologia || ''; alunos.forEach(a => { var bd = dadosSalvos.alunos.find(x => x.nome === a.nome) || {}; tbody.innerHTML += `<tr><td class="text-center text-muted fw-bold">${a.numero}</td><td class="fw-bold prof-nome-aluno">${a.nome}</td><td class="text-center"><input class="form-check-input chk-media" type="checkbox" style="transform: scale(1.3);" ${bd.abaixoMedia?'checked':''}></td><td class="text-center"><input class="form-check-input chk-falta" type="checkbox" style="transform: scale(1.3);" ${bd.falta?'checked':''}></td><td><input type="text" class="form-control form-control-sm inp-motivo" placeholder="Afast. Hosp/Domiciliar..." value="${bd.motivoFalta||''}"></td><td class="text-center"><input class="form-check-input chk-reforco" type="checkbox" style="transform: scale(1.3);" ${bd.reforco?'checked':''}></td><td class="text-center"><input class="form-check-input chk-prog" type="checkbox" style="transform: scale(1.3);" ${bd.prog?'checked':''}></td><td class="text-center"><input class="form-check-input chk-alfab" type="checkbox" style="transform: scale(1.3);" ${bd.alfab?'checked':''}></td></tr>`; }); }
     function salvarMatrizProfessor() { var turma = document.getElementById('profTurmaSelect').value; var comp = document.getElementById('profCompSelect').value; var trim = document.getElementById('profTrimSelect').value; var aval = { turma: turma, componente: comp, trimestre: trim, professor: document.getElementById('profNomeSelect').value, caracteristicas: document.getElementById('profCaracteristicas').value, intervencaoSN: document.getElementById('profIntervencaoSN').value, metodologia: document.getElementById('profMetodologias').value, alunos: [] }; document.querySelectorAll('#tabelaProfessorCorpo tr').forEach(tr => { aval.alunos.push({ nome: tr.querySelector('.prof-nome-aluno').childNodes[0].nodeValue.trim(), abaixoMedia: tr.querySelector('.chk-media').checked, falta: tr.querySelector('.chk-falta').checked, motivoFalta: tr.querySelector('.inp-motivo').value, reforco: tr.querySelector('.chk-reforco').checked, prog: tr.querySelector('.chk-prog').checked, alfab: tr.querySelector('.chk-alfab').checked }); }); localStorage.setItem('mestra_prof_' + turma + '_' + comp + '_' + trim, JSON.stringify(aval)); chamarApiGoogle('salvarMatrizProfessor', aval); alert("✅ Relatório Salvo!"); }
 
@@ -1169,10 +1249,14 @@
         if(dados.criterios) {
           for(var key in dados.criterios) { 
             var grupoCrit = document.getElementById('crit_' + key); 
-            if(grupoCrit) grupoCrit.querySelectorAll('button').forEach(bc => { 
-              // VERIFICAÇÃO CIRÚRGICA: Leitura através do innerText
-              if(bc.innerText.trim() === dados.criterios[key].trim()) aplicarEstiloBotao(bc, dados.criterios[key]); 
-            }); 
+            if(grupoCrit) {
+                grupoCrit.querySelectorAll('.seg-option').forEach(bc => bc.classList.remove('selected-green', 'selected-yellow', 'selected-red'));
+                grupoCrit.querySelectorAll('.seg-option').forEach(bc => { 
+                    if(bc.innerText.trim() === dados.criterios[key].trim()) {
+                        aplicarEstiloBotao(bc, dados.criterios[key]); 
+                    }
+                }); 
+            }
           }
         }
         if(dados.conclusao || dados.caracteristica) { 
@@ -1227,7 +1311,7 @@
       var critObj = {};
       criteriosDetalhados.forEach(c => { 
         var selBtn = document.querySelector('#crit_' + c.chave + ' .selected-green, #crit_' + c.chave + ' .selected-yellow, #crit_' + c.chave + ' .selected-red'); 
-        critObj[c.chave] = selBtn ? selBtn.dataset.value : c.opcoes[0].texto; 
+        critObj[c.chave] = selBtn ? selBtn.innerText.trim() : c.opcoes[0].texto; 
       });
 
       var obj = { 
@@ -1320,7 +1404,7 @@
       criteriosDetalhados.forEach(c => { 
         var selBtn = document.querySelector('#crit_' + c.chave + ' .selected-green, #crit_' + c.chave + ' .selected-yellow, #crit_' + c.chave + ' .selected-red'); 
         if(selBtn) { 
-          var valRaw = selBtn.dataset.value; 
+          var valRaw = selBtn.innerText.trim(); 
           var textoLimpo = valRaw.replace(/[^\p{L}\p{N}\s,\.\-\(\)\/]/gu, '').trim().toLowerCase(); 
           if(valRaw.startsWith('🟢')) greens.push(c.nome + " (" + textoLimpo + ")"); 
           if(valRaw.startsWith('🟡')) yellows.push(c.nome + " (" + textoLimpo + ")"); 
