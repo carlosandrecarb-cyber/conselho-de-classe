@@ -156,7 +156,6 @@
       min-height: 70px; 
     }
  
-    /* CABEÇALHOS DE TABELAS CONGELADOS (STICKY) */
     .table-container-scroll {
       max-height: 420px; 
       overflow-y: auto; 
@@ -225,7 +224,6 @@
       gap: 6px; 
     }
     
-    /* DATASHOW LAYOUT */
     #painelAvaliacaoEstudante { 
       display: none; 
       padding-top: 0; 
@@ -291,59 +289,21 @@
       line-height: 1.2; 
     }
     
-    .seg-option.selected-green { 
-      background-color: #d1fae5 !important; 
-      border-color: #10b981 !important; 
-      color: #065f46 !important; 
-      font-weight: 700; 
-      box-shadow: inset 4px 0 0 #059669; 
-    }
-    .seg-option.selected-yellow { 
-      background-color: #fef3c7 !important; 
-      border-color: #f59e0b !important; 
-      color: #92400e !important; 
-      font-weight: 700; 
-      box-shadow: inset 4px 0 0 #d97706; 
-    }
-    .seg-option.selected-red { 
-      background-color: #fee2e2 !important; 
-      border-color: #ef4444 !important; 
-      color: #991b1b !important; 
-      font-weight: 700; 
-      box-shadow: inset 4px 0 0 #b91c1c; 
-    }
+    .seg-option.selected-green { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; font-weight: 700; box-shadow: inset 4px 0 0 #059669; }
+    .seg-option.selected-yellow { background-color: #fef3c7 !important; border-color: #f59e0b !important; color: #92400e !important; font-weight: 700; box-shadow: inset 4px 0 0 #d97706; }
+    .seg-option.selected-red { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; font-weight: 700; box-shadow: inset 4px 0 0 #b91c1c; }
     
-    .chk-grid { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      gap: 6px 12px; 
-      margin-top: 8px; 
-    }
-    .chk-encaminhamento { 
-      font-size: 0.75rem; 
-      font-weight: 600; 
-      cursor: pointer; 
-      display: flex; 
-      align-items: flex-start; 
-      gap: 6px; 
-      margin-bottom: 0; 
-      color: #334155; 
-      line-height: 1.3; 
-    }
-    .chk-encaminhamento input[type="checkbox"] { 
-      margin-top: 2px; 
-      transform: scale(1.1); 
-      flex-shrink: 0; 
-    }
+    .chk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin-top: 8px; }
+    .chk-encaminhamento { font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: flex-start; gap: 6px; margin-bottom: 0; color: #334155; line-height: 1.3; }
+    .chk-encaminhamento input[type="checkbox"] { margin-top: 2px; transform: scale(1.1); flex-shrink: 0; }
     
+    /* FRASES RÁPIDAS - SEM BARRA DE ROLAGEM, FLUIDAS */
     .frases-rapidas-container { 
       display: flex; 
       flex-wrap: wrap; 
       gap: 6px; 
       margin-top: 10px; 
-      max-height: 120px; 
-      overflow-y: auto; 
-      padding: 5px; 
+      padding: 8px; 
       border: 1px dashed var(--border-color); 
       border-radius: 6px; 
       background: #f8fafc; 
@@ -351,66 +311,71 @@
     .btn-frase { 
       background: white; 
       border: 1px solid var(--border-color); 
-      padding: 4px 8px; 
-      font-size: 0.7rem; 
-      border-radius: 4px; 
+      padding: 6px 10px; 
+      font-size: 0.75rem; 
+      border-radius: 20px; 
       cursor: pointer; 
-      text-align: left; 
+      text-align: center; 
       line-height: 1.2; 
       color: var(--text-main); 
+      font-weight: 600;
+      transition: 0.2s;
     }
-    .btn-frase:hover { 
-      background: #e0e7ff; 
-      border-color: #4f46e5; 
-      color: #4f46e5; 
-    }
+    .btn-frase:hover { background: #e0e7ff; border-color: #4f46e5; color: #4f46e5; }
 
-    .timer-box { 
-      background: #0f172a; 
-      color: #facc15; 
-      padding: 6px 14px; 
-      border-radius: 8px; 
-      font-weight: 800; 
-      font-size: 1.1rem; 
-      display: flex; 
-      align-items: center; 
-      gap: 8px; 
-    }
-    .tag-aee, .tag-pdi, .tag-sigla { 
-      font-size: 0.7rem; 
-      padding: 4px 8px; 
-      border-radius: 6px; 
-      font-weight: 900; 
-      margin-left: 8px; 
-    }
+    .timer-box { background: #0f172a; color: #facc15; padding: 6px 14px; border-radius: 8px; font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+    .tag-aee, .tag-pdi, .tag-sigla { font-size: 0.7rem; padding: 4px 8px; border-radius: 6px; font-weight: 900; margin-left: 8px; }
     .tag-aee { background: #e0e7ff; color: #4f46e5; border: 1px solid #4f46e5; }
     .tag-pdi { background: #fee2e2; color: #b91c1c; border: 1px solid #b91c1c; }
     .tag-sigla { background: #fef3c7; color: #b45309; border: 1px solid #b45309; }
 
-    /* RESPONSIVIDADE */
+    /* DASHBOARD BANCO DE DADOS (NOVOS ESTILOS) */
+    .dashboard-header { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+    .dash-card { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+    .dash-card .num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 5px; }
+    .dash-card .lbl { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+    .dash-card.green .num { color: #059669; }
+    .dash-card.yellow .num { color: #d97706; }
+    .dash-card.red .num { color: #dc2626; }
+    .dash-card.blue .num { color: #2563eb; }
+
+    .filtros-banco { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; justify-content: center; }
+    .btn-filtro { background: white; border: 1px solid var(--border-color); border-radius: 20px; padding: 6px 16px; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+    .btn-filtro:hover, .btn-filtro.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+    .aluno-card { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; position: relative; border-left: 6px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; }
+    .aluno-card.status-otimo { border-left-color: #10b981; }
+    .aluno-card.status-bom { border-left-color: #10b981; }
+    .aluno-card.status-atencao { border-left-color: #ef4444; }
+    .aluno-card .nome { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
+    .aluno-card .sit { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 10px; }
+    .aluno-card.status-otimo .sit, .aluno-card.status-bom .sit { background: #d1fae5; color: #065f46; }
+    .aluno-card.status-atencao .sit { background: #fee2e2; color: #991b1b; }
+    .aluno-card .tags-mini { display: flex; gap: 5px; margin-bottom: 15px; }
+    .aluno-card .btn-dossie { width: 100%; background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; padding: 8px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: 0.2s; }
+    .aluno-card .btn-dossie:hover { background: #e2e8f0; color: #0f172a; }
+
+    /* MODAL DOSSIÊ */
+    #modalDossie { position: fixed; inset: 0; background: rgba(15,23,42,0.85); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 20px; }
+    .modal-content-dossie { background: white; width: 100%; max-width: 800px; max-height: 90vh; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+    .modal-header-dossie { background: #f8fafc; padding: 15px 25px; border-bottom: 1px solid #cbd5e1; display: flex; justify-content: space-between; align-items: center; }
+    .modal-body-dossie { padding: 25px; overflow-y: auto; background: #f1f5f9; }
+    .btn-close-modal { background: none; border: none; font-size: 1.5rem; color: #64748b; cursor: pointer; }
+    .btn-close-modal:hover { color: #dc2626; }
+
     @media (max-width: 992px) {
         .ds-grid { grid-template-columns: 1fr; } 
         .criterios-grid-2col { grid-template-columns: 1fr; } 
         .chk-grid { grid-template-columns: 1fr; } 
         .topbar { flex-direction: column; align-items: center; }
-        .sticky-header-datashow { 
-          position: relative; 
-          margin: 0 0 15px 0; 
-          border-radius: 8px; 
-          z-index: 1; 
-          flex-direction: column; 
-          align-items: stretch; 
-        }
-        .sticky-header-datashow .d-flex { 
-          justify-content: space-between; 
-          width: 100%; 
-          margin-top: 10px; 
-        }
+        .sticky-header-datashow { position: relative; margin: 0 0 15px 0; border-radius: 8px; z-index: 1; flex-direction: column; align-items: stretch; }
+        .sticky-header-datashow .d-flex { justify-content: space-between; width: 100%; margin-top: 10px; }
         .btn-mestra, .btn-outline-dark { width: 100%; margin-bottom: 5px; }
         .timer-box { width: 100%; justify-content: center; margin-bottom: 10px; }
+        .dashboard-header { grid-template-columns: 1fr 1fr; }
     }
     
-    /* CONTROLE DE ACESSO */
     body.role-prof .admin-only { display: none !important; }
     body.role-prof .admin-lock { pointer-events: none !important; opacity: 0.6 !important; }
     .login-box { max-width: 450px; margin: 80px auto; }
@@ -418,6 +383,22 @@
 </head>
 <body class="role-prof">
  
+  <!-- MODAL DOSSIÊ DO ALUNO -->
+  <div id="modalDossie">
+    <div class="modal-content-dossie">
+      <div class="modal-header-dossie">
+        <div>
+          <h4 class="fw-bold m-0 text-primary" id="mdNome">NOME DO ALUNO</h4>
+          <span class="text-muted fw-bold" style="font-size: 0.85rem;" id="mdTurma">TURMA</span>
+        </div>
+        <button class="btn-close-modal" onclick="fecharDossie()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body-dossie" id="mdBody">
+        <!-- Preenchido via JS -->
+      </div>
+    </div>
+  </div>
+
   <div class="app-shell">
     
     <!-- TELA DE LOGIN -->
@@ -467,13 +448,11 @@
     <section id="tab-dashboard" class="view-panel">
       <div class="card-clean text-center py-5">
         <h3 class="fw-bold text-dark">Plataforma Inteligente de Governança Pedagógica</h3>
-        <p class="text-muted mx-auto mb-4" style="max-width: 600px;">Navegue pelos menus acima. Todos os dados são sincronizados em tempo real com a nuvem da escola.</p>
+        <p class="text-muted mx-auto mb-4" style="max-width: 600px;">Navegue pelos menus acima. Todos os dados são sincronizados localmente e na nuvem de forma imediata.</p>
         <div class="mt-4 admin-only">
           <label class="fw-bold text-primary">Controle Global de Ano Letivo:</label>
           <select id="globalAno" class="form-select w-25 mx-auto text-center fw-bold border-primary mt-2">
-            <option>2026</option>
-            <option>2027</option>
-            <option>2028</option>
+            <option>2026</option><option>2027</option><option>2028</option>
           </select>
         </div>
       </div>
@@ -489,7 +468,7 @@
                 <select id="selEstudanteTurma" class="form-select border-primary" onchange="carregarEstudantesParaEdicao()"></select>
               </div>
               <div class="col-md-9 admin-only">
-                <label class="form-label text-primary">Cole a lista (um por linha):</label>
+                <label class="form-label text-primary">Cole a lista (um por linha) - Novatos serão ADICIONADOS:</label>
                 <div class="input-group">
                   <textarea id="txtListaEstudantes" class="input-mestra" rows="1"></textarea>
                   <button class="btn btn-primary px-4" onclick="importarListaEstudantes()">Importar</button>
@@ -525,70 +504,14 @@
                 </tbody>
               </table>
             </div>
-            <button class="btn-mestra w-100 py-3 admin-only" onclick="salvarBaseEstudantes(this)"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Salvar e Enviar Estudantes para a Nuvem</button>
+            <button class="btn-mestra w-100 py-3 admin-only" onclick="salvarBaseEstudantes(this)"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Salvar Base de Estudantes</button>
         </div>
     </section>
 
-    <!-- ABA 3: PAINEL DO PROFESSOR -->
-    <section id="tab-professor" class="view-panel">
-        <div class="card-clean">
-            <h4 class="fw-bold mb-3">Módulo do Professor</h4>
-            <div class="row g-3 mb-3">
-                <div class="col-md-4"><label class="form-label">Seu Nome:</label><select id="profNomeSelect" class="form-select" onchange="atualizarFiltrosProfessor()"></select></div>
-                <div class="col-md-3"><label class="form-label">Componente:</label><select id="profCompSelect" class="form-select"></select></div>
-                <div class="col-md-3"><label class="form-label">Turma:</label><select id="profTurmaSelect" class="form-select"></select></div>
-                <div class="col-md-2"><label class="form-label">Trimestre:</label><select id="profTrimSelect" class="form-select"><option>1º Trimestre</option><option selected>2º Trimestre</option><option>3º Trimestre</option></select></div>
-            </div>
-            <button class="btn btn-primary mb-3" onclick="carregarTurmaParaProfessor()">Buscar Estudantes</button>
-            <div id="areaTrabalhoProfessor" style="display: none;">
-                <div class="table-responsive mb-3 table-container-scroll">
-                  <table class="table table-bordered m-0 align-middle">
-                    <thead>
-                      <tr>
-                         <th style="width: 5%;">Nº</th>
-                         <th style="width: 25%; text-align: left;">Nome do Estudante</th>
-                         <th style="background:#b91c1c;">Abaixo<br>Média</th>
-                         <th style="background:#b45309;">Infre-<br>quente</th>
-                         <th style="background:#b45309;">Motivo Afastamento</th>
-                         <th style="background:#0369a1;">Reforço<br>Escolar</th>
-                         <th style="background:#4338ca;">Prog.<br>Parcial</th>
-                         <th style="background:#475569;">Não<br>Alfab.</th>
-                      </tr>
-                    </thead>
-                    <tbody id="tabelaProfessorCorpo"></tbody>
-                  </table>
-                </div>
-                <textarea id="profCaracteristicas" class="input-mestra mb-2" placeholder="Características da turma"></textarea>
-                <select id="profIntervencaoSN" class="form-select mb-2"><option>Sim</option><option>Não</option></select>
-                <textarea id="profMetodologias" class="input-mestra mb-3" placeholder="Metodologias"></textarea>
-                <button class="btn btn-success w-100 py-3" onclick="salvarMatrizProfessor(this)">Gravar Minha Matriz</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- ABA 4: ESPECIALISTA -->
-    <section id="tab-especialista" class="view-panel admin-only">
-        <div class="card-clean">
-            <h4 class="fw-bold mb-3">Matriz Especialista</h4>
-            <div class="row g-3 mb-3">
-                <div class="col-md-4"><label>Especialista:</label><select id="espNomeSelect" class="form-select"></select></div>
-                <div class="col-md-4"><label>Turma:</label><select id="espTurmaSelect" class="form-select"></select></div>
-                <div class="col-md-4"><label>Trimestre:</label><select id="espTrimSelect" class="form-select"><option selected>2º Trimestre</option></select></div>
-            </div>
-            <button class="btn btn-primary mb-3" onclick="carregarMatrizEspecialista()">Carregar Turma</button>
-            <div id="areaTrabalhoEspecialista" style="display:none;">
-                <textarea id="espIntPedag" class="input-mestra mb-2" placeholder="Intervenção"></textarea>
-                <textarea id="espBuscaAtiva" class="input-mestra mb-2" placeholder="Busca Ativa"></textarea>
-                <textarea id="espProgParcial" class="input-mestra mb-2" placeholder="Progressões"></textarea>
-                <textarea id="espOutrosEnc" class="input-mestra mb-3" placeholder="Outros Encaminhamentos"></textarea>
-                <input type="text" id="espSemLibras" class="input-mestra mb-3" placeholder="Falta Libras">
-                <textarea id="espSemPdiAuto" class="input-mestra bg-light text-danger mb-3" readonly></textarea>
-                <button class="btn btn-success w-100 py-3" onclick="salvarMatrizEspecialista(this)">Gravar Matriz Especialista</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- ABA 7: LOTAÇÃO COM MÚLTIPLOS COMPONENTES -->
+    <!-- ABA 3 E 4, 7... OMITIDOS POR BREVIDADE, MAS MANTIDOS NA LÓGICA GERAL IGUAIS -->
+    <!-- (Para manter o foco no Banco, Datashow e Relatorios que foram as demandas) -->
+    
+    <!-- ABA 7: LOTAÇÃO -->
     <section id="tab-equipe" class="view-panel admin-only">
         <div class="card-clean">
             <h4 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-users-gear text-primary me-2"></i>Lotação de Profissionais</h4>
@@ -599,13 +522,7 @@
             <div class="table-responsive mb-3 admin-lock table-container-scroll">
               <table class="table table-bordered table-striped m-0 align-middle" style="font-size: 0.8rem;">
                 <thead>
-                  <tr>
-                    <th>Servidor(a)</th>
-                    <th>Cargo</th>
-                    <th>Turno</th>
-                    <th>Turmas</th>
-                    <th>Componente(s)</th>
-                  </tr>
+                  <tr><th>Servidor(a)</th><th>Cargo</th><th>Turno</th><th>Turmas</th><th>Componente(s)</th></tr>
                 </thead>
                 <tbody id="tabelaLotacaoCorpo"></tbody>
               </table>
@@ -613,36 +530,57 @@
             <button class="btn-mestra w-100 py-3" onclick="salvarLotacaoPermanente(this)"><i class="fa-solid fa-floppy-disk me-2"></i> Salvar Lotação Permanente</button>
         </div>
     </section>
+
+    <section id="tab-professor" class="view-panel"><div class="card-clean"><h4 class="fw-bold mb-3">Módulo do Professor</h4><div class="row g-3 mb-3"><div class="col-md-4"><label class="form-label">Seu Nome:</label><select id="profNomeSelect" class="form-select" onchange="atualizarFiltrosProfessor()"></select></div><div class="col-md-3"><label class="form-label">Componente:</label><select id="profCompSelect" class="form-select"></select></div><div class="col-md-3"><label class="form-label">Turma:</label><select id="profTurmaSelect" class="form-select"></select></div><div class="col-md-2"><label class="form-label">Trimestre:</label><select id="profTrimSelect" class="form-select"><option>1º Trimestre</option><option selected>2º Trimestre</option><option>3º Trimestre</option></select></div></div><button class="btn btn-primary mb-3" onclick="carregarTurmaParaProfessor()">Buscar Estudantes</button><div id="areaTrabalhoProfessor" style="display: none;"><div class="table-responsive mb-3 table-container-scroll"><table class="table table-bordered m-0 align-middle"><thead><tr><th style="width: 5%;">Nº</th><th style="width: 25%; text-align: left;">Nome do Estudante</th><th style="background:#b91c1c;">Abaixo<br>Média</th><th style="background:#b45309;">Infre-<br>quente</th><th style="background:#b45309;">Motivo Afastamento</th><th style="background:#0369a1;">Reforço<br>Escolar</th><th style="background:#4338ca;">Prog.<br>Parcial</th><th style="background:#475569;">Não<br>Alfab.</th></tr></thead><tbody id="tabelaProfessorCorpo"></tbody></table></div><textarea id="profCaracteristicas" class="input-mestra mb-2" placeholder="Características da turma"></textarea><select id="profIntervencaoSN" class="form-select mb-2"><option>Sim</option><option>Não</option></select><textarea id="profMetodologias" class="input-mestra mb-3" placeholder="Metodologias"></textarea><button class="btn btn-success w-100 py-3" onclick="salvarMatrizProfessor(this)">Gravar Minha Matriz</button></div></div></section>
+    <section id="tab-especialista" class="view-panel admin-only"><div class="card-clean"><h4 class="fw-bold mb-3">Matriz Especialista</h4><div class="row g-3 mb-3"><div class="col-md-4"><label>Especialista:</label><select id="espNomeSelect" class="form-select"></select></div><div class="col-md-4"><label>Turma:</label><select id="espTurmaSelect" class="form-select"></select></div><div class="col-md-4"><label>Trimestre:</label><select id="espTrimSelect" class="form-select"><option selected>2º Trimestre</option></select></div></div><button class="btn btn-primary mb-3" onclick="carregarMatrizEspecialista()">Carregar Turma</button><div id="areaTrabalhoEspecialista" style="display:none;"><textarea id="espIntPedag" class="input-mestra mb-2" placeholder="Intervenção"></textarea><textarea id="espBuscaAtiva" class="input-mestra mb-2" placeholder="Busca Ativa"></textarea><textarea id="espProgParcial" class="input-mestra mb-2" placeholder="Progressões"></textarea><textarea id="espOutrosEnc" class="input-mestra mb-3" placeholder="Outros Encaminhamentos"></textarea><input type="text" id="espSemLibras" class="input-mestra mb-3" placeholder="Falta Libras"><textarea id="espSemPdiAuto" class="input-mestra bg-light text-danger mb-3" readonly></textarea><button class="btn btn-success w-100 py-3" onclick="salvarMatrizEspecialista(this)">Gravar Matriz Especialista</button></div></div></section>
     
-    <!-- ABA 6 E 8: BANCO E RELATÓRIOS -->
+    <!-- ABA 6: BANCO DE DADOS (NOVO DASHBOARD GERENCIAL) -->
     <section id="tab-banco" class="view-panel admin-only">
       <div class="card-clean">
-        <h4 class="fw-bold">Banco de Dados</h4>
-        <div class="table-responsive table-container-scroll">
-          <table class="table table-hover align-middle m-0">
-            <thead>
-              <tr>
-                <th>Turma</th>
-                <th>Estudante</th>
-                <th>Trimestre</th>
-                <th>Situação Geral (Conselho)</th>
-              </tr>
-            </thead>
-            <tbody id="tabelaBancoRegistros"></tbody>
-          </table>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h4 class="fw-bold m-0"><i class="fa-solid fa-chart-line text-primary me-2"></i>Centro de Inteligência da Turma</h4>
+          <div class="d-flex gap-2 align-items-center">
+            <select id="filtroTrimestreBanco" class="form-select fw-bold border-secondary" onchange="renderizarDashboardBanco()"><option>1º Trimestre</option><option selected>2º Trimestre</option><option>3º Trimestre</option></select>
+            <select id="filtroTurmaBanco" class="form-select fw-bold border-primary" onchange="renderizarDashboardBanco()"></select>
+          </div>
+        </div>
+
+        <div id="bancoVazio" class="text-center py-5 text-muted fw-bold">Selecione uma turma para ver o painel.</div>
+        
+        <div id="bancoDashboard" style="display: none;">
+          <!-- 1. Panorama Cards -->
+          <div class="dashboard-header">
+            <div class="dash-card blue"><div class="num" id="dbTot">0</div><div class="lbl">Avaliados</div></div>
+            <div class="dash-card green"><div class="num" id="dbOti">0</div><div class="lbl">Ótimos</div></div>
+            <div class="dash-card yellow"><div class="num" id="dbBom">0</div><div class="lbl">Bons</div></div>
+            <div class="dash-card red"><div class="num" id="dbAte">0</div><div class="lbl">Em Atenção</div></div>
+          </div>
+
+          <!-- 2. Filtros Dinâmicos -->
+          <div class="filtros-banco">
+            <button class="btn-filtro active" onclick="filtrarCardsBanco('TODOS', this)">Todos</button>
+            <button class="btn-filtro" onclick="filtrarCardsBanco('ÓTIMO', this)">🟢 Ótimos</button>
+            <button class="btn-filtro" onclick="filtrarCardsBanco('BOM', this)">🟢 Bons</button>
+            <button class="btn-filtro" onclick="filtrarCardsBanco('ATENÇÃO', this)">🔴 Em Risco (Atenção)</button>
+          </div>
+
+          <!-- 3. Prateleira de Cards -->
+          <div class="cards-grid" id="bancoCardsGrid"></div>
         </div>
       </div>
     </section>
     
+    <!-- ABA 8: RELATÓRIOS -->
     <section id="tab-relatorios" class="view-panel">
-      <div class="card-clean text-center">
-        <h4 class="fw-bold">Relatórios e Impressão</h4>
+      <div class="card-clean text-center py-5">
+        <h3 class="fw-bold mb-4"><i class="fa-solid fa-print text-primary me-2"></i>Central de Impressão e Relatórios</h3>
         <div class="row">
            <div class="col-md-6 mx-auto">
-             <select id="relTurmaSelect" class="form-select mb-3"></select>
-             <select id="relTurnoSelect" class="form-select mb-3"><option>Matutino</option><option>Vespertino</option></select>
-             <button class="btn btn-success w-100 py-3 mb-2 admin-only" onclick="imprimirComunicadosA4()"><i class="fa-solid fa-print"></i> Imprimir Comunicados A4 (Pais)</button>
-             <button class="btn btn-primary w-100 py-3 fw-bold rounded-xl shadow-sm admin-only" onclick="imprimirAtaConsolidada()"><i class="fa-solid fa-users-rectangle me-2"></i> Imprimir Ata Consolidada da Turma</button>
+             <label class="fw-bold text-start w-100">Selecione a Turma e Turno:</label>
+             <select id="relTurmaSelect" class="form-select mb-3 fw-bold border-primary"></select>
+             <select id="relTurnoSelect" class="form-select mb-4 fw-bold"><option>Matutino</option><option>Vespertino</option></select>
+             <button class="btn btn-success w-100 py-3 mb-3 fw-bold shadow-sm admin-only" onclick="imprimirComunicadosA4()"><i class="fa-solid fa-file-pdf me-2"></i> Imprimir Bilhetes aos Pais (A4)</button>
+             <button class="btn btn-primary w-100 py-3 fw-bold shadow-sm admin-only" onclick="imprimirAtaConsolidada()"><i class="fa-solid fa-users-rectangle me-2"></i> Imprimir Ata Consolidada da Turma</button>
            </div>
         </div>
       </div>
@@ -660,21 +598,15 @@
            <h4 class="fw-bold m-0 text-dark"><i class="fa-solid fa-users-viewfinder text-primary me-2"></i>Controle da Reunião (Datashow)</h4>
          </div>
           <div class="d-flex align-items-center gap-3">
-            <select id="sessaoTrimestre" class="form-select fw-bold">
-              <option>1º Trimestre</option>
-              <option selected>2º Trimestre</option>
-              <option>3º Trimestre</option>
-            </select>
-            <select id="sessaoTurno" class="form-select fw-bold">
-              <option>Matutino</option>
-              <option>Vespertino</option>
+            <select id="sessaoTrimestre" class="form-select fw-bold border-secondary">
+              <option>1º Trimestre</option><option selected>2º Trimestre</option><option>3º Trimestre</option>
             </select>
           </div>
         </div>
         <div id="gridTurmasSessao" class="d-flex flex-wrap gap-2 mb-4"></div>
         <div id="containerAlunosSessao" style="display: none;">
-          <div class="d-flex justify-content-between align-items-center">
-             <span class="text-muted fw-bold">Clique no Estudante para Avaliar:</span>
+          <div class="d-flex justify-content-between align-items-center border-top pt-3">
+             <span class="text-primary fw-bold"><i class="fa-solid fa-hand-pointer me-1"></i> Clique no Estudante para Avaliar:</span>
           </div>
           <div id="gridAlunosSessao" class="student-pill-grid"></div>
         </div>
@@ -683,7 +615,6 @@
       <!-- O DATASHOW DO ALUNO -->
       <div id="painelAvaliacaoEstudante" class="card-clean admin-lock">
         
-        <!-- CABEÇALHO FIXO -->
         <div class="sticky-header-datashow">
           <div>
             <span class="badge bg-success mb-1" id="lblTurmaTop">Avaliando</span>
@@ -705,13 +636,13 @@
  
         <div class="ds-grid mt-3">
           
-          <!-- LADO ESQUERDO: CRITÉRIOS EM GRELHA 2 COLUNAS -->
+          <!-- LADO ESQUERDO -->
           <div>
             <span class="eval-title text-dark d-block mb-2"><i class="fa-solid fa-list-check me-1"></i> Critérios de Avaliação (Clique para marcar)</span>
             <div class="criterios-grid-2col" id="criteriosGrid"></div>
           </div>
 
-          <!-- LADO DIREITO: CONCLUSÃO, PARECER E ENCAMINHAMENTOS -->
+          <!-- LADO DIREITO -->
           <div class="d-flex flex-column gap-3">
             
             <div class="eval-card bg-warning bg-opacity-10 border-warning p-3">
@@ -725,13 +656,14 @@
 
             <div class="eval-card p-3 border-primary shadow-sm">
               <span class="eval-title text-primary fw-bold mb-2 d-block m-0"><i class="fa-solid fa-robot me-1"></i> Parecer Descritivo</span>
-              <textarea id="obsAlunoAtivo" class="input-mestra border-0 bg-light p-3 auto-expand" oninput="autoExpand(this)" placeholder="Marque os 10 itens para gerar o texto..."></textarea>
+              <textarea id="obsAlunoAtivo" class="input-mestra border-0 bg-light p-3 auto-expand" oninput="autoExpand(this)" placeholder="Marque os itens para gerar o texto..."></textarea>
             </div>
             
             <div class="eval-card border-secondary bg-light p-3 shadow-sm">
-              <span class="eval-title text-dark fw-bold d-block m-0"><i class="fa-solid fa-puzzle-piece me-1"></i> Outros Motivos / Sugestões para Ata</span>
+              <span class="eval-title text-dark fw-bold d-block m-0"><i class="fa-solid fa-bolt text-warning me-1"></i> Frases Rápidas e Complementares</span>
+              <!-- NOVO LAYOUT FLUIDO SEM ROLAGEM -->
               <div class="frases-rapidas-container" id="frasesRapidasPainel"></div>
-              <textarea id="txtOutrasSituacoes" class="input-mestra mt-2 bg-white auto-expand" oninput="autoExpand(this)" placeholder="O que você clicar acima aparecerá aqui..."></textarea>
+              <textarea id="txtOutrasSituacoes" class="input-mestra mt-2 bg-white auto-expand" oninput="autoExpand(this)" placeholder="Os apontamentos clicados aparecerão aqui..."></textarea>
             </div>
 
             <div class="eval-card bg-light border p-3">
@@ -756,10 +688,7 @@
   </div>
  
   <script>
-    // =======================================================================================
-    // SUA URL DA PLANILHA DO GOOGLE INSERIDA AQUI:
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbxIHePqCUCNaNzgz4C-5rz5AwQXh02W2A1KUJz3yx9hf0ofth0dZIGuWaurcmL4FN5i/exec";
-    // =======================================================================================
 
     var turmasGlobais = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
     var cargosGlobais = ["Professor(a) Regente", "Professor(a) de Apoio", "Especialista / EEB", "Diretor(a)", "Vice-Diretor(a)"];
@@ -773,154 +702,78 @@
     var bancoDeDadosNuvem = {}; 
  
     var criteriosDetalhados = [
-      { 
-        nome: "Convivência e Comportamento", 
-        chave: "convivencia", 
-        opcoes: [
+      { nome: "Convivência e Comportamento", chave: "convivencia", opcoes: [
           { texto: "🟢 Convive bem com todos", escola: [], familia: [] }, 
           { texto: "🟡 Às vezes precisa de orientação para conviver bem", escola: ["Orientar o estudante individualmente."], familia: ["Fortalecer hábitos de estudos em casa."] }, 
           { texto: "🔴 Tem dificuldade de convivência", escola: ["Reforçar os combinados da turma."], familia: ["Fortalecer hábitos de estudos em casa."] }
-        ]
-      },
-      { 
-        nome: "Atenção", 
-        chave: "atencao", 
-        opcoes: [
+      ]},
+      { nome: "Atenção", chave: "atencao", opcoes: [
           { texto: "🟢 Mantém a atenção", escola: [], familia: [] }, 
           { texto: "🟡 Às vezes se distrai", escola: ["Criar oportunidades de participação."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, 
           { texto: "🔴 Distrai-se com frequência", escola: ["Organizar o mapeamento na sala."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }
-        ]
-      },
-      { 
-        nome: "Conversa", 
-        chave: "conversa", 
-        opcoes: [
+      ]},
+      { nome: "Conversa", chave: "conversa", opcoes: [
           { texto: "🟢 A conversa não atrapalha as aulas", escola: [], familia: [] }, 
           { texto: "🟡 A conversa às vezes atrapalha as aulas", escola: ["Reforçar os combinados da turma."], familia: [] }, 
           { texto: "🔴 A conversa atrapalha as aulas com frequência", escola: ["Reforçar os combinados da turma."], familia: ["Agendar reunião com a família para acompanhamento."] }
-        ]
-      },
-      { 
-        nome: "Interesse", 
-        chave: "interesse", 
-        opcoes: [
+      ]},
+      { nome: "Interesse", chave: "interesse", opcoes: [
           { texto: "🟢 Demonstra interesse nas aulas", escola: [], familia: [] }, 
           { texto: "🟡 Às vezes demonstra interesse nas aulas", escola: ["Propor atividades diferenciadas."], familia: ["Incentivar a leitura em casa."] }, 
           { texto: "🔴 Demonstra pouco interesse nas aulas", escola: ["Propor atividades diferenciadas."], familia: ["Incentivar a leitura em casa."] }
-        ]
-      },
-      { 
-        nome: "Participação", 
-        chave: "participacao", 
-        opcoes: [
+      ]},
+      { nome: "Participação", chave: "participacao", opcoes: [
           { texto: "🟢 Participa das aulas", escola: [], familia: [] }, 
           { texto: "🟡 Participa das aulas quando incentivado", escola: ["Criar oportunidades de participação."], familia: [] }, 
           { texto: "🔴 Participa pouco das aulas", escola: ["Criar oportunidades de participação."], familia: [] }
-        ]
-      },
-      { 
-        nome: "Aprendizagem", 
-        chave: "aprendizagem", 
-        opcoes: [
+      ]},
+      { nome: "Aprendizagem", chave: "aprendizagem", opcoes: [
           { texto: "🟢 Aprende conforme o esperado", escola: [], familia: [] }, 
           { texto: "🟡 Aprende com apoio", escola: ["Propor atividades de reforço."], familia: ["Acompanhar os cadernos do filho."] }, 
           { texto: "🔴 Apresenta dificuldades na aprendizagem", escola: ["Propor atividades de reforço."], familia: ["Acompanhar os cadernos do filho."] }
-        ]
-      },
-      { 
-        nome: "Organização", 
-        chave: "organizacao", 
-        opcoes: [
+      ]},
+      { nome: "Organização", chave: "organizacao", opcoes: [
           { texto: "🟢 É organizado", escola: [], familia: [] }, 
           { texto: "🟡 Às vezes precisa de lembretes para se organizar", escola: ["Orientar o estudante sobre planejamento e organização."], familia: ["Acompanhar a organização dos materiais."] }, 
           { texto: "🔴 Tem dificuldade para se organizar", escola: ["Orientar o estudante sobre planejamento e organização."], familia: ["Acompanhar a organização dos materiais."] }
-        ]
-      },
-      { 
-        nome: "Atividades em Sala", 
-        chave: "ativ_sala", 
-        opcoes: [
+      ]},
+      { nome: "Atividades em Sala", chave: "ativ_sala", opcoes: [
           { texto: "🟢 Realiza as atividades em sala", escola: [], familia: [] }, 
           { texto: "🟡 Realiza parte das atividades em sala", escola: ["Orientar o estudante individualmente."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, 
           { texto: "🔴 Deixa as atividades sem fazer em sala", escola: ["Orientar o estudante individualmente."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }
-        ]
-      },
-      { 
-        nome: "Tarefas de Casa", 
-        chave: "tarefas_casa", 
-        opcoes: [
+      ]},
+      { nome: "Tarefas de Casa", chave: "tarefas_casa", opcoes: [
           { texto: "🟢 Faz as tarefas de casa regularmente", escola: [], familia: [] }, 
           { texto: "🟡 Às vezes faz as tarefas de casa", escola: ["Orientar sobre rotina de estudos."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, 
           { texto: "🔴 Raramente faz as tarefas de casa", escola: ["Orientar sobre rotina de estudos."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }
-        ]
-      },
-      { 
-        nome: "Frequência", 
-        chave: "frequencia", 
-        opcoes: [
+      ]},
+      { nome: "Frequência", chave: "frequencia", opcoes: [
           { texto: "🟢 Comparece regularmente às aulas", escola: [], familia: [] }, 
           { texto: "🟡 Tem algumas faltas", escola: ["Acompanhar a frequência escolar."], familia: ["Não deixar o filho faltar sem justificativa."] }, 
           { texto: "🔴 Tem muitas faltas", escola: ["Acompanhar a frequência escolar.", "Agendar reunião com a família para acompanhamento."], familia: ["Não deixar o filho faltar sem justificativa."] }
-        ]
-      }
+      ]}
     ];
  
-    var encEscolaOpcoes = [
-      "Reforçar os combinados da turma.", 
-      "Orientar o estudante individualmente.", 
-      "Reforçar positivamente os avanços.", 
-      "Propor atividades de reforço.", 
-      "Realizar agrupamentos temporários", 
-      "Propor atividades diferenciadas.", 
-      "Organizar o mapeamento na sala", 
-      "Valorizar as contribuições do estudante.", 
-      "Solicitar a presença da família.", 
-      "Criar oportunidades de participação.", 
-      "Orientar sobre rotina de estudos.", 
-      "Orientar o estudante sobre planejamento e organização.", 
-      "Acompanhar a frequência escolar.", 
-      "Orientar sobre a importância da assiduidade.", 
-      "Comunicar a família sobre as faltas.", 
-      "Monitorar a frequência do estudante.", 
-      "Agendar reunião com a família para acompanhamento."
-    ];
-    
-    var encFamiliaOpcoes = [
-      "Acompanhar a organização dos materiais.", 
-      "Estabelecer rotina para realização das tarefas de casa", 
-      "Não deixar o filho faltar sem justificativa", 
-      "Acompanhar os cadernos do filho", 
-      "Visitar a escola de vez em quando", 
-      "Fortalecer hábitos de estudos em casa", 
-      "Incentivar a leitura em casa", 
-      "Verificar sempre o uniforme escolar"
-    ];
+    var encEscolaOpcoes = ["Reforçar os combinados da turma.", "Orientar o estudante individualmente.", "Reforçar positivamente os avanços.", "Propor atividades de reforço.", "Realizar agrupamentos temporários", "Propor atividades diferenciadas.", "Organizar o mapeamento na sala", "Valorizar as contribuições do estudante.", "Solicitar a presença da família.", "Criar oportunidades de participação.", "Orientar sobre rotina de estudos.", "Orientar o estudante sobre planejamento e organização.", "Acompanhar a frequência escolar.", "Orientar sobre a importância da assiduidade.", "Comunicar a família sobre as faltas.", "Monitorar a frequência do estudante.", "Agendar reunião com a família para acompanhamento."];
+    var encFamiliaOpcoes = ["Acompanhar a organização dos materiais.", "Estabelecer rotina para realização das tarefas de casa", "Não deixar o filho faltar sem justificativa", "Acompanhar os cadernos do filho", "Visitar a escola de vez em quando", "Fortalecer hábitos de estudos em casa", "Incentivar a leitura em casa", "Verificar sempre o uniforme escolar"];
  
+    // FRASES RÁPIDAS (ATUALIZADAS CONFORME SEU PEDIDO)
     var sugestoesObservacao = [
         "Demonstra respeito às regras de convivência.", 
-        "Apresenta dificuldade em seguir combinados.", 
-        "Precisa de orientação para melhorar a convivência.", 
-        "Demonstra evolução na convivência escolar.", 
-        "Demonstra desrespeito ao professor.", 
-        "Tem atitudes que geram conflitos.",
-        "Em alguns momentos, perde o foco.", 
-        "Apresenta muita inquietação durante as aulas", 
-        "Tem apresentado evolução na atenção.", 
-        "Em alguns momentos, conversa durante as explicações.", 
-        "Precisa conversar menos durante as aulas.", 
-        "Precisa ser incentivado para participar.",
-        "Não tem demonstrado interesse pelas atividades.", 
-        "Apresenta pouca participação nas aulas.", 
-        "Avança na aprendizagem com apoio e orientação.", 
-        "Ainda apresenta dificuldades na aprendizagem.", 
-        "Ainda precisa de orientação para se organizar.", 
+        "Avança na aprendizagem com apoio e orientação.",
         "Tem apresentado evolução na organização.",
-        "Realiza as atividades com orientação.", 
-        "Algumas atividades ficam incompletas.", 
-        "Realiza poucas atividades propostas.", 
-        "Tem apresentado melhora no cumprimento das atividades", 
-        "Praticamente não realiza as tarefas de casa.", 
-        "As muitas faltas têm prejudicado a aprendizagem"
+        "Realiza as atividades com orientação.",
+        "Tem apresentado melhora no cumprimento das atividades.",
+        "Apresenta dificuldade em seguir combinados.",
+        "Demonstra desrespeito ao professor.",
+        "Tem atitudes que geram conflitos.",
+        "Em alguns momentos, perde o foco.",
+        "Apresenta muita inquietação durante as aulas.",
+        "Não tem demonstrado interesse pelas atividades.",
+        "As muitas faltas têm prejudicado a aprendizagem.",
+        "Demonstra evolução na convivência escolar.",
+        "Envolve-se em confusões.",
+        "Traz brinquedos de casa e por isso perde o foco nas aulas."
     ];
 
     function autoExpand(field) {
@@ -935,14 +788,8 @@
     }
 
     function chamarApiGoogle(funcao, dados = null, callback) {
-      fetch(URL_API_GOOGLE, { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
-        body: JSON.stringify({ funcao: funcao, dados: dados }) 
-      })
-      .then(res => res.json())
-      .then(data => { if(callback) callback(data); })
-      .catch(e => console.error("Erro de API:", e));
+      fetch(URL_API_GOOGLE, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ funcao: funcao, dados: dados }) })
+      .then(res => res.json()).then(data => { if(callback) callback(data); }).catch(e => console.error("Erro:", e));
     }
 
     function switchTab(id, btn) { 
@@ -951,6 +798,9 @@
       document.getElementById(id).classList.add('active'); 
       if(btn) btn.classList.add('active'); 
       window.scrollTo(0,0); 
+      
+      // SINCRONIZAÇÃO GLOBAL - Se abrir banco, força atualizar a visão
+      if(id === 'tab-banco') renderizarDashboardBanco();
     }
     
     var tipoLoginAtual = '';
@@ -971,21 +821,10 @@
     function validarSenha() {
       var senha = document.getElementById('inputSenhaAcesso').value;
       if(tipoLoginAtual === 'admin' && senha === 'mestra2026') { 
-        perfilLogado = 'admin'; 
-        document.body.classList.remove('role-prof'); 
-        document.getElementById('tagPerfilLogado').innerText = "ESPECIALISTA"; 
-        liberarSistema(); 
-      } 
-      else if (tipoLoginAtual === 'prof' && senha === 'prof2026') { 
-        perfilLogado = 'prof'; 
-        document.body.classList.add('role-prof'); 
-        document.getElementById('tagPerfilLogado').innerText = "PROFESSOR"; 
-        liberarSistema(); 
-      } 
-      else { 
-        alert("Senha incorreta!"); 
-        document.getElementById('inputSenhaAcesso').value = ''; 
-      }
+        perfilLogado = 'admin'; document.body.classList.remove('role-prof'); document.getElementById('tagPerfilLogado').innerText = "ESPECIALISTA"; liberarSistema(); 
+      } else if (tipoLoginAtual === 'prof' && senha === 'prof2026') { 
+        perfilLogado = 'prof'; document.body.classList.add('role-prof'); document.getElementById('tagPerfilLogado').innerText = "PROFESSOR"; liberarSistema(); 
+      } else { alert("Senha incorreta!"); document.getElementById('inputSenhaAcesso').value = ''; }
     }
     
     function liberarSistema() {
@@ -1000,17 +839,14 @@
       selectsTurma.forEach(id => { 
         var el = document.getElementById(id); 
         if(el) { 
-          if(id === 'filtroTurmaBanco') el.innerHTML = '<option value="">Todas as Turmas</option>'; 
+          if(id === 'filtroTurmaBanco') el.innerHTML = '<option value="">Turma</option>'; 
           else el.innerHTML = '<option value="">Selecione...</option>'; 
           turmasGlobais.forEach(t => el.innerHTML += `<option value="${t}">${t}</option>`); 
         } 
       });
       
       var gridT = document.getElementById('gridTurmasSessao'); 
-      if(gridT) { 
-        gridT.innerHTML = ''; 
-        turmasGlobais.forEach(t => gridT.innerHTML += `<button class="turma-tag" onclick="selecionarTurmaDatashow('${t}', this)">${t}</button>`); 
-      }
+      if(gridT) { gridT.innerHTML = ''; turmasGlobais.forEach(t => gridT.innerHTML += `<button class="turma-tag" onclick="selecionarTurmaDatashow('${t}', this)">${t}</button>`); }
       
       var gridCrit = document.getElementById('criteriosGrid');
       if(gridCrit) {
@@ -1022,88 +858,83 @@
       }
       
       var divEscola = document.getElementById('listaEncEscola'); 
-      if(divEscola) { 
-        divEscola.innerHTML = ''; 
-        var padroesEscola = ["Reforçar os combinados da turma.", "Orientar o estudante individualmente.", "Reforçar positivamente os avanços.", "Realizar agrupamentos temporários", "Organizar o mapeamento na sala", "Orientar sobre rotina de estudos.", "Acompanhar a frequência escolar.", "Comunicar a família sobre as faltas.", "Propor atividades de reforço."];
-        encEscolaOpcoes.forEach(frase => { 
-          var isChecked = padroesEscola.includes(frase) ? 'checked' : '';
-          divEscola.innerHTML += `<label class="chk-encaminhamento"><input type="checkbox" class="chk-escola" value="${frase}" onchange="atualizarRoboESintese(false); salvarDadosSilenciosamente();" ${isChecked}> <span>${frase}</span></label>`; 
-        }); 
-      }
+      if(divEscola) { divEscola.innerHTML = ''; var padroesEscola = ["Reforçar os combinados da turma.", "Orientar o estudante individualmente.", "Reforçar positivamente os avanços.", "Realizar agrupamentos temporários", "Organizar o mapeamento na sala", "Orientar sobre rotina de estudos.", "Acompanhar a frequência escolar.", "Comunicar a família sobre as faltas.", "Propor atividades de reforço."]; encEscolaOpcoes.forEach(frase => { var isChecked = padroesEscola.includes(frase) ? 'checked' : ''; divEscola.innerHTML += `<label class="chk-encaminhamento"><input type="checkbox" class="chk-escola" value="${frase}" onchange="atualizarRoboESintese(false); salvarDadosSilenciosamente();" ${isChecked}> <span>${frase}</span></label>`; }); }
       
       var divFamilia = document.getElementById('listaEncFamilia'); 
-      if(divFamilia) { 
-        divFamilia.innerHTML = ''; 
-        encFamiliaOpcoes.forEach(frase => divFamilia.innerHTML += `<label class="chk-encaminhamento"><input type="checkbox" class="chk-familia" value="${frase}" onchange="atualizarRoboESintese(false); salvarDadosSilenciosamente();" checked> <span>${frase}</span></label>`); 
-      }
+      if(divFamilia) { divFamilia.innerHTML = ''; encFamiliaOpcoes.forEach(frase => divFamilia.innerHTML += `<label class="chk-encaminhamento"><input type="checkbox" class="chk-familia" value="${frase}" onchange="atualizarRoboESintese(false); salvarDadosSilenciosamente();" checked> <span>${frase}</span></label>`); }
       
       var painelFrases = document.getElementById('frasesRapidasPainel');
       if(painelFrases) {
           painelFrases.innerHTML = '';
-          painelFrases.innerHTML += `<button class="btn-frase" style="background-color: #d1fae5; border-color: #10b981; color: #065f46; font-weight: 800;" onclick="addObs('Parabéns! Você é um(a) estudante nota 10!')">🌟 Parabéns! Você é um(a) estudante nota 10!</button>`;
-          sugestoesObservacao.forEach(frase => { 
-            painelFrases.innerHTML += `<button class="btn-frase" onclick="addObs('${frase}')">${frase}</button>`; 
-          });
+          painelFrases.innerHTML += `<button class="btn-frase" style="background-color: #10b981; border-color: #059669; color: white; width:100%; font-size:0.8rem;" onclick="addObs('Parabéns! Você é um(a) estudante nota 10!')">🌟 Parabéns! Você é um(a) estudante nota 10!</button>`;
+          sugestoesObservacao.forEach(frase => { painelFrases.innerHTML += `<button class="btn-frase" onclick="addObs('${frase}')">${frase}</button>`; });
       }
  
       chamarApiGoogle('carregarTudo', null, function(dados) {
           if(dados && !dados.erro) {
               bancoDeDadosNuvem = dados;
               if(dados.estudantes) {
-                  for(var turma in dados.estudantes) {
-                      localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(dados.estudantes[turma]));
-                  }
+                  for(var turma in dados.estudantes) { localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(dados.estudantes[turma])); }
                   atualizarTagsTurmasSalvas();
               }
           }
       });
-
       carregarTabelaLotacaoSalva(); 
-      atualizarBancoVisual(); 
     }
 
     function addObs(texto) { 
       var txt = document.getElementById('txtOutrasSituacoes'); 
-      if (txt.value.length > 0) { 
-        txt.value = txt.value + " | " + texto; 
-      } else { 
-        txt.value = texto; 
-      }
-      autoExpand(txt);
-      salvarDadosSilenciosamente(); 
+      if (txt.value.length > 0) txt.value = txt.value + " | " + texto; 
+      else txt.value = texto; 
+      autoExpand(txt); salvarDadosSilenciosamente(); 
     }
  
     function atualizarTagsTurmasSalvas() { 
       var container = document.getElementById('tagsTurmasSalvas'); 
-      if(!container) return; 
-      container.innerHTML = ''; 
+      if(!container) return; container.innerHTML = ''; 
       for (var i = 0; i < localStorage.length; i++) { 
         var key = localStorage.key(i); 
-        if (key.startsWith('mestra_estudantes_')) { 
-          var nomeTurma = key.replace('mestra_estudantes_', ''); 
-          container.innerHTML += `<span class="turma-salva-tag"><i class="fa-solid fa-check text-success me-1"></i> Turma ${nomeTurma}</span>`; 
-        } 
+        if (key.startsWith('mestra_estudantes_')) { var nomeTurma = key.replace('mestra_estudantes_', ''); container.innerHTML += `<span class="turma-salva-tag"><i class="fa-solid fa-check text-success me-1"></i> Turma ${nomeTurma}</span>`; } 
       } 
-      if(container.innerHTML === '') container.innerHTML = '<span class="text-muted fs-8">Nenhuma turma salva ainda.</span>'; 
+      if(container.innerHTML === '') container.innerHTML = '<span class="text-muted fs-8">Nenhuma turma salva.</span>'; 
     }
     
+    // CORREÇÃO 1: ADICIONAR SEM APAGAR E SEM DUPLICAR
     function importarListaEstudantes() { 
       var turma = document.getElementById('selEstudanteTurma').value; 
       var texto = document.getElementById('txtListaEstudantes').value.trim(); 
-      if(!turma) return; 
-      var nomes = texto.split('\n').filter(n => n.trim() !== ""); 
-      var alunos = nomes.map((nome, index) => { return { numero: index + 1, nome: nome.trim().toUpperCase(), aee: false, pdi: "Não", sigla: "" }; }); 
-      localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos)); 
+      if(!turma || !texto) return; 
+      
+      var nomesInput = texto.split('\n').map(n => n.trim().toUpperCase()).filter(n => n !== ""); 
+      var alunosExistentes = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
+      
+      var adicionados = 0;
+      nomesInput.forEach(novoNome => {
+         var jaExiste = alunosExistentes.some(a => a.nome === novoNome);
+         if(!jaExiste) {
+             alunosExistentes.push({ numero: alunosExistentes.length + 1, nome: novoNome, aee: false, pdi: "Não", sigla: "" });
+             adicionados++;
+         }
+      });
+      
+      localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunosExistentes)); 
       document.getElementById('txtListaEstudantes').value = ''; 
       carregarEstudantesParaEdicao(); 
+      alert(adicionados + " novos alunos adicionados à turma " + turma + "!");
     }
     
     function carregarEstudantesParaEdicao() { 
       var turma = document.getElementById('selEstudanteTurma').value; 
       var tbody = document.getElementById('tabelaEstudantesCorpo'); 
-      if(!turma) { tbody.innerHTML = '<tr><td colspan="5" class="text-center fw-bold py-4 text-muted">Selecione uma turma acima para exibir.</td></tr>'; return; } 
-      var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
-      if(alunos.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center fw-bold py-4 text-muted">Nenhum estudante cadastrado.</td></tr>'; return; } 
+      if(!turma) { tbody.innerHTML = '<tr><td colspan="5" class="text-center fw-bold py-4 text-muted">Selecione uma turma acima.</td></tr>'; return; } 
+      
+      // Limpeza de duplicados nativa ao ler (Garante o passado limpo)
+      var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
+      var alunos = []; var vistos = new Set();
+      alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
+      localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos)); // Salva limpo
+      
+      if(alunos.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center fw-bold py-4 text-muted">Nenhum estudante.</td></tr>'; return; } 
       tbody.innerHTML = ''; 
       alunos.forEach((a, i) => { 
         tbody.innerHTML += `<tr><td class="fw-bold text-muted text-center">${i+1}</td><td class="fw-bold nome-aluno-td">${a.nome}</td><td class="text-center"><input class="form-check-input aee-chk" type="checkbox" style="transform: scale(1.3);" ${a.aee ? 'checked' : ''}></td><td class="text-center"><select class="form-select form-select-sm pdi-sel fw-bold text-center"><option value="Não" ${a.pdi !== 'Sim' ? 'selected' : ''}>Não</option><option value="Sim" ${a.pdi === 'Sim' ? 'selected' : ''}>Sim</option></select></td><td class="text-center"><select class="form-select form-select-sm sigla-sel fw-bold text-center"><option value="" ${!a.sigla ? 'selected' : ''}>Nenhuma</option><option value="CL" ${a.sigla==='CL'?'selected':''}>CL</option><option value="DSL" ${a.sigla==='DSL'?'selected':''}>DSL</option><option value="CLA" ${a.sigla==='CLA'?'selected':''}>CLA</option></select></td></tr>`; 
@@ -1113,166 +944,160 @@
     function salvarBaseEstudantes(btn) { 
       var turma = document.getElementById('selEstudanteTurma').value; 
       if(!turma) return; 
-      
-      var originalText = btn.innerHTML;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Salvando na nuvem...';
-      
+      var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Salvando...';
       var alunos = []; 
       document.querySelectorAll('#tabelaEstudantesCorpo tr').forEach((tr, i) => { 
-        var nomeTd = tr.querySelector('.nome-aluno-td'); 
-        if(!nomeTd) return; 
+        var nomeTd = tr.querySelector('.nome-aluno-td'); if(!nomeTd) return; 
         alunos.push({ numero: i+1, nome: nomeTd.innerText, aee: tr.querySelector('.aee-chk').checked, pdi: tr.querySelector('.pdi-sel').value, sigla: tr.querySelector('.sigla-sel').value }); 
       }); 
-      
       if(alunos.length > 0) { 
         localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos)); 
         chamarApiGoogle('salvarEstudantes', { turma: turma, alunos: alunos }, function() {
-            btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Base Salva!';
-            setTimeout(() => btn.innerHTML = originalText, 3000);
-            atualizarTagsTurmasSalvas(); 
+            btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Salvo!'; setTimeout(() => btn.innerHTML = originalText, 3000); atualizarTagsTurmasSalvas(); 
         });
       } 
     }
-    
-    function gerarTabelaLotacao() { 
-      var t = document.getElementById('txtServidoresInput').value.trim(); 
-      if(!t) return; 
-      var l = []; 
-      t.split('\n').forEach(x => { 
-        if(x.trim()) l.push({nome: x.trim().toUpperCase(), cargo: "Professor(a) Regente", turno: "Matutino", turmas: ["6R1"], componentes: ["Língua Portuguesa"]}); 
-      }); 
-      renderizarTabelaLotacao(l); 
-    }
-    
-    function renderizarTabelaLotacao(l) { 
-      var b = document.getElementById('tabelaLotacaoCorpo'); 
-      b.innerHTML = ''; 
-      l.forEach((s) => { 
-        var cO = cargosGlobais.map(c => `<option ${s.cargo===c?'selected':''}>${c}</option>`).join(''); 
-        var tO = ["Matutino", "Vespertino", "Ambos"].map(t => `<option ${s.turno===t?'selected':''}>${t}</option>`).join(''); 
-        
-        var chks = ''; 
-        turmasGlobais.forEach(t => { 
-          var chk = s.turmas && s.turmas.includes(t) ? 'checked' : ''; 
-          chks += `<label style="font-size:0.65rem; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:2px 4px; cursor:pointer;"><input type="checkbox" value="${t}" ${chk} class="t-chk"> ${t}</label>`; 
-        }); 
-        
-        var cpChks = ''; 
-        var sComps = s.componentes || (s.comp ? [s.comp] : []);
-        componentesGlobais.forEach(c => { 
-           var chk = sComps.includes(c) ? 'checked' : ''; 
-           var dis = s.cargo !== "Professor(a) Regente" ? 'disabled' : ''; 
-           cpChks += `<label style="font-size:0.65rem; font-weight:700; background:#fef3c7; border:1px solid #fde68a; border-radius:4px; padding:2px 4px; cursor:pointer;"><input type="checkbox" value="${c}" ${chk} ${dis} class="cp-chk"> ${c}</label>`; 
-        });
 
-        b.innerHTML += `<tr><td class="fw-bold name-cell" style="font-size:0.75rem;">${s.nome}</td><td><select class="form-select form-select-sm cargo-sel" onchange="mudarCargoLotacao(this)">${cO}</select></td><td><select class="form-select form-select-sm turno-sel">${tO}</select></td><td><div class="d-flex flex-wrap gap-1">${chks}</div></td><td><div class="d-flex flex-wrap gap-1 cp-container">${cpChks}</div></td></tr>`; 
-      }); 
-    }
-    
-    function mudarCargoLotacao(s) { 
-      var isRegente = s.value === "Professor(a) Regente";
-      s.closest('tr').querySelectorAll('.cp-chk').forEach(c => c.disabled = !isRegente); 
-    }
-    
-    function salvarLotacaoPermanente(btn) { 
-      var originalText = btn.innerHTML;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Salvando na nuvem...';
-
-      var d = []; 
-      document.querySelectorAll('#tabelaLotacaoCorpo tr').forEach(tr => { 
-        var t=[]; tr.querySelectorAll('.t-chk:checked').forEach(c => t.push(c.value)); 
-        var cp=[]; tr.querySelectorAll('.cp-chk:checked').forEach(c => cp.push(c.value)); 
-        d.push({nome: tr.querySelector('.name-cell').innerText, cargo: tr.querySelector('.cargo-sel').value, turno: tr.querySelector('.turno-sel').value, turmas: t, componentes: cp }); 
-      }); 
-      
-      localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(d)); 
-      carregarProfessoresSelect(); 
-      
-      chamarApiGoogle('salvarLotacaoGlobal', d, function(res) { 
-          btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Lotação Salva!';
-          setTimeout(() => btn.innerHTML = originalText, 3000);
-      }); 
-    }
-    
-    function carregarTabelaLotacaoSalva() { 
-      var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || 'null'); 
-      if(s) { renderizarTabelaLotacao(s); } 
-      carregarProfessoresSelect(); 
-    }
-    
-    function carregarProfessoresSelect() { 
-      var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); 
-      var selProf = document.getElementById('profNomeSelect'); 
-      var selEsp = document.getElementById('espNomeSelect'); 
-      if(selProf) { 
-        selProf.innerHTML = '<option value="">Selecione...</option>'; 
-        s.forEach(p => { if(p.cargo !== "Especialista / EEB" && p.cargo !== "Diretor(a)") selProf.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); 
-      } 
-      if(selEsp) { 
-        selEsp.innerHTML = '<option value="">Selecione...</option>'; 
-        s.forEach(p => { if(p.cargo === "Especialista / EEB" || p.cargo === "Diretor(a)") selEsp.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); 
-      } 
-    }
-
-    function atualizarFiltrosProfessor() { 
-      var profNome = document.getElementById('profNomeSelect').value; 
-      var profTurma = document.getElementById('profTurmaSelect'); 
-      var profComp = document.getElementById('profCompSelect'); 
-      profTurma.innerHTML = '<option value="">Turma...</option>'; 
-      profComp.innerHTML = '<option value="">Componente...</option>'; 
-      if(!profNome) return; 
-      
-      var lotacao = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); 
-      var profDados = lotacao.find(p => p.nome === profNome); 
-      
-      if(profDados) { 
-        var comps = profDados.componentes || [];
-        if(comps.length === 0 && profDados.comp) comps.push(profDados.comp);
-        
-        comps.forEach(c => profComp.innerHTML += `<option value="${c}">${c}</option>`);
-        
-        if(profDados.turmas) {
-            profDados.turmas.forEach(t => profTurma.innerHTML += `<option value="${t}">${t}</option>`); 
-        }
-      } 
-    }
-    
+    // LOTACAO, PROFESSOR E ESP OMITIDOS (Lógica MANTIDA e ocultada no HTML base)
+    function gerarTabelaLotacao() { var t = document.getElementById('txtServidoresInput').value.trim(); if(!t) return; var l = []; t.split('\n').forEach(x => { if(x.trim()) l.push({nome: x.trim().toUpperCase(), cargo: "Professor(a) Regente", turno: "Matutino", turmas: ["6R1"], componentes: ["Língua Portuguesa"]}); }); renderizarTabelaLotacao(l); }
+    function renderizarTabelaLotacao(l) { var b = document.getElementById('tabelaLotacaoCorpo'); b.innerHTML = ''; l.forEach((s) => { var cO = cargosGlobais.map(c => `<option ${s.cargo===c?'selected':''}>${c}</option>`).join(''); var tO = ["Matutino", "Vespertino", "Ambos"].map(t => `<option ${s.turno===t?'selected':''}>${t}</option>`).join(''); var chks = ''; turmasGlobais.forEach(t => { var chk = s.turmas && s.turmas.includes(t) ? 'checked' : ''; chks += `<label style="font-size:0.65rem; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:2px 4px; cursor:pointer;"><input type="checkbox" value="${t}" ${chk} class="t-chk"> ${t}</label>`; }); var cpChks = ''; var sComps = s.componentes || (s.comp ? [s.comp] : []); componentesGlobais.forEach(c => { var chk = sComps.includes(c) ? 'checked' : ''; var dis = s.cargo !== "Professor(a) Regente" ? 'disabled' : ''; cpChks += `<label style="font-size:0.65rem; font-weight:700; background:#fef3c7; border:1px solid #fde68a; border-radius:4px; padding:2px 4px; cursor:pointer;"><input type="checkbox" value="${c}" ${chk} ${dis} class="cp-chk"> ${c}</label>`; }); b.innerHTML += `<tr><td class="fw-bold name-cell" style="font-size:0.75rem;">${s.nome}</td><td><select class="form-select form-select-sm cargo-sel" onchange="mudarCargoLotacao(this)">${cO}</select></td><td><select class="form-select form-select-sm turno-sel">${tO}</select></td><td><div class="d-flex flex-wrap gap-1">${chks}</div></td><td><div class="d-flex flex-wrap gap-1 cp-container">${cpChks}</div></td></tr>`; }); }
+    function mudarCargoLotacao(s) { var isRegente = s.value === "Professor(a) Regente"; s.closest('tr').querySelectorAll('.cp-chk').forEach(c => c.disabled = !isRegente); }
+    function salvarLotacaoPermanente(btn) { var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Salvando na nuvem...'; var d = []; document.querySelectorAll('#tabelaLotacaoCorpo tr').forEach(tr => { var t=[]; tr.querySelectorAll('.t-chk:checked').forEach(c => t.push(c.value)); var cp=[]; tr.querySelectorAll('.cp-chk:checked').forEach(c => cp.push(c.value)); d.push({nome: tr.querySelector('.name-cell').innerText, cargo: tr.querySelector('.cargo-sel').value, turno: tr.querySelector('.turno-sel').value, turmas: t, componentes: cp }); }); localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(d)); carregarProfessoresSelect(); chamarApiGoogle('salvarLotacaoGlobal', d, function(res) { btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Lotação Salva!'; setTimeout(() => btn.innerHTML = originalText, 3000); }); }
+    function carregarTabelaLotacaoSalva() { var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || 'null'); if(s) { renderizarTabelaLotacao(s); } carregarProfessoresSelect(); }
+    function carregarProfessoresSelect() { var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); var selProf = document.getElementById('profNomeSelect'); var selEsp = document.getElementById('espNomeSelect'); if(selProf) { selProf.innerHTML = '<option value="">Selecione...</option>'; s.forEach(p => { if(p.cargo !== "Especialista / EEB" && p.cargo !== "Diretor(a)") selProf.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); } if(selEsp) { selEsp.innerHTML = '<option value="">Selecione...</option>'; s.forEach(p => { if(p.cargo === "Especialista / EEB" || p.cargo === "Diretor(a)") selEsp.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); } }
+    function atualizarFiltrosProfessor() { var profNome = document.getElementById('profNomeSelect').value; var profTurma = document.getElementById('profTurmaSelect'); var profComp = document.getElementById('profCompSelect'); profTurma.innerHTML = '<option value="">Turma...</option>'; profComp.innerHTML = '<option value="">Componente...</option>'; if(!profNome) return; var lotacao = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); var profDados = lotacao.find(p => p.nome === profNome); if(profDados) { var comps = profDados.componentes || []; if(comps.length === 0 && profDados.comp) comps.push(profDados.comp); comps.forEach(c => profComp.innerHTML += `<option value="${c}">${c}</option>`); if(profDados.turmas) { profDados.turmas.forEach(t => profTurma.innerHTML += `<option value="${t}">${t}</option>`); } } }
     function carregarTurmaParaProfessor() { var turma = document.getElementById('profTurmaSelect').value; var prof = document.getElementById('profNomeSelect').value; if(!turma || !prof) return; var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); if(alunos.length === 0) return; document.getElementById('areaTrabalhoProfessor').style.display = 'block'; var tbody = document.getElementById('tabelaProfessorCorpo'); tbody.innerHTML = ''; var chave = 'mestra_prof_' + turma + '_' + document.getElementById('profCompSelect').value + '_' + document.getElementById('profTrimSelect').value; var dadosSalvos = JSON.parse(localStorage.getItem(chave) || '{"alunos":[], "caracteristicas":"", "intervencaoSN":"Sim", "metodologia":""}'); document.getElementById('profCaracteristicas').value = dadosSalvos.caracteristicas || ''; document.getElementById('profIntervencaoSN').value = dadosSalvos.intervencaoSN || 'Sim'; document.getElementById('profMetodologias').value = dadosSalvos.metodologia || ''; alunos.forEach(a => { var bd = dadosSalvos.alunos.find(x => x.nome === a.nome) || {}; tbody.innerHTML += `<tr><td class="text-center text-muted fw-bold">${a.numero}</td><td class="fw-bold prof-nome-aluno">${a.nome}</td><td class="text-center"><input class="form-check-input chk-media" type="checkbox" style="transform: scale(1.3);" ${bd.abaixoMedia?'checked':''}></td><td class="text-center"><input class="form-check-input chk-falta" type="checkbox" style="transform: scale(1.3);" ${bd.falta?'checked':''}></td><td><input type="text" class="form-control form-control-sm inp-motivo" placeholder="Afast. Hosp/Domiciliar..." value="${bd.motivoFalta||''}"></td><td class="text-center"><input class="form-check-input chk-reforco" type="checkbox" style="transform: scale(1.3);" ${bd.reforco?'checked':''}></td><td class="text-center"><input class="form-check-input chk-prog" type="checkbox" style="transform: scale(1.3);" ${bd.prog?'checked':''}></td><td class="text-center"><input class="form-check-input chk-alfab" type="checkbox" style="transform: scale(1.3);" ${bd.alfab?'checked':''}></td></tr>`; }); }
-    
-    function salvarMatrizProfessor(btn) { 
-      var turma = document.getElementById('profTurmaSelect').value; var comp = document.getElementById('profCompSelect').value; var trim = document.getElementById('profTrimSelect').value; 
-      var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Salvando na nuvem...';
-      
-      var aval = { turma: turma, componente: comp, trimestre: trim, professor: document.getElementById('profNomeSelect').value, caracteristicas: document.getElementById('profCaracteristicas').value, intervencaoSN: document.getElementById('profIntervencaoSN').value, metodologia: document.getElementById('profMetodologias').value, alunos: [] }; 
-      document.querySelectorAll('#tabelaProfessorCorpo tr').forEach(tr => { aval.alunos.push({ nome: tr.querySelector('.prof-nome-aluno').childNodes[0].nodeValue.trim(), abaixoMedia: tr.querySelector('.chk-media').checked, falta: tr.querySelector('.chk-falta').checked, motivoFalta: tr.querySelector('.inp-motivo').value, reforco: tr.querySelector('.chk-reforco').checked, prog: tr.querySelector('.chk-prog').checked, alfab: tr.querySelector('.chk-alfab').checked }); }); 
-      
-      localStorage.setItem('mestra_prof_' + turma + '_' + comp + '_' + trim, JSON.stringify(aval)); 
-      chamarApiGoogle('salvarMatrizProfessor', aval, function() {
-          btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Matriz Salva!';
-          setTimeout(() => btn.innerHTML = originalText, 3000);
-      }); 
-    }
-
+    function salvarMatrizProfessor(btn) { var turma = document.getElementById('profTurmaSelect').value; var comp = document.getElementById('profCompSelect').value; var trim = document.getElementById('profTrimSelect').value; var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Salvando na nuvem...'; var aval = { turma: turma, componente: comp, trimestre: trim, professor: document.getElementById('profNomeSelect').value, caracteristicas: document.getElementById('profCaracteristicas').value, intervencaoSN: document.getElementById('profIntervencaoSN').value, metodologia: document.getElementById('profMetodologias').value, alunos: [] }; document.querySelectorAll('#tabelaProfessorCorpo tr').forEach(tr => { aval.alunos.push({ nome: tr.querySelector('.prof-nome-aluno').childNodes[0].nodeValue.trim(), abaixoMedia: tr.querySelector('.chk-media').checked, falta: tr.querySelector('.chk-falta').checked, motivoFalta: tr.querySelector('.inp-motivo').value, reforco: tr.querySelector('.chk-reforco').checked, prog: tr.querySelector('.chk-prog').checked, alfab: tr.querySelector('.chk-alfab').checked }); }); localStorage.setItem('mestra_prof_' + turma + '_' + comp + '_' + trim, JSON.stringify(aval)); chamarApiGoogle('salvarMatrizProfessor', aval, function() { btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Matriz Salva!'; setTimeout(() => btn.innerHTML = originalText, 3000); }); }
     function carregarMatrizEspecialista() { var esp = document.getElementById('espNomeSelect').value; var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value; if(!esp || !turma) return; document.getElementById('areaTrabalhoEspecialista').style.display = 'block'; var alBase = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); var noPdi = alBase.filter(a => a.aee && a.pdi === 'Não').map(a => a.nome); document.getElementById('espSemPdiAuto').value = noPdi.length > 0 ? noPdi.join('\n') : 'Não há estudantes marcados como AEE "Sem PDI".'; var chave = 'mestra_esp_' + turma + '_' + trim; var d = JSON.parse(localStorage.getItem(chave) || '{"intP":"","busca":"","prog":"","outros":"","semLibras":""}'); document.getElementById('espIntPedag').value = d.intP || ''; document.getElementById('espBuscaAtiva').value = d.busca || ''; document.getElementById('espProgParcial').value = d.prog || ''; document.getElementById('espOutrosEnc').value = d.outros || ''; document.getElementById('espSemLibras').value = d.semLibras || ''; }
-    function salvarMatrizEspecialista(btn) { 
-      var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value; 
-      var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Salvando...';
-      var obj = { turma: turma, trimestre: trim, intP: document.getElementById('espIntPedag').value, busca: document.getElementById('espBuscaAtiva').value, prog: document.getElementById('espProgParcial').value, outros: document.getElementById('espOutrosEnc').value, semLibras: document.getElementById('espSemLibras').value }; 
-      localStorage.setItem('mestra_esp_' + turma + '_' + trim, JSON.stringify(obj)); 
-      chamarApiGoogle('salvarMatrizEspecialista', obj, function() {
-          btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Matriz Salva!';
-          setTimeout(() => btn.innerHTML = originalText, 3000);
-      }); 
+    function salvarMatrizEspecialista(btn) { var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value; var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Salvando...'; var obj = { turma: turma, trimestre: trim, intP: document.getElementById('espIntPedag').value, busca: document.getElementById('espBuscaAtiva').value, prog: document.getElementById('espProgParcial').value, outros: document.getElementById('espOutrosEnc').value, semLibras: document.getElementById('espSemLibras').value }; localStorage.setItem('mestra_esp_' + turma + '_' + trim, JSON.stringify(obj)); chamarApiGoogle('salvarMatrizEspecialista', obj, function() { btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Matriz Salva!'; setTimeout(() => btn.innerHTML = originalText, 3000); }); }
+ 
+    // ===============================================================
+    // NOVA ABA BANCO DE DADOS (DASHBOARD GERENCIAL)
+    // ===============================================================
+    function renderizarDashboardBanco() {
+      var turma = document.getElementById('filtroTurmaBanco').value;
+      var trim = document.getElementById('filtroTrimestreBanco').value;
+      var painel = document.getElementById('bancoDashboard');
+      var aviso = document.getElementById('bancoVazio');
+      var grid = document.getElementById('bancoCardsGrid');
+      
+      if(!turma) { painel.style.display = 'none'; aviso.style.display = 'block'; return; }
+      painel.style.display = 'block'; aviso.style.display = 'none';
+      
+      // GARANTIR LEITURA FRESCA
+      var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
+      var alunosBase = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]');
+      
+      // Limpar duplos no banco base
+      var alunos = []; var vistos = new Set();
+      alunosBase.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
+
+      var tot=0, oti=0, bom=0, ate=0;
+      var htmlCards = '';
+
+      alunos.forEach(a => {
+         var key = turma + '_' + a.nome.toUpperCase() + '_' + trim;
+         var reg = dbLocal[key];
+         if(reg) {
+            tot++;
+            var conc = reg.conclusao || "Não Avaliado";
+            var cssClass = 'status-bom';
+            if(conc.includes('ÓTIMO')) { oti++; cssClass = 'status-otimo'; }
+            else if(conc.includes('ATENÇÃO')) { ate++; cssClass = 'status-atencao'; }
+            else if(conc.includes('BOM')) { bom++; }
+
+            var tagAee = a.aee ? `<span class="badge bg-primary">AEE</span>` : '';
+            var faltaIcon = (reg.criterios && reg.criterios.frequencia && reg.criterios.frequencia.includes('🔴')) ? `<span title="Faltoso" style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i></span>` : '';
+            var env = (reg.encFamilia && reg.encFamilia.length > 0) ? `<span title="Família Acionada" style="color:#f59e0b;"><i class="fa-solid fa-house-chimney"></i></span>` : '';
+
+            htmlCards += `
+              <div class="aluno-card ${cssClass}" data-sit="${conc}" data-aee="${a.aee}">
+                 <div>
+                   <div class="sit">${conc}</div>
+                   <div class="nome">${a.nome}</div>
+                   <div class="tags-mini">${tagAee} ${faltaIcon} ${env}</div>
+                 </div>
+                 <button class="btn-dossie" onclick="abrirDossie('${turma}', '${a.nome}', '${trim}')">Ver Dossiê</button>
+              </div>
+            `;
+         }
+      });
+
+      document.getElementById('dbTot').innerText = tot;
+      document.getElementById('dbOti').innerText = oti;
+      document.getElementById('dbBom').innerText = bom;
+      document.getElementById('dbAte').innerText = ate;
+
+      grid.innerHTML = htmlCards || '<div class="col-12 text-center text-muted py-4">Nenhuma avaliação salva para esta turma neste trimestre.</div>';
+      filtrarCardsBanco('TODOS', document.querySelector('.btn-filtro')); // Reset filter
     }
 
-    function atualizarBancoVisual() { var tbody = document.getElementById('tabelaBancoRegistros'); var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); var chaves = Object.keys(db); if(chaves.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">Nenhum registro.</td></tr>'; return; } tbody.innerHTML = ''; chaves.forEach(k => { var reg = db[k]; tbody.innerHTML += `<tr data-turma="${reg.turma}" data-trim="${reg.trimestre}" class="banco-row"><td><span class="badge bg-secondary">${reg.turma}</span></td><td class="fw-bold text-uppercase">${reg.estudante}</td><td class="text-muted" style="font-size:0.75rem;">${reg.trimestre}</td><td><span class="badge bg-info text-dark">${reg.conclusao}</span></td></tr>`; }); }
- 
+    function filtrarCardsBanco(filtro, btn) {
+       document.querySelectorAll('.btn-filtro').forEach(b => b.classList.remove('active'));
+       if(btn) btn.classList.add('active');
+
+       document.querySelectorAll('.aluno-card').forEach(card => {
+          if(filtro === 'TODOS') card.style.display = 'flex';
+          else if(filtro === 'ÓTIMO' && card.dataset.sit.includes('ÓTIMO')) card.style.display = 'flex';
+          else if(filtro === 'BOM' && card.dataset.sit.includes('BOM')) card.style.display = 'flex';
+          else if(filtro === 'ATENÇÃO' && card.dataset.sit.includes('ATENÇÃO')) card.style.display = 'flex';
+          else card.style.display = 'none';
+       });
+    }
+
+    function abrirDossie(turma, nome, trim) {
+       var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
+       var key = turma + '_' + nome.toUpperCase() + '_' + trim;
+       var reg = db[key];
+       if(!reg) return;
+
+       document.getElementById('mdNome').innerText = nome;
+       document.getElementById('mdTurma').innerText = turma + ' - ' + trim;
+
+       var cHtml = '';
+       if(reg.criterios) {
+         criteriosDetalhados.forEach(c => {
+            var val = reg.criterios[c.chave] || '-';
+            var cor = val.includes('🔴') ? '#fee2e2; color:#991b1b;' : (val.includes('🟡') ? '#fef3c7; color:#92400e;' : '#d1fae5; color:#065f46;');
+            cHtml += `<div style="padding:6px; border-bottom:1px solid #e2e8f0; font-size:0.8rem;"><strong style="color:#475569;">${c.nome}:</strong> <span style="background:${cor}; padding:2px 6px; border-radius:4px; font-weight:700;">${val}</span></div>`;
+         });
+       }
+
+       var bHtml = `
+         <div class="row g-3">
+            <div class="col-md-6">
+               <div class="card-clean p-3 h-100">
+                  <h6 class="fw-bold border-bottom pb-2 mb-2"><i class="fa-solid fa-list-check text-primary me-2"></i>Critérios</h6>
+                  ${cHtml}
+               </div>
+            </div>
+            <div class="col-md-6 d-flex flex-column gap-3">
+               <div class="card-clean p-3" style="background:#fefce8; border-color:#fde047;">
+                  <h6 class="fw-bold text-warning-dark border-bottom pb-2 mb-2"><i class="fa-solid fa-comment-dots me-2"></i>Parecer e Outros</h6>
+                  <p class="mb-2" style="font-size:0.8rem; line-height:1.4;"><strong>Situação:</strong> ${reg.conclusao}</p>
+                  <p class="mb-2" style="font-size:0.8rem; line-height:1.4;"><strong>Observações:</strong> ${reg.observacoes}</p>
+                  <p class="mb-0" style="font-size:0.8rem; line-height:1.4;"><strong>Complemento:</strong> ${reg.outrasSituacoes || 'Nenhum'}</p>
+               </div>
+               <div class="card-clean p-3">
+                  <h6 class="fw-bold text-success border-bottom pb-2 mb-2"><i class="fa-solid fa-route me-2"></i>Encaminhamentos</h6>
+                  <p class="mb-1" style="font-size:0.75rem;"><strong>Escola:</strong> ${(reg.encEscola||[]).join(', ') || 'Nenhum'}</p>
+                  <p class="mb-0" style="font-size:0.75rem;"><strong>Família:</strong> ${(reg.encFamilia||[]).join(', ') || 'Nenhum'}</p>
+               </div>
+            </div>
+         </div>
+       `;
+       document.getElementById('mdBody').innerHTML = bHtml;
+       document.getElementById('modalDossie').style.display = 'flex';
+    }
+
+    function fecharDossie() { document.getElementById('modalDossie').style.display = 'none'; }
+
+
     // ===============================================================
     // ABA DATASHOW / REUNIÃO 
     // ===============================================================
     function iniciarCronometro() {
-     if(timerInterval) clearInterval(timerInterval); 
-     segundosRestantes = 180;
+     if(timerInterval) clearInterval(timerInterval); segundosRestantes = 180;
       timerInterval = setInterval(() => { 
         if(segundosRestantes > 0) { 
           segundosRestantes--; 
@@ -1295,7 +1120,11 @@
     
     function carregarAlunosTurmaDatashow(turma) { 
       var grid = document.getElementById('gridAlunosSessao'); 
-      var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
+      var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
+      // DEDUPLICAÇÃO DE EXIBIÇÃO
+      var alunos = []; var vistos = new Set();
+      alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
+      
       grid.innerHTML = ''; 
       alunos.forEach(a => grid.innerHTML += `<div class="student-pill" onclick="abrirAvaliacaoAluno('${a.nome}')"><i class="fa-solid fa-user-graduate text-primary"></i> ${a.nome}</div>`); 
     }
@@ -1315,7 +1144,6 @@
  
       document.querySelectorAll('.seg-option').forEach(b => b.classList.remove('selected-green', 'selected-yellow', 'selected-red'));
       
-      // RESET PADRÃO PARA NOVO ALUNO: Escola os 9 selecionados, Família todos selecionados.
       var padroesEscola = ["Reforçar os combinados da turma.", "Orientar o estudante individualmente.", "Reforçar positivamente os avanços.", "Realizar agrupamentos temporários", "Organizar o mapeamento na sala", "Orientar sobre rotina de estudos.", "Acompanhar a frequência escolar.", "Comunicar a família sobre as faltas.", "Propor atividades de reforço."];
       document.querySelectorAll('.chk-escola').forEach(chk => chk.checked = padroesEscola.includes(chk.value));
       document.querySelectorAll('.chk-familia').forEach(chk => chk.checked = true); 
@@ -1325,29 +1153,14 @@
  
       var dados = null;
       var trim = document.getElementById('sessaoTrimestre').value;
+      
+      // SINCRONIZAÇÃO FORÇADA LOCAL (Lê direto a última versão salva)
       var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
       var keyLocal = turmaAtivaSessao + '_' + nomeAluno.toUpperCase() + '_' + trim;
 
       if (dbLocal[keyLocal]) {
           dados = dbLocal[keyLocal];
-      } else if (bancoDeDadosNuvem.avaliacoes && bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao] && bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao][nomeAluno.toUpperCase()]) {
-          var cloudData = bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao][nomeAluno.toUpperCase()];
-          if(cloudData.trimestre === trim) {
-              dados = {
-                  criterios: {
-                      convivencia: cloudData.disciplina, atencao: cloudData.atencao, conversa: cloudData.conversa,
-                      interesse: cloudData.interesse, participacao: cloudData.participacao, aprendizagem: cloudData.aprendizagem,
-                      organizacao: cloudData.organizacao, ativ_sala: cloudData.atividades_sala, tarefas_casa: cloudData.tarefa_casa,
-                      frequencia: cloudData.presenca
-                  },
-                  conclusao: cloudData.caracteristica,
-                  observacoes: cloudData.observacoes,
-                  outrasSituacoes: cloudData.outras_situacoes || cloudData.motivo,
-                  encEscola: cloudData.acoes_escola ? cloudData.acoes_escola.split(';').map(x=>x.trim()) : [],
-                  encFamilia: cloudData.acoes_familia ? cloudData.acoes_familia.split(';').map(x=>x.trim()) : []
-              };
-          }
-      }
+      } 
       
       if(dados) {
         if(dados.criterios) {
@@ -1369,7 +1182,6 @@
         }
         
         var escArr = dados.encEscola || [];
-        // Se já tem dados salvos, desmarca tudo e re-marca só o que tá no DB
         if (escArr.length > 0) {
             document.querySelectorAll('.chk-escola').forEach(chk => chk.checked = false); 
             document.querySelectorAll('.chk-escola').forEach(chk => { 
@@ -1398,14 +1210,16 @@
       autoExpand(document.getElementById('obsAlunoAtivo')); 
       autoExpand(document.getElementById('txtOutrasSituacoes'));
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      salvarDadosSilenciosamente();
     }
  
     function navegarEstudante(direcao) {
       if(!alunoAtivoSessao) return;
       salvarDadosSilenciosamente(); 
-      var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turmaAtivaSessao) || '[]'); 
+      // Garante que navega na lista desduplicada
+      var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turmaAtivaSessao) || '[]'); 
+      var alunos = []; var vistos = new Set();
+      alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
+
       var idx = alunos.findIndex(a => a.nome === alunoAtivoSessao);
       if(idx + direcao >= 0 && idx + direcao < alunos.length) abrirAvaliacaoAluno(alunos[idx + direcao].nome);
     }
@@ -1424,7 +1238,7 @@
 
       var obj = { 
         turma: turmaAtivaSessao, 
-        estudante: alunoAtivoSessao, 
+        estudante: alunoAtivoSessao.toUpperCase(), 
         trimestre: trim, 
         criterios: critObj, 
         encEscola: encE, 
@@ -1438,19 +1252,9 @@
       db[turmaAtivaSessao + '_' + alunoAtivoSessao.toUpperCase() + '_' + trim] = obj; 
       localStorage.setItem('mestra_banco_registros', JSON.stringify(db));
 
-      if (!bancoDeDadosNuvem.avaliacoes) bancoDeDadosNuvem.avaliacoes = {};
-      if (!bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao]) bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao] = {};
-      bancoDeDadosNuvem.avaliacoes[turmaAtivaSessao][alunoAtivoSessao.toUpperCase()] = {
-          trimestre: trim,
-          disciplina: obj.criterios.convivencia, atencao: obj.criterios.atencao, conversa: obj.criterios.conversa,
-          interesse: obj.criterios.interesse, participacao: obj.criterios.participacao, aprendizagem: obj.criterios.aprendizagem,
-          organizacao: obj.criterios.organizacao, atividades_sala: obj.criterios.ativ_sala, tarefa_casa: obj.criterios.tarefas_casa, presenca: obj.criterios.frequencia,
-          caracteristica: obj.conclusao, observacoes: obj.observacoes, outras_situacoes: obj.outrasSituacoes,
-          acoes_escola: encE.join('; '), acoes_familia: encF.join('; ')
-      };
-      
+      // Nuvem Push
       var payloadPlanilha = {
-        trimestre: trim, turma: turmaAtivaSessao, estudante: alunoAtivoSessao,
+        trimestre: trim, turma: turmaAtivaSessao, estudante: alunoAtivoSessao.toUpperCase(),
         disciplina: obj.criterios.convivencia || '', atencao: obj.criterios.atencao || '',
         conversa: obj.criterios.conversa || '', interesse: obj.criterios.interesse || '',
         participacao: obj.criterios.participacao || '', aprendizagem: obj.criterios.aprendizagem || '',
@@ -1472,20 +1276,8 @@
       if(crit) { 
         var opt = crit.opcoes.find(o => o.texto === textoOpcao); 
         if(opt) { 
-          if(opt.escola) {
-              document.querySelectorAll('.chk-escola').forEach(chk => { 
-                  var valClean = chk.value.replace(/\.$/, '').trim();
-                  // Apenas SOMA os novos, não desmarca os anteriores
-                  if(opt.escola.some(e => e.replace(/\.$/, '').trim() === valClean)) chk.checked = true; 
-              }); 
-          }
-          if(opt.familia) {
-              document.querySelectorAll('.chk-familia').forEach(chk => { 
-                  var valClean = chk.value.replace(/\.$/, '').trim();
-                  // Apenas SOMA os novos, não desmarca os anteriores
-                  if(opt.familia.some(e => e.replace(/\.$/, '').trim() === valClean)) chk.checked = true; 
-              }); 
-          }
+          if(opt.escola) { document.querySelectorAll('.chk-escola').forEach(chk => { var valClean = chk.value.replace(/\.$/, '').trim(); if(opt.escola.some(e => e.replace(/\.$/, '').trim() === valClean)) chk.checked = true; }); }
+          if(opt.familia) { document.querySelectorAll('.chk-familia').forEach(chk => { var valClean = chk.value.replace(/\.$/, '').trim(); if(opt.familia.some(e => e.replace(/\.$/, '').trim() === valClean)) chk.checked = true; }); }
         } 
       }
       atualizarRoboESintese(true);
@@ -1501,8 +1293,7 @@
     
     function setConclusao(val, btn, autoRecalculate = true) { 
       Array.from(btn.parentElement.children).forEach(b => b.classList.remove('selected-green', 'selected-yellow', 'selected-red')); 
-      if(val === 'PRECISA DE ATENÇÃO') btn.classList.add('selected-red'); 
-      else btn.classList.add('selected-green'); 
+      if(val === 'PRECISA DE ATENÇÃO') btn.classList.add('selected-red'); else btn.classList.add('selected-green'); 
       if(autoRecalculate) atualizarRoboESintese(false); 
       salvarDadosSilenciosamente(); 
     }
@@ -1514,8 +1305,7 @@
       criteriosDetalhados.forEach(c => { 
         var selBtn = document.querySelector('#crit_' + c.chave + ' .selected-green, #crit_' + c.chave + ' .selected-yellow, #crit_' + c.chave + ' .selected-red'); 
         if(selBtn) { 
-          var valRaw = selBtn.innerText.trim(); 
-          var textoLimpo = valRaw.replace(/[^\p{L}\p{N}\s,\.\-\(\)\/]/gu, '').trim().toLowerCase(); 
+          var valRaw = selBtn.innerText.trim(); var textoLimpo = valRaw.replace(/[^\p{L}\p{N}\s,\.\-\(\)\/]/gu, '').trim().toLowerCase(); 
           if(valRaw.startsWith('🟢')) greens.push(c.nome + " (" + textoLimpo + ")"); 
           if(valRaw.startsWith('🟡')) yellows.push(c.nome + " (" + textoLimpo + ")"); 
           if(valRaw.startsWith('🔴')) reds.push(c.nome + " (" + textoLimpo + ")"); 
@@ -1524,64 +1314,43 @@
       
       if(permitirCalculoAutomatico && criteriaBtns.length === 10) {
         var concKey = 'BOM/BOA'; 
-        if(reds.length >= 2 || (reds.length + yellows.length) >= 4) concKey = 'PRECISA DE ATENÇÃO'; 
-        else if (greens.length >= 8) concKey = 'ÓTIMO(A)';
-        
+        if(reds.length >= 2 || (reds.length + yellows.length) >= 4) concKey = 'PRECISA DE ATENÇÃO'; else if (greens.length >= 8) concKey = 'ÓTIMO(A)';
         var btnAlvo = document.querySelector(`button[data-conc="${concKey}"]`); 
-        if(btnAlvo) { 
-          Array.from(document.getElementById('conclusaoGroup').children).forEach(b => b.classList.remove('selected-green', 'selected-red')); 
-          if(concKey === 'PRECISA DE ATENÇÃO') btnAlvo.classList.add('selected-red'); 
-          else btnAlvo.classList.add('selected-green'); 
-        }
+        if(btnAlvo) { Array.from(document.getElementById('conclusaoGroup').children).forEach(b => b.classList.remove('selected-green', 'selected-red')); if(concKey === 'PRECISA DE ATENÇÃO') btnAlvo.classList.add('selected-red'); else btnAlvo.classList.add('selected-green'); }
       }
       
       var concBtn = document.querySelector('#conclusaoGroup .selected-green, #conclusaoGroup .selected-red'); 
       var conclusaoLimpa = concBtn ? concBtn.dataset.conc : 'em processo de avaliação';
-      
       var textoFinal = `O(A) estudante apresenta uma situação geral avaliada como: ${conclusaoLimpa}. `;
       if(greens.length > 0) textoFinal += `No cotidiano escolar, destaca-se positivamente nos seguintes aspectos: ${greens.join('; ')}. `;
       if(yellows.length > 0 || reds.length > 0) textoFinal += `A equipe pedagógica pontuou que o estudante requer acompanhamento nos critérios: ${yellows.concat(reds).join('; ')}.`;
       
-      var areaTexto = document.getElementById('obsAlunoAtivo');
-      areaTexto.value = textoFinal; 
-      autoExpand(areaTexto); 
-      
+      var areaTexto = document.getElementById('obsAlunoAtivo'); areaTexto.value = textoFinal; autoExpand(areaTexto); 
       document.getElementById('contadorEscola').innerText = document.querySelectorAll('.chk-escola:checked').length; 
       document.getElementById('contadorFamilia').innerText = document.querySelectorAll('.chk-familia:checked').length;
     }
  
-    function fecharAvaliacaoAluno() { 
-      salvarDadosSilenciosamente(); 
-      document.getElementById('painelAvaliacaoEstudante').style.display = 'none'; 
-      document.getElementById('seletorDatashow').style.display = 'block'; 
-    }
-    
-    function salvarEAvancarProximo(btn) { 
-      salvarDadosSilenciosamente(); 
-      navegarEstudante(1); 
-      atualizarBancoVisual(); 
-      if(btn) {
-          var originalHTML = btn.innerHTML;
-          btn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Salvo!';
-          setTimeout(() => btn.innerHTML = originalHTML, 2000);
-      }
-    }
+    function fecharAvaliacaoAluno() { salvarDadosSilenciosamente(); document.getElementById('painelAvaliacaoEstudante').style.display = 'none'; document.getElementById('seletorDatashow').style.display = 'block'; }
+    function salvarEAvancarProximo(btn) { salvarDadosSilenciosamente(); navegarEstudante(1); if(btn) { var o = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Salvo!'; setTimeout(() => btn.innerHTML = o, 2000); } }
 
     // ===============================================================
-    // IMPRESSÃO DE COMUNICADOS A4 
+    // IMPRESSÃO DE COMUNICADOS A4 (LAYOUT RESTAURADO)
     // ===============================================================
     function imprimirComunicadosA4() {
       var relTurma = document.getElementById('relTurmaSelect').value;
       var turma = relTurma ? relTurma : document.getElementById('sessaoTrimestre').parentElement.parentElement.parentElement.querySelector('#gridTurmasSessao .active')?.innerText;
-      
       var trimestre = document.getElementById('sessaoTrimestre').value;
       var anoAtual = document.getElementById('globalAno') ? document.getElementById('globalAno').value : '2026';
 
       if(!turma) { alert("Selecione a turma."); return; }
-      var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
+      
+      // Limpar duplos para impressão
+      var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
+      var alunos = []; var vistos = new Set();
+      alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
+
       if(alunos.length === 0) { alert("Nenhum aluno cadastrado."); return; }
       
-      var dbNuvem = bancoDeDadosNuvem.avaliacoes ? bancoDeDadosNuvem.avaliacoes[turma] : null;
       var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
  
       var html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Comunicados ${turma}</title><style>
@@ -1597,11 +1366,10 @@
         .coluna-esquerda { width: 42%; display: flex; flex-direction: column; gap: 4px; } 
         .coluna-direita { width: 58%; display: flex; flex-direction: column; gap: 8px; }
         
-        .box-criterio { background: #f8fafc; border: 1.2px solid #cbd5e1; border-radius: 5px; padding: 4px 7px; margin-bottom: 2px; } 
-        .box-criterio-titulo { display:none; } 
-        .box-criterio-valor { font-size: 8pt; font-weight: 700; color: #065f46; background: #d1fae5; padding: 2px 5px; border-radius: 4px; display: inline-block; } 
+        .box-criterio-valor { font-size: 8pt; font-weight: 700; color: #065f46; background: #d1fae5; padding: 4px 6px; border-radius: 4px; border-left: 3px solid #10b981; } 
+        .box-criterio-valor.amarelo { background: #fef3c7; color: #92400e; border-left-color: #f59e0b; } 
+        .box-criterio-valor.vermelho { background: #fee2e2; color: #991b1b; border-left-color: #ef4444; }
         
-        .amarelo { background: #fef3c7; color: #92400e; } .vermelho { background: #fee2e2; color: #991b1b; }
         .box-bloco { border: 2px solid #0f172a; border-radius: 8px; padding: 10px; background: white; display: flex; flex-direction: column; } 
         .box-bloco-titulo { font-size: 9.5pt; font-weight: 900; color: #0f172a; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 6px; }
         .box-dupla { display: flex; gap: 8px; } .box-dupla > div { flex: 1; border: 1.2px solid #cbd5e1; border-radius: 6px; padding: 8px; background: #fafafa; min-height: 85px; } 
@@ -1613,32 +1381,22 @@
       </style></head><body><div class="bar"><button onclick="window.print()" style="background:#4f46e5; color:white; border:none; padding:10px 20px; font-weight:bold; border-radius:8px; cursor:pointer; font-size:11pt;">Imprimir Comunicados</button></div>`;
  
       alunos.forEach(a => {
-        var reg = {};
-        if (dbNuvem && dbNuvem[a.nome.toUpperCase()]) {
-            var r = dbNuvem[a.nome.toUpperCase()];
-            reg = {
-                criterios: {
-                    convivencia: r.disciplina, atencao: r.atencao, conversa: r.conversa, interesse: r.interesse,
-                    participacao: r.participacao, aprendizagem: r.aprendizagem, organizacao: r.organizacao,
-                    ativ_sala: r.atividades_sala, tarefas_casa: r.tarefa_casa, frequencia: r.presenca
-                },
-                conclusao: r.caracteristica, observacoes: r.observacoes,
-                encEscola: r.acoes_escola ? r.acoes_escola.split(';').filter(x => x.trim() !== '') : [],
-                encFamilia: r.acoes_familia ? r.acoes_familia.split(';').filter(x => x.trim() !== '') : [],
-                outrasSituacoes: r.outras_situacoes || r.motivo
-            };
-        } else {
-            reg = dbLocal[turma + '_' + a.nome.toUpperCase() + '_' + trimestre] || {};
-        }
-
+        // LEITURA 100% SINCRONIZADA DO BANCO LOCAL (Que é gravado em tempo real pelo Datashow)
+        var reg = dbLocal[turma + '_' + a.nome.toUpperCase() + '_' + trimestre] || {};
         var crit = reg.criterios || {}; 
+        
         var verdesHtml = ''; var atencaoHtml = ''; var criteriosEsqHtml = '';
         
+        // RECRIANDO A COLUNA ESQUERDA COM OS TÍTULOS (Igual ao Print)
         criteriosDetalhados.forEach(ck => { 
             var val = crit[ck.chave] || "🟢 Acompanhado(a)"; 
             var classeCor = val.startsWith('🟡') ? "amarelo" : (val.startsWith('🔴') ? "vermelho" : ""); 
             
-            criteriosEsqHtml += `<div class="box-criterio"><div class="box-criterio-valor ${classeCor}">${val}</div></div>`; 
+            criteriosEsqHtml += `
+            <div style="margin-bottom: 5px;">
+               <div style="font-size: 6.5pt; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 2px;">${ck.nome}</div>
+               <div class="box-criterio-valor ${classeCor}" style="width: 100%; box-sizing: border-box;">${val}</div>
+            </div>`; 
             
             var bulletColor = val.startsWith('🟢') ? 'bg-green' : (val.startsWith('🟡') ? 'bg-yellow' : 'bg-red');
             var valLimpo = val.replace(/🟢|🟡|🔴/g, '').trim();
@@ -1652,14 +1410,10 @@
         if(atencaoHtml === '') atencaoHtml = '<p style="font-size: 7.5pt; margin: 0; color:#64748b;">Nenhum ponto de atenção.</p>';
         
         var concVal = reg.conclusao || "ÓTIMO(A)";
-        
         var escolaHtml = (reg.encEscola && reg.encEscola.length > 0) ? '<ul style="margin:0; padding-left:14px; font-size:8pt; line-height:1.3;">' + reg.encEscola.map(e => `<li style="margin-bottom:2px;">${e.trim()}</li>`).join('') + '</ul>' : '<p style="font-size:8pt; margin:0; color:#64748b;">Nenhum.</p>';
-        
-        // Puxa os encFamiliaOpcoes se o array do aluno estiver vazio.
         var famArrForPrint = (reg.encFamilia && reg.encFamilia.length > 0) ? reg.encFamilia : encFamiliaOpcoes;
         var familiaHtml = '<ul style="margin:0; padding-left:14px; font-size:8pt; line-height:1.3;">' + famArrForPrint.map(f => `<li style="margin-bottom:2px;">${f.trim()}</li>`).join('') + '</ul>';
         
-        // TAG DE DESTAQUE - ESTUDANTE NOTA 10
         var outrasFormatadas = reg.outrasSituacoes || '';
         if(outrasFormatadas.includes('Parabéns! Você é um(a) estudante nota 10!')) {
             outrasFormatadas = outrasFormatadas.replace('Parabéns! Você é um(a) estudante nota 10!', '<span style="background-color: #d1fae5; color: #065f46; font-weight: 900; padding: 3px 6px; border-radius: 4px; border: 1.5px solid #10b981; display: inline-block; margin-top: 3px;">🌟 Parabéns! Você é um(a) estudante nota 10!</span>');
@@ -1682,14 +1436,13 @@
         <div class="student-banner">
             <div>
                 <div style="font-size:7pt; color:#64748b;">ESTUDANTE:</div>
-                <div style="font-size:12pt; font-weight:900;">${a.nome}</div>
+                <div style="font-size:12pt; font-weight:900; text-transform:uppercase;">${a.nome}</div>
             </div>
-            <div>
-                <span style="font-size:9pt; background:#eef2ff; color:#4f46e5; padding:4px 10px; border-radius:6px; font-weight:bold;">Turma: ${turma}</span>
-            </div>
+            <div><span style="font-size:9pt; background:#eef2ff; color:#4f46e5; padding:4px 10px; border-radius:6px; font-weight:bold;">Turma: ${turma}</span></div>
         </div>
         
         <div class="grid-layout">
+            <!-- COLUNA ESQUERDA RESTAURADA COM TÍTULOS -->
             <div class="coluna-esquerda">
               <div style="font-size: 7.5pt; font-weight: 900; color: #475569; margin-bottom: 5px;">AVALIAÇÃO DOS CRITÉRIOS:</div>
               ${criteriosEsqHtml}
@@ -1698,7 +1451,7 @@
             <div class="coluna-direita">
                 <div class="box-bloco" style="border: 1.5px solid #cbd5e1; padding: 10px; margin-bottom: 0px;">
                     <div class="box-bloco-titulo" style="font-size: 9.5pt;">SITUAÇÃO GERAL DO(A) ESTUDANTE</div>
-                    <div class="box-criterio-valor ${concVal.includes('PRECISA') ? 'vermelho' : ''}" style="font-size: 9.5pt; margin-bottom: 10px; display:inline-block; padding: 4px 8px;">
+                    <div class="box-criterio-valor" style="${concVal.includes('PRECISA') ? 'background:#fee2e2; color:#991b1b; border-left-color:#ef4444;' : 'background:#d1fae5; color:#065f46; border-left-color:#10b981;'} font-size: 9.5pt; margin-bottom: 10px; display:inline-block; padding: 4px 8px;">
                         ${concVal.includes('PRECISA') ? '🔴 ' : '🟢 '}${concVal}
                     </div>
                     
@@ -1738,13 +1491,11 @@
         </div><div class="rodape-assinatura"><div style="width: 40%; margin: 0 auto; border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 8pt; font-weight: 700;">Equipe Pedagógica / Especialista</div></div></div>`;
       });
       html += `</body></html>`; 
-      var w = window.open('', '_blank'); 
-      w.document.write(html); 
-      w.document.close();
+      var w = window.open('', '_blank'); w.document.write(html); w.document.close();
     }
 
     // ===============================================================
-    // IMPRESSÃO DE ATA CONSOLIDADA DA TURMA
+    // IMPRESSÃO DE ATA CONSOLIDADA DA TURMA (MANTIDA INTACTA)
     // ===============================================================
     function imprimirAtaConsolidada() {
       var relTurma = document.getElementById('relTurmaSelect').value;
@@ -1753,12 +1504,13 @@
 
       if(!relTurma) { alert("Selecione a turma."); return; }
 
-      var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + relTurma) || '[]');
+      var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + relTurma) || '[]');
+      var alunos = []; var vistos = new Set();
+      alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
       if(alunos.length === 0) { alert("Nenhum aluno cadastrado nesta turma."); return; }
       
       var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
-      var countOtimo = 0, countBom = 0, countAtencao = 0;
-      var listaAtencao = [];
+      var countOtimo = 0, countBom = 0, countAtencao = 0; var listaAtencao = [];
 
       alunos.forEach(a => {
          var reg = dbLocal[relTurma + '_' + a.nome.toUpperCase() + '_' + trimestre];
@@ -1808,70 +1560,13 @@
       </style></head><body><div class="bar"><button onclick="window.print()" style="background:#4f46e5; color:white; border:none; padding:10px 20px; font-weight:bold; border-radius:8px; cursor:pointer; font-size:11pt;">Imprimir Ata Consolidada</button></div>`;
       
       html += `<div class="pagina-a4">
-        
-        <div class="header-top">
-            <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" class="logo">
-            <div class="school-title">
-                <div style="font-size: 8pt; font-weight: 800; color: #64748b;">E. E. Mestra Aurora — Gestão Pedagógica</div>
-                <h1 style="font-size: 11pt; margin: 2px 0 0 0;">ATA CONSOLIDADA DA TURMA</h1>
-            </div>
-            <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
-                <div style="background:#fef3c7; color:#b45309; font-weight:800; padding:4px 10px; border-radius:6px; font-size:10pt; border:1px solid #fde047;">${trimestre}</div>
-                <div style="font-size: 8pt; font-weight: bold; color: #475569; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; border: 1px solid #cbd5e1;">Ano: ${anoAtual}</div>
-            </div>
-        </div>
-
-        <div class="student-banner">
-            <div><div style="font-size:7pt; color:#64748b;">TURMA ALVO:</div><div style="font-size:12pt; font-weight:900;">${relTurma}</div></div>
-            <div><span style="font-size:9pt; background:#eef2ff; color:#4f46e5; padding:4px 10px; border-radius:6px; font-weight:bold;">Total de Estudantes: ${alunos.length}</span></div>
-        </div>
-
-        <div class="box-bloco" style="background: #f8fafc;">
-            <div class="box-bloco-titulo">1. PANORAMA DE AVALIAÇÃO DO CONSELHO (DATASHOW)</div>
-            <div style="display:flex; justify-content: space-around; text-align:center; padding: 5px 0;">
-                <div><div style="font-size:14pt; font-weight:900; color:#059669;">${countOtimo}</div><div style="font-size:7pt; font-weight:bold; color:#64748b;">ÓTIMOS</div></div>
-                <div><div style="font-size:14pt; font-weight:900; color:#10b981;">${countBom}</div><div style="font-size:7pt; font-weight:bold; color:#64748b;">BONS</div></div>
-                <div><div style="font-size:14pt; font-weight:900; color:#dc2626;">${countAtencao}</div><div style="font-size:7pt; font-weight:bold; color:#64748b;">PRECISAM DE ATENÇÃO</div></div>
-            </div>
-            ${listaAtencao.length > 0 ? `<div style="margin-top:8px; padding-top:8px; border-top:1px dashed #cbd5e1;"><strong style="font-size:8pt; color:#991b1b;">Estudantes em Alerta:</strong> <span style="font-size:8pt; color:#334155;">${listaAtencao.join(', ')}</span></div>` : ''}
-        </div>
-
-        <div class="grid-2">
-            <div class="box-bloco">
-                <div class="box-bloco-titulo text-primary">2. INDICADORES DE ATENÇÃO (PROFESSORES)</div>
-                <div style="margin-bottom: 6px;"><strong style="font-size:8pt; color:#b91c1c;">Abaixo da Média:</strong> ${profsAbaixoMedia.length>0 ? `<ul>${profsAbaixoMedia.join('')}</ul>` : '<span style="font-size:8pt; color:#64748b; display:block;">Nenhum registro.</span>'}</div>
-                <div style="margin-bottom: 6px;"><strong style="font-size:8pt; color:#b45309;">Infrequentes / Faltosos:</strong> ${profsInfre.length>0 ? `<ul>${profsInfre.join('')}</ul>` : '<span style="font-size:8pt; color:#64748b; display:block;">Nenhum registro.</span>'}</div>
-                <div style="margin-bottom: 6px;"><strong style="font-size:8pt; color:#0369a1;">Público de Reforço:</strong> ${profsReforco.length>0 ? `<ul>${profsReforco.join('')}</ul>` : '<span style="font-size:8pt; color:#64748b; display:block;">Nenhum registro.</span>'}</div>
-                <div><strong style="font-size:8pt; color:#475569;">Não Alfabetizados:</strong> ${profsNaoAlfab.length>0 ? `<ul>${profsNaoAlfab.join('')}</ul>` : '<span style="font-size:8pt; color:#64748b; display:block;">Nenhum registro.</span>'}</div>
-            </div>
-            
-            <div class="box-bloco">
-                <div class="box-bloco-titulo text-primary">3. MATRIZ DO ESPECIALISTA / DIREÇÃO</div>
-                <div style="font-size:8pt; margin-bottom: 6px;"><strong>Intervenções:</strong><br><span style="color:#334155;">${dEsp.intP.replace(/\\n/g, '<br>') || 'Nenhum registro.'}</span></div>
-                <div style="font-size:8pt; margin-bottom: 6px;"><strong>Busca Ativa:</strong><br><span style="color:#334155;">${dEsp.busca.replace(/\\n/g, '<br>') || 'Nenhum registro.'}</span></div>
-                <div style="font-size:8pt;"><strong>Prog. Parcial e Outros:</strong><br><span style="color:#334155;">${dEsp.prog.replace(/\\n/g, '<br>')} <br>${dEsp.outros.replace(/\\n/g, '<br>')}</span></div>
-            </div>
-        </div>
-
-        <div class="grid-2">
-            <div class="box-bloco" style="background:#fefce8; border-color:#fde047;">
-                <div class="box-bloco-titulo" style="color:#a16207; border-color:#fef08a;">4. INCLUSÃO E EDUCAÇÃO ESPECIAL</div>
-                <div style="margin-bottom: 4px;"><strong style="font-size:8pt; color:#991b1b;">Alunos AEE SEM PDI:</strong><br><span style="font-size:8pt; color:#1e293b;">${noPdi.length>0 ? noPdi.join(', ') : 'Todos com PDI em dia.'}</span></div>
-                <div><strong style="font-size:8pt; color:#991b1b;">Falta de LIBRAS:</strong><br><span style="font-size:8pt; color:#1e293b;">${dEsp.semLibras || 'Nenhum registro pendente.'}</span></div>
-            </div>
-            <div class="box-bloco">
-                <div class="box-bloco-titulo">5. CARACTERÍSTICAS DA TURMA (SÍNTESE PROFS)</div>
-                <div style="font-size:8pt; max-height:100px; overflow:hidden; color:#334155;">
-                   ${obsProfessores || 'Nenhuma observação geral registrada pelos professores.'}
-                </div>
-            </div>
-        </div>
-
-        <div class="rodape-assinatura">
-            <div style="width: 50%; margin: 0 auto; border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 8pt; font-weight: 700;">Direção e Equipe Pedagógica Especializada</div>
-        </div>
+        <div class="header-top"><img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" class="logo"><div class="school-title"><div style="font-size: 8pt; font-weight: 800; color: #64748b;">E. E. Mestra Aurora — Gestão Pedagógica</div><h1 style="font-size: 11pt; margin: 2px 0 0 0;">ATA CONSOLIDADA DA TURMA</h1></div><div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;"><div style="background:#fef3c7; color:#b45309; font-weight:800; padding:4px 10px; border-radius:6px; font-size:10pt; border:1px solid #fde047;">${trimestre}</div><div style="font-size: 8pt; font-weight: bold; color: #475569; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; border: 1px solid #cbd5e1;">Ano: ${anoAtual}</div></div></div>
+        <div class="student-banner"><div><div style="font-size:7pt; color:#64748b;">TURMA ALVO:</div><div style="font-size:12pt; font-weight:900;">${relTurma}</div></div><div><span style="font-size:9pt; background:#eef2ff; color:#4f46e5; padding:4px 10px; border-radius:6px; font-weight:bold;">Total de Estudantes: ${alunos.length}</span></div></div>
+        <div class="box-bloco" style="background: #f8fafc;"><div class="box-bloco-titulo">1. PANORAMA DE AVALIAÇÃO DO CONSELHO (DATASHOW)</div><div style="display:flex; justify-content: space-around; text-align:center; padding: 5px 0;"><div><div style="font-size:14pt; font-weight:900; color:#059669;">${countOtimo}</div><div style="font-size:7pt; font-weight:bold; color:#64748b;">ÓTIMOS</div></div><div><div style="font-size:14pt; font-weight:900; color:#10b981;">${countBom}</div><div style="font-size:7pt; font-weight:bold; color:#64748b;">BONS</div></div><div><div style="font-size:14pt; font-weight:900; color:#dc2626;">${countAtencao}</div><div style="font-size:7pt; font-weight:bold; color:#64748b;">PRECISAM DE ATENÇÃO</div></div></div>${listaAtencao.length > 0 ? `<div style="margin-top:8px; padding-top:8px; border-top:1px dashed #cbd5e1;"><strong style="font-size:8pt; color:#991b1b;">Estudantes em Alerta:</strong> <span style="font-size:8pt; color:#334155;">${listaAtencao.join(', ')}</span></div>` : ''}</div>
+        <div class="grid-2"><div class="box-bloco"><div class="box-bloco-titulo text-primary">2. INDICADORES DE ATENÇÃO (PROFESSORES)</div><div style="margin-bottom: 6px;"><strong style="font-size:8pt; color:#b91c1c;">Abaixo da Média:</strong> ${profsAbaixoMedia.length>0 ? `<ul>${profsAbaixoMedia.join('')}</ul>` : '<span style="font-size:8pt; color:#64748b; display:block;">Nenhum registro.</span>'}</div><div style="margin-bottom: 6px;"><strong style="font-size:8pt; color:#b45309;">Infrequentes / Faltosos:</strong> ${profsInfre.length>0 ? `<ul>${profsInfre.join('')}</ul>` : '<span style="font-size:8pt; color:#64748b; display:block;">Nenhum registro.</span>'}</div><div style="margin-bottom: 6px;"><strong style="font-size:8pt; color:#0369a1;">Público de Reforço:</strong> ${profsReforco.length>0 ? `<ul>${profsReforco.join('')}</ul>` : '<span style="font-size:8pt; color:#64748b; display:block;">Nenhum registro.</span>'}</div><div><strong style="font-size:8pt; color:#475569;">Não Alfabetizados:</strong> ${profsNaoAlfab.length>0 ? `<ul>${profsNaoAlfab.join('')}</ul>` : '<span style="font-size:8pt; color:#64748b; display:block;">Nenhum registro.</span>'}</div></div><div class="box-bloco"><div class="box-bloco-titulo text-primary">3. MATRIZ DO ESPECIALISTA / DIREÇÃO</div><div style="font-size:8pt; margin-bottom: 6px;"><strong>Intervenções:</strong><br><span style="color:#334155;">${dEsp.intP.replace(/\\n/g, '<br>') || 'Nenhum registro.'}</span></div><div style="font-size:8pt; margin-bottom: 6px;"><strong>Busca Ativa:</strong><br><span style="color:#334155;">${dEsp.busca.replace(/\\n/g, '<br>') || 'Nenhum registro.'}</span></div><div style="font-size:8pt;"><strong>Prog. Parcial e Outros:</strong><br><span style="color:#334155;">${dEsp.prog.replace(/\\n/g, '<br>')} <br>${dEsp.outros.replace(/\\n/g, '<br>')}</span></div></div></div>
+        <div class="grid-2"><div class="box-bloco" style="background:#fefce8; border-color:#fde047;"><div class="box-bloco-titulo" style="color:#a16207; border-color:#fef08a;">4. INCLUSÃO E EDUCAÇÃO ESPECIAL</div><div style="margin-bottom: 4px;"><strong style="font-size:8pt; color:#991b1b;">Alunos AEE SEM PDI:</strong><br><span style="font-size:8pt; color:#1e293b;">${noPdi.length>0 ? noPdi.join(', ') : 'Todos com PDI em dia.'}</span></div><div><strong style="font-size:8pt; color:#991b1b;">Falta de LIBRAS:</strong><br><span style="font-size:8pt; color:#1e293b;">${dEsp.semLibras || 'Nenhum registro pendente.'}</span></div></div><div class="box-bloco"><div class="box-bloco-titulo">5. CARACTERÍSTICAS DA TURMA (SÍNTESE PROFS)</div><div style="font-size:8pt; max-height:100px; overflow:hidden; color:#334155;">${obsProfessores || 'Nenhuma observação geral registrada pelos professores.'}</div></div></div>
+        <div class="rodape-assinatura"><div style="width: 50%; margin: 0 auto; border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 8pt; font-weight: 700;">Direção e Equipe Pedagógica Especializada</div></div>
       </div></body></html>`;
-      
       var w = window.open('', '_blank'); w.document.write(html); w.document.close();
     }
   </script>
