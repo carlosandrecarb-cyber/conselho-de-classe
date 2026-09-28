@@ -20,7 +20,7 @@
     .nav-pills-modern { background: #f1f5f9; padding: 6px; border-radius: 10px; display: flex; gap: 6px; border: 1px solid var(--border-color); flex-wrap: wrap; justify-content: center; width: 100%; }
     .pill-btn { border: none; background: transparent; padding: 8px 14px; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); border-radius: var(--radius-btn); cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; flex-grow: 1; justify-content: center; }
     .pill-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .card-clean { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-box); padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+    .card-clean { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-box); padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); position: relative; }
     .view-panel { display: none; } .view-panel.active { display: block; animation: fadeIn 0.2s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
     .btn-mestra { background: #10b981; color: white; border: none; font-weight: 700; border-radius: var(--radius-btn); padding: 10px 16px; transition: 0.2s; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
@@ -157,8 +157,11 @@
       <div class="card-clean text-center py-5">
         <h3 class="fw-bold text-dark">Plataforma Inteligente de Governança Pedagógica</h3>
         <p class="text-muted mx-auto mb-4" style="max-width: 600px;">Navegue através dos menus acima. Todos os dados são sincronizados com a folha de cálculo oficial da escola.</p>
-        <div class="d-flex justify-content-center gap-3">
+        <div class="d-flex justify-content-center flex-wrap gap-3">
           <button class="btn btn-primary fw-bold px-4 py-3" onclick="forcarSincronizacaoGeral(this)"><i class="fa-solid fa-arrows-rotate me-2"></i>Sincronizar Alunos e Notas com a Planilha</button>
+          
+          <!-- BOTÃO MÁGICO DE RESET -->
+          <button class="btn btn-danger fw-bold px-4 py-3 shadow" onclick="limparMemoriaEFocarNaPlanilha(this)"><i class="fa-solid fa-broom me-2"></i>Resolver Problemas (Limpar Cache e Puxar do Zero)</button>
         </div>
       </div>
     </section>
@@ -238,7 +241,6 @@
     
     <section id="tab-especialista" class="view-panel admin-only"><div class="card-clean"><h4 class="fw-bold mb-3">Matriz Especialista</h4><div class="row g-3 mb-3"><div class="col-md-4"><label>Especialista:</label><select id="espNomeSelect" class="form-select"></select></div><div class="col-md-4"><label>Turma:</label><select id="espTurmaSelect" class="form-select"></select></div><div class="col-md-4"><label>Trimestre:</label><select id="espTrimSelect" class="form-select"><option selected>2º Trimestre</option></select></div></div><button class="btn btn-primary mb-3" onclick="carregarMatrizEspecialista()">Carregar Turma</button><div id="areaTrabalhoEspecialista" style="display:none;"><textarea id="espIntPedag" class="input-mestra mb-2" placeholder="Intervenção"></textarea><textarea id="espBuscaAtiva" class="input-mestra mb-2" placeholder="Busca Ativa"></textarea><textarea id="espProgParcial" class="input-mestra mb-2" placeholder="Progressões"></textarea><textarea id="espOutrosEnc" class="input-mestra mb-3" placeholder="Outros Encaminhamentos"></textarea><input type="text" id="espSemLibras" class="input-mestra mb-3" placeholder="Falta Libras"><textarea id="espSemPdiAuto" class="input-mestra bg-light text-danger mb-3" readonly></textarea><button class="btn btn-success w-100 py-3" onclick="salvarMatrizEspecialista(this)">Gravar Matriz Especialista</button></div></div></section>
     
-    <!-- ABA 6: BANCO DE DADOS -->
     <section id="tab-banco" class="view-panel admin-only">
       <div class="card-clean">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
@@ -271,7 +273,6 @@
       </div>
     </section>
     
-    <!-- ABA 8: RELATÓRIOS -->
     <section id="tab-relatorios" class="view-panel">
       <div class="card-clean text-center py-5">
         <h3 class="fw-bold mb-4"><i class="fa-solid fa-print text-primary me-2"></i>Central de Impressão e Relatórios</h3>
@@ -287,7 +288,6 @@
       </div>
     </section>
  
-    <!-- ABA 5: DATASHOW / REUNIÃO -->
     <section id="tab-datashow" class="view-panel">
       <div class="card-clean mb-4" id="seletorDatashow">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3 border-bottom pb-3">
@@ -492,24 +492,39 @@
           painelFrases.innerHTML += `<button class="btn-frase" style="background-color: #10b981; border-color: #059669; color: white; width:100%; font-size:0.8rem;" onclick="addObs('Parabéns! Você é um(a) estudante nota 10!')">🌟 Parabéns! Você é um(a) estudante nota 10!</button>`;
           sugestoesObservacao.forEach(frase => { painelFrases.innerHTML += `<button class="btn-frase" onclick="addObs('${frase}')">${frase}</button>`; });
       }
-      
-      // APAGAR A MEMÓRIA VELHA DO NAVEGADOR PARA FORÇAR PUXAR A NOVA:
-      Object.keys(localStorage).forEach(function(key){
-         if(key.startsWith('mestra_estudantes_') || key.startsWith('mestra_banco_registros')){
-            localStorage.removeItem(key);
-         }
-      });
  
       forcarSincronizacaoGeral();
       carregarTabelaLotacaoSalva(); 
     }
 
-    function forcarSincronizacaoGeral(btn) {
+    // NOVA FUNÇÃO DO BOTÃO "LIMPAR MEMÓRIA E PUXAR DO ZERO"
+    function limparMemoriaEFocarNaPlanilha(btn) {
+      if(!confirm("Atenção: Isto vai apagar o cache do navegador e forçar o sistema a ler TODOS os alunos e notas da Planilha do Google. Tem certeza?")) return;
+      
+      var originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Limpando e Puxando da Planilha...';
+      
+      Object.keys(localStorage).forEach(function(key){
+         if(key.startsWith('mestra_estudantes_') || key.startsWith('mestra_banco_registros')){
+            localStorage.removeItem(key);
+         }
+      });
+      
+      forcarSincronizacaoGeral(btn, originalText);
+    }
+
+    function forcarSincronizacaoGeral(btn, originalTextCustom) {
       if(btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>A carregar da Planilha...';
       chamarApiGoogle('carregarTudo', null, function(dados) {
-          if(btn) btn.innerHTML = '<i class="fa-solid fa-check me-2"></i>Alunos Sincronizados com a Planilha!';
+          if(btn) btn.innerHTML = '<i class="fa-solid fa-check me-2"></i>Sincronizado com a Planilha!';
+          
+          if(originalTextCustom) {
+             setTimeout(() => btn.innerHTML = originalTextCustom, 3000);
+          }
+
           if(dados && !dados.erro) {
               bancoDeDadosNuvem = dados;
+              
               if(dados.estudantes && Object.keys(dados.estudantes).length > 0) {
                   for(var turma in dados.estudantes) {
                       localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(dados.estudantes[turma]));
