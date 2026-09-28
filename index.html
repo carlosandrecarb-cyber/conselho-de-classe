@@ -156,9 +156,9 @@
     <section id="tab-dashboard" class="view-panel">
       <div class="card-clean text-center py-5">
         <h3 class="fw-bold text-dark">Plataforma Inteligente de Governança Pedagógica</h3>
-        <p class="text-muted mx-auto mb-4" style="max-width: 600px;">Navegue através dos menus acima. Todos os dados são sincronizados com a nuvem da escola.</p>
+        <p class="text-muted mx-auto mb-4" style="max-width: 600px;">Navegue através dos menus acima. Todos os dados são sincronizados com a folha de cálculo oficial da escola.</p>
         <div class="d-flex justify-content-center gap-3">
-          <button class="btn btn-outline-primary fw-bold" onclick="forcarSincronizacaoGeral(this)"><i class="fa-solid fa-arrows-rotate me-2"></i>Sincronizar Agora com a Folha de Cálculo Google</button>
+          <button class="btn btn-primary fw-bold px-4 py-3" onclick="forcarSincronizacaoGeral(this)"><i class="fa-solid fa-arrows-rotate me-2"></i>Sincronizar Alunos e Notas com a Planilha</button>
         </div>
       </div>
     </section>
@@ -167,7 +167,7 @@
         <div class="card-clean">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h4 class="fw-bold m-0">Gestão Central de Estudantes</h4>
-              <button class="btn btn-sm btn-outline-primary fw-bold" onclick="forcarSincronizacaoGeral(this)"><i class="fa-solid fa-cloud-arrow-down me-1"></i>Puxar Estudantes da Folha de Cálculo</button>
+              <button class="btn btn-sm btn-primary fw-bold" onclick="forcarSincronizacaoGeral(this)"><i class="fa-solid fa-cloud-arrow-down me-1"></i>Puxar Estudantes da Planilha</button>
             </div>
             <div class="row g-3 mb-3">
               <div class="col-md-3">
@@ -175,16 +175,16 @@
                 <select id="selEstudanteTurma" class="form-select border-primary" onchange="carregarEstudantesParaEdicao()"></select>
               </div>
               <div class="col-md-9 admin-only">
-                <label class="form-label text-primary">Cole a lista (um por linha):</label>
+                <label class="form-label text-primary">Cole a lista de estudantes novos (um por linha):</label>
                 <div class="input-group">
                   <textarea id="txtListaEstudantes" class="input-mestra" rows="1"></textarea>
-                  <button class="btn btn-primary px-4" onclick="importarListaEstudantes()">Importar</button>
+                  <button class="btn btn-primary px-4" onclick="importarListaEstudantes()">Importar para a Turma</button>
                 </div>
               </div>
             </div>
             
             <div class="mb-3">
-               <span class="fs-8 fw-bold text-muted text-uppercase">Turmas guardadas no sistema:</span>
+               <span class="fs-8 fw-bold text-muted text-uppercase">Turmas guardadas localmente:</span>
                <div id="tagsTurmasSalvas" class="d-flex gap-2 mt-1 flex-wrap"></div>
             </div>
 
@@ -207,11 +207,11 @@
                   </tr>
                 </thead>
                 <tbody id="tabelaEstudantesCorpo">
-                  <tr><td colspan="5" class="text-center fw-bold py-4 text-muted">Selecione a turma acima para visualizar.</td></tr>
+                  <tr><td colspan="5" class="text-center fw-bold py-4 text-muted">Selecione a turma acima ou Clique em Sincronizar.</td></tr>
                 </tbody>
               </table>
             </div>
-            <button class="btn-mestra w-100 py-3 admin-only" onclick="salvarBaseEstudantes(this)"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Guardar e Enviar Estudantes para a Folha de Cálculo</button>
+            <button class="btn-mestra w-100 py-3 admin-only" onclick="salvarBaseEstudantes(this)"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Guardar Modificações e Enviar para a Planilha</button>
         </div>
     </section>
 
@@ -325,7 +325,7 @@
             <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(-1)"><i class="fa-solid fa-chevron-left me-1"></i> Voltar</button>
             <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(1)">Próximo <i class="fa-solid fa-chevron-right ms-1"></i></button>
             <button class="btn btn-dark fw-bold btn-sm py-2 px-3 ms-2" onclick="fecharAvaliacaoAluno()"><i class="fa-solid fa-xmark"></i> Fechar</button>
-            <button class="btn btn-mestra fw-bold btn-sm py-2 px-4 shadow-sm admin-only" onclick="salvarEAvancarProximo(this)"><i class="fa-solid fa-floppy-disk me-1"></i> Gravar Tudo</button>
+            <button class="btn btn-mestra fw-bold btn-sm py-2 px-4 shadow-sm admin-only" onclick="salvarEAvancarProximo(this)"><i class="fa-solid fa-floppy-disk me-1"></i> Gravar Tudo e Salvar na Planilha</button>
           </div>
         </div>
  
@@ -386,87 +386,29 @@
     var turmaAtivaSessao = ""; var alunoAtivoSessao = null; var timerInterval = null; var segundosRestantes = 180; var perfilLogado = ""; var bancoDeDadosNuvem = {}; 
  
     var criteriosDetalhados = [
-      { nome: "Convivência e Comportamento", chave: "convivencia", opcoes: [
-          { texto: "🟢 Convive bem com todos", escola: [], familia: [] }, 
-          { texto: "🟡 Às vezes precisa de orientação para conviver bem", escola: ["Orientar o estudante individualmente."], familia: ["Fortalecer hábitos de estudos em casa."] }, 
-          { texto: "🔴 Tem dificuldade de convivência", escola: ["Reforçar os combinados da turma."], familia: ["Fortalecer hábitos de estudos em casa."] }
-      ]},
-      { nome: "Atenção", chave: "atencao", opcoes: [
-          { texto: "🟢 Mantém a atenção", escola: [], familia: [] }, 
-          { texto: "🟡 Às vezes se distrai", escola: ["Criar oportunidades de participação."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, 
-          { texto: "🔴 Distrai-se com frequência", escola: ["Organizar o mapeamento na sala."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }
-      ]},
-      { nome: "Conversa", chave: "conversa", opcoes: [
-          { texto: "🟢 A conversa não atrapalha as aulas", escola: [], familia: [] }, 
-          { texto: "🟡 A conversa às vezes atrapalha as aulas", escola: ["Reforçar os combinados da turma."], familia: [] }, 
-          { texto: "🔴 A conversa atrapalha as aulas com frequência", escola: ["Reforçar os combinados da turma."], familia: ["Agendar reunião com a família para acompanhamento."] }
-      ]},
-      { nome: "Interesse", chave: "interesse", opcoes: [
-          { texto: "🟢 Demonstra interesse nas aulas", escola: [], familia: [] }, 
-          { texto: "🟡 Às vezes demonstra interesse nas aulas", escola: ["Propor atividades diferenciadas."], familia: ["Incentivar a leitura em casa."] }, 
-          { texto: "🔴 Demonstra pouco interesse nas aulas", escola: ["Propor atividades diferenciadas."], familia: ["Incentivar a leitura em casa."] }
-      ]},
-      { nome: "Participação", chave: "participacao", opcoes: [
-          { texto: "🟢 Participa das aulas", escola: [], familia: [] }, 
-          { texto: "🟡 Participa das aulas quando incentivado", escola: ["Criar oportunidades de participação."], familia: [] }, 
-          { texto: "🔴 Participa pouco das aulas", escola: ["Criar oportunidades de participação."], familia: [] }
-      ]},
-      { nome: "Aprendizagem", chave: "aprendizagem", opcoes: [
-          { texto: "🟢 Aprende conforme o esperado", escola: [], familia: [] }, 
-          { texto: "🟡 Aprende com apoio", escola: ["Propor atividades de reforço."], familia: ["Acompanhar os cadernos do filho."] }, 
-          { texto: "🔴 Apresenta dificuldades na aprendizagem", escola: ["Propor atividades de reforço."], familia: ["Acompanhar os cadernos do filho."] }
-      ]},
-      { nome: "Organização", chave: "organizacao", opcoes: [
-          { texto: "🟢 É organizado", escola: [], familia: [] }, 
-          { texto: "🟡 Às vezes precisa de lembretes para se organizar", escola: ["Orientar o estudante sobre planejamento e organização."], familia: ["Acompanhar a organização dos materiais."] }, 
-          { texto: "🔴 Tem dificuldade para se organizar", escola: ["Orientar o estudante sobre planejamento e organização."], familia: ["Acompanhar a organização dos materiais."] }
-      ]},
-      { nome: "Atividades em Sala", chave: "ativ_sala", opcoes: [
-          { texto: "🟢 Realiza as atividades em sala", escola: [], familia: [] }, 
-          { texto: "🟡 Realiza parte das atividades em sala", escola: ["Orientar o estudante individualmente."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, 
-          { texto: "🔴 Deixa as atividades sem fazer em sala", escola: ["Orientar o estudante individualmente."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }
-      ]},
-      { nome: "Tarefas de Casa", chave: "tarefas_casa", opcoes: [
-          { texto: "🟢 Faz as tarefas de casa regularmente", escola: [], familia: [] }, 
-          { texto: "🟡 Às vezes faz as tarefas de casa", escola: ["Orientar sobre rotina de estudos."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, 
-          { texto: "🔴 Raramente faz as tarefas de casa", escola: ["Orientar sobre rotina de estudos."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }
-      ]},
-      { nome: "Frequência", chave: "frequencia", opcoes: [
-          { texto: "🟢 Comparece regularmente às aulas", escola: [], familia: [] }, 
-          { texto: "🟡 Tem algumas faltas", escola: ["Acompanhar a frequência escolar."], familia: ["Não deixar o filho faltar sem justificativa."] }, 
-          { texto: "🔴 Tem muitas faltas", escola: ["Acompanhar a frequência escolar.", "Agendar reunião com a família para acompanhamento."], familia: ["Não deixar o filho faltar sem justificativa."] }
-      ]}
+      { nome: "Convivência e Comportamento", chave: "convivencia", opcoes: [{ texto: "🟢 Convive bem com todos", escola: [], familia: [] }, { texto: "🟡 Às vezes precisa de orientação para conviver bem", escola: ["Orientar o estudante individualmente."], familia: ["Fortalecer hábitos de estudos em casa."] }, { texto: "🔴 Tem dificuldade de convivência", escola: ["Reforçar os combinados da turma."], familia: ["Fortalecer hábitos de estudos em casa."] }]},
+      { nome: "Atenção", chave: "atencao", opcoes: [{ texto: "🟢 Mantém a atenção", escola: [], familia: [] }, { texto: "🟡 Às vezes se distrai", escola: ["Criar oportunidades de participação."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, { texto: "🔴 Distrai-se com frequência", escola: ["Organizar o mapeamento na sala."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }]},
+      { nome: "Conversa", chave: "conversa", opcoes: [{ texto: "🟢 A conversa não atrapalha as aulas", escola: [], familia: [] }, { texto: "🟡 A conversa às vezes atrapalha as aulas", escola: ["Reforçar os combinados da turma."], familia: [] }, { texto: "🔴 A conversa atrapalha as aulas com frequência", escola: ["Reforçar os combinados da turma."], familia: ["Agendar reunião com a família para acompanhamento."] }]},
+      { nome: "Interesse", chave: "interesse", opcoes: [{ texto: "🟢 Demonstra interesse nas aulas", escola: [], familia: [] }, { texto: "🟡 Às vezes demonstra interesse nas aulas", escola: ["Propor atividades diferenciadas."], familia: ["Incentivar a leitura em casa."] }, { texto: "🔴 Demonstra pouco interesse nas aulas", escola: ["Propor atividades diferenciadas."], familia: ["Incentivar a leitura em casa."] }]},
+      { nome: "Participação", chave: "participacao", opcoes: [{ texto: "🟢 Participa das aulas", escola: [], familia: [] }, { texto: "🟡 Participa das aulas quando incentivado", escola: ["Criar oportunidades de participação."], familia: [] }, { texto: "🔴 Participa pouco das aulas", escola: ["Criar oportunidades de participação."], familia: [] }]},
+      { nome: "Aprendizagem", chave: "aprendizagem", opcoes: [{ texto: "🟢 Aprende conforme o esperado", escola: [], familia: [] }, { texto: "🟡 Aprende com apoio", escola: ["Propor atividades de reforço."], familia: ["Acompanhar os cadernos do filho."] }, { texto: "🔴 Apresenta dificuldades na aprendizagem", escola: ["Propor atividades de reforço."], familia: ["Acompanhar os cadernos do filho."] }]},
+      { nome: "Organização", chave: "organizacao", opcoes: [{ texto: "🟢 É organizado", escola: [], familia: [] }, { texto: "🟡 Às vezes precisa de lembretes para se organizar", escola: ["Orientar o estudante sobre planejamento e organização."], familia: ["Acompanhar a organização dos materiais."] }, { texto: "🔴 Tem dificuldade para se organizar", escola: ["Orientar o estudante sobre planejamento e organização."], familia: ["Acompanhar a organização dos materiais."] }]},
+      { nome: "Atividades em Sala", chave: "ativ_sala", opcoes: [{ texto: "🟢 Realiza as atividades em sala", escola: [], familia: [] }, { texto: "🟡 Realiza parte das atividades em sala", escola: ["Orientar o estudante individualmente."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, { texto: "🔴 Deixa as atividades sem fazer em sala", escola: ["Orientar o estudante individualmente."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }]},
+      { nome: "Tarefas de Casa", chave: "tarefas_casa", opcoes: [{ texto: "🟢 Faz as tarefas de casa regularmente", escola: [], familia: [] }, { texto: "🟡 Às vezes faz as tarefas de casa", escola: ["Orientar sobre rotina de estudos."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }, { texto: "🔴 Raramente faz as tarefas de casa", escola: ["Orientar sobre rotina de estudos."], familia: ["Estabelecer rotina para realização das tarefas de casa."] }]},
+      { nome: "Frequência", chave: "frequencia", opcoes: [{ texto: "🟢 Comparece regularmente às aulas", escola: [], familia: [] }, { texto: "🟡 Tem algumas faltas", escola: ["Acompanhar a frequência escolar."], familia: ["Não deixar o filho faltar sem justificativa."] }, { texto: "🔴 Tem muitas faltas", escola: ["Acompanhar a frequência escolar.", "Agendar reunião com a família para acompanhamento."], familia: ["Não deixar o filho faltar sem justificativa."] }]}
     ];
  
     var encEscolaOpcoes = ["Reforçar os combinados da turma.", "Orientar o estudante individualmente.", "Reforçar positivamente os avanços.", "Propor atividades de reforço.", "Realizar agrupamentos temporários", "Propor atividades diferenciadas.", "Organizar o mapeamento na sala", "Valorizar as contribuições do estudante.", "Solicitar a presença da família.", "Criar oportunidades de participação.", "Orientar sobre rotina de estudos.", "Orientar o estudante sobre planejamento e organização.", "Acompanhar a frequência escolar.", "Orientar sobre a importância da assiduidade.", "Comunicar a família sobre as faltas.", "Monitorar a frequência do estudante.", "Agendar reunião com a família para acompanhamento."];
     var encFamiliaOpcoes = ["Acompanhar a organização dos materiais.", "Estabelecer rotina para realização das tarefas de casa", "Não deixar o filho faltar sem justificativa", "Acompanhar os cadernos do filho", "Visitar a escola de vez em quando", "Fortalecer hábitos de estudos em casa", "Incentivar a leitura em casa", "Verificar sempre o uniforme escolar"];
  
     var sugestoesObservacao = [
-        "Demonstra respeito às regras de convivência.", 
-        "Avança na aprendizagem com apoio e orientação.",
-        "Tem apresentado evolução na organização.",
-        "Realiza as atividades com orientação.",
-        "Tem apresentado melhora no cumprimento das atividades.",
-        "Apresenta dificuldade em seguir combinados.",
-        "Demonstra desrespeito ao professor.",
-        "Tem atitudes que geram conflitos.",
-        "Em alguns momentos, perde o foco.",
-        "Apresenta muita inquietação durante as aulas.",
-        "Não tem demonstrado interesse pelas atividades.",
-        "As muitas faltas têm prejudicado a aprendizagem.",
-        "Demonstra evolução na convivência escolar.",
-        "Envolve-se em confusões.",
-        "Traz brinquedos de casa e por isso perde o foco nas aulas."
+        "Demonstra respeito às regras de convivência.", "Avança na aprendizagem com apoio e orientação.", "Tem apresentado evolução na organização.", "Realiza as atividades com orientação.", "Tem apresentado melhora no cumprimento das atividades.", "Apresenta dificuldade em seguir combinados.", "Demonstra desrespeito ao professor.", "Tem atitudes que geram conflitos.", "Em alguns momentos, perde o foco.", "Apresenta muita inquietação durante as aulas.", "Não tem demonstrado interesse pelas atividades.", "As muitas faltas têm prejudicado a aprendizagem.", "Demonstra evolução na convivência escolar.", "Envolve-se em confusões.", "Traz brinquedos de casa e por isso perde o foco nas aulas."
     ];
 
     function autoExpand(field) {
         field.style.height = 'inherit';
         var computed = window.getComputedStyle(field);
-        var height = parseInt(computed.getPropertyValue('border-top-width'), 10) 
-                   + parseInt(computed.getPropertyValue('padding-top'), 10) 
-                   + field.scrollHeight 
-                   + parseInt(computed.getPropertyValue('padding-bottom'), 10) 
-                   + parseInt(computed.getPropertyValue('border-bottom-width'), 10);
+        var height = parseInt(computed.getPropertyValue('border-top-width'), 10) + parseInt(computed.getPropertyValue('padding-top'), 10) + field.scrollHeight + parseInt(computed.getPropertyValue('padding-bottom'), 10) + parseInt(computed.getPropertyValue('border-bottom-width'), 10);
         field.style.height = height + 'px';
     }
 
@@ -550,16 +492,22 @@
           painelFrases.innerHTML += `<button class="btn-frase" style="background-color: #10b981; border-color: #059669; color: white; width:100%; font-size:0.8rem;" onclick="addObs('Parabéns! Você é um(a) estudante nota 10!')">🌟 Parabéns! Você é um(a) estudante nota 10!</button>`;
           sugestoesObservacao.forEach(frase => { painelFrases.innerHTML += `<button class="btn-frase" onclick="addObs('${frase}')">${frase}</button>`; });
       }
+      
+      // APAGAR A MEMÓRIA VELHA DO NAVEGADOR PARA FORÇAR PUXAR A NOVA:
+      Object.keys(localStorage).forEach(function(key){
+         if(key.startsWith('mestra_estudantes_') || key.startsWith('mestra_banco_registros')){
+            localStorage.removeItem(key);
+         }
+      });
  
       forcarSincronizacaoGeral();
       carregarTabelaLotacaoSalva(); 
     }
 
-    // SINCRONIZAÇÃO COMPLETA: Puxa da Google e sobrepõe memória local
     function forcarSincronizacaoGeral(btn) {
-      if(btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>A sincronizar...';
+      if(btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>A carregar da Planilha...';
       chamarApiGoogle('carregarTudo', null, function(dados) {
-          if(btn) btn.innerHTML = '<i class="fa-solid fa-check me-2"></i>Sincronizado!';
+          if(btn) btn.innerHTML = '<i class="fa-solid fa-check me-2"></i>Alunos Sincronizados com a Planilha!';
           if(dados && !dados.erro) {
               bancoDeDadosNuvem = dados;
               if(dados.estudantes && Object.keys(dados.estudantes).length > 0) {
@@ -568,6 +516,8 @@
                   }
                   atualizarTagsTurmasSalvas();
                   carregarEstudantesParaEdicao();
+                  
+                  if(turmaAtivaSessao) { carregarAlunosTurmaDatashow(turmaAtivaSessao); }
               }
               if(dados.avaliacoes) {
                   var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
@@ -646,7 +596,7 @@
       alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
       localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos));
       
-      if(alunos.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center fw-bold py-4 text-muted">Nenhum estudante registado.</td></tr>'; return; } 
+      if(alunos.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center fw-bold py-4 text-muted">Nenhum estudante registado nesta turma.</td></tr>'; return; } 
       tbody.innerHTML = ''; 
       alunos.forEach((a, i) => { 
         tbody.innerHTML += `<tr><td class="fw-bold text-muted text-center">${i+1}</td><td class="fw-bold nome-aluno-td">${a.nome}</td><td class="text-center"><input class="form-check-input aee-chk" type="checkbox" style="transform: scale(1.3);" ${a.aee ? 'checked' : ''}></td><td class="text-center"><select class="form-select form-select-sm pdi-sel fw-bold text-center"><option value="Não" ${a.pdi !== 'Sim' ? 'selected' : ''}>Não</option><option value="Sim" ${a.pdi === 'Sim' ? 'selected' : ''}>Sim</option></select></td><td class="text-center"><select class="form-select form-select-sm sigla-sel fw-bold text-center"><option value="" ${!a.sigla ? 'selected' : ''}>Nenhuma</option><option value="CL" ${a.sigla==='CL'?'selected':''}>CL</option><option value="DSL" ${a.sigla==='DSL'?'selected':''}>DSL</option><option value="CLA" ${a.sigla==='CLA'?'selected':''}>CLA</option></select></td></tr>`; 
@@ -655,8 +605,8 @@
     
     function salvarBaseEstudantes(btn) { 
       var turma = document.getElementById('selEstudanteTurma').value; 
-      if(!turma) return; 
-      var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar...';
+      if(!turma) { alert("Selecione uma turma primeiro!"); return; }
+      var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A enviar para a Planilha...';
       var alunos = []; 
       document.querySelectorAll('#tabelaEstudantesCorpo tr').forEach((tr, i) => { 
         var nomeTd = tr.querySelector('.nome-aluno-td'); if(!nomeTd) return; 
@@ -840,7 +790,7 @@
       
       var baseAlunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turmaAtivaSessao) || '[]'); 
       var dadosA = baseAlunos.find(x => x.nome === nomeAluno) || {};
-      var tagHtml = (dadosA.aee ? '<span class="tag-aee shadow-sm">AEE</span>' : '') + (dadosA.pdi==='Sim' ? '<span class="tag-pdi shadow-sm">PDI: Sim</span>' : (dadosA.pdi==='Não' && dadosA.aee ? '<span class="tag-pdi shadow-sm">Sem PDI</span>' : '')) + (dadosA.sigla ? '<span class="tag-sigla shadow-sm">'+dadosA.sigla+'</span>' : '');
+      var tagHtml = (dadosA.aee ? '<span class="tag-aee shadow-sm">AEE</span>' : '') + (dadosA.pdi==='Sim' ? '<span class="tag-pdi bg-success text-white border-success shadow-sm">PDI: Sim</span>' : (dadosA.pdi==='Não' && dadosA.aee ? '<span class="tag-pdi shadow-sm">Sem PDI</span>' : '')) + (dadosA.sigla ? '<span class="tag-sigla shadow-sm">'+dadosA.sigla+'</span>' : '');
       document.getElementById('tagsAlunoDatashow').innerHTML = tagHtml;
  
       document.querySelectorAll('.seg-option').forEach(b => b.classList.remove('selected-green', 'selected-yellow', 'selected-red'));
@@ -1034,7 +984,7 @@
       var relTurma = document.getElementById('relTurmaSelect').value;
       var turma = relTurma ? relTurma : document.getElementById('sessaoTrimestre').parentElement.parentElement.parentElement.querySelector('#gridTurmasSessao .active')?.innerText;
       var trimestre = document.getElementById('sessaoTrimestre').value;
-      var anoAtual = "2026";
+      var anoAtual = document.getElementById('globalAno') ? document.getElementById('globalAno').value : '2026';
 
       if(!turma) { alert("Selecione a turma."); return; }
       
@@ -1108,6 +1058,7 @@
         }
  
         html += `<div class="pagina-a4"><div>
+        
         <div class="header-top">
             <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" class="logo">
             <div class="school-title">
@@ -1123,9 +1074,11 @@
         <div class="student-banner">
             <div>
                 <div style="font-size:7pt; color:#64748b;">ESTUDANTE:</div>
-                <div style="font-size:12pt; font-weight:900; text-transform:uppercase;">${a.nome}</div>
+                <div style="font-size:12pt; font-weight:900;">${a.nome}</div>
             </div>
-            <div><span style="font-size:9pt; background:#eef2ff; color:#4f46e5; padding:4px 10px; border-radius:6px; font-weight:bold;">Turma: ${turma}</span></div>
+            <div>
+                <span style="font-size:9pt; background:#eef2ff; color:#4f46e5; padding:4px 10px; border-radius:6px; font-weight:bold;">Turma: ${turma}</span>
+            </div>
         </div>
         
         <div class="grid-layout">
@@ -1176,14 +1129,13 @@
 
         </div><div class="rodape-assinatura"><div style="width: 40%; margin: 0 auto; border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 8pt; font-weight: 700;">Equipa Pedagógica / Especialista</div></div></div>`;
       });
-      html += `</body></html>`; 
-      var w = window.open('', '_blank'); w.document.write(html); w.document.close();
+      html += `</body></html>`; var w = window.open('', '_blank'); w.document.write(html); w.document.close();
     }
 
     function imprimirAtaConsolidada() {
       var relTurma = document.getElementById('relTurmaSelect').value;
       var trimestre = document.getElementById('sessaoTrimestre').value;
-      var anoAtual = "2026";
+      var anoAtual = document.getElementById('globalAno') ? document.getElementById('globalAno').value : '2026';
 
       if(!relTurma) { alert("Selecione a turma."); return; }
 
