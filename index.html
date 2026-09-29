@@ -278,91 +278,52 @@
          </div>
           <div class="d-flex align-items-center gap-3">
             
-            <!-- NOVO BOTÃO: Sincronização Rápida só para o Datashow -->
-            <button class="btn btn-sm btn-primary fw-bold" onclick="sincronizarApenasAvaliacoes(this)">
-                <i class="fa-solid fa-bolt me-1"></i> Atualizar Notas da Nuvem (Rápido)
-            </button>
-            
-            <select id="sessaoTrimestre" class="form-select fw-bold border-secondary">
-              <option>1º Trimestre</option><option selected>2º Trimestre</option><option>3º Trimestre</option>
-            </select>
-          </div>
-        </div>
-        <div id="gridTurmasSessao" class="d-flex flex-wrap gap-2 mb-4"></div>
-        <div id="containerAlunosSessao" style="display: none;">
-          <div class="d-flex justify-content-between align-items-center border-top pt-3">
-             <span class="text-primary fw-bold"><i class="fa-solid fa-hand-pointer me-1"></i> Clique no Estudante para Avaliar:</span>
-          </div>
-          <div id="gridAlunosSessao" class="student-pill-grid"></div>
-        </div>
-      </div>
- 
-      <div id="painelAvaliacaoEstudante" class="card-clean admin-lock">
-        <div class="sticky-header-datashow">
-          <div>
-            <span class="badge bg-success mb-1" id="lblTurmaTop">Avaliando</span>
-            <h3 class="fw-extrabold m-0 text-uppercase text-dark d-flex align-items-center flex-wrap gap-2" id="nomeAlunoAtivo" style="font-size: 1.3rem;">
-              <span id="nomeAlunoDisplay">NOME DO ESTUDANTE</span>
-              <span id="tagsAlunoDatashow"></span>
-           </h3>
-          </div>
-          <div class="d-flex align-items-center gap-2 flex-wrap">
-            <div class="timer-box" id="cronometroDisplay">
-              <i class="fa-regular fa-clock"></i> <span id="tempoRestante">03:00</span>
-            </div>
-            <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(-1)"><i class="fa-solid fa-chevron-left me-1"></i> Voltar</button>
-            <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(1)">Próximo <i class="fa-solid fa-chevron-right ms-1"></i></button>
-            <button class="btn btn-dark fw-bold btn-sm py-2 px-3 ms-2" onclick="fecharAvaliacaoAluno()"><i class="fa-solid fa-xmark"></i> Fechar</button>
-            <button class="btn btn-mestra fw-bold btn-sm py-2 px-4 shadow-sm admin-only" onclick="salvarEAvancarProximo(this)"><i class="fa-solid fa-floppy-disk me-1"></i> Gravar Tudo e Salvar na Planilha</button>
-          </div>
-        </div>
- 
-        <div class="ds-grid mt-3">
-          <div>
-            <span class="eval-title text-dark d-block mb-2"><i class="fa-solid fa-list-check me-1"></i> Critérios de Avaliação (Clique para marcar)</span>
-            <div class="criterios-grid-2col" id="criteriosGrid"></div>
-          </div>
-
-          <div class="d-flex flex-column gap-3">
-            <div class="eval-card bg-warning bg-opacity-10 border-warning p-3">
-              <span class="eval-title text-dark fw-bold mb-2 d-block m-0"><i class="fa-solid fa-award me-1"></i> Conclusão Geral</span>
-              <div class="d-flex flex-wrap gap-2" id="conclusaoGroup">
-               <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="ÓTIMO(A)" onclick="setConclusao('ÓTIMO(A)', this)">🟢 ÓTIMO(A)</button>
-               <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="BOM/BOA" onclick="setConclusao('BOM/BOA', this)">🟢 BOM/BOA</button>
-               <button class="seg-option flex-grow-1 py-2 fw-bold text-center" data-conc="PRECISA DE ATENÇÃO" onclick="setConclusao('PRECISA DE ATENÇÃO', this)">🔴 PRECISA DE ATENÇÃO</button>
-             </div>
-            </div>
-
-            <div class="eval-card p-3 border-primary shadow-sm">
-              <span class="eval-title text-primary fw-bold mb-2 d-block m-0"><i class="fa-solid fa-robot me-1"></i> Parecer Descritivo</span>
-              <textarea id="obsAlunoAtivo" class="input-mestra border-0 bg-light p-3 auto-expand" oninput="autoExpand(this)" placeholder="Marque os itens para gerar o texto..."></textarea>
-            </div>
-            
-            <div class="eval-card border-secondary bg-light p-3 shadow-sm">
-              <span class="eval-title text-dark fw-bold d-block m-0"><i class="fa-solid fa-bolt text-warning me-1"></i> Frases Rápidas e Complementares</span>
-              <div class="frases-rapidas-container" id="frasesRapidasPainel"></div>
-              <textarea id="txtOutrasSituacoes" class="input-mestra mt-2 bg-white auto-expand" oninput="autoExpand(this)" placeholder="Os apontamentos clicados aparecerão aqui..."></textarea>
-            </div>
-
-            <div class="eval-card bg-light border p-3">
-                <span class="eval-title text-dark fw-bold d-block m-0 border-bottom pb-2 mb-3">ENCAMINHAMENTOS APLICADOS (AUTO-SINCRONIZADO)</span>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <span class="eval-title text-primary m-0"><i class="fa-solid fa-school me-1"></i> Ações da Escola <span class="badge bg-primary ms-1" id="contadorEscola">0</span></span>
-                        <div id="listaEncEscola" class="chk-grid mt-2"></div>
-                    </div>
-                    <div class="col-sm-6" style="border-left: 1px solid #cbd5e1;">
-                        <span class="eval-title text-success m-0"><i class="fa-solid fa-house-chimney me-1"></i> Para a Família <span class="badge bg-success ms-1" id="contadorFamilia">0</span></span>
-                        <div id="listaEncFamilia" class="chk-grid mt-2"></div>
-                    </div>
-                </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+           // A NOVA FUNÇÃO QUE CHAMA O MOTOR V8 DE ALTA VELOCIDADE
+    function sincronizarApenasAvaliacoes(btn) {
+      var turma = turmaAtivaSessao;
+      var trim = document.getElementById('sessaoTrimestre').value;
+      
+      if(!turma) { alert("Atenção: Por favor, selecione uma turma primeiro!"); return; }
+      
+      var originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-rocket fa-bounce me-2"></i>A Puxar Atualizações (Super Rápido)...';
+      
+      chamarApiGoogle('carregarAvaliacoesTurma', { turma: turma, trimestre: trim }, function(dados) {
+         btn.innerHTML = '<i class="fa-solid fa-check me-2"></i>Notas Atualizadas!';
+         setTimeout(() => btn.innerHTML = originalText, 3000);
+         
+         if (dados && !dados.erro && dados.avaliacoes && dados.avaliacoes[turma]) {
+             var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
+             var avaliacoesDaTurma = dados.avaliacoes[turma];
+             
+             for(var aluno in avaliacoesDaTurma) {
+                 var reg = avaliacoesDaTurma[aluno][trim];
+                 if(reg) {
+                     var k = turma + '_' + aluno.toUpperCase() + '_' + trim;
+                     dbLocal[k] = {
+                         turma: turma, estudante: aluno, trimestre: trim,
+                         criterios: {
+                             convivencia: reg.disciplina, atencao: reg.atencao, conversa: reg.conversa,
+                             interesse: reg.interesse, participacao: reg.participacao, aprendizagem: reg.aprendizagem,
+                             organizacao: reg.organizacao, ativ_sala: reg.atividades_sala, tarefas_casa: reg.tarefa_casa,
+                             frequencia: reg.presenca
+                         },
+                         conclusao: reg.caracteristica, observacoes: reg.observacoes, outrasSituacoes: reg.outras_situacoes,
+                         encEscola: reg.acoes_escola ? reg.acoes_escola.split(';').map(x=>x.trim()) : [],
+                         encFamilia: reg.acoes_familia ? reg.acoes_familia.split(';').map(x=>x.trim()) : []
+                     };
+                 }
+             }
+             localStorage.setItem('mestra_banco_registros', JSON.stringify(dbLocal));
+             
+             // Se o Adriel estiver aberto na tela neste momento, ele pisca e atualiza ao vivo
+             if(alunoAtivoSessao) abrirAvaliacaoAluno(alunoAtivoSessao);
+             alert("Sucesso! As últimas alterações da turma " + turma + " foram descarregadas e o Adriel já está com os dados corretos.");
+         } else {
+             alert("A turma ainda não possui avaliações no sistema.");
+         }
+      });
+    }
  
   <script>
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbxIHePqCUCNaNzgz4C-5rz5AwQXh02W2A1KUJz3yx9hf0ofth0dZIGuWaurcmL4FN5i/exec";
