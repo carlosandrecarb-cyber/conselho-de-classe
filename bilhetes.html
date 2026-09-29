@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Comunicados e Bilhetes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * { word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; }
+    @page { size: A4 portrait; margin: 8mm; } 
+    body { font-family: 'Inter', Arial, sans-serif; margin: 0; background: #e2e8f0; color: #0f172a; } 
+    
+    .no-print { background: #0f172a; padding: 15px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; justify-content: center; position: sticky; top: 0; z-index: 100; }
+    .btn-gerar { background: #4f46e5; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+    .btn-imprimir { background: #10b981; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+    .btn-fechar { background: #ef4444; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    select, input { padding: 10px; border-radius: 8px; border: none; font-weight: bold; font-family: 'Inter'; outline: none; }
+    
+    #relatorioContainer { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+
+    .pagina-a4 { width: 100%; max-width: 210mm; min-height: 277mm; background: white; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 12mm; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .header-top { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 10px; }
+    .logo { height: 45px; object-fit: contain; } .school-title { text-align: center; flex-grow: 1; }
+    .student-banner { background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .grid-layout { display: flex; gap: 12px; flex-grow: 1; margin-bottom: 10px; } 
+    .coluna-esquerda { width: 42%; display: flex; flex-direction: column; gap: 4px; } 
+    .coluna-direita { width: 58%; display: flex; flex-direction: column; gap: 8px; }
+    .box-criterio-valor { font-size: 8pt; font-weight: 700; color: #065f46; background: #d1fae5; padding: 4px 6px; border-radius: 4px; border-left: 3px solid #10b981; } 
+    .box-criterio-valor.amarelo { background: #fef3c7; color: #92400e; border-left-color: #f59e0b; } 
+    .box-criterio-valor.vermelho { background: #fee2e2; color: #991b1b; border-left-color: #ef4444; }
+    .box-bloco { border: 2px solid #0f172a; border-radius: 8px; padding: 10px; background: white; display: flex; flex-direction: column; } 
+    .box-bloco-titulo { font-size: 9.5pt; font-weight: 900; color: #0f172a; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 6px; }
+    .box-dupla { display: flex; gap: 8px; } .box-dupla > div { flex: 1; border: 1.2px solid #cbd5e1; border-radius: 6px; padding: 8px; background: #fafafa; min-height: 85px; } 
+    .rodape-assinatura { text-align: center; border-top: 1.5px dashed #64748b; padding-top: 8px; margin-top: 5px; }
+    .criterio-resumo { font-size: 8.5pt; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .criterio-resumo span.bullet { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+    .bg-green { background-color: #10b981; } .bg-red { background-color: #ef4444; } .bg-yellow { background-color: #f59e0b; }
+    
+    @media print { 
+        body { background: white; } 
+        .no-print { display: none !important; } 
+        #relatorioContainer { gap: 0; }
+        .pagina-a4 { border: none; box-shadow: none; padding: 5mm; height: 100vh; margin: 0; } 
+    }
+  </style>
+</head>
+<body>
+
+  <div class="no-print">
+    <select id="selTurma"></select>
+    <select id="selTrimestre">
+      <option>1º Trimestre</option>
+      <option selected>2º Trimestre</option>
+      <option>3º Trimestre</option>
+    </select>
+    <input type="text" id="inpAno" value="2026" style="width: 80px; text-align: center;">
+    
+    <button class="btn-gerar" onclick="gerarBilhetes()"><i class="fa-solid fa-file-pdf"></i> Processar Bilhetes</button>
+    <button class="btn-imprimir" onclick="window.print()"><i class="fa-solid fa-print"></i> Imprimir Tudo</button>
+    <button class="btn-fechar" onclick="window.close()"><i class="fa-solid fa-xmark"></i> Fechar Guia</button>
+  </div>
+
+  <div id="relatorioContainer">
+      <h3 style="text-align: center; color: #475569; margin-top: 50px;">Selecione a turma e clique em "Processar Bilhetes"</h3>
+  </div>
+
+  <script>
+    var turmasGlobais = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
+    var selTurma = document.getElementById('selTurma');
+    selTurma.innerHTML = '<option value="">Selecione a Turma...</option>';
+    turmasGlobais.forEach(t => selTurma.innerHTML += `<option value="${t}">${t}</option>`);
+
+    var criteriosDetalhados = [
+      { nome: "Convivência e Comportamento", chave: "convivencia" }, { nome: "Atenção", chave: "atencao" },
+      { nome: "Conversa", chave: "conversa" }, { nome: "Interesse", chave: "interesse" },
+      { nome: "Participação", chave: "participacao" }, { nome: "Aprendizagem", chave: "aprendizagem" },
+      { nome: "Organização", chave: "organizacao" }, { nome: "Atividades em Sala", chave: "ativ_sala" },
+      { nome: "Tarefas de Casa", chave: "tarefas_casa" }, { nome: "Frequência", chave: "frequencia" }
+    ];
+    var encFamiliaOpcoes = ["Acompanhar a organização dos materiais.", "Estabelecer rotina para realização das tarefas de casa", "Não deixar o filho faltar sem justificativa", "Acompanhar os cadernos do filho", "Visitar a escola de vez em quando", "Fortalecer hábitos de estudos em casa", "Incentivar a leitura em casa", "Verificar sempre o uniforme escolar"];
+
+    function gerarBilhetes() {
+      var turma = selTurma.value;
+      var trimestre = document.getElementById('selTrimestre').value;
+      var anoAtual = document.getElementById('inpAno').value;
+      var container = document.getElementById('relatorioContainer');
+
+      if(!turma) { alert("Selecione a turma."); return; }
+      
+      var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
+      var alunos = []; var vistos = new Set();
+      alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
+
+      if(alunos.length === 0) { alert("Nenhum aluno registado nesta turma na memória. Sincronize o sistema principal primeiro."); return; }
+      
+      var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
+      var htmlFinal = '';
+
+      alunos.forEach(a => {
+        var reg = dbLocal[turma + '_' + a.nome.toUpperCase() + '_' + trimestre];
+        if(!reg) return; // Só imprime bilhete de quem foi avaliado
+
+        var crit = reg.criterios || {}; 
+        var verdesHtml = ''; var atencaoHtml = ''; var criteriosEsqHtml = '';
+        
+        criteriosDetalhados.forEach(ck => { 
+            var val = crit[ck.chave] || "🟢 Acompanhado(a)"; 
+            var classeCor = val.startsWith('🟡') ? "amarelo" : (val.startsWith('🔴') ? "vermelho" : ""); 
+            
+            criteriosEsqHtml += `
+            <div style="margin-bottom: 5px;">
+               <div style="font-size: 6.5pt; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 2px;">${ck.nome}</div>
+               <div class="box-criterio-valor ${classeCor}" style="width: 100%; box-sizing: border-box;">${val}</div>
+            </div>`; 
+            
+            var bulletColor = val.startsWith('🟢') ? 'bg-green' : (val.startsWith('🟡') ? 'bg-yellow' : 'bg-red');
+            var valLimpo = val.replace(/🟢|🟡|🔴/g, '').trim();
+            var innerItem = `<div class="criterio-resumo"><span class="bullet ${bulletColor}"></span> <span>${valLimpo}</span></div>`;
+
+            if (val.startsWith('🟢')) verdesHtml += innerItem; 
+            else atencaoHtml += innerItem;
+        });
+        
+        if(verdesHtml === '') verdesHtml = '<p style="font-size: 7.5pt; margin: 0; color:#64748b;">Nenhum destaque registado.</p>';
+        if(atencaoHtml === '') atencaoHtml = '<p style="font-size: 7.5pt; margin: 0; color:#64748b;">Nenhum ponto de atenção.</p>';
+        
+        var concVal = reg.conclusao || "ÓTIMO(A)";
+        var escolaHtml = (reg.encEscola && reg.encEscola.length > 0) ? '<ul style="margin:0; padding-left:14px; font-size:8pt; line-height:1.3;">' + reg.encEscola.map(e => `<li style="margin-bottom:2px;">${e.trim()}</li>`).join('') + '</ul>' : '<p style="font-size:8pt; margin:0; color:#64748b;">Nenhum.</p>';
+        var famArrForPrint = (reg.encFamilia && reg.encFamilia.length > 0) ? reg.encFamilia : encFamiliaOpcoes;
+        var familiaHtml = '<ul style="margin:0; padding-left:14px; font-size:8pt; line-height:1.3;">' + famArrForPrint.map(f => `<li style="margin-bottom:2px;">${f.trim()}</li>`).join('') + '</ul>';
+        
+        var outrasFormatadas = reg.outrasSituacoes || '';
+        if(outrasFormatadas.includes('Parabéns! Você é um(a) estudante nota 10!')) {
+            outrasFormatadas = outrasFormatadas.replace('Parabéns! Você é um(a) estudante nota 10!', '<span style="background-color: #d1fae5; color: #065f46; font-weight: 900; padding: 3px 6px; border-radius: 4px; border: 1.5px solid #10b981; display: inline-block; margin-top: 3px;">🌟 Parabéns! Você é um(a) estudante nota 10!</span>');
+        }
+
+        htmlFinal += `
+        <div class="pagina-a4">
+          <div>
+            <div class="header-top">
+                <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" class="logo">
+                <div class="school-title">
+                    <div style="font-size: 8pt; font-weight: 800; color: #64748b;">E. E. Mestra Aurora — Gestão Pedagógica</div>
+                    <h1 style="font-size: 11pt; margin: 2px 0 0 0;">CONSOLIDADO E ENCAMINHAMENTOS DO CONSELHO DE CLASSE</h1>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
+                    <div style="background:#fef3c7; color:#b45309; font-weight:800; padding:4px 10px; border-radius:6px; font-size:10pt; border:1px solid #fde047;">${trimestre}</div>
+                    <div style="font-size: 8pt; font-weight: bold; color: #475569; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; border: 1px solid #cbd5e1;">Ano Letivo: ${anoAtual}</div>
+                </div>
+            </div>
+
+            <div class="student-banner">
+                <div>
+                    <div style="font-size:7pt; color:#64748b;">ESTUDANTE:</div>
+                    <div style="font-size:12pt; font-weight:900;">${a.nome}</div>
+                </div>
+                <div>
+                    <span style="font-size:9pt; background:#eef2ff; color:#4f46e5; padding:4px 10px; border-radius:6px; font-weight:bold;">Turma: ${turma}</span>
+                </div>
+            </div>
+            
+            <div class="grid-layout">
+                <div class="coluna-esquerda">
+                  <div style="font-size: 7.5pt; font-weight: 900; color: #475569; margin-bottom: 5px;">AVALIAÇÃO DOS CRITÉRIOS:</div>
+                  ${criteriosEsqHtml}
+                </div>
+                
+                <div class="coluna-direita">
+                    <div class="box-bloco" style="border: 1.5px solid #cbd5e1; padding: 10px; margin-bottom: 0px;">
+                        <div class="box-bloco-titulo" style="font-size: 9.5pt;">SITUAÇÃO GERAL DO(A) ESTUDANTE</div>
+                        <div class="box-criterio-valor" style="${concVal.includes('PRECISA') ? 'background:#fee2e2; color:#991b1b; border-left-color:#ef4444;' : 'background:#d1fae5; color:#065f46; border-left-color:#10b981;'} font-size: 9.5pt; margin-bottom: 10px; display:inline-block; padding: 4px 8px;">
+                            ${concVal.includes('PRECISA') ? '🔴 ' : '🟢 '}${concVal}
+                        </div>
+                        
+                        <div style="display: flex; gap: 8px; border-top: 1px solid #e2e8f0; padding-top: 10px; margin-top: 5px;">
+                            <div style="flex:1; background: #f0fdf4; padding: 8px; border-radius: 6px; border: 1px solid #bbf7d0;">
+                                <div style="font-size: 7pt; font-weight: 900; color: #166534; margin-bottom: 6px; text-transform: uppercase;">🟢 Destaca-se Positivamente</div>
+                                ${verdesHtml}
+                            </div>
+                            <div style="flex:1; background: #fef2f2; padding: 8px; border-radius: 6px; border: 1px solid #fecaca;">
+                                <div style="font-size: 7pt; font-weight: 900; color: #991b1b; margin-bottom: 6px; text-transform: uppercase;">🔴 Requer Acompanhamento</div>
+                                ${atencaoHtml}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${outrasFormatadas ? `<div class="box-bloco" style="margin-top:0px; border-top: none; border-top-left-radius: 0; border-top-right-radius: 0; border: 1.5px solid #cbd5e1; padding: 8px 10px;">
+                        <div class="box-bloco-titulo" style="font-size: 8pt; margin-bottom:3px; border:none;">Outros Motivos / Situações Complementares:</div>
+                        <div style="font-size: 8pt; line-height: 1.3;">${outrasFormatadas}</div>
+                    </div>` : ''}
+                    
+                    <div class="box-bloco" style="margin-top: 5px;">
+                        <div class="box-bloco-titulo">PARECER E ENCAMINHAMENTOS</div>
+                        <div class="box-dupla">
+                            <div>
+                                <div style="font-size:7.5pt; font-weight:900; color:#4f46e5; border-bottom:1px solid #cbd5e1; margin-bottom:6px; padding-bottom:2px;">AÇÕES DA ESCOLA</div>
+                                ${escolaHtml}
+                            </div>
+                            <div>
+                                <div style="font-size:7.5pt; font-weight:900; color:#059669; border-bottom:1px solid #cbd5e1; margin-bottom:6px; padding-bottom:2px;">PARA A FAMÍLIA</div>
+                                ${familiaHtml}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="rodape-assinatura">
+              <div style="width: 40%; margin: 0 auto; border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 8pt; font-weight: 700;">Equipa Pedagógica / Especialista</div>
+          </div>
+        </div>`;
+      });
+      
+      if(htmlFinal === '') { container.innerHTML = '<h3 style="text-align: center; color: #ef4444; margin-top: 50px;">Nenhum estudante desta turma foi avaliado no sistema ainda.</h3>'; }
+      else { container.innerHTML = htmlFinal; }
+    }
+  </script>
+</body>
+</html>
