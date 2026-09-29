@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ata Consolidada Pedagógica</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f1f5f9; color: #0f172a; margin: 0; padding: 20px; }
+    .no-print { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+    .btn-gerar { background: #4f46e5; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+    .btn-gerar:hover { background: #3730a3; }
+    .btn-imprimir { background: #10b981; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+    select { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-weight: bold; font-family: 'Inter'; outline: none; }
+    
+    .a4-page { max-width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 15mm; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 4px; box-sizing: border-box; position: relative; }
+    .header { border-bottom: 3px solid #0f172a; padding-bottom: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; }
+    .header img { height: 60px; }
+    .header h1 { font-size: 16pt; margin: 0; font-weight: 900; text-transform: uppercase; }
+    .header p { margin: 2px 0 0 0; font-size: 10pt; color: #475569; font-weight: 600; }
+    
+    .info-bar { background: #e0e7ff; color: #3730a3; padding: 10px 15px; border-radius: 8px; font-weight: 800; font-size: 11pt; display: flex; justify-content: space-between; margin-bottom: 20px; border: 1px solid #c7d2fe; }
+    
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+    .metric-box { border: 1.5px solid #cbd5e1; padding: 15px; border-radius: 8px; text-align: center; }
+    .metric-box.green { border-color: #34d399; background: #ecfdf5; }
+    .metric-box.red { border-color: #fca5a5; background: #fef2f2; }
+    .metric-box.orange { border-color: #fbbf24; background: #fffbeb; }
+    .metric-number { font-size: 24pt; font-weight: 900; margin-bottom: 5px; line-height: 1; }
+    .metric-label { font-size: 8pt; font-weight: 800; text-transform: uppercase; color: #475569; }
+    
+    .section-title { font-size: 11pt; font-weight: 900; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; margin: 25px 0 12px 0; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .ranking-list { list-style: none; padding: 0; margin: 0; }
+    .ranking-list li { background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 9pt; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
+    .ranking-list .perc { background: #0f172a; color: white; padding: 2px 6px; border-radius: 4px; font-size: 8pt; }
+    .ranking-list.red .perc { background: #dc2626; }
+    .ranking-list.green .perc { background: #059669; }
+    
+    .aluno-risco { border-left: 4px solid #dc2626; background: #fef2f2; padding: 10px 15px; margin-bottom: 10px; border-radius: 0 8px 8px 0; }
+    .aluno-risco h4 { margin: 0 0 5px 0; font-size: 10pt; color: #991b1b; font-weight: 800; }
+    .aluno-risco p { margin: 0; font-size: 8pt; color: #475569; line-height: 1.4; }
+    .aluno-risco span.tag { background: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 4px; font-size: 7.5pt; font-weight: bold; margin-right: 5px; display: inline-block; margin-bottom: 4px; border: 1px solid #fca5a5; }
+
+    .alerta-faltas { border: 2px dashed #f59e0b; background: #fffbeb; padding: 12px; border-radius: 8px; font-size: 9pt; font-weight: 600; color: #b45309; }
+    
+    .bloco-texto { background: #f8fafc; border: 1px solid #cbd5e1; padding: 12px; border-radius: 8px; font-size: 9pt; line-height: 1.5; color: #334155; margin-bottom: 10px; }
+    .bloco-texto strong { color: #0f172a; }
+
+    textarea.editavel { width: 100%; border: 1px dashed #cbd5e1; background: #fdf8f6; padding: 12px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 9.5pt; color: #0f172a; resize: none; min-height: 80px; font-weight: 600; box-sizing: border-box; }
+    textarea.editavel:focus { outline: none; border-color: #f97316; background: white; }
+
+    .assinaturas { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; text-align: center; page-break-inside: avoid; }
+    .ass-linha { border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 9pt; font-weight: 700; color: #475569; }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .no-print { display: none !important; }
+      .a4-page { box-shadow: none; padding: 0; }
+      textarea.editavel { border: 1px solid #e2e8f0; background: white; resize: none; overflow: hidden; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="no-print">
+    <select id="selTurma"></select>
+    <select id="selTrimestre">
+      <option>1º Trimestre</option>
+      <option selected>2º Trimestre</option>
+      <option>3º Trimestre</option>
+    </select>
+    <button class="btn-gerar" onclick="gerarRelatorio()"><i class="fa-solid fa-microchip"></i> Processar Inteligência Pedagógica</button>
+    <button class="btn-imprimir" onclick="window.print()"><i class="fa-solid fa-print"></i> Imprimir Ata</button>
+    <a href="index.html" style="margin-left: auto; text-decoration: none; font-weight: bold; color: #64748b;"><i class="fa-solid fa-arrow-left"></i> Voltar ao Sistema</a>
+  </div>
+
+  <div class="a4-page" id="relatorioContainer" style="display: none;">
+    
+    <div class="header">
+      <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" alt="Logo">
+      <div>
+        <p>E. E. Mestra Aurora — Plataforma de Governança Pedagógica</p>
+        <h1>ATA CONSOLIDADA E DIAGNÓSTICO DA TURMA</h1>
+      </div>
+    </div>
+
+    <div class="info-bar">
+      <span id="txtTurma">Turma: --</span>
+      <span id="txtTrimestre">Trimestre: --</span>
+      <span id="txtTotal">Total Avaliados: 0</span>
+    </div>
+
+    <div class="grid-3">
+      <div class="metric-box green">
+        <div class="metric-number" style="color: #059669;" id="valOtimo">0</div>
+        <div class="metric-label">Bons e Ótimos</div>
+      </div>
+      <div class="metric-box red">
+        <div class="metric-number" style="color: #dc2626;" id="valAtencao">0</div>
+        <div class="metric-label">Risco Pedagógico</div>
+      </div>
+      <div class="metric-box orange">
+        <div class="metric-number" style="color: #d97706;" id="valFaltas">0</div>
+        <div class="metric-label">Infrequência Crítica</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="section-title"><i class="fa-solid fa-triangle-exclamation" style="color: #dc2626;"></i> Maiores Desafios da Turma</div>
+        <ul class="ranking-list red" id="listaNegativa"></ul>
+      </div>
+      <div>
+        <div class="section-title"><i class="fa-solid fa-medal" style="color: #059669;"></i> Potencialidades da Turma</div>
+        <ul class="ranking-list green" id="listaPositiva"></ul>
+      </div>
+    </div>
+
+    <div class="section-title"><i class="fa-solid fa-bullhorn" style="color: #4f46e5;"></i> 1. Síntese do Corpo Docente e Especialistas</div>
+    <div class="bloco-texto" id="blocoProfessores">
+       <!-- Preenchido pelo JS -->
+    </div>
+
+    <div class="section-title"><i class="fa-solid fa-user-shield" style="color: #dc2626;"></i> 2. Radar de Estudantes em Risco (Acompanhamento Urgente)</div>
+    <div id="alertaFaltasContainer" class="alerta-faltas mb-3" style="display: none; margin-bottom: 10px;">
+       <i class="fa-solid fa-bell"></i> <strong>Alerta de Busca Ativa (Faltas):</strong> <span id="nomesFaltosos"></span>
+    </div>
+    <div id="listaAlunosRisco"></div>
+
+    <div class="section-title"><i class="fa-solid fa-route" style="color: #0f172a;"></i> 3. Intervenções e Encaminhamentos Majoritários</div>
+    <div class="grid-2">
+      <div>
+        <h4 style="font-size: 9.5pt; color: #4f46e5; margin: 0 0 8px 0;">Ações Exigidas da Escola:</h4>
+        <ul class="ranking-list" id="listaAcoesEscola"></ul>
+      </div>
+      <div>
+        <h4 style="font-size: 9.5pt; color: #059669; margin: 0 0 8px 0;">Solicitações Frequentes às Famílias:</h4>
+        <ul class="ranking-list" id="listaAcoesFamilia"></ul>
+      </div>
+    </div>
+
+    <div class="section-title"><i class="fa-solid fa-pen-to-square" style="color: #f97316;"></i> 4. Acordos e Metas do Conselho (Editável)</div>
+    <textarea class="editavel" placeholder="Digite aqui as metas traçadas pela equipe, combinados com a turma, ou observações finais que devam constar na Ata impressa..."></textarea>
+
+    <div class="assinaturas">
+      <div class="ass-linha">Equipe Docente e Pedagógica</div>
+      <div class="ass-linha">Direção Escolar</div>
+    </div>
+
+  </div>
+
+  <script>
+    var turmasGlobais = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
+    var selTurma = document.getElementById('selTurma');
+    selTurma.innerHTML = '<option value="">Selecione a Turma...</option>';
+    turmasGlobais.forEach(t => selTurma.innerHTML += `<option value="${t}">${t}</option>`);
+
+    var mapaCriterios = {
+        convivencia: "Convivência", atencao: "Atenção", conversa: "Conversa",
+        interesse: "Interesse", participacao: "Participação", aprendizagem: "Aprendizagem",
+        organizacao: "Organização", ativ_sala: "Ativ. em Sala",
+        tarefas_casa: "Tarefas de Casa", frequencia: "Frequência"
+    };
+
+    function autoExpandTextArea() {
+        var tx = document.querySelector('textarea.editavel');
+        tx.style.height = 'auto';
+        tx.style.height = (tx.scrollHeight) + 'px';
+    }
+    document.querySelector('textarea.editavel').addEventListener('input', autoExpandTextArea);
+
+    function gerarRelatorio() {
+        var turma = selTurma.value;
+        var trim = document.getElementById('selTrimestre').value;
+        if (!turma) { alert("Por favor, selecione uma turma primeiro."); return; }
+
+        var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
+        var alunosBase = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]');
+        
+        var stats = { total: 0, bomOtimo: 0, atencao: 0, faltas: 0 };
+        var contagemVermelha = {}; var contagemVerde = {};
+        var contagemEscola = {}; var contagemFamilia = {};
+        var alunosAlvoHTML = '';
+        var listaFaltosos = [];
+
+        for(let key in mapaCriterios) { contagemVermelha[mapaCriterios[key]] = 0; contagemVerde[mapaCriterios[key]] = 0; }
+
+        // LÓGICA DE DADOS DO CONSELHO (DATASHOW)
+        alunosBase.forEach(a => {
+            var reg = dbLocal[turma + '_' + a.nome.toUpperCase() + '_' + trim];
+            if (reg) {
+                stats.total++;
+
+                // Verificar Faltas Críticas
+                if (reg.criterios && reg.criterios.frequencia && reg.criterios.frequencia.includes('🔴')) {
+                    stats.faltas++;
+                    listaFaltosos.push(a.nome);
+                }
+
+                if (reg.conclusao.includes("ATENÇÃO")) {
+                    stats.atencao++;
+                    var tagsProblema = '';
+                    for(let critKey in reg.criterios) {
+                        let critVal = reg.criterios[critKey] || '';
+                        if(critVal.includes('🔴')) {
+                            tagsProblema += `<span class="tag">${mapaCriterios[critKey]}</span>`;
+                            contagemVermelha[mapaCriterios[critKey]]++;
+                        }
+                        if(critVal.includes('🟢')) contagemVerde[mapaCriterios[critKey]]++;
+                    }
+                    alunosAlvoHTML += `
+                        <div class="aluno-risco">
+                            <h4>${a.nome} ${a.aee ? '(AEE)' : ''} ${a.pdi==='Sim' ? '(PDI)' : ''}</h4>
+                            <div style="margin-bottom: 4px;">${tagsProblema}</div>
+                            <p><strong>Obs:</strong> ${reg.observacoes.split('. ').slice(0, 2).join('. ') + '.'} ${reg.outrasSituacoes ? ' | ' + reg.outrasSituacoes : ''}</p>
+                        </div>
+                    `;
+                } else {
+                    stats.bomOtimo++;
+                    for(let critKey in reg.criterios) {
+                        let critVal = reg.criterios[critKey] || '';
+                        if(critVal.includes('🔴')) contagemVermelha[mapaCriterios[critKey]]++;
+                        if(critVal.includes('🟢')) contagemVerde[mapaCriterios[critKey]]++;
+                    }
+                }
+
+                (reg.encEscola || []).forEach(e => { contagemEscola[e] = (contagemEscola[e] || 0) + 1; });
+                (reg.encFamilia || []).forEach(e => { contagemFamilia[e] = (contagemFamilia[e] || 0) + 1; });
+            }
+        });
+
+        if (stats.total === 0) { alert("Não há avaliações salvas para esta turma neste trimestre. Sincronize no Datashow primeiro."); return; }
+
+        // LÓGICA DE PUXAR MATRIZES DE PROFESSORES E ESPECIALISTAS
+        var sinteseProfessores = "";
+        for (var i = 0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            if (key.startsWith('mestra_prof_' + turma + '_') && key.endsWith('_' + trim)) {
+                var pData = JSON.parse(localStorage.getItem(key));
+                var comp = key.split('_')[3] || 'Componente';
+                if(pData.caracteristicas) {
+                    sinteseProfessores += `<strong>${comp} (${pData.professor}):</strong> ${pData.caracteristicas}<br>`;
+                }
+            }
+        }
+        var dEsp = JSON.parse(localStorage.getItem('mestra_esp_' + turma + '_' + trim) || '{}');
+        if(dEsp.intP || dEsp.busca || dEsp.prog) {
+            sinteseProfessores += `<hr style="border:0; border-top:1px dashed #cbd5e1; margin: 8px 0;">`;
+            if(dEsp.intP) sinteseProfessores += `<strong>Intervenção Pedagógica:</strong> ${dEsp.intP}<br>`;
+            if(dEsp.busca) sinteseProfessores += `<strong>Busca Ativa:</strong> ${dEsp.busca}<br>`;
+            if(dEsp.prog) sinteseProfessores += `<strong>Progressão Parcial:</strong> ${dEsp.prog}<br>`;
+        }
+        
+        document.getElementById('blocoProfessores').innerHTML = sinteseProfessores || "<em>Nenhuma síntese ou característica de turma registada pelos professores ou especialistas para este trimestre.</em>";
+
+        // ATUALIZAÇÃO DOS NÚMEROS E GRÁFICOS TEXTUAIS
+        document.getElementById('txtTurma').innerText = "Turma: " + turma;
+        document.getElementById('txtTrimestre').innerText = "Trimestre: " + trim;
+        document.getElementById('txtTotal').innerText = "Total Avaliados: " + stats.total;
+        document.getElementById('valOtimo').innerText = stats.bomOtimo;
+        document.getElementById('valAtencao').innerText = stats.atencao;
+        document.getElementById('valFaltas').innerText = stats.faltas;
+
+        // ALERTA DE FALTAS
+        var divFaltas = document.getElementById('alertaFaltasContainer');
+        if(listaFaltosos.length > 0) {
+            document.getElementById('nomesFaltosos').innerText = listaFaltosos.join(', ');
+            divFaltas.style.display = 'block';
+        } else {
+            divFaltas.style.display = 'none';
+        }
+
+        document.getElementById('listaNegativa').innerHTML = gerarRankingHTML(contagemVermelha, stats.total, 3);
+        document.getElementById('listaPositiva').innerHTML = gerarRankingHTML(contagemVerde, stats.total, 3);
+        document.getElementById('listaAcoesEscola').innerHTML = gerarRankingSimplesHTML(contagemEscola, 4);
+        document.getElementById('listaAcoesFamilia').innerHTML = gerarRankingSimplesHTML(contagemFamilia, 4);
+        
+        document.getElementById('listaAlunosRisco').innerHTML = alunosAlvoHTML || '<p style="font-size: 9pt; color: #059669; font-weight: bold;">Nenhum estudante classificado em Risco Pedagógico nesta turma.</p>';
+
+        document.getElementById('relatorioContainer').style.display = 'block';
+        setTimeout(autoExpandTextArea, 100);
+    }
+
+    function gerarRankingHTML(objetoContagem, totalAlunos, limite) {
+        var arr = Object.keys(objetoContagem).map(k => ({ nome: k, qtd: objetoContagem[k] }));
+        arr.sort((a, b) => b.qtd - a.qtd);
+        var html = '';
+        for (let i = 0; i < limite && i < arr.length; i++) {
+            if (arr[i].qtd > 0) {
+                let perc = Math.round((arr[i].qtd / totalAlunos) * 100);
+                html += `<li>${arr[i].nome} <span class="perc">${perc}% da turma</span></li>`;
+            }
+        }
+        return html || '<li style="color:#94a3b8; justify-content:center;">Sem dados relevantes</li>';
+    }
+
+    function gerarRankingSimplesHTML(objetoContagem, limite) {
+        var arr = Object.keys(objetoContagem).map(k => ({ nome: k, qtd: objetoContagem[k] }));
+        arr.sort((a, b) => b.qtd - a.qtd);
+        var html = '';
+        for (let i = 0; i < limite && i < arr.length; i++) {
+            if (arr[i].qtd > 0) {
+                html += `<li>${arr[i].nome} <span style="font-size:7.5pt; color:#64748b;">${arr[i].qtd} alunos</span></li>`;
+            }
+        }
+        return html || '<li style="color:#94a3b8; justify-content:center;">Nenhum registo</li>';
+    }
+  </script>
+</body>
+</html>
