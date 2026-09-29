@@ -98,7 +98,7 @@
 
       alunos.forEach(a => {
         var reg = dbLocal[turma + '_' + a.nome.toUpperCase() + '_' + trimestre];
-        if(!reg) return; // Só imprime bilhete de quem foi avaliado
+        if(!reg) return;
 
         var crit = reg.criterios || {}; 
         var verdesHtml = ''; var atencaoHtml = ''; var criteriosEsqHtml = '';
