@@ -143,7 +143,7 @@
         <button class="pill-btn admin-only" onclick="switchTab('tab-especialista', this)"><i class="fa-solid fa-user-tie"></i> Especialista</button>
         <button class="pill-btn" onclick="switchTab('tab-datashow', this)"><i class="fa-solid fa-display"></i> Datashow</button>
         <button class="pill-btn admin-only" onclick="switchTab('tab-banco', this)"><i class="fa-solid fa-database"></i> Banco</button>
-        <button class="pill-btn admin-only" onclick="location.href='ata.html'"><i class="fa-solid fa-print"></i> Ata Pedagógica</button>
+        <button class="pill-btn admin-only" onclick="switchTab('tab-relatorios', this)"><i class="fa-solid fa-print"></i> Relatórios</button>
         <button class="pill-btn text-danger ms-2" onclick="location.reload()"><i class="fa-solid fa-power-off"></i> Sair</button>
       </nav>
     </header>
@@ -158,9 +158,6 @@
         </div>
       </div>
     </section>
-
-    <!-- Outras abas (Estudantes, Lotação, Professor, Especialista, Banco) permanecem inalteradas, mas ocultas para brevidade no texto explicativo, 
-         estão TODAS aqui abaixo no código final que será fornecido -->
     
     <section id="tab-estudantes" class="view-panel">
         <div class="card-clean">
@@ -244,7 +241,25 @@
       </div>
     </section>
 
-    <!-- DATASHOW COM RADAR DE TEMPO REAL -->
+    <!-- RELATÓRIOS (ABREM EM NOVA GUIA) -->
+    <section id="tab-relatorios" class="view-panel">
+      <div class="card-clean text-center py-5">
+        <h3 class="fw-bold mb-4"><i class="fa-solid fa-print text-primary me-2"></i>Central de Impressão e Relatórios</h3>
+        <p class="text-muted mb-5">Os relatórios abrirão numa nova aba para que você não perca o seu acesso (login) nesta tela.</p>
+        <div class="row">
+           <div class="col-md-6 mx-auto d-flex flex-column gap-3">
+             <button class="btn btn-success py-4 fw-bold shadow-sm admin-only" style="font-size: 1.1rem;" onclick="window.open('bilhetes.html', '_blank')">
+                 <i class="fa-solid fa-file-pdf me-2"></i> Gerar Bilhetes (Comunicados aos Pais)
+             </button>
+             <button class="btn btn-primary py-4 fw-bold shadow-sm admin-only" style="font-size: 1.1rem;" onclick="window.open('ata.html', '_blank')">
+                 <i class="fa-solid fa-users-rectangle me-2"></i> Gerar Ata Consolidada da Turma
+             </button>
+           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATASHOW -->
     <section id="tab-datashow" class="view-panel">
       <div class="card-clean mb-4" id="seletorDatashow">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3 border-bottom pb-3">
@@ -252,16 +267,12 @@
            <h4 class="fw-bold m-0 text-dark"><i class="fa-solid fa-users-viewfinder text-primary me-2"></i>Controle da Reunião (Datashow)</h4>
          </div>
           <div class="d-flex align-items-center gap-3">
-            
             <button class="btn btn-sm btn-primary fw-bold" onclick="sincronizarApenasAvaliacoes(this)">
                 <i class="fa-solid fa-bolt me-1"></i> Forçar Atualização
             </button>
-            
-            <!-- INDICADOR DO RADAR DE TEMPO REAL -->
             <span id="statusRadar" class="pulse-radar" style="font-size: 0.85rem; color: #10b981; font-weight: 800; display: none; background: #ecfdf5; padding: 6px 12px; border-radius: 20px; border: 1px solid #34d399;">
                 <i class="fa-solid fa-satellite-dish"></i> Sincronização em Tempo Real ON
             </span>
-            
             <select id="sessaoTrimestre" class="form-select fw-bold border-secondary">
               <option>1º Trimestre</option><option selected>2º Trimestre</option><option>3º Trimestre</option>
             </select>
@@ -292,7 +303,6 @@
             <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(-1)"><i class="fa-solid fa-chevron-left me-1"></i> Voltar</button>
             <button class="btn btn-outline-dark fw-bold btn-sm py-2 px-3" onclick="navegarEstudante(1)">Próximo <i class="fa-solid fa-chevron-right ms-1"></i></button>
             <button class="btn btn-dark fw-bold btn-sm py-2 px-3 ms-2" onclick="fecharAvaliacaoAluno()"><i class="fa-solid fa-xmark"></i> Fechar</button>
-            <!-- BOTÃO OFICIAL DE GRAVAÇÃO -->
             <button class="btn btn-mestra fw-bold btn-sm py-2 px-4 shadow-sm admin-only" onclick="salvarEAvancarProximo(this)"><i class="fa-solid fa-floppy-disk me-1"></i> Gravar Tudo e Salvar na Planilha</button>
           </div>
         </div>
@@ -345,9 +355,7 @@
   </div>
  
   <script>
-    // =========================================================================
-    // COLE O SEU LINK DA API DO GOOGLE AQUI EMBAIXO
-    // =========================================================================
+    // COLOQUE AQUI O SEU LINK DA API DO GOOGLE (Não se esqueça desta etapa!)
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbxIHePqCUCNaNzgz4C-5rz5AwQXh02W2A1KUJz3yx9hf0ofth0dZIGuWaurcmL4FN5i/exec"; 
 
     var turmasGlobais = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
@@ -355,7 +363,7 @@
     var componentesGlobais = ["Língua Portuguesa", "Matemática", "História", "Geografia", "Ciências", "Língua Inglesa", "Arte", "Educação Física", "Ensino Religioso"];
     
     var turmaAtivaSessao = ""; var alunoAtivoSessao = null; var timerInterval = null; var segundosRestantes = 180; var perfilLogado = ""; var bancoDeDadosNuvem = {}; 
-    var radarTempoRealInterval = null; // Variável do nosso Radar de Tempo Real
+    var radarTempoRealInterval = null; 
  
     var criteriosDetalhados = [
       { nome: "Convivência e Comportamento", chave: "convivencia", opcoes: [{ texto: "🟢 Convive bem com todos", escola: [], familia: [] }, { texto: "🟡 Às vezes precisa de orientação para conviver bem", escola: ["Orientar o estudante individualmente."], familia: ["Fortalecer hábitos de estudos em casa."] }, { texto: "🔴 Tem dificuldade de convivência", escola: ["Reforçar os combinados da turma."], familia: ["Fortalecer hábitos de estudos em casa."] }]},
@@ -395,9 +403,7 @@
       window.scrollTo(0,0); 
       if(id === 'tab-banco') renderizarDashboardBanco();
       
-      // Lógica do Radar: Só fica ativo se estivermos na aba Datashow
-      if(id === 'tab-datashow' && turmaAtivaSessao) { ligarRadarTempoReal(); } 
-      else { desligarRadarTempoReal(); }
+      if(id === 'tab-datashow' && turmaAtivaSessao) { ligarRadarTempoReal(); } else { desligarRadarTempoReal(); }
     }
     
     function mostrarSenha(tipo) { 
@@ -521,25 +527,18 @@
       });
     }
 
-    // =========================================================================
-    // O NOVO RADAR DE TEMPO REAL (PILOTO AUTOMÁTICO)
-    // =========================================================================
     function ligarRadarTempoReal() {
         if (radarTempoRealInterval) clearInterval(radarTempoRealInterval);
         document.getElementById('statusRadar').style.display = 'inline-block';
-        
-        // A cada 10 segundos ele verifica a planilha na nuvem sem travar a tela
         radarTempoRealInterval = setInterval(function() {
             var turma = turmaAtivaSessao;
             var trim = document.getElementById('sessaoTrimestre').value;
             if(!turma) return;
-
             chamarApiGoogle('carregarAvaliacoesTurma', { turma: turma, trimestre: trim }, function(dados) {
                 if (dados && !dados.erro && dados.avaliacoes && dados.avaliacoes[turma]) {
                     var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
                     var avaliacoesDaTurma = dados.avaliacoes[turma];
                     var dadosAtualizados = false;
-
                     for(var aluno in avaliacoesDaTurma) {
                         var reg = avaliacoesDaTurma[aluno][trim];
                         if(reg) {
@@ -555,15 +554,11 @@
                     }
                     if(dadosAtualizados) {
                         localStorage.setItem('mestra_banco_registros', JSON.stringify(dbLocal));
-                        
-                        // Atualiza a tela automaticamente APENAS se o utilizador NÃO estiver a escrever nos campos de texto (para não apagar o que ele está a escrever)
-                        if(alunoAtivoSessao && document.activeElement.tagName !== 'TEXTAREA') {
-                            abrirAvaliacaoAluno(alunoAtivoSessao);
-                        }
+                        if(alunoAtivoSessao && document.activeElement.tagName !== 'TEXTAREA') { abrirAvaliacaoAluno(alunoAtivoSessao); }
                     }
                 }
             });
-        }, 10000); // 10000ms = 10 segundos
+        }, 10000);
     }
 
     function desligarRadarTempoReal() {
@@ -576,10 +571,8 @@
       var turma = turmaAtivaSessao;
       var trim = document.getElementById('sessaoTrimestre').value;
       if(!turma) { alert("Atenção: Por favor, selecione uma turma primeiro!"); return; }
-      
       var originalText = btn.innerHTML;
       btn.innerHTML = '<i class="fa-solid fa-rocket fa-bounce me-2"></i>A Puxar Atualizações...';
-      
       chamarApiGoogle('carregarAvaliacoesTurma', { turma: turma, trimestre: trim }, function(dados) {
          btn.innerHTML = '<i class="fa-solid fa-check me-2"></i>Notas Atualizadas!';
          setTimeout(() => btn.innerHTML = originalText, 3000);
@@ -603,10 +596,6 @@
          }
       });
     }
-
-    // =========================================================================
-    // RESTANTE DO CÓDIGO (GRAVAÇÃO, ETC)
-    // =========================================================================
 
     function addObs(texto) { 
       var txt = document.getElementById('txtOutrasSituacoes'); 
@@ -687,19 +676,15 @@
       var painel = document.getElementById('bancoDashboard');
       var aviso = document.getElementById('bancoVazio');
       var grid = document.getElementById('bancoCardsGrid');
-      
       if(!turma) { painel.style.display = 'none'; aviso.style.display = 'block'; return; }
       painel.style.display = 'block'; aviso.style.display = 'none';
-      
       var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
       var alunosBase = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]');
-      
       var alunos = []; var vistos = new Set();
       alunosBase.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
 
       var tot=0, oti=0, bom=0, ate=0;
       var htmlCards = '';
-
       alunos.forEach(a => {
          var key = turma + '_' + a.nome.toUpperCase() + '_' + trim;
          var reg = dbLocal[key];
@@ -715,24 +700,10 @@
             var faltaIcon = (reg.criterios && reg.criterios.frequencia && reg.criterios.frequencia.includes('🔴')) ? `<span title="Faltoso" style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i></span>` : '';
             var env = (reg.encFamilia && reg.encFamilia.length > 0) ? `<span title="Família Convocada" style="color:#f59e0b;"><i class="fa-solid fa-house-chimney"></i></span>` : '';
 
-            htmlCards += `
-              <div class="aluno-card ${cssClass}" data-sit="${conc}" data-aee="${a.aee}">
-                 <div>
-                   <div class="sit">${conc}</div>
-                   <div class="nome">${a.nome}</div>
-                   <div class="tags-mini">${tagAee} ${faltaIcon} ${env}</div>
-                 </div>
-                 <button class="btn-dossie" onclick="abrirDossie('${turma}', '${a.nome}', '${trim}')">Ver Dossiê</button>
-              </div>
-            `;
+            htmlCards += `<div class="aluno-card ${cssClass}" data-sit="${conc}" data-aee="${a.aee}"><div><div class="sit">${conc}</div><div class="nome">${a.nome}</div><div class="tags-mini">${tagAee} ${faltaIcon} ${env}</div></div><button class="btn-dossie" onclick="abrirDossie('${turma}', '${a.nome}', '${trim}')">Ver Dossiê</button></div>`;
          }
       });
-
-      document.getElementById('dbTot').innerText = tot;
-      document.getElementById('dbOti').innerText = oti;
-      document.getElementById('dbBom').innerText = bom;
-      document.getElementById('dbAte').innerText = ate;
-
+      document.getElementById('dbTot').innerText = tot; document.getElementById('dbOti').innerText = oti; document.getElementById('dbBom').innerText = bom; document.getElementById('dbAte').innerText = ate;
       grid.innerHTML = htmlCards || '<div class="col-12 text-center text-muted py-4">Nenhuma avaliação guardada para esta turma neste trimestre.</div>';
       filtrarCardsBanco('TODOS', document.querySelector('.btn-filtro'));
     }
@@ -754,10 +725,8 @@
        var key = turma + '_' + nome.toUpperCase() + '_' + trim;
        var reg = db[key];
        if(!reg) return;
-
        document.getElementById('mdNome').innerText = nome;
        document.getElementById('mdTurma').innerText = turma + ' - ' + trim;
-
        var cHtml = '';
        if(reg.criterios) {
          criteriosDetalhados.forEach(c => {
@@ -766,30 +735,7 @@
             cHtml += `<div style="padding:6px; border-bottom:1px solid #e2e8f0; font-size:0.8rem;"><strong style="color:#475569;">${c.nome}:</strong> <span style="background:${cor}; padding:2px 6px; border-radius:4px; font-weight:700;">${val}</span></div>`;
          });
        }
-
-       var bHtml = `
-         <div class="row g-3">
-            <div class="col-md-6">
-               <div class="card-clean p-3 h-100">
-                  <h6 class="fw-bold border-bottom pb-2 mb-2"><i class="fa-solid fa-list-check text-primary me-2"></i>Critérios</h6>
-                  ${cHtml}
-               </div>
-            </div>
-            <div class="col-md-6 d-flex flex-column gap-3">
-               <div class="card-clean p-3" style="background:#fefce8; border-color:#fde047;">
-                  <h6 class="fw-bold text-warning-dark border-bottom pb-2 mb-2"><i class="fa-solid fa-comment-dots me-2"></i>Parecer e Outros</h6>
-                  <p class="mb-2" style="font-size:0.8rem; line-height:1.4;"><strong>Situação:</strong> ${reg.conclusao}</p>
-                  <p class="mb-2" style="font-size:0.8rem; line-height:1.4;"><strong>Observações:</strong> ${reg.observacoes}</p>
-                  <p class="mb-0" style="font-size:0.8rem; line-height:1.4;"><strong>Complemento:</strong> ${reg.outrasSituacoes || 'Nenhum'}</p>
-               </div>
-               <div class="card-clean p-3">
-                  <h6 class="fw-bold text-success border-bottom pb-2 mb-2"><i class="fa-solid fa-route me-2"></i>Encaminhamentos</h6>
-                  <p class="mb-1" style="font-size:0.75rem;"><strong>Escola:</strong> ${(reg.encEscola||[]).join(', ') || 'Nenhum'}</p>
-                  <p class="mb-0" style="font-size:0.75rem;"><strong>Família:</strong> ${(reg.encFamilia||[]).join(', ') || 'Nenhum'}</p>
-               </div>
-            </div>
-         </div>
-       `;
+       var bHtml = `<div class="row g-3"><div class="col-md-6"><div class="card-clean p-3 h-100"><h6 class="fw-bold border-bottom pb-2 mb-2"><i class="fa-solid fa-list-check text-primary me-2"></i>Critérios</h6>${cHtml}</div></div><div class="col-md-6 d-flex flex-column gap-3"><div class="card-clean p-3" style="background:#fefce8; border-color:#fde047;"><h6 class="fw-bold text-warning-dark border-bottom pb-2 mb-2"><i class="fa-solid fa-comment-dots me-2"></i>Parecer e Outros</h6><p class="mb-2" style="font-size:0.8rem; line-height:1.4;"><strong>Situação:</strong> ${reg.conclusao}</p><p class="mb-2" style="font-size:0.8rem; line-height:1.4;"><strong>Observações:</strong> ${reg.observacoes}</p><p class="mb-0" style="font-size:0.8rem; line-height:1.4;"><strong>Complemento:</strong> ${reg.outrasSituacoes || 'Nenhum'}</p></div><div class="card-clean p-3"><h6 class="fw-bold text-success border-bottom pb-2 mb-2"><i class="fa-solid fa-route me-2"></i>Encaminhamentos</h6><p class="mb-1" style="font-size:0.75rem;"><strong>Escola:</strong> ${(reg.encEscola||[]).join(', ') || 'Nenhum'}</p><p class="mb-0" style="font-size:0.75rem;"><strong>Família:</strong> ${(reg.encFamilia||[]).join(', ') || 'Nenhum'}</p></div></div></div>`;
        document.getElementById('mdBody').innerHTML = bHtml;
        document.getElementById('modalDossie').style.display = 'flex';
     }
@@ -816,8 +762,6 @@
       document.getElementById('containerAlunosSessao').style.display = 'block'; 
       document.getElementById('painelAvaliacaoEstudante').style.display = 'none'; 
       carregarAlunosTurmaDatashow(turma); 
-      
-      // Quando seleciona a turma, o radar começa a girar para mantê-la atualizada!
       ligarRadarTempoReal();
     }
     
@@ -826,7 +770,6 @@
       var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
       var alunos = []; var vistos = new Set();
       alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
-      
       grid.innerHTML = ''; 
       alunos.forEach(a => grid.innerHTML += `<div class="student-pill" onclick="abrirAvaliacaoAluno('${a.nome}')"><i class="fa-solid fa-user-graduate text-primary"></i> ${a.nome}</div>`); 
     }
@@ -850,7 +793,6 @@
       document.querySelectorAll('.chk-escola').forEach(chk => chk.checked = padroesEscola.includes(chk.value));
       document.querySelectorAll('.chk-familia').forEach(chk => chk.checked = true); 
       
-      // NÃO limpa as textareas se o usuário já estiver digitando nela, para não perder o texto ao atualizar em tempo real
       if (document.activeElement.id !== 'obsAlunoAtivo' && document.activeElement.id !== 'txtOutrasSituacoes') {
           document.getElementById('obsAlunoAtivo').value = ''; 
           document.getElementById('txtOutrasSituacoes').value = '';
@@ -879,7 +821,6 @@
           var btnAlvo = document.querySelector(`button[data-conc="${dados.conclusao || dados.caracteristica}"]`); 
           if(btnAlvo) setConclusao((dados.conclusao || dados.caracteristica), btnAlvo, false); 
         }
-        
         var escArr = dados.encEscola || [];
         if (escArr.length > 0) {
             document.querySelectorAll('.chk-escola').forEach(chk => chk.checked = false); 
@@ -888,7 +829,6 @@
                 if(escArr.some(e => e.replace(/\.$/, '').trim() === cleanVal)) chk.checked = true; 
             });
         }
-        
         if (dados.encFamilia && dados.encFamilia.length > 0) {
             document.querySelectorAll('.chk-familia').forEach(chk => chk.checked = false); 
             var famArr = dados.encFamilia || [];
@@ -897,8 +837,6 @@
                 if(famArr.some(e => e.replace(/\.$/, '').trim() === cleanVal)) chk.checked = true; 
             });
         }
-        
-        // Só atualiza os textos de observações se o utilizador NÃO os estiver a editar ativamente
         if (document.activeElement.id !== 'obsAlunoAtivo') { document.getElementById('obsAlunoAtivo').value = dados.observacoes || ''; }
         if (document.activeElement.id !== 'txtOutrasSituacoes') { document.getElementById('txtOutrasSituacoes').value = dados.outrasSituacoes || ''; }
         
@@ -918,7 +856,6 @@
       var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turmaAtivaSessao) || '[]'); 
       var alunos = []; var vistos = new Set();
       alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
-
       var idx = alunos.findIndex(a => a.nome === alunoAtivoSessao);
       if(idx + direcao >= 0 && idx + direcao < alunos.length) abrirAvaliacaoAluno(alunos[idx + direcao].nome);
     }
@@ -936,15 +873,10 @@
       });
 
       var obj = { 
-        turma: turmaAtivaSessao, 
-        estudante: alunoAtivoSessao.toUpperCase(), 
-        trimestre: trim, 
-        criterios: critObj, 
-        encEscola: encE, 
-        encFamilia: encF, 
+        turma: turmaAtivaSessao, estudante: alunoAtivoSessao.toUpperCase(), trimestre: trim, 
+        criterios: critObj, encEscola: encE, encFamilia: encF, 
         conclusao: btnConc ? btnConc.dataset.conc : 'BOM/BOA', 
-        outrasSituacoes: document.getElementById('txtOutrasSituacoes').value, 
-        observacoes: document.getElementById('obsAlunoAtivo').value 
+        outrasSituacoes: document.getElementById('txtOutrasSituacoes').value, observacoes: document.getElementById('obsAlunoAtivo').value 
       };
       
       var db = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}'); 
