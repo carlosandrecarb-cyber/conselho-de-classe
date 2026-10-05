@@ -37,10 +37,24 @@
     .bg-green { background-color: #10b981; } .bg-red { background-color: #ef4444; } .bg-yellow { background-color: #f59e0b; }
     
     @media print { 
-        body { background: white; } 
+        html { font-size: 96%; } /* Ligeira redução para garantir que cabe com folga no A4 */
+        body { 
+            background: white; 
+            -webkit-print-color-adjust: exact; /* Mantém as cores originais na impressão */
+            print-color-adjust: exact; 
+        } 
         .no-print { display: none !important; } 
-        #relatorioContainer { gap: 0; }
-        .pagina-a4 { border: none; box-shadow: none; padding: 5mm; height: 100vh; margin: 0; } 
+        #relatorioContainer { gap: 0; display: block; }
+        .pagina-a4 { 
+            border: none; 
+            box-shadow: none; 
+            padding: 0; /* Usa a margem do @page */
+            margin: 0;
+            height: auto; /* Remove o 100vh que cortava o ecrã */
+            min-height: 277mm;
+            page-break-after: always;
+            page-break-inside: avoid; /* Impede a folha de ser partida a meio */
+        } 
     }
   </style>
 </head>
