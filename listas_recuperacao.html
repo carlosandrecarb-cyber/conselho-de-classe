@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Listas Diárias de Recuperação</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; margin: 0; padding: 20px; color: #0f172a; }
+    
+    .painel-controlo { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .header-title h2 { margin: 0; font-weight: 900; }
+    
+    .filtros { display: flex; gap: 15px; margin-top: 15px; flex-wrap: wrap; align-items: center; }
+    select, input { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-weight: bold; font-family: 'Inter'; outline: none; }
+    .btn-acao { background: #4f46e5; color: white; border: none; padding: 10px 15px; font-weight: bold; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .btn-add { background: #f59e0b; color: white; border: none; padding: 10px 15px; font-weight: bold; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    
+    .dias-container { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; border-top: 2px dashed #cbd5e1; padding-top: 20px; }
+    .dia-box { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; }
+    .dia-header { display: flex; justify-content: space-between; align-items: center; font-weight: 900; }
+    .btn-remover { background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
+    .checkbox-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    .check-item { background: white; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
+    @page { size: A4 portrait; margin: 15mm; }
+    #containerImpressao { display: none; }
+    .folha-pauta { width: 100%; max-width: 210mm; background: white; margin: 0 auto; page-break-after: always; min-height: 250mm; }
+    .folha-pauta h1 { font-size: 14pt; text-align: center; text-transform: uppercase; font-weight: 900; margin-bottom: 5px; }
+    .folha-pauta h2 { font-size: 11pt; text-align: center; color: #475569; margin-top: 0; margin-bottom: 20px; }
+    
+    table.tabela-chamada { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 9.5pt; }
+    table.tabela-chamada th { background: #e2e8f0; color: #0f172a; padding: 8px; border: 1px solid #0f172a; text-transform: uppercase; font-weight: 900; }
+    table.tabela-chamada td { padding: 8px; border: 1px solid #0f172a; }
+    
+    @media print {
+        body { background: white; padding: 0; }
+        .painel-controlo { display: none !important; }
+        #containerImpressao { display: block; }
+        .folha-pauta { box-shadow: none; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="painel-controlo">
+    <div class="header-title">
+      <h2><i class="fa-solid fa-calendar-days text-primary"></i> Gerador de Pautas de Recuperação</h2>
+      <p style="margin-top: 5px; color:#64748b; font-weight:600;">Crie os dias de prova e gere listas com os alunos filtrados.</p>
+    </div>
+    
+    <div class="filtros">
+      <select id="selTurma"></select>
+      <select id="selTrimestre">
+        <option value="1º Trimestre">1º Trimestre</option>
+        <option value="2º Trimestre" selected>2º Trimestre</option>
+        <option value="3º Trimestre (Final)">3º Trimestre (Final)</option>
+      </select>
+      <button class="btn-add" onclick="adicionarDia()"><i class="fa-solid fa-plus"></i> Novo Dia de Prova</button>
+      <button class="btn-acao" onclick="gerarListas()"><i class="fa-solid fa-wand-magic-sparkles"></i> Processar Listas</button>
+      <button class="btn-acao" style="background:#10b981;" onclick="window.print()"><i class="fa-solid fa-print"></i> Imprimir Pautas</button>
+    </div>
+
+    <div id="containerDias" class="dias-container"></div>
+  </div>
+
+  <div id="containerImpressao"></div>
+
+  <script>
+    var turmasGlobais = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
+    var selTurma = document.getElementById('selTurma');
+    turmasGlobais.forEach(t => selTurma.innerHTML += `<option value="${t}">${t}</option>`);
+
+    var componentes = ["Arte", "Ciências", "Ed. Física", "Ens. Religioso", "Geografia", "História", "L. Inglesa", "L. Portuguesa", "Matemática"];
+    var contadorDias = 0;
+
+    function adicionarDia() {
+        contadorDias++;
+        var checkboxes = componentes.map(c => `<label class="check-item"><input type="checkbox" name="comp_${contadorDias}" value="${c}"> ${c}</label>`).join('');
+        var box = document.createElement('div');
+        box.className = 'dia-box';
+        box.innerHTML = `<div class="dia-header"><input type="text" class="input-nome-dia" placeholder="Ex: Dia 1 - Terça-feira (25/11)" style="width: 300px; padding: 6px;"><button class="btn-remover" onclick="this.parentElement.parentElement.remove()"><i class="fa-solid fa-trash"></i></button></div><div class="checkbox-grid">${checkboxes}</div>`;
+        document.getElementById('containerDias').appendChild(box);
+    }
+
+    window.onload = function() { adicionarDia(); };
+
+    function gerarListas() {
+        var turma = selTurma.value; var trim = document.getElementById('selTrimestre').value;
+        var notasSalvas = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + trim) || '{}');
+        var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]');
+        var alunos = []; var vistos = new Set();
+        alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
+
+        var htmlFinal = '';
+        var blocosDias = document.querySelectorAll('.dia-box');
+        if(blocosDias.length === 0) return;
+
+        blocosDias.forEach(bloco => {
+            var nomeDia = bloco.querySelector('.input-nome-dia').value || 'Dia de Recuperação';
+            var compsSelecionados = Array.from(bloco.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+            if (compsSelecionados.length === 0) return; 
+
+            var linhasTabela = ''; var numero = 1;
+            alunos.forEach(a => {
+                var dadosAluno = notasSalvas[a.nome] || {};
+                var disciplinasDesteDia = [];
+                compsSelecionados.forEach(c => {
+                    if (dadosAluno[c] === 'REC' || dadosAluno[c] === 'EI') disciplinasDesteDia.push(c.substring(0,3).toUpperCase());
+                });
+                if (disciplinasDesteDia.length > 0) {
+                    linhasTabela += `<tr><td style="text-align:center;">${numero}</td><td style="font-weight:bold;">${a.nome}</td><td style="text-align:center; font-weight:bold; color:#ef4444;">${disciplinasDesteDia.join(' / ')}</td><td style="width:35%;"></td></tr>`;
+                    numero++;
+                }
+            });
+
+            if (linhasTabela === '') linhasTabela = `<tr><td colspan="4" style="text-align:center; color:#64748b; padding:15px;">Nenhum estudante de recuperação nestes componentes.</td></tr>`;
+
+            htmlFinal += `<div class="folha-pauta"><h1>ESCOLA ESTADUAL MESTRA AURORA</h1><h2>Pauta de Presença • Recuperação • ${trim}</h2><div style="display:flex; justify-content:space-between; border: 2px solid #0f172a; padding: 10px; font-weight:900; background:#f1f5f9;"><span>TURMA: ${turma}</span><span>DATA: ${nomeDia}</span></div><p style="font-size:8.5pt; font-weight:bold; color:#475569; margin-top:5px;">Componentes: ${compsSelecionados.join(', ')}</p><table class="tabela-chamada"><thead><tr><th style="width: 5%;">Nº</th><th style="width: 40%; text-align:left;">Nome do Estudante</th><th style="width: 20%;">Provas a Fazer</th><th style="width: 35%;">Assinatura do Estudante</th></tr></thead><tbody>${linhasTabela}</tbody></table></div>`;
+        });
+
+        document.getElementById('containerImpressao').innerHTML = htmlFinal;
+        document.querySelector('.painel-controlo').style.display = 'none'; 
+        
+        var btnVoltar = document.createElement('button');
+        btnVoltar.className = 'btn-add';
+        btnVoltar.style.position = 'fixed'; btnVoltar.style.bottom = '20px'; btnVoltar.style.right = '20px';
+        btnVoltar.innerHTML = '<i class="fa-solid fa-arrow-left"></i> Voltar à Edição';
+        btnVoltar.onclick = function() { document.querySelector('.painel-controlo').style.display = 'block'; document.getElementById('containerImpressao').innerHTML = ''; this.remove(); };
+        document.body.appendChild(btnVoltar);
+    }
+  </script>
+</body>
+</html>
