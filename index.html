@@ -249,18 +249,37 @@
       </div>
     </section>
 
-    <!-- RELATÓRIOS (ABREM EM NOVA GUIA PARA PROTEGER O LOGIN) -->
+    <!-- NOVA CENTRAL DE RELATÓRIOS E RESULTADOS (AGORA COM RECUPERAÇÃO) -->
     <section id="tab-relatorios" class="view-panel">
       <div class="card-clean text-center py-5">
-        <h3 class="fw-bold mb-4"><i class="fa-solid fa-print text-primary me-2"></i>Central de Impressão e Relatórios</h3>
-        <p class="text-muted mb-5">Os relatórios abrirão numa nova aba para que não perca o seu acesso (login) nesta tela.</p>
-        <div class="row">
-           <div class="col-md-6 mx-auto d-flex flex-column gap-3">
-             <button class="btn btn-success py-4 fw-bold shadow-sm admin-only" style="font-size: 1.1rem;" onclick="window.open('bilhetes.html', '_blank')">
-                 <i class="fa-solid fa-file-pdf me-2"></i> Gerar Bilhetes (Comunicados aos Pais)
+        <h3 class="fw-bold mb-4"><i class="fa-solid fa-print text-primary me-2"></i>Central de Relatórios e Resultados</h3>
+        <p class="text-muted mb-5">Escolha o módulo pretendido. Eles abrirão numa nova aba para que não perca o seu acesso (login) nesta tela.</p>
+        
+        <div class="row g-4 text-start">
+           <!-- BLOCO DO CONSELHO DE CLASSE -->
+           <div class="col-md-6 d-flex flex-column gap-3">
+             <h5 class="fw-bold text-dark border-bottom pb-2">Conselho de Classe (Avaliação Qualitativa)</h5>
+             
+             <button class="btn btn-outline-primary py-3 fw-bold shadow-sm admin-only" onclick="window.open('bilhetes.html', '_blank')">
+                 <i class="fa-solid fa-file-pdf me-2"></i> Imprimir Bilhetes (Pareceres Descritivos)
              </button>
-             <button class="btn btn-primary py-4 fw-bold shadow-sm admin-only" style="font-size: 1.1rem;" onclick="window.open('ata.html', '_blank')">
+             <button class="btn btn-primary py-3 fw-bold shadow-sm admin-only" onclick="window.open('ata.html', '_blank')">
                  <i class="fa-solid fa-users-rectangle me-2"></i> Gerar Ata Consolidada da Turma
+             </button>
+           </div>
+           
+           <!-- BLOCO DOS RESULTADOS E RECUPERAÇÃO -->
+           <div class="col-md-6 d-flex flex-column gap-3" style="border-left: 1px dashed #cbd5e1;">
+             <h5 class="fw-bold text-success border-bottom pb-2">Resultados Finais & Recuperação</h5>
+             
+             <button class="btn btn-success py-3 fw-bold shadow-sm admin-only" onclick="window.open('matriz_resultados.html', '_blank')">
+                 <i class="fa-solid fa-table-list me-2"></i> 1. Lançar Resultados Finais (REC / EI)
+             </button>
+             <button class="btn btn-outline-success py-3 fw-bold shadow-sm admin-only" onclick="window.open('bilhetes_recuperacao.html', '_blank')">
+                 <i class="fa-solid fa-envelope-open-text me-2"></i> 2. Imprimir Bilhetes (Aprovados e Recuperação)
+             </button>
+             <button class="btn btn-outline-dark py-3 fw-bold shadow-sm admin-only" onclick="window.open('listas_recuperacao.html', '_blank')">
+                 <i class="fa-solid fa-clipboard-list me-2"></i> 3. Gerar Pautas Diárias de Prova
              </button>
            </div>
         </div>
@@ -493,7 +512,7 @@
       var chavesParaApagar = [];
       for (var i = 0; i < localStorage.length; i++) {
          var key = localStorage.key(i);
-         if (key.startsWith('mestra_estudantes_') || key.startsWith('mestra_banco_registros') || key.startsWith('mestra_prof_') || key.startsWith('mestra_esp_')) {
+         if (key.startsWith('mestra_estudantes_') || key.startsWith('mestra_banco_registros') || key.startsWith('mestra_prof_') || key.startsWith('mestra_esp_') || key.startsWith('mestra_resultados_')) {
              chavesParaApagar.push(key);
          }
       }
@@ -564,7 +583,6 @@
                     }
                     if(dadosAtualizados) {
                         localStorage.setItem('mestra_banco_registros', JSON.stringify(dbLocal));
-                        // Atualiza a tela discretamente, sem piscar e sem mexer se estiver digitando texto.
                     }
                 }
             });
@@ -855,7 +873,7 @@
       } else { 
         atualizarRoboESintese(true); 
       }
-     
+      
       autoExpand(document.getElementById('obsAlunoAtivo')); 
       autoExpand(document.getElementById('txtOutrasSituacoes'));
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -864,7 +882,7 @@
     function navegarEstudante(direcao) {
       if(!alunoAtivoSessao) return;
       
-      // MÁGICA RESTAURADA: Salva automaticamente na nuvem antes de mudar de aluno!
+      // Salva automaticamente na nuvem antes de mudar de aluno
       salvarDadosSilenciosamente(); 
       
       var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turmaAtivaSessao) || '[]'); 
@@ -973,7 +991,7 @@
     }
  
     function fecharAvaliacaoAluno() { 
-      // MÁGICA RESTAURADA: Salva automaticamente antes de fechar o painel!
+      // Salva automaticamente antes de fechar o painel
       if(alunoAtivoSessao) salvarDadosSilenciosamente(); 
 
       document.getElementById('painelAvaliacaoEstudante').style.display = 'none'; 
