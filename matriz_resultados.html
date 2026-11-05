@@ -37,7 +37,6 @@
     .status-rec { background-color: #fee2e2; color: #991b1b; border-color: #ef4444; }
     .status-ei { background-color: #fef3c7; color: #92400e; border-color: #f59e0b; }
     .status-rep { background-color: #f1f5f9; color: #0f172a; border-color: #475569; }
-    
     .status-janeiro { background-color: #ffedd5; color: #9a3412; border-color: #f97316; }
 
     .import-excel-box { background: #f0fdf4; border: 2px dashed #10b981; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; }
@@ -130,7 +129,7 @@
 
         if (trim === 'FINAL') {
             document.getElementById('tabelaMatriz').style.minWidth = '900px';
-            thead.innerHTML = `<tr><th>Estudante</th><th style="width: 250px;">SITUAÇÃO GERAL (ATA)</th><th>PROGRESSÃO PARCIAL (Automático no Importador DED)</th></tr>`;
+            thead.innerHTML = `<tr><th>Estudante</th><th style="width: 250px;">SITUAÇÃO GERAL (ATA)</th><th>COMPONENTES NÃO CONSOLIDADOS (Obrigatório marcar os retidos)</th></tr>`;
             
             var dadosFinais = JSON.parse(localStorage.getItem('mestra_resultados_final_' + turma) || '{}');
             
@@ -223,9 +222,6 @@
         setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-check"></i> Gravado Localmente!'; setTimeout(() => btn.innerHTML = textoOriginal, 3000); }, 500);
     }
 
-    // =========================================================================
-    // IMPORTADOR MÁGICO (AGORA COM LÓGICA FINAL DE ANO)
-    // =========================================================================
     function processarExcel(e) {
         var file = e.target.files[0]; if (!file) return;
         var trim = document.getElementById('selTrimestre').value;
@@ -255,11 +251,8 @@
                             mapDisciplinas.forEach(m => {
                                 var idx = indicesDisciplinas[m.sistema];
                                 if (idx !== undefined) {
-                                    // A coluna "TOTAL" no DED fica 4 posições à frente da disciplina: [T1, T2, T3, EIR, TOTAL]
                                     var totalFinal = parseFloat((jsonRows[r][idx + 4] || "0").toString().replace(',', '.')) || 0;
-                                    if (totalFinal < 60) {
-                                        materiasPerdidas.push(m.sigla);
-                                    }
+                                    if (totalFinal < 60) materiasPerdidas.push(m.sigla);
                                 }
                             });
                             
@@ -294,7 +287,6 @@
                 document.getElementById('resultadoImportacao').innerHTML = `<i class="fa-solid fa-check"></i> Importação concluída! Verifique a tabela e clique em "Gravar Resultados".`;
             } catch(err) { 
                 alert("Erro ao ler o ficheiro. Confirme se é a planilha consolidada oficial do DED."); 
-                console.error(err); 
                 document.getElementById('resultadoImportacao').innerHTML = `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Falha na extração.</span>`;
             }
         };
