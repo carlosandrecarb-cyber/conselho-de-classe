@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Listas Diárias de Recuperação</title>
+  <title>Listas Diárias de Recuperação e Provas</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -46,8 +46,8 @@
 
   <div class="painel-controlo">
     <div class="header-title">
-      <h2><i class="fa-solid fa-calendar-days text-primary"></i> Gerador de Pautas de Recuperação</h2>
-      <p style="margin-top: 5px; color:#64748b; font-weight:600;">Crie os dias de prova e gere listas com os alunos filtrados.</p>
+      <h2><i class="fa-solid fa-calendar-days text-primary"></i> Gerador de Pautas (Recuperação / Janeiro)</h2>
+      <p style="margin-top: 5px; color:#64748b; font-weight:600;">Crie os dias de prova e gere listas oficiais de assinaturas.</p>
     </div>
     
     <div class="filtros">
@@ -55,7 +55,9 @@
       <select id="selTrimestre">
         <option value="1º Trimestre">1º Trimestre</option>
         <option value="2º Trimestre" selected>2º Trimestre</option>
-        <option value="3º Trimestre (Final)">3º Trimestre (Final)</option>
+        <option value="3º Trimestre">3º Trimestre</option>
+        <!-- A OPÇÃO NOVA QUE FALTAVA! -->
+        <option value="FINAL" style="background: #facc15; color: #0f172a;">★ SITUAÇÃO FINAL (PROVA JANEIRO)</option>
       </select>
       <button class="btn-add" onclick="adicionarDia()"><i class="fa-solid fa-plus"></i> Novo Dia de Prova</button>
       <button class="btn-acao" onclick="gerarListas()"><i class="fa-solid fa-wand-magic-sparkles"></i> Processar Listas</button>
@@ -72,7 +74,8 @@
     var selTurma = document.getElementById('selTurma');
     turmasGlobais.forEach(t => selTurma.innerHTML += `<option value="${t}">${t}</option>`);
 
-    var componentes = ["Arte", "Ciências", "Ed. Física", "Ens. Religioso", "Geografia", "História", "L. Inglesa", "L. Portuguesa", "Matemática"];
+    var componentes = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Língua Inglesa", "Língua Portuguesa", "Matemática"];
+    var mapSiglas = { "ART":"Arte", "CIÊ":"Ciências", "EDF":"Educação Física", "ER":"Ensino Religioso", "GEO":"Geografia", "HIST":"História", "LI":"Língua Inglesa", "LP":"Língua Portuguesa", "MAT":"Matemática" };
     var contadorDias = 0;
 
     function adicionarDia() {
@@ -88,36 +91,57 @@
 
     function gerarListas() {
         var turma = selTurma.value; var trim = document.getElementById('selTrimestre').value;
-        var notasSalvas = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + trim) || '{}');
         var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]');
         var alunos = []; var vistos = new Set();
         alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
+
+        var notasSalvas = {};
+        if (trim === 'FINAL') {
+            notasSalvas = JSON.parse(localStorage.getItem('mestra_resultados_final_' + turma) || '{}');
+        } else {
+            notasSalvas = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + trim) || '{}');
+        }
 
         var htmlFinal = '';
         var blocosDias = document.querySelectorAll('.dia-box');
         if(blocosDias.length === 0) return;
 
         blocosDias.forEach(bloco => {
-            var nomeDia = bloco.querySelector('.input-nome-dia').value || 'Dia de Recuperação';
+            var nomeDia = bloco.querySelector('.input-nome-dia').value || 'Dia de Prova';
             var compsSelecionados = Array.from(bloco.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
             if (compsSelecionados.length === 0) return; 
 
             var linhasTabela = ''; var numero = 1;
+            
             alunos.forEach(a => {
                 var dadosAluno = notasSalvas[a.nome] || {};
                 var disciplinasDesteDia = [];
+                
                 compsSelecionados.forEach(c => {
-                    if (dadosAluno[c] === 'REC' || dadosAluno[c] === 'EI') disciplinasDesteDia.push(c.substring(0,3).toUpperCase());
+                    // LÓGICA DE JANEIRO E PROGRESSÃO
+                    if (trim === 'FINAL') {
+                        var sigla = Object.keys(mapSiglas).find(key => mapSiglas[key] === c);
+                        if (dadosAluno.status && (dadosAluno.status.includes('JANEIRO') || dadosAluno.status.includes('PROGRESSÃO')) && dadosAluno.prog && dadosAluno.prog.includes(sigla)) {
+                            disciplinasDesteDia.push(c);
+                        }
+                    } 
+                    // LÓGICA DE RECUPERAÇÃO TRIMESTRAL
+                    else {
+                        if (dadosAluno[c] === 'REC' || dadosAluno[c] === 'EI') {
+                            disciplinasDesteDia.push(c);
+                        }
+                    }
                 });
+                
                 if (disciplinasDesteDia.length > 0) {
-                    linhasTabela += `<tr><td style="text-align:center;">${numero}</td><td style="font-weight:bold;">${a.nome}</td><td style="text-align:center; font-weight:bold; color:#ef4444;">${disciplinasDesteDia.join(' / ')}</td><td style="width:35%;"></td></tr>`;
+                    linhasTabela += `<tr><td style="text-align:center;">${numero}</td><td style="font-weight:bold;">${a.nome}</td><td style="text-align:center; font-weight:bold; color:#ef4444; font-size: 8pt;">${disciplinasDesteDia.join(' / ')}</td><td style="width:35%;"></td></tr>`;
                     numero++;
                 }
             });
 
-            if (linhasTabela === '') linhasTabela = `<tr><td colspan="4" style="text-align:center; color:#64748b; padding:15px;">Nenhum estudante de recuperação nestes componentes.</td></tr>`;
+            if (linhasTabela === '') linhasTabela = `<tr><td colspan="4" style="text-align:center; color:#64748b; padding:15px;">Nenhum estudante fará provas nestes componentes hoje.</td></tr>`;
 
-            htmlFinal += `<div class="folha-pauta"><h1>ESCOLA ESTADUAL MESTRA AURORA</h1><h2>Pauta de Presença • Recuperação • ${trim}</h2><div style="display:flex; justify-content:space-between; border: 2px solid #0f172a; padding: 10px; font-weight:900; background:#f1f5f9;"><span>TURMA: ${turma}</span><span>DATA: ${nomeDia}</span></div><p style="font-size:8.5pt; font-weight:bold; color:#475569; margin-top:5px;">Componentes: ${compsSelecionados.join(', ')}</p><table class="tabela-chamada"><thead><tr><th style="width: 5%;">Nº</th><th style="width: 40%; text-align:left;">Nome do Estudante</th><th style="width: 20%;">Provas a Fazer</th><th style="width: 35%;">Assinatura do Estudante</th></tr></thead><tbody>${linhasTabela}</tbody></table></div>`;
+            htmlFinal += `<div class="folha-pauta"><h1>ESCOLA ESTADUAL MESTRA AURORA</h1><h2>Pauta de Presença • Avaliações • ${trim}</h2><div style="display:flex; justify-content:space-between; border: 2px solid #0f172a; padding: 10px; font-weight:900; background:#f1f5f9;"><span>TURMA: ${turma}</span><span>DATA: ${nomeDia}</span></div><p style="font-size:8.5pt; font-weight:bold; color:#475569; margin-top:5px;">Componentes de Hoje: ${compsSelecionados.join(', ')}</p><table class="tabela-chamada"><thead><tr><th style="width: 5%;">Nº</th><th style="width: 40%; text-align:left;">Nome do Estudante</th><th style="width: 25%;">Provas a Fazer Hoje</th><th style="width: 30%;">Assinatura do Estudante</th></tr></thead><tbody>${linhasTabela}</tbody></table></div>`;
         });
 
         document.getElementById('containerImpressao').innerHTML = htmlFinal;
