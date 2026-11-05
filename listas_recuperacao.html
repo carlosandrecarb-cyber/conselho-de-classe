@@ -40,8 +40,12 @@
         page-break-after: always; min-height: 250mm; padding: 20px; 
         box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #cbd5e1;
     }
-    .folha-pauta h1 { font-size: 14pt; text-align: center; text-transform: uppercase; font-weight: 900; margin-bottom: 5px; }
-    .folha-pauta h2 { font-size: 11pt; text-align: center; color: #475569; margin-top: 0; margin-bottom: 20px; }
+    
+    /* ESTILOS DO NOVO CABEÇALHO OFICIAL */
+    .header-oficial { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px; }
+    .header-oficial img { height: 45px; object-fit: contain; }
+    .header-oficial h1 { font-size: 14pt; text-transform: uppercase; font-weight: 900; margin: 0; color: #0f172a; }
+    .folha-pauta h2 { font-size: 11pt; text-align: center; color: #475569; margin-top: 5px; margin-bottom: 20px; }
     
     table.tabela-chamada { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 9.5pt; }
     table.tabela-chamada th { background: #e2e8f0; color: #0f172a; padding: 8px; border: 1px solid #0f172a; text-transform: uppercase; font-weight: 900; }
@@ -192,31 +196,37 @@
                 });
                 
                 if (disciplinasDesteDia.length > 0) {
-                    linhasTabela += `<tr><td style="text-align:center;">${numero}</td><td style="font-weight:bold;">${a.nome}</td><td style="text-align:center; font-weight:bold; color:#ef4444; font-size: 8pt;">${disciplinasDesteDia.join('<br>')}</td><td style="width:35%;"></td></tr>`;
+                    linhasTabela += `<tr><td style="text-align:center;">${numero}</td><td style="font-weight:bold; font-size:8.5pt;">${a.nome}</td><td style="text-align:center; font-weight:bold; color:#ef4444; font-size: 8pt;">${disciplinasDesteDia.join('<br>')}</td><td style="width:35%;"></td></tr>`;
                     numero++;
                 }
             });
 
             if (linhasTabela === '') linhasTabela = `<tr><td colspan="4" style="text-align:center; color:#64748b; padding:15px;">Nenhum estudante fará provas nestes componentes nesta data.</td></tr>`;
 
-            var tipoAvaliacao = trim === 'FINAL' ? 'Avaliação de Janeiro / Progressão' : 'Recuperação Trimestral';
+            // TÍTULO DINÂMICO CONFORME O FILTRO
+            var tipoAvaliacao = trim === 'FINAL' ? 'Recuperação Final (Janeiro/Progressão)' : 'Recuperação (' + trim + ')';
 
             htmlFinal += `
             <div class="folha-pauta">
-                <h1>ESCOLA ESTADUAL MESTRA AURORA</h1>
+                <div class="header-oficial">
+                    <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" alt="Logo Escola">
+                    <h1>ESCOLA ESTADUAL MESTRA AURORA</h1>
+                </div>
                 <h2>Pauta de Presença • ${tipoAvaliacao}</h2>
+                
                 <div style="display:flex; justify-content:space-between; border: 2px solid #0f172a; padding: 10px; font-weight:900; background:#f1f5f9;">
                     <span>TURMA: ${turma}</span>
                     <span>DATA: ${nomeDiaFinal}</span>
                 </div>
                 <p style="font-size:8.5pt; font-weight:bold; color:#475569; margin-top:5px; margin-bottom:5px;">Componentes: ${compsSelecionados.join(', ')}</p>
+                
                 <table class="tabela-chamada">
                     <thead>
                         <tr>
                             <th style="width: 5%;">Nº</th>
-                            <th style="width: 40%; text-align:left;">Nome do Estudante</th>
-                            <th style="width: 25%;">Provas a Fazer</th>
-                            <th style="width: 30%;">Assinatura do Estudante</th>
+                            <th style="width: 40%; text-align:left;">NOME DO ESTUDANTE</th>
+                            <th style="width: 25%;">PROVAS A FAZER</th>
+                            <th style="width: 30%;">ASSINATURA DO ESTUDANTE</th>
                         </tr>
                     </thead>
                     <tbody>${linhasTabela}</tbody>
@@ -225,7 +235,7 @@
         });
 
         if(htmlFinal === '') {
-            alert("Certifique-se de que os estudantes têm as matérias devidamente assinaladas na Matriz de Resultados.");
+            alert("Nenhum aluno da turma selecionada precisa fazer prova nos componentes escolhidos.");
             return;
         }
 
@@ -233,7 +243,6 @@
         document.getElementById('containerImpressao').style.display = 'block';
         document.querySelector('.painel-controlo').style.display = 'none'; 
         
-        // CRIA OS BOTÕES FLUTUANTES PARA PODER IMPRIMIR DEPOIS DE PROCESSAR!
         document.getElementById('areaBotoesFlutuantes').innerHTML = `
             <div class="botoes-flutuantes" style="position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; z-index: 9999;">
                 <button class="btn-add" onclick="voltarEdicao()"><i class="fa-solid fa-arrow-left"></i> Voltar à Edição</button>
