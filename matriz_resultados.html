@@ -15,10 +15,9 @@
     .header-title p { margin: 5px 0 0 0; color: #64748b; font-size: 0.9rem; font-weight: 600; }
     
     .filtros { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
-    select { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-weight: bold; font-family: 'Inter'; outline: none; background: #f1f5f9; min-width: 150px; }
+    select, input[type="text"] { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-weight: bold; font-family: 'Inter'; outline: none; background: #f1f5f9; min-width: 150px; }
     
     .btn-acao { background: #4f46e5; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-    .btn-acao:hover { background: #3730a3; }
     
     .table-container { background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: auto; max-height: 68vh; padding: 0; display: none; margin-bottom: 20px; border: 1px solid #cbd5e1; }
     table { width: 100%; border-collapse: collapse; min-width: 1300px; }
@@ -29,23 +28,25 @@
     td { padding: 8px; border: 1px solid #e2e8f0; text-align: center; vertical-align: middle; background: white; }
     td:first-child { text-align: left; font-weight: 800; color: #334155; background: #f8fafc; position: sticky; left: 0; z-index: 20; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-right: 2px solid #cbd5e1; }
     
-    .nota-badge { font-size: 0.75rem; font-weight: 900; color: #475569; background: #e2e8f0; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 6px; letter-spacing: 0.5px; }
+    .nota-badge { font-size: 0.75rem; font-weight: 900; color: #475569; background: #e2e8f0; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
     .nota-badge.red { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
     .nota-badge.green { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
 
-    .status-select { width: 100%; padding: 6px; font-size: 0.75rem; font-weight: 800; border-radius: 6px; border: 1px solid #cbd5e1; cursor: pointer; text-align: center; appearance: none; transition: 0.3s; }
+    .status-select { width: 100%; padding: 6px; font-size: 0.75rem; font-weight: 800; border-radius: 6px; border: 1px solid #cbd5e1; cursor: pointer; text-align: center; font-family: 'Inter'; }
     .status-aprovado { background-color: #d1fae5; color: #065f46; border-color: #10b981; }
     .status-rec { background-color: #fee2e2; color: #991b1b; border-color: #ef4444; }
     .status-ei { background-color: #fef3c7; color: #92400e; border-color: #f59e0b; }
-    .status-rep { background-color: #f1f5f9; color: #0f172a; border-color: #475569; text-decoration: line-through; }
+    .status-rep { background-color: #f1f5f9; color: #0f172a; border-color: #475569; }
+    
+    .status-janeiro { background-color: #ffedd5; color: #9a3412; border-color: #f97316; }
 
-    .loading { display: none; text-align: center; padding: 40px; font-weight: bold; color: #4f46e5; }
-    .calculadora-box { background: #fffbeb; border: 2px dashed #f59e0b; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; }
-    .calc-input { padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-weight: bold; width: 120px; text-align: center; }
-    .calc-resultado { font-weight: 900; font-size: 1.1rem; margin-top: 10px; color: #0f172a; }
     .import-excel-box { background: #f0fdf4; border: 2px dashed #10b981; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; }
     .file-upload-wrapper { position: relative; overflow: hidden; display: inline-block; cursor: pointer; }
     .file-upload-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
+    
+    .chks-progressao { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
+    .chks-progressao label { font-size: 0.75rem; font-weight: bold; margin: 0; cursor: pointer; background: #f1f5f9; padding: 4px 6px; border-radius: 4px; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; }
+    .chks-progressao input { margin-right: 4px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -53,67 +54,35 @@
   <div class="header-bar">
     <div class="header-title">
       <h2><i class="fa-solid fa-list-check"></i> Matriz Consolidada de Resultados</h2>
-      <p>Lançamento rápido de Recuperação, EI e Aprovação.</p>
+      <p>Lançamento rápido de Recuperação, EI e Situação Final.</p>
     </div>
-    
     <div class="filtros">
       <select id="selTurma" onchange="carregarMatriz()"></select>
       <select id="selTrimestre" onchange="carregarMatriz()">
         <option value="1º Trimestre">1º Trimestre</option>
         <option value="2º Trimestre" selected>2º Trimestre</option>
-        <option value="3º Trimestre (Final)">3º Trimestre (Final)</option>
+        <option value="3º Trimestre">3º Trimestre</option>
+        <option value="FINAL" style="background: #facc15; color: #0f172a;">★ SITUAÇÃO FINAL (ATA)</option>
       </select>
-      
-      <button class="btn-acao" style="background:#10b981;" onclick="toggleImportador()"><i class="fa-solid fa-file-excel"></i> Importar DED</button>
-      <button class="btn-acao" style="background:#f59e0b;" onclick="toggleCalculadora()"><i class="fa-solid fa-calculator"></i> Simulador EI</button>
+      <button class="btn-acao" id="btnImport" style="background:#10b981;" onclick="toggleImportador()"><i class="fa-solid fa-file-excel"></i> Importar DED</button>
       <button class="btn-acao" id="btnSalvar" onclick="salvarMatriz()"><i class="fa-solid fa-floppy-disk"></i> Gravar Resultados</button>
-      <button class="btn-acao" style="background:#ef4444;" onclick="window.close()"><i class="fa-solid fa-xmark"></i> Fechar</button>
     </div>
   </div>
 
   <div id="importadorExcel" class="import-excel-box">
-      <h4 style="margin-top:0; color:#065f46;"><i class="fa-solid fa-wand-magic-sparkles"></i> Automação: Extração do Relatório Consolidado do DED</h4>
-      <p style="font-size: 0.85rem; color:#475569; margin-bottom:15px;">Anexe o ficheiro Excel oficial da turma. O sistema preencherá as notas e os status automaticamente baseados na regra de 60 pontos.</p>
+      <h4 style="margin-top:0; color:#065f46;"><i class="fa-solid fa-wand-magic-sparkles"></i> Extração DED Automática</h4>
       <div class="file-upload-wrapper">
-          <button class="btn-acao" style="background:#059669; padding: 12px 25px; font-size: 1rem;"><i class="fa-solid fa-cloud-arrow-up"></i> Selecionar Ficheiro Excel (.xlsx)</button>
+          <button class="btn-acao" style="background:#059669; padding: 12px 25px;"><i class="fa-solid fa-cloud-arrow-up"></i> Selecionar Ficheiro Excel (.xlsx)</button>
           <input type="file" id="arquivoExcel" accept=".xlsx, .xls" onchange="processarExcel(event)">
       </div>
       <div id="resultadoImportacao" style="margin-top: 15px; font-weight: bold; color: #059669;"></div>
   </div>
 
-  <div id="calculadoraEI" class="calculadora-box">
-      <h4 style="margin-top:0; color:#d97706;"><i class="fa-solid fa-scale-unbalanced"></i> Simulador Matemático (Regra de 60 Pontos)</h4>
-      <p style="font-size: 0.85rem; color:#475569; margin-bottom:10px;">Digite a soma dos pontos do 1º e 2º trimestres juntos (Máximo 60) para descobrir se o estudante já está matematicamente em <strong>Estudos Independentes</strong>.</p>
-      <label style="font-weight: bold; font-size: 0.9rem;">Pontos Acumulados (T1 + T2):</label>
-      <input type="number" id="inpPontosT1T2" class="calc-input" max="60" min="0" placeholder="Ex: 18">
-      <button class="btn-acao" style="display:inline-block; padding: 8px 15px; margin-left:10px;" onclick="calcularEI()">Calcular Risco</button>
-      <div id="resultadoCalc" class="calc-resultado"></div>
-  </div>
-
-  <div id="loading" class="loading"><i class="fa-solid fa-spinner fa-spin fa-2x mb-2"></i><br>A carregar estudantes...</div>
-
   <div class="table-container" id="containerMatriz">
     <table id="tabelaMatriz">
-      <thead>
-        <tr>
-          <th>Estudante</th>
-          <th>Arte</th>
-          <th>Ciências</th>
-          <th>Educação Física</th>
-          <th>Ensino Religioso</th>
-          <th>Geografia</th>
-          <th>História</th>
-          <th>Língua Inglesa</th>
-          <th>Língua Portuguesa</th>
-          <th>Matemática</th>
-        </tr>
-      </thead>
+      <thead id="cabecalhoTabela"></thead>
       <tbody id="corpoMatriz"></tbody>
     </table>
-  </div>
-  
-  <div style="background: #f8fafc; border: 1px dashed #cbd5e1; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: 700; font-size: 0.9rem; color: #334155; text-align: center;">
-    <i class="fa-solid fa-lightbulb text-warning"></i> <strong>Dica:</strong> Pode alterar qualquer "caixinha" manualmente após a importação e depois clicar em Gravar.
   </div>
 
   <script>
@@ -121,143 +90,81 @@
     var turmasGlobais = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
     
     var mapDisciplinas = [
-        { excel: "ARTE", sistema: "Arte" },
-        { excel: "CIÊNCIAS", sistema: "Ciências" },
-        { excel: "EDUCAÇÃO FÍSICA", sistema: "Educação Física" },
-        { excel: "ENSINO RELIGIOSO", sistema: "Ensino Religioso" },
-        { excel: "GEOGRAFIA", sistema: "Geografia" },
-        { excel: "HISTÓRIA", sistema: "História" },
-        { excel: "LÍNGUA INGLESA", sistema: "Língua Inglesa" },
-        { excel: "LÍNGUA PORTUGUESA", sistema: "Língua Portuguesa" },
-        { excel: "MATEMÁTICA", sistema: "Matemática" }
+        { excel: "ARTE", sistema: "Arte", sigla: "ART" }, { excel: "CIÊNCIAS", sistema: "Ciências", sigla: "CIÊ" },
+        { excel: "EDUCAÇÃO FÍSICA", sistema: "Educação Física", sigla: "EDF" }, { excel: "ENSINO RELIGIOSO", sistema: "Ensino Religioso", sigla: "ER" },
+        { excel: "GEOGRAFIA", sistema: "Geografia", sigla: "GEO" }, { excel: "HISTÓRIA", sistema: "História", sigla: "HIST" },
+        { excel: "LÍNGUA INGLESA", sistema: "Língua Inglesa", sigla: "LI" }, { excel: "LÍNGUA PORTUGUESA", sistema: "Língua Portuguesa", sigla: "LP" },
+        { excel: "MATEMÁTICA", sistema: "Matemática", sigla: "MAT" }
     ];
     
     var selTurma = document.getElementById('selTurma');
-    selTurma.innerHTML = '<option value="">Selecione a Turma...</option>';
     turmasGlobais.forEach(t => selTurma.innerHTML += `<option value="${t}">${t}</option>`);
 
-    function toggleCalculadora() {
-        document.getElementById('importadorExcel').style.display = 'none';
-        var box = document.getElementById('calculadoraEI');
-        box.style.display = box.style.display === 'block' ? 'none' : 'block';
-    }
-
     function toggleImportador() {
-        document.getElementById('calculadoraEI').style.display = 'none';
         var box = document.getElementById('importadorExcel');
         box.style.display = box.style.display === 'block' ? 'none' : 'block';
     }
 
-    function calcularEI() {
-        var acumulado = parseFloat(document.getElementById('inpPontosT1T2').value) || 0;
-        var resultadoDiv = document.getElementById('resultadoCalc');
-        var pontosParaPassar = 60 - acumulado;
-        if (pontosParaPassar > 40) {
-            resultadoDiv.innerHTML = `<span style="color: #dc2626;"><i class="fa-solid fa-triangle-exclamation"></i> O estudante precisa de ${pontosParaPassar.toFixed(1)} pontos. É MATEMATICAMENTE IMPOSSÍVEL. Ele está em <strong>ESTUDOS INDEPENDENTES</strong>.</span>`;
-        } else if (pontosParaPassar <= 0) {
-            resultadoDiv.innerHTML = `<span style="color: #059669;"><i class="fa-solid fa-star"></i> O estudante já conseguiu 60 pontos! Está APROVADO(A).</span>`;
-        } else {
-            resultadoDiv.innerHTML = `<span style="color: #0f172a;"><i class="fa-solid fa-check"></i> Precisa tirar exatos <strong>${pontosParaPassar.toFixed(1)} pontos</strong> no 3º Trimestre. (REC)</span>`;
-        }
-    }
-
-    function processarExcel(e) {
-        var file = e.target.files[0]; if (!file) return;
-        var trim = document.getElementById('selTrimestre').value;
-        if(trim !== '2º Trimestre' && trim !== '3º Trimestre (Final)') { alert("Mude o filtro de trimestre para o 2º ou 3º."); return; }
-
-        document.getElementById('resultadoImportacao').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> A analisar DED e calcular médias...';
-
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                var data = new Uint8Array(e.target.result); var workbook = XLSX.read(data, {type: 'array'});
-                var worksheet = workbook.Sheets[workbook.SheetNames[0]]; var jsonRows = XLSX.utils.sheet_to_json(worksheet, {header: 1});
-                var linhaDisciplinas = jsonRows[4]; var indicesDisciplinas = {};
-                for (var i = 0; i < linhaDisciplinas.length; i++) {
-                    var nomeCol = (linhaDisciplinas[i] || "").toString().trim().toUpperCase();
-                    mapDisciplinas.forEach(m => { if (nomeCol === m.excel) indicesDisciplinas[m.sistema] = i; });
-                }
-
-                var dadosExtraidos = {};
-                for (var r = 6; r < jsonRows.length; r++) {
-                    var nomeAluno = (jsonRows[r][0] || "").toString().trim().toUpperCase();
-                    if (nomeAluno.length > 3) {
-                        dadosExtraidos[nomeAluno] = {};
-                        mapDisciplinas.forEach(m => {
-                            var idx = indicesDisciplinas[m.sistema];
-                            if (idx !== undefined) {
-                                var notaT1 = parseFloat((jsonRows[r][idx] || "0").toString().replace(',', '.')) || 0;
-                                var notaT2 = parseFloat((jsonRows[r][idx + 1] || "0").toString().replace(',', '.')) || 0;
-                                var pontosAcumulados = notaT1 + notaT2;
-                                var statusApurado = "APROVADO";
-                                var notaVisual = pontosAcumulados;
-
-                                if (trim === '2º Trimestre') {
-                                    if (pontosAcumulados < 20) statusApurado = "EI";
-                                    else if (pontosAcumulados < 36) statusApurado = "REC";
-                                } else if (trim === '3º Trimestre (Final)') {
-                                    var notaT3 = parseFloat((jsonRows[r][idx + 2] || "0").toString().replace(',', '.')) || 0;
-                                    notaVisual = pontosAcumulados + notaT3;
-                                    if (notaVisual < 60) statusApurado = "EI";
-                                }
-                                dadosExtraidos[nomeAluno][m.sistema] = { status: statusApurado, nota: notaVisual };
-                            }
-                        });
-                    }
-                }
-                aplicarImportacaoNaTela(dadosExtraidos);
-                document.getElementById('resultadoImportacao').innerHTML = `<i class="fa-solid fa-check"></i> Importação e Cálculos concluídos! Não se esqueça de clicar em <strong>"Gravar Resultados"</strong>.`;
-            } catch(err) {
-                document.getElementById('resultadoImportacao').innerHTML = `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Ocorreu um erro ao ler o ficheiro. Confirme se é o formato oficial do DED.</span>`;
-            }
-        };
-        reader.readAsArrayBuffer(file);
-    }
-
-    function aplicarImportacaoNaTela(dadosMatematicos) {
-        document.querySelectorAll('.status-select').forEach(sel => {
-            var aluno = sel.getAttribute('data-aluno'); var comp = sel.getAttribute('data-comp');
-            if (dadosMatematicos[aluno] && dadosMatematicos[aluno][comp]) {
-                var info = dadosMatematicos[aluno][comp];
-                sel.value = info.status; atualizarCorSelect(sel);
-                
-                var badgeId = 'nota_' + aluno.replace(/\s+/g, '_') + '_' + comp.replace(/\s+/g, '_');
-                var badge = document.getElementById(badgeId);
-                if(badge) {
-                    badge.innerText = info.nota.toFixed(1) + ' pts';
-                    badge.className = 'nota-badge ' + (info.nota < (document.getElementById('selTrimestre').value === '2º Trimestre' ? 36 : 60) ? 'red' : 'green');
-                }
-            }
-        });
-    }
-
     function atualizarCorSelect(sel) {
-        sel.classList.remove('status-aprovado', 'status-rec', 'status-ei', 'status-rep');
-        if (sel.value === 'APROVADO') sel.classList.add('status-aprovado');
-        else if (sel.value === 'REC') sel.classList.add('status-rec');
-        else if (sel.value === 'EI') sel.classList.add('status-ei');
-        else if (sel.value === 'REP') sel.classList.add('status-rep');
+        sel.classList.remove('status-aprovado', 'status-rec', 'status-ei', 'status-rep', 'status-janeiro');
+        if (sel.value.includes('APROVADO(A) COM PROGRESSÃO')) sel.classList.add('status-ei');
+        else if (sel.value.includes('APROVADO')) sel.classList.add('status-aprovado');
+        else if (sel.value.includes('REC')) sel.classList.add('status-rec');
+        else if (sel.value.includes('EI')) sel.classList.add('status-ei');
+        else if (sel.value.includes('PROVA ELETRÔNICA')) sel.classList.add('status-janeiro');
+        else if (sel.value.includes('REPROVADO')) sel.classList.add('status-rep');
     }
 
     function carregarMatriz() {
         var turma = selTurma.value; var trim = document.getElementById('selTrimestre').value;
-        if (!turma) { document.getElementById('containerMatriz').style.display = 'none'; return; }
+        if (!turma) return;
         
-        document.getElementById('loading').style.display = 'block'; document.getElementById('containerMatriz').style.display = 'none';
+        document.getElementById('containerMatriz').style.display = 'none';
 
-        setTimeout(() => {
-            var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]');
-            var alunos = []; var vistos = new Set();
-            alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
+        var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]');
+        var alunos = []; var vistos = new Set();
+        alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
+        
+        var thead = document.getElementById('cabecalhoTabela');
+        var tbody = document.getElementById('corpoMatriz'); tbody.innerHTML = '';
 
-            if (alunos.length === 0) { document.getElementById('loading').innerHTML = "Nenhum estudante registado."; return; }
+        if (trim === 'FINAL') {
+            document.getElementById('tabelaMatriz').style.minWidth = '900px';
+            thead.innerHTML = `<tr><th>Estudante</th><th style="width: 250px;">SITUAÇÃO GERAL (ATA)</th><th>PROGRESSÃO PARCIAL (Automático no Importador DED)</th></tr>`;
+            
+            var dadosFinais = JSON.parse(localStorage.getItem('mestra_resultados_final_' + turma) || '{}');
+            
+            alunos.forEach(a => {
+                var d = dadosFinais[a.nome] || { status: 'APROVADO(A)', prog: '' };
+                var tr = document.createElement('tr');
+                
+                var checkboxes = mapDisciplinas.map(m => {
+                    var chk = d.prog.includes(m.sigla) ? 'checked' : '';
+                    return `<label><input type="checkbox" class="chk-prog-${a.nome.replace(/\s+/g, '_')}" value="${m.sigla}" ${chk}> ${m.sigla}</label>`;
+                }).join('');
 
+                tr.innerHTML = `
+                    <td>${a.nome}</td>
+                    <td>
+                        <select class="status-select sel-status-final" data-aluno="${a.nome}" onchange="atualizarCorSelect(this)">
+                            <option value="APROVADO(A)" ${d.status === 'APROVADO(A)' ? 'selected' : ''}>✔ APROVADO(A)</option>
+                            <option value="APROVADO(A) COM PROGRESSÃO PARCIAL" ${d.status === 'APROVADO(A) COM PROGRESSÃO PARCIAL' ? 'selected' : ''}>🟡 APROVADO COM PROGRESSÃO PARCIAL</option>
+                            <option value="PROVA ELETRÔNICA EM JANEIRO" ${d.status === 'PROVA ELETRÔNICA EM JANEIRO' ? 'selected' : ''}>🟠 PROVA ELETRÔNICA EM JANEIRO</option>
+                            <option value="REPROVADO(A)" ${d.status === 'REPROVADO(A)' ? 'selected' : ''}>⚫ REPROVADO(A)</option>
+                        </select>
+                    </td>
+                    <td class="chks-progressao">${checkboxes}</td>
+                `;
+                tbody.appendChild(tr);
+                atualizarCorSelect(tr.querySelector('select'));
+            });
+        } else {
+            document.getElementById('tabelaMatriz').style.minWidth = '1300px';
+            thead.innerHTML = `<tr><th>Estudante</th>` + mapDisciplinas.map(m => `<th>${m.sistema}</th>`).join('') + `</tr>`;
+            
             var notasSalvas = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + trim) || '{}');
             var pontuacoesExatas = JSON.parse(localStorage.getItem('mestra_pontos_' + turma + '_' + trim) || '{}');
             
-            var tbody = document.getElementById('corpoMatriz'); tbody.innerHTML = '';
-
             alunos.forEach(a => {
                 var tr = document.createElement('tr'); tr.innerHTML = `<td>${a.nome}</td>`;
                 var dadosAluno = notasSalvas[a.nome] || {};
@@ -266,70 +173,165 @@
                 mapDisciplinas.forEach(mapItem => {
                     var comp = mapItem.sistema;
                     var valorAtual = dadosAluno[comp] || 'APROVADO';
-                    
-                    // Tratamento seguro para as notas visuais (impede o erro de carregamento)
-                    var pontosTexto = '- pts';
-                    if(dadosPontosAluno[comp]) {
-                        pontosTexto = dadosPontosAluno[comp];
-                    }
-                    
-                    var corBadge = '';
-                    if (!pontosTexto.includes('-')) {
-                        var numVal = parseFloat(pontosTexto);
-                        corBadge = numVal < (trim === '2º Trimestre' ? 36 : 60) ? 'red' : 'green';
-                    }
-                    
-                    var opcoesExtra = trim === '3º Trimestre (Final)' ? `<option value="EI" ${valorAtual==='EI'?'selected':''}>🟡 EI</option><option value="REP" ${valorAtual==='REP'?'selected':''}>⚫ REP</option>` : '';
+                    var pontosTexto = dadosPontosAluno[comp] ? dadosPontosAluno[comp] : '- pts';
+                    var corBadge = pontosTexto.includes('-') ? '' : (parseFloat(pontuacoesExatas[a.nome][comp]) < (trim === '2º Trimestre' ? 36 : 60) ? 'red' : 'green');
+                    var opExtras = trim === '3º Trimestre' ? `<option value="EI" ${valorAtual==='EI'?'selected':''}>🟡 EI</option><option value="REP" ${valorAtual==='REP'?'selected':''}>⚫ REP</option>` : '';
                     var badgeId = 'nota_' + a.nome.replace(/\s+/g, '_') + '_' + comp.replace(/\s+/g, '_');
 
-                    var td = document.createElement('td');
-                    td.innerHTML = `
+                    tr.innerHTML += `<td>
                         <div id="${badgeId}" class="nota-badge ${corBadge}">${pontosTexto}</div>
-                        <select class="status-select" data-aluno="${a.nome}" data-comp="${comp}" onchange="atualizarCorSelect(this)">
+                        <select class="status-select sel-trimestre" data-aluno="${a.nome}" data-comp="${comp}" onchange="atualizarCorSelect(this)">
                             <option value="APROVADO" ${valorAtual === 'APROVADO' ? 'selected' : ''}>✔ Aprovado</option>
                             <option value="REC" ${valorAtual === 'REC' ? 'selected' : ''}>🔴 REC</option>
-                            ${opcoesExtra}
+                            ${opExtras}
                         </select>
-                    `;
-                    tr.appendChild(td);
-                    setTimeout(() => atualizarCorSelect(td.querySelector('select')), 10);
+                    </td>`;
                 });
                 tbody.appendChild(tr);
+                tr.querySelectorAll('select').forEach(s => atualizarCorSelect(s));
             });
-
-            document.getElementById('loading').style.display = 'none'; document.getElementById('containerMatriz').style.display = 'block';
-        }, 300);
+        }
+        document.getElementById('containerMatriz').style.display = 'block';
     }
 
     function salvarMatriz() {
         var turma = selTurma.value; var trim = document.getElementById('selTrimestre').value;
-        if (!turma) { alert("Selecione uma turma."); return; }
-
         var btn = document.getElementById('btnSalvar'); var textoOriginal = btn.innerHTML;
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando...';
 
-        var dadosTurma = {}; var dadosPontos = {};
+        if (trim === 'FINAL') {
+            var dadosFinal = {};
+            document.querySelectorAll('.sel-status-final').forEach(sel => {
+                var aluno = sel.getAttribute('data-aluno');
+                var chks = Array.from(document.querySelectorAll(`.chk-prog-${aluno.replace(/\s+/g, '_')}:checked`)).map(c => c.value).join(', ');
+                dadosFinal[aluno] = { status: sel.value, prog: chks };
+            });
+            localStorage.setItem('mestra_resultados_final_' + turma, JSON.stringify(dadosFinal));
+        } else {
+            var dadosTurma = {}; var dadosPontos = {};
+            document.querySelectorAll('.sel-trimestre').forEach(sel => {
+                var aluno = sel.getAttribute('data-aluno'); var comp = sel.getAttribute('data-comp');
+                if (!dadosTurma[aluno]) { dadosTurma[aluno] = {}; dadosPontos[aluno] = {}; }
+                dadosTurma[aluno][comp] = sel.value; 
+                var badge = document.getElementById('nota_' + aluno.replace(/\s+/g, '_') + '_' + comp.replace(/\s+/g, '_'));
+                dadosPontos[aluno][comp] = badge ? badge.innerText : '- pts';
+            });
+            localStorage.setItem('mestra_resultados_' + turma + '_' + trim, JSON.stringify(dadosTurma));
+            localStorage.setItem('mestra_pontos_' + turma + '_' + trim, JSON.stringify(dadosPontos));
+        }
+
+        setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-check"></i> Gravado Localmente!'; setTimeout(() => btn.innerHTML = textoOriginal, 3000); }, 500);
+    }
+
+    // =========================================================================
+    // IMPORTADOR MÁGICO (AGORA COM LÓGICA FINAL DE ANO)
+    // =========================================================================
+    function processarExcel(e) {
+        var file = e.target.files[0]; if (!file) return;
+        var trim = document.getElementById('selTrimestre').value;
+        var reader = new FileReader();
         
-        document.querySelectorAll('.status-select').forEach(sel => {
-            var aluno = sel.getAttribute('data-aluno'); var comp = sel.getAttribute('data-comp');
-            if (!dadosTurma[aluno]) { dadosTurma[aluno] = {}; dadosPontos[aluno] = {}; }
-            
-            dadosTurma[aluno][comp] = sel.value; 
-            
-            var badge = document.getElementById('nota_' + aluno.replace(/\s+/g, '_') + '_' + comp.replace(/\s+/g, '_'));
-            dadosPontos[aluno][comp] = badge ? badge.innerText : '- pts';
-        });
+        document.getElementById('resultadoImportacao').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> A analisar DED e processar a legislação...';
 
-        localStorage.setItem('mestra_resultados_' + turma + '_' + trim, JSON.stringify(dadosTurma));
-        localStorage.setItem('mestra_pontos_' + turma + '_' + trim, JSON.stringify(dadosPontos));
+        reader.onload = function(e) {
+            try {
+                var data = new Uint8Array(e.target.result); var workbook = XLSX.read(data, {type: 'array'});
+                var jsonRows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1});
+                var linhaDisciplinas = jsonRows[4]; var indicesDisciplinas = {};
+                
+                for (var i = 0; i < linhaDisciplinas.length; i++) {
+                    var nomeCol = (linhaDisciplinas[i] || "").toString().trim().toUpperCase();
+                    mapDisciplinas.forEach(m => { if (nomeCol === m.excel) indicesDisciplinas[m.sistema] = i; });
+                }
+                
+                var dadosExtraidos = {};
+                
+                for (var r = 6; r < jsonRows.length; r++) {
+                    var nomeAluno = (jsonRows[r][0] || "").toString().trim().toUpperCase();
+                    if (nomeAluno.length > 3) {
+                        
+                        if (trim === 'FINAL') {
+                            var materiasPerdidas = [];
+                            mapDisciplinas.forEach(m => {
+                                var idx = indicesDisciplinas[m.sistema];
+                                if (idx !== undefined) {
+                                    // A coluna "TOTAL" no DED fica 4 posições à frente da disciplina: [T1, T2, T3, EIR, TOTAL]
+                                    var totalFinal = parseFloat((jsonRows[r][idx + 4] || "0").toString().replace(',', '.')) || 0;
+                                    if (totalFinal < 60) {
+                                        materiasPerdidas.push(m.sigla);
+                                    }
+                                }
+                            });
+                            
+                            var statusApurado = 'APROVADO(A)';
+                            if (materiasPerdidas.length > 0 && materiasPerdidas.length <= 3) {
+                                statusApurado = 'APROVADO(A) COM PROGRESSÃO PARCIAL';
+                            } else if (materiasPerdidas.length > 3) {
+                                statusApurado = 'REPROVADO(A)'; 
+                            }
+                            
+                            dadosExtraidos[nomeAluno] = { status: statusApurado, prog: materiasPerdidas.join(', ') };
+                            
+                        } else {
+                            dadosExtraidos[nomeAluno] = {};
+                            mapDisciplinas.forEach(m => {
+                                var idx = indicesDisciplinas[m.sistema];
+                                if (idx !== undefined) {
+                                    var notaT1 = parseFloat((jsonRows[r][idx] || "0").toString().replace(',', '.')) || 0;
+                                    var notaT2 = parseFloat((jsonRows[r][idx + 1] || "0").toString().replace(',', '.')) || 0;
+                                    var pts = notaT1 + notaT2;
+                                    var stat = "APROVADO"; var vis = pts;
+                                    if (trim === '2º Trimestre') { if (pts < 20) stat = "EI"; else if (pts < 36) stat = "REC"; } 
+                                    else if (trim === '3º Trimestre') { var notaT3 = parseFloat((jsonRows[r][idx + 2] || "0").toString().replace(',', '.')) || 0; vis = pts + notaT3; if (vis < 60) stat = "EI"; }
+                                    dadosExtraidos[nomeAluno][m.sistema] = { status: stat, nota: vis };
+                                }
+                            });
+                        }
+                    }
+                }
+                
+                aplicarImportacaoNaTela(dadosExtraidos, trim);
+                document.getElementById('resultadoImportacao').innerHTML = `<i class="fa-solid fa-check"></i> Importação concluída! Verifique a tabela e clique em "Gravar Resultados".`;
+            } catch(err) { 
+                alert("Erro ao ler o ficheiro. Confirme se é a planilha consolidada oficial do DED."); 
+                console.error(err); 
+                document.getElementById('resultadoImportacao').innerHTML = `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Falha na extração.</span>`;
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    }
 
-        var objParaNuvem = { funcao: 'salvarResultadosGerais', dados: { turma: turma, trimestre: trim, avaliacoes: dadosTurma } };
-        fetch(URL_API_GOOGLE, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(objParaNuvem) })
-        .then(res => res.json()).then(data => {
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> Guardado na Nuvem!'; setTimeout(() => btn.innerHTML = textoOriginal, 3000);
-        }).catch(e => {
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> Salvo Localmente (Offline)'; setTimeout(() => btn.innerHTML = textoOriginal, 3000);
-        });
+    function aplicarImportacaoNaTela(dados, trim) {
+        if (trim === 'FINAL') {
+            document.querySelectorAll('.sel-status-final').forEach(sel => {
+                var aluno = sel.getAttribute('data-aluno');
+                if (dados[aluno]) {
+                    sel.value = dados[aluno].status;
+                    atualizarCorSelect(sel);
+                    
+                    document.querySelectorAll('.chk-prog-' + aluno.replace(/\s+/g, '_')).forEach(chk => chk.checked = false);
+                    
+                    if (dados[aluno].prog) {
+                        var sigs = dados[aluno].prog.split(', ');
+                        document.querySelectorAll('.chk-prog-' + aluno.replace(/\s+/g, '_')).forEach(chk => {
+                            if (sigs.includes(chk.value)) chk.checked = true;
+                        });
+                    }
+                }
+            });
+        } else {
+            document.querySelectorAll('.sel-trimestre').forEach(sel => {
+                var aluno = sel.getAttribute('data-aluno'); var comp = sel.getAttribute('data-comp');
+                if (dados[aluno] && dados[aluno][comp]) {
+                    sel.value = dados[aluno][comp].status; atualizarCorSelect(sel);
+                    var badge = document.getElementById('nota_' + aluno.replace(/\s+/g, '_') + '_' + comp.replace(/\s+/g, '_'));
+                    if(badge) { 
+                        badge.innerText = dados[aluno][comp].nota.toFixed(1) + ' pts'; 
+                        badge.className = 'nota-badge ' + (dados[aluno][comp].nota < (trim === '2º Trimestre' ? 36 : 60) ? 'red' : 'green'); 
+                    }
+                }
+            });
+        }
     }
   </script>
 </body>
