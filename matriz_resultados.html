@@ -28,7 +28,6 @@
     td { padding: 8px; border: 1px solid #e2e8f0; text-align: center; vertical-align: middle; background: white; }
     td:first-child { text-align: left; font-weight: 800; color: #334155; background: #f8fafc; position: sticky; left: 0; z-index: 20; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-right: 2px solid #cbd5e1; }
     
-    /* Etiqueta ajustada para acomodar 2 linhas de texto */
     .nota-badge { font-size: 0.75rem; font-weight: 900; color: #475569; background: #e2e8f0; padding: 4px 8px; border-radius: 4px; display: inline-block; margin-bottom: 6px; line-height: 1.3; }
     .nota-badge.red { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
     .nota-badge.green { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
@@ -59,10 +58,11 @@
     <div class="filtros">
       <select id="selTurma" onchange="carregarMatriz()"></select>
       <select id="selTrimestre" onchange="carregarMatriz()">
-        <option value="1º Trimestre">1º Trimestre</option>
-        <option value="2º Trimestre" selected>2º Trimestre</option>
-        <option value="3º Trimestre">3º Trimestre</option>
-        <option value="FINAL" style="background: #facc15; color: #0f172a;">★ SITUAÇÃO FINAL (ATA)</option>
+        <option value="1º Trimestre">1º Trimestre (Recuperação)</option>
+        <option value="2º Trimestre" selected>2º Trimestre (Recuperação)</option>
+        <option value="3º Trimestre">3º Trimestre (Recuperação)</option>
+        <option value="Estudos Independentes">★ Estudos Independentes (EI)</option>
+        <option value="FINAL" style="background: #facc15; color: #0f172a;">★ SITUAÇÃO FINAL (ATA/JANEIRO)</option>
       </select>
       <button class="btn-acao" id="btnImport" style="background:#10b981;" onclick="toggleImportador()"><i class="fa-solid fa-file-excel"></i> Importar DED</button>
       <button class="btn-acao" id="btnSalvar" onclick="salvarMatriz()"><i class="fa-solid fa-floppy-disk"></i> Gravar Resultados</button>
@@ -112,7 +112,7 @@
         else if (sel.value.includes('REC')) sel.classList.add('status-rec');
         else if (sel.value.includes('EI')) sel.classList.add('status-ei');
         else if (sel.value.includes('PROVA ELETRÔNICA')) sel.classList.add('status-janeiro');
-        else if (sel.value.includes('REPROVADO')) sel.classList.add('status-rep');
+        else if (sel.value.includes('REPROVADO') || sel.value === 'REP') sel.classList.add('status-rep');
     }
 
     function carregarMatriz() {
@@ -130,7 +130,6 @@
 
         if (trim === 'FINAL') {
             document.getElementById('tabelaMatriz').style.minWidth = '900px';
-            // LEGENDA NO CABEÇALHO FIXO DO FINAL
             thead.innerHTML = `<tr><th>Estudante</th><th style="width: 250px;">SITUAÇÃO GERAL (ATA)</th><th>COMPONENTES NÃO CONSOLIDADOS<br><span style="font-size:0.65rem; color:#94a3b8; font-weight:normal;">(F = Faltam pontos para a média 60)</span></th></tr>`;
             
             var dadosFinais = JSON.parse(localStorage.getItem('mestra_resultados_final_' + turma) || '{}');
@@ -139,7 +138,6 @@
                 var d = dadosFinais[a.nome] || { status: 'APROVADO(A)', prog: '' };
                 var tr = document.createElement('tr');
                 
-                // Se já existir a html gravada pelo importador, carrega. Se não, cria as normais.
                 var checkboxesHTML = d.faltasHtml || mapDisciplinas.map(m => {
                     var chk = d.prog.includes(m.sigla) ? 'checked' : '';
                     return `<label><input type="checkbox" class="chk-prog-${a.nome.replace(/\s+/g, '_')}" value="${m.sigla}" ${chk}> ${m.sigla}</label>`;
@@ -162,12 +160,13 @@
             });
         } else {
             document.getElementById('tabelaMatriz').style.minWidth = '1300px';
-            // LEGENDA NO CABEÇALHO FIXO DOS TRIMESTRES
             thead.innerHTML = `<tr><th>Estudante<br><span style="font-size:0.65rem; font-weight:normal; color:#94a3b8;">F = Falta p/ Média</span></th>` + mapDisciplinas.map(m => `<th>${m.sistema}</th>`).join('') + `</tr>`;
             
-            var notasSalvas = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + trim) || '{}');
-            var pontuacoesExatas = JSON.parse(localStorage.getItem('mestra_pontos_' + turma + '_' + trim) || '{}');
-            var metaPontos = trim === '1º Trimestre' ? 20 : (trim === '2º Trimestre' ? 36 : 60);
+            // Tratamento especial para Estudos Independentes usar a base de dados do 3º Trimestre
+            var chaveBusca = trim === 'Estudos Independentes' ? '3º Trimestre' : trim;
+            var notasSalvas = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + chaveBusca) || '{}');
+            var pontuacoesExatas = JSON.parse(localStorage.getItem('mestra_pontos_' + turma + '_' + chaveBusca) || '{}');
+            var metaPontos = (chaveBusca === '1º Trimestre') ? 20 : ((chaveBusca === '2º Trimestre') ? 36 : 60);
 
             alunos.forEach(a => {
                 var tr = document.createElement('tr'); tr.innerHTML = `<td>${a.nome}</td>`;
@@ -182,15 +181,33 @@
                     var notaNumerica = parseFloat(pontosTextoHtml) || 0;
                     var corBadge = pontosTextoHtml.includes('-') ? '' : (notaNumerica < metaPontos ? 'red' : 'green');
                     
-                    var opExtras = trim === '3º Trimestre' ? `<option value="EI" ${valorAtual==='EI'?'selected':''}>🟡 EI</option><option value="REP" ${valorAtual==='REP'?'selected':''}>⚫ REP</option>` : '';
+                    var opcoesSelect = '';
+                    if (trim === 'Estudos Independentes') {
+                        opcoesSelect = `
+                            <option value="APROVADO" ${valorAtual === 'APROVADO' ? 'selected' : ''}>✔ Aprovado</option>
+                            <option value="EI" ${valorAtual === 'EI' ? 'selected' : ''}>🟡 EI</option>
+                            <option value="REP" ${valorAtual === 'REP' ? 'selected' : ''}>⚫ REP</option>
+                        `;
+                    } else if (trim === '3º Trimestre') {
+                        opcoesSelect = `
+                            <option value="APROVADO" ${valorAtual === 'APROVADO' ? 'selected' : ''}>✔ Aprovado</option>
+                            <option value="REC" ${valorAtual === 'REC' ? 'selected' : ''}>🔴 REC</option>
+                            <option value="EI" ${valorAtual === 'EI' ? 'selected' : ''}>🟡 EI</option>
+                            <option value="REP" ${valorAtual === 'REP' ? 'selected' : ''}>⚫ REP</option>
+                        `;
+                    } else {
+                        opcoesSelect = `
+                            <option value="APROVADO" ${valorAtual === 'APROVADO' ? 'selected' : ''}>✔ Aprovado</option>
+                            <option value="REC" ${valorAtual === 'REC' ? 'selected' : ''}>🔴 REC</option>
+                        `;
+                    }
+
                     var badgeId = 'nota_' + a.nome.replace(/\s+/g, '_') + '_' + comp.replace(/\s+/g, '_');
 
                     tr.innerHTML += `<td>
                         <div id="${badgeId}" class="nota-badge ${corBadge}">${pontosTextoHtml}</div>
                         <select class="status-select sel-trimestre" data-aluno="${a.nome}" data-comp="${comp}" onchange="atualizarCorSelect(this)">
-                            <option value="APROVADO" ${valorAtual === 'APROVADO' ? 'selected' : ''}>✔ Aprovado</option>
-                            <option value="REC" ${valorAtual === 'REC' ? 'selected' : ''}>🔴 REC</option>
-                            ${opExtras}
+                            ${opcoesSelect}
                         </select>
                     </td>`;
                 });
@@ -212,7 +229,7 @@
                 var aluno = sel.getAttribute('data-aluno');
                 var chks = Array.from(document.querySelectorAll(`.chk-prog-${aluno.replace(/\s+/g, '_')}:checked`)).map(c => c.value).join(', ');
                 var faltasHtml = document.getElementById('prog_' + aluno.replace(/\s+/g, '_')).innerHTML;
-                dadosFinal[aluno] = { status: sel.value, prog: chks, faltasHtml: faltasHtml }; // Guarda as anotações visuais da tela
+                dadosFinal[aluno] = { status: sel.value, prog: chks, faltasHtml: faltasHtml }; 
             });
             localStorage.setItem('mestra_resultados_final_' + turma, JSON.stringify(dadosFinal));
         } else {
@@ -222,18 +239,17 @@
                 if (!dadosTurma[aluno]) { dadosTurma[aluno] = {}; dadosPontos[aluno] = {}; }
                 dadosTurma[aluno][comp] = sel.value; 
                 var badge = document.getElementById('nota_' + aluno.replace(/\s+/g, '_') + '_' + comp.replace(/\s+/g, '_'));
-                dadosPontos[aluno][comp] = badge ? badge.innerHTML : '- pts'; // Guarda todo o texto/HTML do badge
+                dadosPontos[aluno][comp] = badge ? badge.innerHTML : '- pts'; 
             });
-            localStorage.setItem('mestra_resultados_' + turma + '_' + trim, JSON.stringify(dadosTurma));
-            localStorage.setItem('mestra_pontos_' + turma + '_' + trim, JSON.stringify(dadosPontos));
+            // Guarda com a chave real (EI sobrepõe 3º Trimestre)
+            var chaveGravar = trim === 'Estudos Independentes' ? '3º Trimestre' : trim;
+            localStorage.setItem('mestra_resultados_' + turma + '_' + chaveGravar, JSON.stringify(dadosTurma));
+            localStorage.setItem('mestra_pontos_' + turma + '_' + chaveGravar, JSON.stringify(dadosPontos));
         }
 
         setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-check"></i> Gravado Localmente!'; setTimeout(() => btn.innerHTML = textoOriginal, 3000); }, 500);
     }
 
-    // =========================================================================
-    // IMPORTADOR MÁGICO - AGORA COM CÁLCULO DO QUE FALTA
-    // =========================================================================
     function processarExcel(e) {
         var file = e.target.files[0]; if (!file) return;
         var trim = document.getElementById('selTrimestre').value;
@@ -259,9 +275,7 @@
                     if (nomeAluno.length > 3) {
                         
                         if (trim === 'FINAL') {
-                            var materiasPerdidas = [];
-                            var faltasMap = {};
-                            
+                            var materiasPerdidas = []; var faltasMap = {};
                             mapDisciplinas.forEach(m => {
                                 var idx = indicesDisciplinas[m.sistema];
                                 if (idx !== undefined) {
@@ -300,12 +314,11 @@
                                         vis = notaT1 + notaT2;
                                         if (vis < 20) { stat = "EI"; pontosFaltantes = 36 - vis; } 
                                         else if (vis < 36) { stat = "REC"; pontosFaltantes = 36 - vis; } 
-                                    } else if (trim === '3º Trimestre') { 
+                                    } else if (trim === '3º Trimestre' || trim === 'Estudos Independentes') { 
                                         vis = notaT1 + notaT2 + notaT3; 
                                         if (vis < 60) { stat = "EI"; pontosFaltantes = 60 - vis; } 
                                     }
 
-                                    // Constrói a formatação com o "F:" se estiver a dever pontos
                                     if (pontosFaltantes > 0) {
                                         htmlNota = vis.toFixed(1) + ' pts<br><span style="font-size:0.7rem; font-weight:900; color:#7f1d1d;">(F: ' + pontosFaltantes.toFixed(1) + ')</span>';
                                     } else {
@@ -334,15 +347,12 @@
             document.querySelectorAll('.sel-status-final').forEach(sel => {
                 var aluno = sel.getAttribute('data-aluno');
                 if (dados[aluno]) {
-                    sel.value = dados[aluno].status;
-                    atualizarCorSelect(sel);
-                    
+                    sel.value = dados[aluno].status; atualizarCorSelect(sel);
                     var tdProg = document.getElementById('prog_' + aluno.replace(/\s+/g, '_'));
                     if (tdProg) {
                         var newHtml = mapDisciplinas.map(m => {
                             var isChecked = dados[aluno].prog.includes(m.sigla);
                             var checkedAttr = isChecked ? 'checked' : '';
-                            // Adiciona a nota de F:X ao lado do checkbox para o Especialista ver!
                             var faltaLabel = (isChecked && dados[aluno].faltasMap && dados[aluno].faltasMap[m.sigla]) ? ` <span style="color:#b91c1c; font-weight:900;">(F:${dados[aluno].faltasMap[m.sigla]})</span>` : '';
                             return `<label><input type="checkbox" class="chk-prog-${aluno.replace(/\s+/g, '_')}" value="${m.sigla}" ${checkedAttr}> ${m.sigla}${faltaLabel}</label>`;
                         }).join('');
@@ -357,8 +367,8 @@
                     sel.value = dados[aluno][comp].status; atualizarCorSelect(sel);
                     var badge = document.getElementById('nota_' + aluno.replace(/\s+/g, '_') + '_' + comp.replace(/\s+/g, '_'));
                     if(badge) { 
-                        badge.innerHTML = dados[aluno][comp].notaHtml; // Insere o HTML completo com o F:
-                        var metaPontos = trim === '1º Trimestre' ? 20 : (trim === '2º Trimestre' ? 36 : 60);
+                        badge.innerHTML = dados[aluno][comp].notaHtml; 
+                        var metaPontos = (trim === '1º Trimestre') ? 20 : ((trim === '2º Trimestre') ? 36 : 60);
                         badge.className = 'nota-badge ' + (dados[aluno][comp].notaRaw < metaPontos ? 'red' : 'green'); 
                     }
                 }
