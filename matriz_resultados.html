@@ -20,21 +20,15 @@
     .btn-acao { background: #4f46e5; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
     .btn-acao:hover { background: #3730a3; }
     
-    /* ESTRUTURA PARA FIXAR CABEÇALHOS (STICKY) */
     .table-container { background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: auto; max-height: 68vh; padding: 0; display: none; margin-bottom: 20px; border: 1px solid #cbd5e1; }
-    table { width: 100%; border-collapse: collapse; min-width: 1100px; }
+    table { width: 100%; border-collapse: collapse; min-width: 1300px; }
     
-    /* O Cabeçalho Topo fica fixo no Eixo Y */
     th { background: #0f172a; color: white; padding: 15px 10px; text-align: center; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; border: 1px solid #334155; position: sticky; top: 0; z-index: 30; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-    
-    /* A Célula do Canto Superior Esquerdo (Cruzamento) fica fixa nos Eixos X e Y */
     th:first-child { text-align: left; left: 0; z-index: 40; min-width: 250px; }
     
-    /* A Primeira Coluna (Nome do Aluno) fica fixa no Eixo X */
     td { padding: 8px; border: 1px solid #e2e8f0; text-align: center; vertical-align: middle; background: white; }
     td:first-child { text-align: left; font-weight: 800; color: #334155; background: #f8fafc; position: sticky; left: 0; z-index: 20; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-right: 2px solid #cbd5e1; }
     
-    /* ETIQUETA DA NOTA (NOVIDADE!) */
     .nota-badge { font-size: 0.75rem; font-weight: 900; color: #475569; background: #e2e8f0; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 6px; letter-spacing: 0.5px; }
     .nota-badge.red { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
     .nota-badge.green { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
@@ -46,7 +40,6 @@
     .status-rep { background-color: #f1f5f9; color: #0f172a; border-color: #475569; text-decoration: line-through; }
 
     .loading { display: none; text-align: center; padding: 40px; font-weight: bold; color: #4f46e5; }
-
     .calculadora-box { background: #fffbeb; border: 2px dashed #f59e0b; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; }
     .calc-input { padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-weight: bold; width: 120px; text-align: center; }
     .calc-resultado { font-weight: 900; font-size: 1.1rem; margin-top: 10px; color: #0f172a; }
@@ -78,11 +71,9 @@
     </div>
   </div>
 
-  <!-- CAIXA DE IMPORTAÇÃO DE EXCEL MAGICO -->
   <div id="importadorExcel" class="import-excel-box">
       <h4 style="margin-top:0; color:#065f46;"><i class="fa-solid fa-wand-magic-sparkles"></i> Automação: Extração do Relatório Consolidado do DED</h4>
       <p style="font-size: 0.85rem; color:#475569; margin-bottom:15px;">Anexe o ficheiro Excel oficial da turma. O sistema preencherá as notas e os status automaticamente baseados na regra de 60 pontos.</p>
-      
       <div class="file-upload-wrapper">
           <button class="btn-acao" style="background:#059669; padding: 12px 25px; font-size: 1rem;"><i class="fa-solid fa-cloud-arrow-up"></i> Selecionar Ficheiro Excel (.xlsx)</button>
           <input type="file" id="arquivoExcel" accept=".xlsx, .xls" onchange="processarExcel(event)">
@@ -90,28 +81,31 @@
       <div id="resultadoImportacao" style="margin-top: 15px; font-weight: bold; color: #059669;"></div>
   </div>
 
-  <!-- CALCULADORA DE RISCO MATEMÁTICO -->
   <div id="calculadoraEI" class="calculadora-box">
       <h4 style="margin-top:0; color:#d97706;"><i class="fa-solid fa-scale-unbalanced"></i> Simulador Matemático (Regra de 60 Pontos)</h4>
       <p style="font-size: 0.85rem; color:#475569; margin-bottom:10px;">Digite a soma dos pontos do 1º e 2º trimestres juntos (Máximo 60) para descobrir se o estudante já está matematicamente em <strong>Estudos Independentes</strong>.</p>
-      
       <label style="font-weight: bold; font-size: 0.9rem;">Pontos Acumulados (T1 + T2):</label>
       <input type="number" id="inpPontosT1T2" class="calc-input" max="60" min="0" placeholder="Ex: 18">
       <button class="btn-acao" style="display:inline-block; padding: 8px 15px; margin-left:10px;" onclick="calcularEI()">Calcular Risco</button>
-      
       <div id="resultadoCalc" class="calc-resultado"></div>
   </div>
 
   <div id="loading" class="loading"><i class="fa-solid fa-spinner fa-spin fa-2x mb-2"></i><br>A carregar estudantes...</div>
 
-  <!-- A TABELA COM STICKY HEADER -->
   <div class="table-container" id="containerMatriz">
     <table id="tabelaMatriz">
       <thead>
         <tr>
           <th>Estudante</th>
-          <th>Arte</th><th>Ciências</th><th>Ed. Física</th><th>Ens. Religioso</th>
-          <th>Geografia</th><th>História</th><th>L. Inglesa</th><th>L. Portuguesa</th><th>Matemática</th>
+          <th>Arte</th>
+          <th>Ciências</th>
+          <th>Educação Física</th>
+          <th>Ensino Religioso</th>
+          <th>Geografia</th>
+          <th>História</th>
+          <th>Língua Inglesa</th>
+          <th>Língua Portuguesa</th>
+          <th>Matemática</th>
         </tr>
       </thead>
       <tbody id="corpoMatriz"></tbody>
@@ -123,18 +117,18 @@
   </div>
 
   <script>
-    // =========================================================================
-    // COLE O SEU LINK DA API DO GOOGLE AQUI EMBAIXO
-    // =========================================================================
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbxIHePqCUCNaNzgz4C-5rz5AwQXh02W2A1KUJz3yx9hf0ofth0dZIGuWaurcmL4FN5i/exec"; 
-
     var turmasGlobais = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
     
     var mapDisciplinas = [
-        { excel: "ARTE", sistema: "Arte" }, { excel: "CIÊNCIAS", sistema: "Ciências" },
-        { excel: "EDUCAÇÃO FÍSICA", sistema: "Ed. Física" }, { excel: "ENSINO RELIGIOSO", sistema: "Ens. Religioso" },
-        { excel: "GEOGRAFIA", sistema: "Geografia" }, { excel: "HISTÓRIA", sistema: "História" },
-        { excel: "LÍNGUA INGLESA", sistema: "L. Inglesa" }, { excel: "LÍNGUA PORTUGUESA", sistema: "L. Portuguesa" },
+        { excel: "ARTE", sistema: "Arte" },
+        { excel: "CIÊNCIAS", sistema: "Ciências" },
+        { excel: "EDUCAÇÃO FÍSICA", sistema: "Educação Física" },
+        { excel: "ENSINO RELIGIOSO", sistema: "Ensino Religioso" },
+        { excel: "GEOGRAFIA", sistema: "Geografia" },
+        { excel: "HISTÓRIA", sistema: "História" },
+        { excel: "LÍNGUA INGLESA", sistema: "Língua Inglesa" },
+        { excel: "LÍNGUA PORTUGUESA", sistema: "Língua Portuguesa" },
         { excel: "MATEMÁTICA", sistema: "Matemática" }
     ];
     
@@ -228,7 +222,6 @@
                 var info = dadosMatematicos[aluno][comp];
                 sel.value = info.status; atualizarCorSelect(sel);
                 
-                // Pinta e escreve na etiqueta da Nota visual
                 var badgeId = 'nota_' + aluno.replace(/\s+/g, '_') + '_' + comp.replace(/\s+/g, '_');
                 var badge = document.getElementById(badgeId);
                 if(badge) {
@@ -261,19 +254,31 @@
             if (alunos.length === 0) { document.getElementById('loading').innerHTML = "Nenhum estudante registado."; return; }
 
             var notasSalvas = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + trim) || '{}');
-            var pontuacoesExatas = JSON.parse(localStorage.getItem('mestra_pontos_' + turma + '_' + trim) || '{}'); // Lê os pontos guardados
+            var pontuacoesExatas = JSON.parse(localStorage.getItem('mestra_pontos_' + turma + '_' + trim) || '{}');
             
             var tbody = document.getElementById('corpoMatriz'); tbody.innerHTML = '';
 
             alunos.forEach(a => {
                 var tr = document.createElement('tr'); tr.innerHTML = `<td>${a.nome}</td>`;
                 var dadosAluno = notasSalvas[a.nome] || {};
+                var dadosPontosAluno = pontuacoesExatas[a.nome] || {};
                 
-                componentes.forEach(comp => {
+                mapDisciplinas.forEach(mapItem => {
+                    var comp = mapItem.sistema;
                     var valorAtual = dadosAluno[comp] || 'APROVADO';
-                    var pontosTexto = (pontuacoesExatas[a.nome] && pontuacoesExatas[a.nome][comp]) ? pontuacoesExatas[a.nome][comp] : '- pts';
                     
-                    var corBadge = pontosTexto.includes('-') ? '' : (parseFloat(pontuacoesExatas[a.nome][comp]) < (trim === '2º Trimestre' ? 36 : 60) ? 'red' : 'green');
+                    // Tratamento seguro para as notas visuais (impede o erro de carregamento)
+                    var pontosTexto = '- pts';
+                    if(dadosPontosAluno[comp]) {
+                        pontosTexto = dadosPontosAluno[comp];
+                    }
+                    
+                    var corBadge = '';
+                    if (!pontosTexto.includes('-')) {
+                        var numVal = parseFloat(pontosTexto);
+                        corBadge = numVal < (trim === '2º Trimestre' ? 36 : 60) ? 'red' : 'green';
+                    }
+                    
                     var opcoesExtra = trim === '3º Trimestre (Final)' ? `<option value="EI" ${valorAtual==='EI'?'selected':''}>🟡 EI</option><option value="REP" ${valorAtual==='REP'?'selected':''}>⚫ REP</option>` : '';
                     var badgeId = 'nota_' + a.nome.replace(/\s+/g, '_') + '_' + comp.replace(/\s+/g, '_');
 
@@ -309,14 +314,14 @@
             var aluno = sel.getAttribute('data-aluno'); var comp = sel.getAttribute('data-comp');
             if (!dadosTurma[aluno]) { dadosTurma[aluno] = {}; dadosPontos[aluno] = {}; }
             
-            dadosTurma[aluno][comp] = sel.value; // Salva se é REC, EI...
+            dadosTurma[aluno][comp] = sel.value; 
             
             var badge = document.getElementById('nota_' + aluno.replace(/\s+/g, '_') + '_' + comp.replace(/\s+/g, '_'));
-            dadosPontos[aluno][comp] = badge ? badge.innerText : '- pts'; // Salva os "45.0 pts"
+            dadosPontos[aluno][comp] = badge ? badge.innerText : '- pts';
         });
 
         localStorage.setItem('mestra_resultados_' + turma + '_' + trim, JSON.stringify(dadosTurma));
-        localStorage.setItem('mestra_pontos_' + turma + '_' + trim, JSON.stringify(dadosPontos)); // Guarda os pontos visuais
+        localStorage.setItem('mestra_pontos_' + turma + '_' + trim, JSON.stringify(dadosPontos));
 
         var objParaNuvem = { funcao: 'salvarResultadosGerais', dados: { turma: turma, trimestre: trim, avaliacoes: dadosTurma } };
         fetch(URL_API_GOOGLE, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(objParaNuvem) })
