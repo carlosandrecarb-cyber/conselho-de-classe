@@ -20,7 +20,9 @@
     
     .bilhete { flex: 1; padding: 8mm 12mm; border-bottom: 1.5px solid #cbd5e1; display: flex; flex-direction: column; justify-content: center; }
     .bilhete:nth-child(4) { border-bottom: none; } 
-    .bilhete-fantasma { visibility: hidden; } /* Para empurrar o layout sem estragar a impressão */
+    
+    /* GANTE QUE O ESPAÇO VAZIO TEM EXATAMENTE O MESMO TAMANHO */
+    .bilhete-fantasma { visibility: hidden !important; border: none !important; }
 
     .header-b { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
     .header-b img { height: 35px; }
@@ -104,6 +106,9 @@
         var htmlFinal = '';
         var contador = 0;
 
+        // CRIAMOS UM BILHETE FANTASMA PARA PREENCHER ESPAÇOS VAZIOS NA ÚLTIMA PÁGINA
+        var htmlFantasma = constroiBilhete('FANTASMA', 'FANTASMA', 'texto-oficial', 'FANTASMA', '').replace('class="bilhete"', 'class="bilhete bilhete-fantasma"');
+
         if (trim === 'FINAL') {
             var notasSalvas = JSON.parse(localStorage.getItem('mestra_resultados_final_' + turma) || '{}');
             
@@ -163,10 +168,10 @@
                 htmlFinal += constroiBilhete(a.nome, turma, classeTexto, avisoLegal, gridDisciplinasHTML);
                 contador++; 
                 
-                // Se chegou ao último aluno e a folha não encheu, adiciona blocos invisíveis para não quebrar a página!
-                if (index === alunos.length - 1 && contador < 4 && contador > 0) {
+                // INJEÇÃO DOS FANTASMAS PARA NÃO DOBRAR A PÁGINA
+                if (index === alunos.length - 1 && contador > 0 && contador < 4) {
                     while (contador < 4) {
-                        htmlFinal += `<div class="bilhete bilhete-fantasma"></div>`;
+                        htmlFinal += htmlFantasma;
                         contador++;
                     }
                     htmlFinal += `</div>`; 
@@ -216,10 +221,9 @@
                 htmlFinal += constroiBilhete(a.nome, turma, classeTexto, avisoLegal, gridDisciplinasHTML);
                 contador++; 
                 
-                // Fantasmas para fechar a página corretamente
-                if (index === alunos.length - 1 && contador < 4 && contador > 0) {
+                if (index === alunos.length - 1 && contador > 0 && contador < 4) {
                     while (contador < 4) {
-                        htmlFinal += `<div class="bilhete bilhete-fantasma"></div>`;
+                        htmlFinal += htmlFantasma;
                         contador++;
                     }
                     htmlFinal += `</div>`; 
