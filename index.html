@@ -128,7 +128,7 @@
       </div>
     </section>
  
-    <!-- MENU -->
+    <!-- MENU SUPERIOR (NOVO NOME DA ABA) -->
     <header class="topbar" id="barraMenu">
       <div class="d-flex align-items-center gap-3">
         <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 45px; object-fit: contain;">
@@ -144,6 +144,10 @@
         <button class="pill-btn" onclick="switchTab('tab-professor', this)"><i class="fa-solid fa-chalkboard-user"></i> Professor</button>
         <button class="pill-btn admin-only" onclick="switchTab('tab-especialista', this)"><i class="fa-solid fa-user-tie"></i> Especialista</button>
         <button class="pill-btn" onclick="switchTab('tab-datashow', this)"><i class="fa-solid fa-display"></i> Datashow</button>
+        
+        <!-- ABA DE RESULTADOS RENOMEADA A SEU PEDIDO -->
+        <button class="pill-btn admin-only" style="color: #059669; font-weight: 800;" onclick="switchTab('tab-resultados', this)"><i class="fa-solid fa-graduation-cap"></i> C. de Classe Trimestral/Final</button>
+        
         <button class="pill-btn admin-only" onclick="switchTab('tab-banco', this)"><i class="fa-solid fa-database"></i> Banco</button>
         <button class="pill-btn admin-only" onclick="switchTab('tab-relatorios', this)"><i class="fa-solid fa-print"></i> Relatórios</button>
         <button class="pill-btn text-danger ms-2" onclick="location.reload()"><i class="fa-solid fa-power-off"></i> Sair</button>
@@ -215,7 +219,45 @@
     </section>
 
     <!-- PROFESSOR -->
-    <section id="tab-professor" class="view-panel"><div class="card-clean"><h4 class="fw-bold mb-3">Módulo do Professor</h4><div class="row g-3 mb-3"><div class="col-md-4"><label class="form-label">O Seu Nome:</label><select id="profNomeSelect" class="form-select" onchange="atualizarFiltrosProfessor()"></select></div><div class="col-md-3"><label class="form-label">Componente:</label><select id="profCompSelect" class="form-select"></select></div><div class="col-md-3"><label class="form-label">Turma:</label><select id="profTurmaSelect" class="form-select"></select></div><div class="col-md-2"><label class="form-label">Trimestre:</label><select id="profTrimSelect" class="form-select"><option>1º Trimestre</option><option selected>2º Trimestre</option><option>3º Trimestre</option></select></div></div><button class="btn btn-primary mb-3" onclick="carregarTurmaParaProfessor()">Procurar Estudantes</button><div id="areaTrabalhoProfessor" style="display: none;"><div class="table-responsive mb-3 table-container-scroll"><table class="table table-bordered m-0 align-middle"><thead><tr><th style="width: 5%;">Nº</th><th style="width: 25%; text-align: left;">Nome do Estudante</th><th style="background:#b91c1c;">Abaixo<br>Média</th><th style="background:#b45309;">Infre-<br>quente</th><th style="background:#b45309;">Motivo Afastamento</th><th style="background:#0369a1;">Reforço<br>Escolar</th><th style="background:#4338ca;">Prog.<br>Parcial</th><th style="background:#475569;">Não<br>Alfab.</th></tr></thead><tbody id="tabelaProfessorCorpo"></tbody></table></div><textarea id="profCaracteristicas" class="input-mestra mb-2" placeholder="Características da turma"></textarea><select id="profIntervencaoSN" class="form-select mb-2"><option>Sim</option><option>Não</option></select><textarea id="profMetodologias" class="input-mestra mb-3" placeholder="Metodologias"></textarea><button class="btn btn-success w-100 py-3" onclick="salvarMatrizProfessor(this)">Gravar Matriz</button></div></div></section>
+    <section id="tab-professor" class="view-panel">
+      <div class="card-clean">
+        <h4 class="fw-bold mb-3"><i class="fa-solid fa-chalkboard-user text-primary me-2"></i>Módulo do Professor (Avaliação e Resultados)</h4>
+        
+        <div class="row g-3 mb-3">
+          <div class="col-md-4"><label class="form-label fw-bold">O Seu Nome:</label><select id="profNomeSelect" class="form-select" onchange="atualizarFiltrosProfessor()"></select></div>
+          <div class="col-md-3"><label class="form-label fw-bold">Componente:</label><select id="profCompSelect" class="form-select"></select></div>
+          <div class="col-md-3"><label class="form-label fw-bold">Turma:</label><select id="profTurmaSelect" class="form-select"></select></div>
+          <div class="col-md-2"><label class="form-label fw-bold">Trimestre:</label><select id="profTrimSelect" class="form-select"><option value="1º Trimestre">1º Trimestre</option><option value="2º Trimestre" selected>2º Trimestre</option><option value="3º Trimestre (Final)">3º Trimestre (Final)</option></select></div>
+        </div>
+        
+        <button class="btn btn-primary mb-3 fw-bold" onclick="carregarTurmaParaProfessor()"><i class="fa-solid fa-magnifying-glass me-2"></i>Procurar Estudantes</button>
+        
+        <div id="areaTrabalhoProfessor" style="display: none;">
+          <div class="table-responsive mb-3 table-container-scroll">
+            <table class="table table-bordered m-0 align-middle">
+              <thead>
+                <tr>
+                  <th style="width: 5%;">Nº</th>
+                  <th style="width: 25%; text-align: left;">Nome do Estudante</th>
+                  <th style="background:#0f172a; color:#facc15; font-size: 0.8rem; border: 2px solid #facc15;">RESULTADO<br>FINAL</th>
+                  <th style="background:#b91c1c;">Abaixo<br>Média</th>
+                  <th style="background:#b45309;">Infre-<br>quente</th>
+                  <th style="background:#b45309;">Motivo Afastamento</th>
+                  <th style="background:#0369a1;">Reforço<br>Escolar</th>
+                  <th style="background:#4338ca;">Prog.<br>Parcial</th>
+                  <th style="background:#475569;">Não<br>Alfab.</th>
+                </tr>
+              </thead>
+              <tbody id="tabelaProfessorCorpo"></tbody>
+            </table>
+          </div>
+          <textarea id="profCaracteristicas" class="input-mestra mb-2" placeholder="Características da turma"></textarea>
+          <select id="profIntervencaoSN" class="form-select mb-2"><option>Sim</option><option>Não</option></select>
+          <textarea id="profMetodologias" class="input-mestra mb-3" placeholder="Metodologias"></textarea>
+          <button class="btn btn-success w-100 py-3 fw-bold shadow-sm" onclick="salvarMatrizProfessor(this)"><i class="fa-solid fa-floppy-disk me-2"></i> Gravar Matriz e Enviar Resultados Oficiais</button>
+        </div>
+      </div>
+    </section>
     
     <!-- ESPECIALISTA -->
     <section id="tab-especialista" class="view-panel admin-only"><div class="card-clean"><h4 class="fw-bold mb-3">Matriz Especialista</h4><div class="row g-3 mb-3"><div class="col-md-4"><label>Especialista:</label><select id="espNomeSelect" class="form-select"></select></div><div class="col-md-4"><label>Turma:</label><select id="espTurmaSelect" class="form-select"></select></div><div class="col-md-4"><label>Trimestre:</label><select id="espTrimSelect" class="form-select"><option selected>2º Trimestre</option></select></div></div><button class="btn btn-primary mb-3" onclick="carregarMatrizEspecialista()">Carregar Turma</button><div id="areaTrabalhoEspecialista" style="display:none;"><textarea id="espIntPedag" class="input-mestra mb-2" placeholder="Intervenção"></textarea><textarea id="espBuscaAtiva" class="input-mestra mb-2" placeholder="Busca Ativa"></textarea><textarea id="espProgParcial" class="input-mestra mb-2" placeholder="Progressões"></textarea><textarea id="espOutrosEnc" class="input-mestra mb-3" placeholder="Outros Encaminhamentos"></textarea><input type="text" id="espSemLibras" class="input-mestra mb-3" placeholder="Falta Libras"><textarea id="espSemPdiAuto" class="input-mestra bg-light text-danger mb-3" readonly></textarea><button class="btn btn-success w-100 py-3" onclick="salvarMatrizEspecialista(this)">Gravar Matriz Especialista</button></div></div></section>
@@ -249,37 +291,41 @@
       </div>
     </section>
 
-    <!-- NOVA CENTRAL DE RELATÓRIOS E RESULTADOS (AGORA COM RECUPERAÇÃO) -->
+    <!-- NOVA ABA RENOMEADA: CONSELHO DE CLASSE TRIMESTRAL/FINAL -->
+    <section id="tab-resultados" class="view-panel admin-only">
+      <div class="card-clean text-center py-5">
+        <h3 class="fw-bold mb-4" style="color: #059669;"><i class="fa-solid fa-graduation-cap me-2"></i>Conselho de Classe Trimestral/Final</h3>
+        <p class="text-muted mb-5 mx-auto" style="max-width: 600px;">Aqui o(a) Especialista gere as notas e comunicados de intervenção. Os atalhos abrem noutra aba para segurança do sistema.</p>
+        
+        <div class="row g-4 justify-content-center">
+           <div class="col-md-8 d-flex flex-column gap-3 text-start">
+             <button class="btn btn-success py-3 fw-bold shadow-sm" onclick="window.open('matriz_resultados.html', '_blank')">
+                 <i class="fa-solid fa-table-list me-2"></i> 1. Matriz de Resultados (Importar DED, Lançar REC e EI)
+             </button>
+             <button class="btn btn-outline-success py-3 fw-bold shadow-sm" onclick="window.open('bilhetes_recuperacao.html', '_blank')">
+                 <i class="fa-solid fa-envelope-open-text me-2"></i> 2. Imprimir Bilhetes (Aprovados e Recuperação)
+             </button>
+             <button class="btn btn-outline-dark py-3 fw-bold shadow-sm" onclick="window.open('listas_recuperacao.html', '_blank')">
+                 <i class="fa-solid fa-clipboard-list me-2"></i> 3. Gerar Pautas Diárias de Assinatura (Dias de Prova)
+             </button>
+           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RELATÓRIOS DO CONSELHO (AVALIAÇÃO QUALITATIVA) -->
     <section id="tab-relatorios" class="view-panel">
       <div class="card-clean text-center py-5">
-        <h3 class="fw-bold mb-4"><i class="fa-solid fa-print text-primary me-2"></i>Central de Relatórios e Resultados</h3>
-        <p class="text-muted mb-5">Escolha o módulo pretendido. Eles abrirão numa nova aba para que não perca o seu acesso (login) nesta tela.</p>
+        <h3 class="fw-bold mb-4"><i class="fa-solid fa-print text-primary me-2"></i>Relatórios do Conselho de Classe</h3>
+        <p class="text-muted mb-5">Estas atas referem-se apenas à avaliação descritiva e qualitativa da equipa.</p>
         
-        <div class="row g-4 text-start">
-           <!-- BLOCO DO CONSELHO DE CLASSE -->
-           <div class="col-md-6 d-flex flex-column gap-3">
-             <h5 class="fw-bold text-dark border-bottom pb-2">Conselho de Classe (Avaliação Qualitativa)</h5>
-             
+        <div class="row">
+           <div class="col-md-6 mx-auto d-flex flex-column gap-3">
              <button class="btn btn-outline-primary py-3 fw-bold shadow-sm admin-only" onclick="window.open('bilhetes.html', '_blank')">
                  <i class="fa-solid fa-file-pdf me-2"></i> Imprimir Bilhetes (Pareceres Descritivos)
              </button>
              <button class="btn btn-primary py-3 fw-bold shadow-sm admin-only" onclick="window.open('ata.html', '_blank')">
                  <i class="fa-solid fa-users-rectangle me-2"></i> Gerar Ata Consolidada da Turma
-             </button>
-           </div>
-           
-           <!-- BLOCO DOS RESULTADOS E RECUPERAÇÃO -->
-           <div class="col-md-6 d-flex flex-column gap-3" style="border-left: 1px dashed #cbd5e1;">
-             <h5 class="fw-bold text-success border-bottom pb-2">Resultados Finais & Recuperação</h5>
-             
-             <button class="btn btn-success py-3 fw-bold shadow-sm admin-only" onclick="window.open('matriz_resultados.html', '_blank')">
-                 <i class="fa-solid fa-table-list me-2"></i> 1. Lançar Resultados Finais (REC / EI)
-             </button>
-             <button class="btn btn-outline-success py-3 fw-bold shadow-sm admin-only" onclick="window.open('bilhetes_recuperacao.html', '_blank')">
-                 <i class="fa-solid fa-envelope-open-text me-2"></i> 2. Imprimir Bilhetes (Aprovados e Recuperação)
-             </button>
-             <button class="btn btn-outline-dark py-3 fw-bold shadow-sm admin-only" onclick="window.open('listas_recuperacao.html', '_blank')">
-                 <i class="fa-solid fa-clipboard-list me-2"></i> 3. Gerar Pautas Diárias de Prova
              </button>
            </div>
         </div>
@@ -512,7 +558,7 @@
       var chavesParaApagar = [];
       for (var i = 0; i < localStorage.length; i++) {
          var key = localStorage.key(i);
-         if (key.startsWith('mestra_estudantes_') || key.startsWith('mestra_banco_registros') || key.startsWith('mestra_prof_') || key.startsWith('mestra_esp_') || key.startsWith('mestra_resultados_')) {
+         if (key.startsWith('mestra_estudantes_') || key.startsWith('mestra_banco_registros') || key.startsWith('mestra_prof_') || key.startsWith('mestra_esp_') || key.startsWith('mestra_resultados_') || key.startsWith('mestra_notas_')) {
              chavesParaApagar.push(key);
          }
       }
@@ -693,8 +739,90 @@
     function carregarProfessoresSelect() { var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); var selProf = document.getElementById('profNomeSelect'); var selEsp = document.getElementById('espNomeSelect'); if(selProf) { selProf.innerHTML = '<option value="">Selecione...</option>'; s.forEach(p => { if(p.cargo !== "Especialista / EEB" && p.cargo !== "Diretor(a)") selProf.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); } if(selEsp) { selEsp.innerHTML = '<option value="">Selecione...</option>'; s.forEach(p => { if(p.cargo === "Especialista / EEB" || p.cargo === "Diretor(a)") selEsp.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); } }
 
     function atualizarFiltrosProfessor() { var profNome = document.getElementById('profNomeSelect').value; var profTurma = document.getElementById('profTurmaSelect'); var profComp = document.getElementById('profCompSelect'); profTurma.innerHTML = '<option value="">Turma...</option>'; profComp.innerHTML = '<option value="">Componente...</option>'; if(!profNome) return; var lotacao = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); var profDados = lotacao.find(p => p.nome === profNome); if(profDados) { var comps = profDados.componentes || []; if(comps.length === 0 && profDados.comp) comps.push(profDados.comp); comps.forEach(c => profComp.innerHTML += `<option value="${c}">${c}</option>`); if(profDados.turmas) { profDados.turmas.forEach(t => profTurma.innerHTML += `<option value="${t}">${t}</option>`); } } }
-    function carregarTurmaParaProfessor() { var turma = document.getElementById('profTurmaSelect').value; var prof = document.getElementById('profNomeSelect').value; if(!turma || !prof) return; var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); if(alunos.length === 0) return; document.getElementById('areaTrabalhoProfessor').style.display = 'block'; var tbody = document.getElementById('tabelaProfessorCorpo'); tbody.innerHTML = ''; var chave = 'mestra_prof_' + turma + '_' + document.getElementById('profCompSelect').value + '_' + document.getElementById('profTrimSelect').value; var dadosSalvos = JSON.parse(localStorage.getItem(chave) || '{"alunos":[], "caracteristicas":"", "intervencaoSN":"Sim", "metodologia":""}'); document.getElementById('profCaracteristicas').value = dadosSalvos.caracteristicas || ''; document.getElementById('profIntervencaoSN').value = dadosSalvos.intervencaoSN || 'Sim'; document.getElementById('profMetodologias').value = dadosSalvos.metodologia || ''; alunos.forEach(a => { var bd = dadosSalvos.alunos.find(x => x.nome === a.nome) || {}; tbody.innerHTML += `<tr><td class="text-center text-muted fw-bold">${a.numero}</td><td class="fw-bold prof-nome-aluno">${a.nome}</td><td class="text-center"><input class="form-check-input chk-media" type="checkbox" style="transform: scale(1.3);" ${bd.abaixoMedia?'checked':''}></td><td class="text-center"><input class="form-check-input chk-falta" type="checkbox" style="transform: scale(1.3);" ${bd.falta?'checked':''}></td><td><input type="text" class="form-control form-control-sm inp-motivo" placeholder="Afast. Hosp/Domiciliar..." value="${bd.motivoFalta||''}"></td><td class="text-center"><input class="form-check-input chk-reforco" type="checkbox" style="transform: scale(1.3);" ${bd.reforco?'checked':''}></td><td class="text-center"><input class="form-check-input chk-prog" type="checkbox" style="transform: scale(1.3);" ${bd.prog?'checked':''}></td><td class="text-center"><input class="form-check-input chk-alfab" type="checkbox" style="transform: scale(1.3);" ${bd.alfab?'checked':''}></td></tr>`; }); }
-    function salvarMatrizProfessor(btn) { var turma = document.getElementById('profTurmaSelect').value; var comp = document.getElementById('profCompSelect').value; var trim = document.getElementById('profTrimSelect').value; var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar...'; var aval = { turma: turma, componente: comp, trimestre: trim, professor: document.getElementById('profNomeSelect').value, caracteristicas: document.getElementById('profCaracteristicas').value, intervencaoSN: document.getElementById('profIntervencaoSN').value, metodologia: document.getElementById('profMetodologias').value, alunos: [] }; document.querySelectorAll('#tabelaProfessorCorpo tr').forEach(tr => { aval.alunos.push({ nome: tr.querySelector('.prof-nome-aluno').childNodes[0].nodeValue.trim(), abaixoMedia: tr.querySelector('.chk-media').checked, falta: tr.querySelector('.chk-falta').checked, motivoFalta: tr.querySelector('.inp-motivo').value, reforco: tr.querySelector('.chk-reforco').checked, prog: tr.querySelector('.chk-prog').checked, alfab: tr.querySelector('.chk-alfab').checked }); }); localStorage.setItem('mestra_prof_' + turma + '_' + comp + '_' + trim, JSON.stringify(aval)); chamarApiGoogle('salvarMatrizProfessor', aval, function() { btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Guardado!'; setTimeout(() => btn.innerHTML = originalText, 3000); }); }
+    
+    function carregarTurmaParaProfessor() { 
+      var turma = document.getElementById('profTurmaSelect').value; 
+      var prof = document.getElementById('profNomeSelect').value; 
+      var comp = document.getElementById('profCompSelect').value;
+      var trim = document.getElementById('profTrimSelect').value;
+      
+      if(!turma || !prof || !comp) return; 
+      
+      var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
+      if(alunos.length === 0) return; 
+      
+      document.getElementById('areaTrabalhoProfessor').style.display = 'block'; 
+      var tbody = document.getElementById('tabelaProfessorCorpo'); tbody.innerHTML = ''; 
+      
+      var chaveQualitativa = 'mestra_prof_' + turma + '_' + comp + '_' + trim; 
+      var dadosSalvos = JSON.parse(localStorage.getItem(chaveQualitativa) || '{"alunos":[], "caracteristicas":"", "intervencaoSN":"Sim", "metodologia":""}'); 
+      var resultadosOficiais = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + trim) || '{}');
+
+      document.getElementById('profCaracteristicas').value = dadosSalvos.caracteristicas || ''; 
+      document.getElementById('profIntervencaoSN').value = dadosSalvos.intervencaoSN || 'Sim'; 
+      document.getElementById('profMetodologias').value = dadosSalvos.metodologia || ''; 
+      
+      alunos.forEach(a => { 
+        var bd = dadosSalvos.alunos.find(x => x.nome === a.nome) || {}; 
+        var statusAtual = 'APROVADO';
+        if(resultadosOficiais[a.nome] && resultadosOficiais[a.nome][comp]) statusAtual = resultadosOficiais[a.nome][comp];
+
+        var opcoesExtra = trim === '3º Trimestre (Final)' ? `<option value="EI" ${statusAtual==='EI'?'selected':''}>🟡 EI (Est. Indep.)</option><option value="REP" ${statusAtual==='REP'?'selected':''}>⚫ Reprovado</option>` : '';
+
+        var corFundo = statusAtual === 'REC' ? '#fee2e2' : (statusAtual === 'EI' ? '#fef3c7' : (statusAtual === 'REP' ? '#f1f5f9' : '#d1fae5'));
+        var corTexto = statusAtual === 'REC' ? '#991b1b' : (statusAtual === 'EI' ? '#92400e' : (statusAtual === 'REP' ? '#0f172a' : '#065f46'));
+
+        tbody.innerHTML += `
+          <tr>
+            <td class="text-center text-muted fw-bold">${a.numero}</td>
+            <td class="fw-bold prof-nome-aluno">${a.nome}</td>
+            <td style="padding: 4px;">
+              <select class="form-select form-select-sm fw-bold sel-status-prof" style="width: 120px; font-size:0.75rem; background-color: ${corFundo}; color: ${corTexto}; border-color: ${corTexto};" onchange="this.style.backgroundColor = this.value === 'REC' ? '#fee2e2' : (this.value === 'EI' ? '#fef3c7' : (this.value === 'REP' ? '#f1f5f9' : '#d1fae5')); this.style.color = this.value === 'REC' ? '#991b1b' : (this.value === 'EI' ? '#92400e' : (this.value === 'REP' ? '#0f172a' : '#065f46')); this.style.borderColor = this.style.color;">
+                <option value="APROVADO" ${statusAtual === 'APROVADO' ? 'selected' : ''}>✔ Aprovado</option>
+                <option value="REC" ${statusAtual === 'REC' ? 'selected' : ''}>🔴 Recuperação</option>
+                ${opcoesExtra}
+              </select>
+            </td>
+            <td class="text-center"><input class="form-check-input chk-media" type="checkbox" style="transform: scale(1.3);" ${bd.abaixoMedia?'checked':''}></td>
+            <td class="text-center"><input class="form-check-input chk-falta" type="checkbox" style="transform: scale(1.3);" ${bd.falta?'checked':''}></td>
+            <td><input type="text" class="form-control form-control-sm inp-motivo" placeholder="Motivo..." value="${bd.motivoFalta||''}"></td>
+            <td class="text-center"><input class="form-check-input chk-reforco" type="checkbox" style="transform: scale(1.3);" ${bd.reforco?'checked':''}></td>
+            <td class="text-center"><input class="form-check-input chk-prog" type="checkbox" style="transform: scale(1.3);" ${bd.prog?'checked':''}></td>
+            <td class="text-center"><input class="form-check-input chk-alfab" type="checkbox" style="transform: scale(1.3);" ${bd.alfab?'checked':''}></td>
+          </tr>
+        `; 
+      }); 
+    }
+
+    function salvarMatrizProfessor(btn) { 
+      var turma = document.getElementById('profTurmaSelect').value; 
+      var comp = document.getElementById('profCompSelect').value; 
+      var trim = document.getElementById('profTrimSelect').value; 
+      var originalText = btn.innerHTML; 
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar tudo...'; 
+      
+      var aval = { turma: turma, componente: comp, trimestre: trim, professor: document.getElementById('profNomeSelect').value, caracteristicas: document.getElementById('profCaracteristicas').value, intervencaoSN: document.getElementById('profIntervencaoSN').value, metodologia: document.getElementById('profMetodologias').value, alunos: [] }; 
+      var resultadosOficiais = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + trim) || '{}');
+
+      document.querySelectorAll('#tabelaProfessorCorpo tr').forEach(tr => { 
+        var nomeA = tr.querySelector('.prof-nome-aluno').childNodes[0].nodeValue.trim();
+        var statusFinal = tr.querySelector('.sel-status-prof').value;
+        aval.alunos.push({ 
+            nome: nomeA, abaixoMedia: tr.querySelector('.chk-media').checked, falta: tr.querySelector('.chk-falta').checked, motivoFalta: tr.querySelector('.inp-motivo').value, reforco: tr.querySelector('.chk-reforco').checked, prog: tr.querySelector('.chk-prog').checked, alfab: tr.querySelector('.chk-alfab').checked 
+        }); 
+        if(!resultadosOficiais[nomeA]) resultadosOficiais[nomeA] = {};
+        resultadosOficiais[nomeA][comp] = statusFinal;
+      }); 
+
+      localStorage.setItem('mestra_prof_' + turma + '_' + comp + '_' + trim, JSON.stringify(aval)); 
+      localStorage.setItem('mestra_resultados_' + turma + '_' + trim, JSON.stringify(resultadosOficiais));
+
+      chamarApiGoogle('salvarMatrizProfessor', aval, function() { 
+          btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Salvo com Sucesso!'; 
+          setTimeout(() => btn.innerHTML = originalText, 3000); 
+      }); 
+    }
+
     function carregarMatrizEspecialista() { var esp = document.getElementById('espNomeSelect').value; var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value; if(!esp || !turma) return; document.getElementById('areaTrabalhoEspecialista').style.display = 'block'; var alBase = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); var noPdi = alBase.filter(a => a.aee && a.pdi === 'Não').map(a => a.nome); document.getElementById('espSemPdiAuto').value = noPdi.length > 0 ? noPdi.join('\n') : 'Não há estudantes marcados como AEE "Sem PDI".'; var chave = 'mestra_esp_' + turma + '_' + trim; var d = JSON.parse(localStorage.getItem(chave) || '{"intP":"","busca":"","prog":"","outros":"","semLibras":""}'); document.getElementById('espIntPedag').value = d.intP || ''; document.getElementById('espBuscaAtiva').value = d.busca || ''; document.getElementById('espProgParcial').value = d.prog || ''; document.getElementById('espOutrosEnc').value = d.outros || ''; document.getElementById('espSemLibras').value = d.semLibras || ''; }
     function salvarMatrizEspecialista(btn) { var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value; var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar...'; var obj = { turma: turma, trimestre: trim, intP: document.getElementById('espIntPedag').value, busca: document.getElementById('espBuscaAtiva').value, prog: document.getElementById('espProgParcial').value, outros: document.getElementById('espOutrosEnc').value, semLibras: document.getElementById('espSemLibras').value }; localStorage.setItem('mestra_esp_' + turma + '_' + trim, JSON.stringify(obj)); chamarApiGoogle('salvarMatrizEspecialista', obj, function() { btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Guardado!'; setTimeout(() => btn.innerHTML = originalText, 3000); }); }
  
@@ -881,10 +1009,7 @@
  
     function navegarEstudante(direcao) {
       if(!alunoAtivoSessao) return;
-      
-      // Salva automaticamente na nuvem antes de mudar de aluno
       salvarDadosSilenciosamente(); 
-      
       var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turmaAtivaSessao) || '[]'); 
       var alunos = []; var vistos = new Set();
       alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
@@ -991,9 +1116,7 @@
     }
  
     function fecharAvaliacaoAluno() { 
-      // Salva automaticamente antes de fechar o painel
       if(alunoAtivoSessao) salvarDadosSilenciosamente(); 
-
       document.getElementById('painelAvaliacaoEstudante').style.display = 'none'; 
       document.getElementById('seletorDatashow').style.display = 'block'; 
       alunoAtivoSessao = null;
