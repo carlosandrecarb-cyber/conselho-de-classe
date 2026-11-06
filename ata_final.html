@@ -13,12 +13,25 @@
     .no-print { background: #0f172a; padding: 15px; display: flex; gap: 15px; justify-content: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-wrap: wrap; }
     select, input, textarea { padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-family: 'Inter'; outline: none; }
     .btn-acao { background: #4f46e5; color: white; border: none; padding: 8px 15px; font-weight: bold; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .btn-aviso { background: #f59e0b; color: white; border: none; padding: 8px 15px; font-weight: bold; border-radius: 6px; cursor: default; display: flex; align-items: center; gap: 8px; }
     
-    .pagina-a4 { width: 100%; max-width: 210mm; min-height: 297mm; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin: 20px auto; padding: 15mm; page-break-after: always; text-align: justify; }
+    /* A folha A4 editável */
+    .pagina-a4 { 
+        width: 100%; max-width: 210mm; min-height: 297mm; 
+        background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+        margin: 20px auto; padding: 15mm; 
+        text-align: justify; 
+        transition: 0.3s;
+    }
+    
+    /* Destaque visual para mostrar que a folha é editável */
+    .pagina-a4[contenteditable="true"]:hover {
+        box-shadow: 0 0 0 3px #60a5fa, 0 4px 10px rgba(0,0,0,0.1);
+    }
     
     .texto-base { font-size: 10pt; line-height: 1.4; margin-bottom: 10px; text-align: justify; }
     
-    .tabela-final { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; font-size: 9pt; }
+    .tabela-final { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; font-size: 8.5pt; }
     .tabela-final th { border: 1px solid #0f172a; padding: 6px; background: #e2e8f0; text-align: center; font-weight: 900; }
     .tabela-final td { border: 1px solid #0f172a; padding: 6px; vertical-align: middle; }
     
@@ -31,7 +44,7 @@
     @media print { 
         body { background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; } 
         .no-print, .caixa-edicao { display: none !important; } 
-        .pagina-a4 { box-shadow: none; margin: 0; padding: 0; } 
+        .pagina-a4 { box-shadow: none; margin: 0; padding: 0; border: none; } 
     }
   </style>
 </head>
@@ -39,8 +52,9 @@
 
   <div class="no-print">
     <select id="selTurma"></select>
-    <button class="btn-acao" onclick="gerarAta()"><i class="fa-solid fa-file-signature"></i> Processar Ata Final</button>
-    <button class="btn-acao" style="background:#10b981;" onclick="window.print()"><i class="fa-solid fa-print"></i> Imprimir Ata</button>
+    <button class="btn-acao" onclick="gerarAta()"><i class="fa-solid fa-file-signature"></i> 1. Gerar Ata Final</button>
+    <div class="btn-aviso"><i class="fa-solid fa-pen"></i> 2. Clique no texto gerado abaixo para editar!</div>
+    <button class="btn-acao" style="background:#10b981;" onclick="window.print()"><i class="fa-solid fa-print"></i> 3. Imprimir</button>
   </div>
 
   <div class="caixa-edicao">
@@ -59,7 +73,7 @@
   </div>
 
   <div id="relatorioContainer">
-      <h3 style="text-align: center; color: #475569; margin-top: 50px;">Selecione a turma e clique em "Processar Ata Final"</h3>
+      <h3 style="text-align: center; color: #475569; margin-top: 50px;">Selecione a turma e clique em "Gerar Ata Final"</h3>
   </div>
 
   <script>
@@ -68,6 +82,7 @@
     turmasGlobais.forEach(t => selTurma.innerHTML += `<option value="${t}">${t}</option>`);
     
     var mapSiglas = { "ART":"Arte", "CIÊ":"Ciências", "EDF":"Educação Física", "ER":"Ensino Religioso", "GEO":"Geografia", "HIST":"História", "LI":"Língua Inglesa", "LP":"Língua Portuguesa", "MAT":"Matemática" };
+    var componentes = ["Arte", "Ciências", "Educação Física", "Ensino Religioso", "Geografia", "História", "Língua Inglesa", "Língua Portuguesa", "Matemática"];
 
     function gerarAta() {
         var turma = selTurma.value;
@@ -77,7 +92,9 @@
         var alunos = []; var vistos = new Set();
         alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
         
-        var notasSalvas = JSON.parse(localStorage.getItem('mestra_resultados_final_' + turma) || '{}');
+        var notasFinais = JSON.parse(localStorage.getItem('mestra_resultados_final_' + turma) || '{}');
+        // Puxamos também as notas dos Estudos Independentes (3º Trimestre) para relatar as intervenções anteriores
+        var notasEstudosIndep = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_3º Trimestre') || '{}');
 
         if (alunos.length === 0) { alert("Nenhum estudante na turma."); return; }
 
@@ -95,34 +112,68 @@
         var num = 1;
 
         alunos.forEach(a => {
-            var sit = notasSalvas[a.nome] || { status: 'APROVADO(A)', prog: '' };
-            var siglaFormatada = '-';
-            
-            if (sit.status === 'APROVADO(A) COM PROGRESSÃO PARCIAL' && sit.prog) {
-                var siglas = sit.prog.split(', ');
-                var nomesCompletos = siglas.map(s => mapSiglas[s] || s);
-                siglaFormatada = nomesCompletos.join(', '); // Aqui convertemos para nomes completos (Sem Abreviação)!
+            var sitFinal = notasFinais[a.nome] || { status: 'APROVADO(A)', prog: '' };
+            var statusEstudosIndep = notasEstudosIndep[a.nome] || {};
+            var componentesAfetados = [];
+
+            // 1. Identificar se o aluno ficou em EI ou foi Retido nos Estudos Independentes
+            componentes.forEach(c => {
+                if(statusEstudosIndep[c] === 'EI' || statusEstudosIndep[c] === 'REP') {
+                    componentesAfetados.push(c);
+                }
+            });
+
+            // 2. Adicionar as disciplinas onde houve Progressão ou Prova de Janeiro na Matriz Final
+            if (sitFinal.prog) {
+                var siglas = sitFinal.prog.split(', ');
+                siglas.forEach(s => {
+                    var nomeCompleto = mapSiglas[s] || s;
+                    if (!componentesAfetados.includes(nomeCompleto)) {
+                        componentesAfetados.push(nomeCompleto);
+                    }
+                });
             }
+
+            // Formatação do texto da coluna de componentes
+            var siglaFormatada = '-';
+            if (componentesAfetados.length > 0) {
+                if (sitFinal.status === 'APROVADO(A)') {
+                    siglaFormatada = 'Realizou EI em: ' + componentesAfetados.join(', ');
+                } else {
+                    siglaFormatada = componentesAfetados.join(', ');
+                }
+            }
+
+            var corStatus = '#0f172a';
+            if(sitFinal.status.includes('REPROVADO')) corStatus = '#991b1b';
+            if(sitFinal.status.includes('JANEIRO')) corStatus = '#9a3412';
+            if(sitFinal.status.includes('PROGRESSÃO')) corStatus = '#92400e';
+            if(sitFinal.status === 'APROVADO(A)') corStatus = '#065f46';
 
             linhasTabela += `
                 <tr>
                     <td class="td-centro">${num < 10 ? '0'+num : num}</td>
                     <td class="td-nome">${a.nome}</td>
-                    <td class="td-centro">${sit.status}</td>
+                    <td class="td-centro" style="color: ${corStatus};">${sitFinal.status}</td>
                     <td class="td-centro" style="color: #b91c1c;">${siglaFormatada}</td>
                 </tr>
             `;
             num++;
         });
 
+        // O 'contenteditable="true"' permite editar tudo na página antes de imprimir!
         var htmlFinal = `
-        <div class="pagina-a4">
+        <div class="pagina-a4" contenteditable="true" spellcheck="false" title="Pode clicar no texto e alterar o que precisar antes de imprimir!">
             <div class="texto-base" style="text-indent: 20px;">
-                ${numAta} do Conselho de Classe da turma ${turma} referente ao Situação Final do ano de ${anoLetivo}. A presente Ata, objetiva, registrar a situação dos/das estudantes do ano de ${anoLetivo}, fundamentando-se e baseando-se nas orientações do Documento Orientador expedido pela SEE/MG, da Resolução SEE Nº 4.948 de 25 de janeiro de 2024, Memorando Nº 337/2024/SEE/SB e Documento Orientador do Conselho de Classe. Aos ${dataAta}, reuniram-se na ${salaAta} da Escola, às ${horaAta}, os membros do Conselho de Classe, coordenado pelo Diretor ${diretor}, a Vice-Diretora ${vice} e pelos Especialistas, ${esp}, e os seguintes docentes: ${profs}, com a finalidade de avaliar, de forma Global as competências (conhecimentos e habilidades adquiridos pelos estudantes), pautando-se na Resolução SEE Nº 4.948 de 25 de janeiro de 2024, Artigo 107 e Parágrafo único, no Artigo 109 e Parágrafo único e no Artigo 110, que seguem, Art. 107- A escola deverá oferecer aos estudantes diferentes oportunidades de aprendizagem com atividades de intervenções pedagógicas ao longo de todo o ano letivo, a saber: I - estudos contínuos de recuperação, ao longo do processo de ensino e aprendizagem, em sala de aula, constituídos de atividades específicas para o atendimento ao estudante ou grupos de estudantes que não desenvolveram as habilidades trabalhadas; II - estudos periódicos de recuperação, aplicados ao final de cada bimestre, antes da realização do Conselho de Classe, para o estudante ou grupo de estudantes que não desenvolveram as habilidades previstas para o bimestre; III - estudos independentes de recuperação, realizados após o último conselho de classe, com atividades avaliativas a serem aplicadas antes do encerramento do ano escolar, quando as estratégias de intervenção pedagógica previstas nos incisos I e II não tiverem sido suficientes para atender às necessidades mínimas de aprendizagem do estudante. Parágrafo único. Para os estudos independentes de recuperação, deverá ser elaborado, pelo professor responsável pelo componente curricular, um plano de estudos, com orientações e atividades que contemplem o(s) objeto(s) do conhecimento e a(s) habilidade(s) que não foram consolidadas pelo estudante; Art. 109- O Conselho de Classe é uma instância colegiada, responsável por favorecer a articulação entre professores, realizar a análise das metodologias utilizadas, estabelecer a relação dos diversos pontos de vistas e as intervenções necessárias nos processos de ensino e de aprendizagem. Parágrafo único. O Conselho de Classe terá sua composição e organização regulamentadas por documento específico; Art. 110- A promoção dos estudantes deve ser decidida, coletivamente, pelos professores no Conselho de Classe, levando-se em conta o desempenho global do estudante, seu envolvimento no processo de aprender e não apenas a avaliação de cada professor em seu componente curricular, de forma isolada, considerando-se os princípios da continuidade da aprendizagem e da interdisciplinaridade reuniu-se os membros supramencionados, que compõem o Conselho de Classe, com o objetivo de decidir, coletivamente, o desempenho global de cada estudante, levando em conta o envolvimento deste no processo de aprender no contexto geral, pautando-se, principalmente, na sua continuidade em relação ao desenvolvimento da aprendizagem, foco principal da reunião.
+                ${numAta} do Conselho de Classe da turma ${turma} referente à Situação Final do ano de ${anoLetivo}. A presente Ata, objetiva, registrar a situação dos/das estudantes do ano de ${anoLetivo}, fundamentando-se e baseando-se nas orientações do Documento Orientador expedido pela SEE/MG, da Resolução SEE Nº 4.948 de 25 de janeiro de 2024, da <strong>Resolução SEE Nº 5.209 de 07 de novembro de 2025</strong>, e Documentos Orientadores do Conselho de Classe. Aos ${dataAta}, reuniram-se na ${salaAta} da Escola, às ${horaAta}, os membros do Conselho de Classe, coordenado pelo Diretor(a) ${diretor}, a Vice-Diretora ${vice} e pelos Especialistas, ${esp}, e os seguintes docentes: ${profs}, com a finalidade de avaliar de forma Global as competências (conhecimentos e habilidades) adquiridos pelos estudantes.
             </div>
             
             <div class="texto-base" style="text-indent: 20px;">
-                Iniciando o Conselho de Classe da turma, o Diretor ${diretor}, reforçou pontos constantes e importantes do redimensionando o fazer pedagógico e, reforçou sobre o que a legislação no que se refere ao discutir sobre a situação final dos estudantes, e sobre a decisão coletiva do Conselho de Classe, devendo-se observar todo o percurso de cada estudante individualmente para consolidar a situação final de cada um dos estudantes da presente turma. Dando continuidade, o Diretor ${diretor}, passou a palavra para os Especialistas para que pudessem dar continuidade ao processo do Conselho de Classe final do ano corrente. Continuando, o Especialista da turma continuou com o Conselho de Classe Final, o qual passou a discutir a situação global de cada estudante, observando as diferentes oportunidades de aprendizagem desenvolvidas e oferecidas aos estudantes e as várias estratégias utilizadas, pautando-se principalmente na legislação supramencionada em sua totalidade, em relação ao ano corrente, e, levando em consideração a discussão feita pelo membros que constituem o Conselho de Classe, e, principalmente o contexto de cada um dos estudantes, perante a sua situação de aprendizagem com foco na continuidade de cada um, fica assim definida, no quadro abaixo, a situação final de cada estudante desta turma, e, nos casos de estudantes que ficaram em Progressão Parcial, de acordo com a legislação supramencionada, ficará com situação APROVADO(A) COM PROGRESSÃO PARCIAL e está registrado na coluna PROGRESSÃO PARCIAL, o(s) respectivo(s) Componente(s) Curricular(es) por extenso:
+                A reunião pautou-se na observância da legislação vigente, destacando-se o Artigo 107 da Res. SEE 4.948/2024, bem como os Artigos 1º, 2º e 3º da <strong>Resolução SEE Nº 5.209/2025</strong>, os quais determinam a oferta de diferentes oportunidades de aprendizagem e intervenção pedagógica ao longo do letivo (incisos I e II), além da realização de Estudos Independentes de Recuperação e o direito à realização de avaliação para fins de certificação e Prova Eletrônica para estudantes que não consolidaram as aprendizagens essenciais. O Conselho de Classe deliberou de forma colegiada, analisando o percurso escolar de cada estudante individualmente, o desenvolvimento das habilidades e as metodologias aplicadas, de acordo com o Art. 109 da Res. SEE 4.948/2024.
+            </div>
+
+            <div class="texto-base" style="text-indent: 20px;">
+                Iniciando o Conselho de Classe da turma, a Direção reforçou pontos cruciais do fazer pedagógico, passando a palavra aos Especialistas para a condução das análises globais. Foram ponderadas as diversas estratégias utilizadas, o contexto de cada estudante e a oferta dos Estudos Independentes. Após a avaliação coletiva, fica definida no quadro abaixo a Situação Final de cada estudante. Nos casos em que o estudante necessitou de Estudos Independentes, obteve Progressão Parcial, foi submetido à Prova Eletrônica de Janeiro ou restou Reprovado, encontra-se devidamente identificado na tabela os respectivos Componentes Curriculares por extenso, assegurando o registro documental da continuidade do processo formativo:
             </div>
 
             <table class="tabela-final">
@@ -130,8 +181,8 @@
                     <tr>
                         <th style="width: 5%;">Nº</th>
                         <th style="width: 40%;">ESTUDANTE</th>
-                        <th style="width: 30%;">SITUAÇÃO FINAL DO ESTUDANTE EM RELAÇÃO AO ANO DE ${anoLetivo}</th>
-                        <th style="width: 25%;">APROVADO(A) COM PROGRESSÃO PARCIAL EM</th>
+                        <th style="width: 25%;">SITUAÇÃO FINAL DO ESTUDANTE</th>
+                        <th style="width: 30%;">COMPONENTES CURRICULARES<br>(Retenção / Janeiro / Progressão / EI)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -140,7 +191,12 @@
             </table>
 
             <div class="texto-base" style="text-indent: 20px;">
-                O Diretor ${diretor}, retomou a palavra e indagou, aos presentes, se haveria mais alguma observação e ninguém se manifestou. Por fim, o Diretor ${diretor}, agradeceu a todos e parabenizou pelo esforço e empenho durante o período. Nada mais havendo a tratar, eu, Especialista designado(a) para lavrar a presente Ata, que depois de lida e aprovada, será assinada por todos os presentes. Carbonita, ${dataAta}.
+                A Direção retomou a palavra e indagou aos presentes se haveria mais alguma observação, não havendo manifestações. Por fim, agradeceu o esforço e empenho de toda a equipa durante o ano letivo. Nada mais havendo a tratar, eu, Especialista designado(a) para lavrar a presente Ata, dou por encerrada a sessão, a qual, depois de lida e aprovada, será assinada por todos os presentes. Carbonita, ${dataAta}.
+            </div>
+            
+            <div style="margin-top: 50px; text-align: center; font-weight: bold; font-size: 10pt;">
+                _________________________________________________________________<br>
+                Assinaturas da Equipe Pedagógica e Docentes
             </div>
         </div>
         `;
