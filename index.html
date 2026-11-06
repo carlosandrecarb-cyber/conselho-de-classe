@@ -103,22 +103,22 @@
   </div>
   <div class="app-shell">
     
-    <!-- LOGIN -->
+    <!-- LOGIN OTIMIZADO -->
     <section id="tab-login" class="view-panel active">
       <div class="card-clean text-center py-5 login-box" style="max-width: 400px; margin: 50px auto;">
         <img src="https://i.ibb.co/Mk85hWrs/LOGO-MESTRA-AURORA-2.png" style="height: 80px; object-fit: contain; margin-bottom: 20px;">
         <h3 class="fw-extrabold text-dark mb-1">CONSELHO DE CLASSE</h3>
         <p class="text-muted fs-7 mb-4">Identifique-se para aceder ao sistema</p>
         <div id="loginOptions">
-          <button class="btn btn-outline-primary w-100 py-3 mb-3 fw-bold rounded-xl" onclick="mostrarSenha('prof')"><i class="fa-solid fa-chalkboard-user me-2"></i> Sou Professor</button>
-          <button class="btn btn-dark w-100 py-3 fw-bold rounded-xl" onclick="mostrarSenha('admin')"><i class="fa-solid fa-shield-halved me-2"></i> Sou Especialista / Direção</button>
+          <button class="btn btn-outline-primary w-100 py-3 mb-3 fw-bold rounded-xl" onclick="mostrarLoginProf()"><i class="fa-solid fa-chalkboard-user me-2"></i> Sou Professor</button>
+          <button class="btn btn-dark w-100 py-3 fw-bold rounded-xl" onclick="mostrarLoginAdmin()"><i class="fa-solid fa-shield-halved me-2"></i> Sou Especialista / Direção</button>
         </div>
-        <div id="loginPassword" style="display: none;">
+        <div id="loginForm" style="display: none;">
           <label class="form-label fw-bold text-start w-100" id="lblTipoLogin">Palavra-passe de Acesso:</label>
-          <input type="password" id="inputSenhaAcesso" class="input-mestra mb-3 text-center fs-5" placeholder="***">
+          <input type="text" id="inputAcesso" class="input-mestra mb-3 text-center fs-5" placeholder="***" onkeydown="if(event.key === 'Enter') validarAcesso()">
           <div class="d-flex gap-2">
             <button class="btn btn-secondary w-50 fw-bold py-2" onclick="voltarLogin()">Voltar</button>
-            <button class="btn btn-success w-50 fw-bold py-2" onclick="validarSenha()">Entrar <i class="fa-solid fa-arrow-right-to-bracket ms-1"></i></button>
+            <button class="btn btn-success w-50 fw-bold py-2" onclick="validarAcesso()">Entrar <i class="fa-solid fa-arrow-right-to-bracket ms-1"></i></button>
           </div>
         </div>
       </div>
@@ -193,17 +193,17 @@
         </div>
     </section>
     
-    <!-- LOTAÇÃO -->
+    <!-- LOTAÇÃO OTIMIZADA PARA IMPORTAR E-MAILS DO EXCEL -->
     <section id="tab-equipe" class="view-panel admin-only">
         <div class="card-clean">
             <h4 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-users-gear text-primary me-2"></i>Lotação de Profissionais</h4>
             <div class="input-group mb-3">
-                <textarea id="txtServidoresInput" class="input-mestra" rows="2" placeholder="Cole a lista de servidores (Um por linha)"></textarea>
+                <textarea id="txtServidoresInput" class="input-mestra" rows="2" placeholder="Cole a lista (Nome e E-mail juntos, Ex: João Silva, joao@escola.com)"></textarea>
                 <button class="btn btn-success px-4 fw-bold" onclick="gerarTabelaLotacao()">Gerar Tabela</button>
             </div>
             <div class="table-responsive mb-3 admin-lock table-container-scroll">
               <table class="table table-bordered table-striped m-0 align-middle" style="font-size: 0.8rem;">
-                <thead><tr><th>Servidor(a)</th><th>Cargo</th><th>Turno</th><th>Turmas</th><th>Componente(s)</th></tr></thead>
+                <thead><tr><th>Nome do Profissional</th><th>E-mail de Acesso (Login)</th><th>Cargo</th><th>Turno</th><th>Turmas</th><th>Componente(s)</th></tr></thead>
                 <tbody id="tabelaLotacaoCorpo"></tbody>
               </table>
             </div>
@@ -211,7 +211,7 @@
         </div>
     </section>
     
-    <!-- PROFESSOR (MÓDULO ATUALIZADO 5 FASES) -->
+    <!-- PROFESSOR -->
     <section id="tab-professor" class="view-panel">
       <div class="card-clean">
         <h4 class="fw-bold mb-3"><i class="fa-solid fa-chalkboard-user text-primary me-2"></i>Módulo do Professor (Avaliação e Resultados)</h4>
@@ -354,7 +354,6 @@
              <button class="btn btn-primary py-3 fw-bold shadow-sm admin-only" onclick="window.open('ata.html', '_blank')">
                  <i class="fa-solid fa-users-rectangle me-2"></i> Gerar Ata Qualitativa e Descritiva
              </button>
-             <!-- NOVO BOTÃO PARA A ATA FINAL (DOCUMENTAL) -->
              <button class="btn btn-danger py-3 fw-bold shadow-sm admin-only mt-3" onclick="window.open('ata_final.html', '_blank')">
                  <i class="fa-solid fa-file-signature me-2"></i> Gerar ATA OFICIAL FINAL (Resultado Janeiro/Progressão)
              </button>
@@ -458,6 +457,7 @@
     
     var turmaAtivaSessao = ""; var alunoAtivoSessao = null; var timerInterval = null; var segundosRestantes = 180; var perfilLogado = ""; var bancoDeDadosNuvem = {}; 
     var radarTempoRealInterval = null; 
+    var tipoLoginAtual = ''; var nomeProfLogado = ''; // NOVAS VARIÁVEIS DE LOGIN INTELIGENTE
  
     var criteriosDetalhados = [
       { nome: "Convivência e Comportamento", chave: "convivencia", opcoes: [{ texto: "🟢 Convive bem com todos", escola: [], familia: [] }, { texto: "🟡 Às vezes precisa de orientação para conviver bem", escola: ["Orientar o estudante individualmente."], familia: ["Fortalecer hábitos de estudos em casa."] }, { texto: "🔴 Tem dificuldade de convivência", escola: ["Reforçar os combinados da turma."], familia: ["Fortalecer hábitos de estudos em casa."] }]},
@@ -499,27 +499,52 @@
       if(id === 'tab-datashow' && turmaAtivaSessao) { ligarRadarTempoReal(); } else { desligarRadarTempoReal(); }
     }
     
-    function mostrarSenha(tipo) { 
-      tipoLoginAtual = tipo; 
+    function mostrarLoginProf() { 
+      tipoLoginAtual = 'prof'; 
       document.getElementById('loginOptions').style.display = 'none'; 
-      document.getElementById('loginPassword').style.display = 'block'; 
-      document.getElementById('lblTipoLogin').innerText = tipo === 'admin' ? "Palavra-passe Especialista/Direção:" : "Palavra-passe Professor(a):"; 
-      document.getElementById('inputSenhaAcesso').focus(); 
+      document.getElementById('loginForm').style.display = 'block'; 
+      document.getElementById('lblTipoLogin').innerText = "O seu E-mail Institucional (Registado na Lotação):"; 
+      var inp = document.getElementById('inputAcesso');
+      inp.type = 'email'; inp.placeholder = "professor@escola.mg.gov.br"; inp.value = ''; inp.focus();
+    }
+    
+    function mostrarLoginAdmin() { 
+      tipoLoginAtual = 'admin'; 
+      document.getElementById('loginOptions').style.display = 'none'; 
+      document.getElementById('loginForm').style.display = 'block'; 
+      document.getElementById('lblTipoLogin').innerText = "Palavra-passe Especialista/Direção:"; 
+      var inp = document.getElementById('inputAcesso');
+      inp.type = 'password'; inp.placeholder = "***"; inp.value = ''; inp.focus();
     }
     
     function voltarLogin() { 
-      document.getElementById('loginPassword').style.display = 'none'; 
+      document.getElementById('loginForm').style.display = 'none'; 
       document.getElementById('loginOptions').style.display = 'block'; 
-      document.getElementById('inputSenhaAcesso').value = ''; 
+      document.getElementById('inputAcesso').value = ''; 
     }
     
-    function validarSenha() {
-      var senha = document.getElementById('inputSenhaAcesso').value;
-      if(tipoLoginAtual === 'admin' && senha === 'mestra2026') { 
-        perfilLogado = 'admin'; document.body.classList.remove('role-prof'); document.getElementById('tagPerfilLogado').innerText = "ESPECIALISTA"; liberarSistema(); 
-      } else if (tipoLoginAtual === 'prof' && senha === 'prof2026') { 
-        perfilLogado = 'prof'; document.body.classList.add('role-prof'); document.getElementById('tagPerfilLogado').innerText = "PROFESSOR"; liberarSistema(); 
-      } else { alert("Palavra-passe incorreta!"); document.getElementById('inputSenhaAcesso').value = ''; }
+    function validarAcesso() {
+      var val = document.getElementById('inputAcesso').value.trim();
+      if(!val) return;
+
+      if(tipoLoginAtual === 'admin') { 
+        if(val === 'mestra2026') {
+            perfilLogado = 'admin'; document.body.classList.remove('role-prof'); document.getElementById('tagPerfilLogado').innerText = "ESPECIALISTA"; liberarSistema(); 
+        } else {
+            alert("Palavra-passe incorreta!"); document.getElementById('inputAcesso').value = '';
+        }
+      } else if (tipoLoginAtual === 'prof') { 
+        var lotacao = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]');
+        var profEncontrado = lotacao.find(p => p.email && p.email.toLowerCase() === val.toLowerCase());
+        
+        if (profEncontrado) {
+            perfilLogado = 'prof'; nomeProfLogado = profEncontrado.nome;
+            document.body.classList.add('role-prof'); document.getElementById('tagPerfilLogado').innerText = "PROFESSOR"; 
+            liberarSistema(); 
+        } else { 
+            alert("E-mail não encontrado! Peça à Supervisão para registar o seu e-mail na aba 'Lotação'."); 
+        }
+      }
     }
     
     function liberarSistema() {
@@ -567,6 +592,18 @@
  
       forcarSincronizacaoGeral();
       carregarTabelaLotacaoSalva(); 
+      
+      // AUTO-PREENCHER E BLOQUEAR NOME DO PROFESSOR SE LOGADO COM EMAIL
+      if(perfilLogado === 'prof' && nomeProfLogado) {
+          var selP = document.getElementById('profNomeSelect');
+          if(selP) {
+              setTimeout(() => { 
+                  selP.value = nomeProfLogado; 
+                  selP.disabled = true; // Segurança!
+                  atualizarFiltrosProfessor();
+              }, 500);
+          }
+      }
     }
     
     function limparMemoriaEFocarNaPlanilha(btn) {
@@ -748,12 +785,71 @@
       } 
     }
     
-    function gerarTabelaLotacao() { var t = document.getElementById('txtServidoresInput').value.trim(); if(!t) return; var l = []; t.split('\n').forEach(x => { if(x.trim()) l.push({nome: x.trim().toUpperCase(), cargo: "Professor(a) Regente", turno: "Matutino", turmas: ["6R1"], componentes: ["Língua Portuguesa"]}); }); renderizarTabelaLotacao(l); }
-    function renderizarTabelaLotacao(l) { var b = document.getElementById('tabelaLotacaoCorpo'); b.innerHTML = ''; l.forEach((s) => { var cO = cargosGlobais.map(c => `<option ${s.cargo===c?'selected':''}>${c}</option>`).join(''); var tO = ["Matutino", "Vespertino", "Ambos"].map(t => `<option ${s.turno===t?'selected':''}>${t}</option>`).join(''); var chks = ''; turmasGlobais.forEach(t => { var chk = s.turmas && s.turmas.includes(t) ? 'checked' : ''; chks += `<label style="font-size:0.65rem; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:2px 4px; cursor:pointer;"><input type="checkbox" value="${t}" ${chk} class="t-chk"> ${t}</label>`; }); var cpChks = ''; var sComps = s.componentes || (s.comp ? [s.comp] : []); componentesGlobais.forEach(c => { var chk = sComps.includes(c) ? 'checked' : ''; var dis = s.cargo !== "Professor(a) Regente" ? 'disabled' : ''; cpChks += `<label style="font-size:0.65rem; font-weight:700; background:#fef3c7; border:1px solid #fde68a; border-radius:4px; padding:2px 4px; cursor:pointer;"><input type="checkbox" value="${c}" ${chk} ${dis} class="cp-chk"> ${c}</label>`; }); b.innerHTML += `<tr><td class="fw-bold name-cell" style="font-size:0.75rem;">${s.nome}</td><td><select class="form-select form-select-sm cargo-sel" onchange="mudarCargoLotacao(this)">${cO}</select></td><td><select class="form-select form-select-sm turno-sel">${tO}</select></td><td><div class="d-flex flex-wrap gap-1">${chks}</div></td><td><div class="d-flex flex-wrap gap-1 cp-container">${cpChks}</div></td></tr>`; }); }
+    // NOVA INTELIGÊNCIA NA LOTAÇÃO (ACEITA NOME, E-MAIL E PREENCHE TABELA)
+    function gerarTabelaLotacao() { 
+      var t = document.getElementById('txtServidoresInput').value.trim(); 
+      if(!t) return; 
+      var l = []; 
+      t.split('\n').forEach(linha => { 
+        if(linha.trim()) {
+            var partes = linha.split('\t'); // Tenta separar se vier do Excel (Tabulação)
+            if(partes.length < 2) partes = linha.split(','); // Ou separa por vírgula
+            if(partes.length < 2) partes = linha.split(' - '); // Ou traço
+            
+            var nomeFormatado = partes[0].trim().toUpperCase();
+            var emailFormatado = partes.length > 1 ? partes[1].trim().toLowerCase() : '';
+            
+            l.push({nome: nomeFormatado, email: emailFormatado, cargo: "Professor(a) Regente", turno: "Matutino", turmas: ["6R1"], componentes: ["Língua Portuguesa"]}); 
+        }
+      }); 
+      renderizarTabelaLotacao(l); 
+    }
+    
+    function renderizarTabelaLotacao(l) { 
+      var b = document.getElementById('tabelaLotacaoCorpo'); b.innerHTML = ''; 
+      l.forEach((s) => { 
+        var cO = cargosGlobais.map(c => `<option ${s.cargo===c?'selected':''}>${c}</option>`).join(''); 
+        var tO = ["Matutino", "Vespertino", "Ambos"].map(t => `<option ${s.turno===t?'selected':''}>${t}</option>`).join(''); 
+        
+        var chks = ''; turmasGlobais.forEach(t => { var chk = s.turmas && s.turmas.includes(t) ? 'checked' : ''; chks += `<label style="font-size:0.65rem; font-weight:700; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:2px 4px; cursor:pointer;"><input type="checkbox" value="${t}" ${chk} class="t-chk"> ${t}</label>`; }); 
+        
+        var cpChks = ''; var sComps = s.componentes || (s.comp ? [s.comp] : []); 
+        componentesGlobais.forEach(c => { var chk = sComps.includes(c) ? 'checked' : ''; var dis = s.cargo !== "Professor(a) Regente" ? 'disabled' : ''; cpChks += `<label style="font-size:0.65rem; font-weight:700; background:#fef3c7; border:1px solid #fde68a; border-radius:4px; padding:2px 4px; cursor:pointer;"><input type="checkbox" value="${c}" ${chk} ${dis} class="cp-chk"> ${c}</label>`; }); 
+        
+        b.innerHTML += `<tr>
+            <td><input type="text" class="form-control form-control-sm name-cell fw-bold" value="${s.nome}"></td>
+            <td><input type="text" class="form-control form-control-sm email-cell" placeholder="E-mail de Acesso" value="${s.email || ''}"></td>
+            <td><select class="form-select form-select-sm cargo-sel" onchange="mudarCargoLotacao(this)">${cO}</select></td>
+            <td><select class="form-select form-select-sm turno-sel">${tO}</select></td>
+            <td><div class="d-flex flex-wrap gap-1">${chks}</div></td>
+            <td><div class="d-flex flex-wrap gap-1 cp-container">${cpChks}</div></td>
+        </tr>`; 
+      }); 
+    }
+    
     function mudarCargoLotacao(s) { var isRegente = s.value === "Professor(a) Regente"; s.closest('tr').querySelectorAll('.cp-chk').forEach(c => c.disabled = !isRegente); }
-    function salvarLotacaoPermanente(btn) { var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar...'; var d = []; document.querySelectorAll('#tabelaLotacaoCorpo tr').forEach(tr => { var t=[]; tr.querySelectorAll('.t-chk:checked').forEach(c => t.push(c.value)); var cp=[]; tr.querySelectorAll('.cp-chk:checked').forEach(c => cp.push(c.value)); d.push({nome: tr.querySelector('.name-cell').innerText, cargo: tr.querySelector('.cargo-sel').value, turno: tr.querySelector('.turno-sel').value, turmas: t, componentes: cp }); }); localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(d)); carregarProfessoresSelect(); chamarApiGoogle('salvarLotacaoGlobal', d, function(res) { btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Lotação Guardada!'; setTimeout(() => btn.innerHTML = originalText, 3000); }); }
+    
+    function salvarLotacaoPermanente(btn) { 
+      var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar...'; 
+      var d = []; 
+      document.querySelectorAll('#tabelaLotacaoCorpo tr').forEach(tr => { 
+        var t=[]; tr.querySelectorAll('.t-chk:checked').forEach(c => t.push(c.value)); 
+        var cp=[]; tr.querySelectorAll('.cp-chk:checked').forEach(c => cp.push(c.value)); 
+        d.push({
+            nome: tr.querySelector('.name-cell').value.trim().toUpperCase(), 
+            email: tr.querySelector('.email-cell').value.trim().toLowerCase(),
+            cargo: tr.querySelector('.cargo-sel').value, 
+            turno: tr.querySelector('.turno-sel').value, turmas: t, componentes: cp 
+        }); 
+      }); 
+      localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(d)); carregarProfessoresSelect(); 
+      chamarApiGoogle('salvarLotacaoGlobal', d, function(res) { btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Lotação Guardada!'; setTimeout(() => btn.innerHTML = originalText, 3000); }); 
+    }
+    
     function carregarTabelaLotacaoSalva() { var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || 'null'); if(s) { renderizarTabelaLotacao(s); } carregarProfessoresSelect(); }
+    
     function carregarProfessoresSelect() { var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); var selProf = document.getElementById('profNomeSelect'); var selEsp = document.getElementById('espNomeSelect'); if(selProf) { selProf.innerHTML = '<option value="">Selecione...</option>'; s.forEach(p => { if(p.cargo !== "Especialista / EEB" && p.cargo !== "Diretor(a)") selProf.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); } if(selEsp) { selEsp.innerHTML = '<option value="">Selecione...</option>'; s.forEach(p => { if(p.cargo === "Especialista / EEB" || p.cargo === "Diretor(a)") selEsp.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); } }
+    
     function atualizarFiltrosProfessor() { var profNome = document.getElementById('profNomeSelect').value; var profTurma = document.getElementById('profTurmaSelect'); var profComp = document.getElementById('profCompSelect'); profTurma.innerHTML = '<option value="">Turma...</option>'; profComp.innerHTML = '<option value="">Componente...</option>'; if(!profNome) return; var lotacao = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); var profDados = lotacao.find(p => p.nome === profNome); if(profDados) { var comps = profDados.componentes || []; if(comps.length === 0 && profDados.comp) comps.push(profDados.comp); comps.forEach(c => profComp.innerHTML += `<option value="${c}">${c}</option>`); if(profDados.turmas) { profDados.turmas.forEach(t => profTurma.innerHTML += `<option value="${t}">${t}</option>`); } } }
     
     // MÓDULO DO PROFESSOR (COM PONTOS VISÍVEIS)
@@ -774,7 +870,6 @@
       var chaveQualitativa = 'mestra_prof_' + turma + '_' + comp + '_' + trim; 
       var dadosSalvos = JSON.parse(localStorage.getItem(chaveQualitativa) || '{"alunos":[], "caracteristicas":"", "intervencaoSN":"Sim", "metodologia":""}'); 
       
-      // LÓGICA DE INTELIGÊNCIA DE FASES
       var chaveBusca = trim === 'Estudos Independentes' ? '3º Trimestre' : trim;
       var resultadosOficiais = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + chaveBusca) || '{}');
       var pontuacoesExatas = JSON.parse(localStorage.getItem('mestra_pontos_' + turma + '_' + chaveBusca) || '{}');
@@ -791,7 +886,6 @@
             statusAtual = resultadosOficiais[a.nome][comp];
         }
         
-        // RECUPERA OS PONTOS EXATOS COM A SIGLA (F: X) PARA O PROFESSOR VER
         var pontosHtml = '- pts';
         if(pontuacoesExatas[a.nome] && pontuacoesExatas[a.nome][comp]) {
             pontosHtml = pontuacoesExatas[a.nome][comp];
@@ -845,7 +939,6 @@
       
       var aval = { turma: turma, componente: comp, trimestre: trim, professor: document.getElementById('profNomeSelect').value, caracteristicas: document.getElementById('profCaracteristicas').value, intervencaoSN: document.getElementById('profIntervencaoSN').value, metodologia: document.getElementById('profMetodologias').value, alunos: [] }; 
       
-      // O SISTEMA SABE QUE EI GRAVA NO 3º TRIMESTRE OFICIAL
       var chaveGravar = trim === 'Estudos Independentes' ? '3º Trimestre' : trim;
       var resultadosOficiais = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + chaveGravar) || '{}');
       
