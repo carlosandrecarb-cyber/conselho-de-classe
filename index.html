@@ -53,7 +53,6 @@
     .tag-aee { background: #e0e7ff; color: #4f46e5; border: 1px solid #4f46e5; }
     .tag-pdi { background: #fee2e2; color: #b91c1c; border: 1px solid #b91c1c; }
     .tag-sigla { background: #fef3c7; color: #b45309; border: 1px solid #b45309; }
-    /* DASHBOARD BANCO DE DADOS */
     .dashboard-header { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
     .dash-card { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
     .dash-card .num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 5px; }
@@ -118,7 +117,7 @@
           <input type="text" id="inputAcesso" class="input-mestra mb-3 text-center fs-5" placeholder="***" onkeydown="if(event.key === 'Enter') validarAcesso()">
           <div class="d-flex gap-2">
             <button class="btn btn-secondary w-50 fw-bold py-2" onclick="voltarLogin()">Voltar</button>
-            <button class="btn btn-success w-50 fw-bold py-2" onclick="validarAcesso()">Entrar <i class="fa-solid fa-arrow-right-to-bracket ms-1"></i></button>
+            <button class="btn btn-success w-50 fw-bold py-2" onclick="validarAcesso()" title="Clique para entrar no sistema">Entrar <i class="fa-solid fa-arrow-right-to-bracket ms-1"></i></button>
           </div>
         </div>
       </div>
@@ -143,7 +142,7 @@
         <button class="pill-btn admin-only" style="color: #059669; font-weight: 800;" onclick="switchTab('tab-resultados', this)"><i class="fa-solid fa-graduation-cap"></i> C. de Classe Trimestral/Final</button>
         <button class="pill-btn admin-only" onclick="switchTab('tab-banco', this)"><i class="fa-solid fa-database"></i> Banco</button>
         <button class="pill-btn admin-only" onclick="switchTab('tab-relatorios', this)"><i class="fa-solid fa-print"></i> Relatórios</button>
-        <button class="pill-btn text-danger ms-2" onclick="location.reload()"><i class="fa-solid fa-power-off"></i> Sair</button>
+        <button class="pill-btn text-danger ms-2" onclick="location.reload()" title="Sair da sua conta e voltar à tela inicial"><i class="fa-solid fa-power-off"></i> Sair</button>
       </nav>
     </header>
  
@@ -153,8 +152,8 @@
         <h3 class="fw-bold text-dark">Plataforma Inteligente de Governança Pedagógica</h3>
         <p class="text-muted mx-auto mb-4" style="max-width: 600px;">Navegue através dos menus acima. Todos os dados são sincronizados com a folha de cálculo oficial da escola.</p>
         <div class="d-flex justify-content-center flex-wrap gap-3">
-          <button class="btn btn-primary fw-bold px-4 py-3" onclick="forcarSincronizacaoGeral(this)"><i class="fa-solid fa-arrows-rotate me-2"></i>Sincronizar Alunos e Notas com a Planilha</button>
-          <button class="btn btn-danger fw-bold px-4 py-3 shadow" onclick="limparMemoriaEFocarNaPlanilha(this)"><i class="fa-solid fa-broom me-2"></i>Resolver Problemas (Limpar Cache e Puxar do Zero)</button>
+          <button class="btn btn-primary fw-bold px-4 py-3" onclick="forcarSincronizacaoGeral(this)" title="Puxa os dados mais recentes de todos os professores diretamente da Nuvem"><i class="fa-solid fa-arrows-rotate me-2"></i>Sincronizar Alunos e Notas com a Planilha</button>
+          <button class="btn btn-danger fw-bold px-4 py-3 shadow" onclick="limparMemoriaEFocarNaPlanilha(this)" title="Usa esta opção apenas se o sistema estiver com erros (apaga o cache)"><i class="fa-solid fa-broom me-2"></i>Resolver Problemas (Limpar Cache e Puxar do Zero)</button>
         </div>
       </div>
     </section>
@@ -164,7 +163,7 @@
         <div class="card-clean">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h4 class="fw-bold m-0">Gestão Central de Estudantes</h4>
-              <button class="btn btn-sm btn-primary fw-bold" onclick="forcarSincronizacaoGeral(this)"><i class="fa-solid fa-cloud-arrow-down me-1"></i>Puxar Estudantes da Planilha</button>
+              <button class="btn btn-sm btn-primary fw-bold" onclick="forcarSincronizacaoGeral(this)" title="Puxa os estudantes atualizados da planilha oficial"><i class="fa-solid fa-cloud-arrow-down me-1"></i>Puxar Estudantes da Planilha</button>
             </div>
             <div class="row g-3 mb-3">
               <div class="col-md-3">
@@ -175,7 +174,7 @@
                 <label class="form-label text-primary">Cole a lista de estudantes novos (um por linha):</label>
                 <div class="input-group">
                   <textarea id="txtListaEstudantes" class="input-mestra" rows="1"></textarea>
-                  <button class="btn btn-primary px-4" onclick="importarListaEstudantes()">Importar para a Turma</button>
+                  <button class="btn btn-primary px-4" onclick="importarListaEstudantes()" title="Adiciona os estudantes colados acima à turma selecionada">Importar para a Turma</button>
                 </div>
               </div>
             </div>
@@ -189,73 +188,77 @@
                 <tbody id="tabelaEstudantesCorpo"><tr><td colspan="5" class="text-center fw-bold py-4 text-muted">Selecione a turma acima ou Clique em Sincronizar.</td></tr></tbody>
               </table>
             </div>
-            <button class="btn-mestra w-100 py-3 admin-only" onclick="salvarBaseEstudantes(this)"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Guardar Modificações e Enviar para a Planilha</button>
+            <button class="btn-mestra w-100 py-3 admin-only" onclick="salvarBaseEstudantes(this)" title="Envia e salva as alterações feitas na tabela acima para a Nuvem"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Guardar Modificações e Enviar para a Planilha</button>
         </div>
     </section>
     
-    <!-- LOTAÇÃO OTIMIZADA PARA IMPORTAR E-MAILS DO EXCEL -->
+    <!-- LOTAÇÃO OTIMIZADA PARA IMPORTAR E-MAILS DO EXCEL COM LIXEIRA -->
     <section id="tab-equipe" class="view-panel admin-only">
         <div class="card-clean">
             <h4 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-users-gear text-primary me-2"></i>Lotação de Profissionais</h4>
             <div class="input-group mb-3">
                 <textarea id="txtServidoresInput" class="input-mestra" rows="2" placeholder="Cole a lista (Nome e E-mail juntos, Ex: João Silva, joao@escola.com)"></textarea>
-                <button class="btn btn-success px-4 fw-bold" onclick="gerarTabelaLotacao()">Gerar Tabela</button>
+                <button class="btn btn-success px-4 fw-bold" onclick="gerarTabelaLotacao()" title="Transforma o texto colado acima em linhas na tabela abaixo">Gerar Tabela</button>
             </div>
             <div class="table-responsive mb-3 admin-lock table-container-scroll">
               <table class="table table-bordered table-striped m-0 align-middle" style="font-size: 0.8rem;">
-                <thead><tr><th>Nome do Profissional</th><th>E-mail de Acesso (Login)</th><th>Cargo</th><th>Turno</th><th>Turmas</th><th>Componente(s)</th></tr></thead>
+                <thead><tr><th>Nome do Profissional</th><th>E-mail de Acesso (Login)</th><th>Cargo</th><th>Turno</th><th>Turmas</th><th>Componente(s)</th><th width="5%">Ação</th></tr></thead>
                 <tbody id="tabelaLotacaoCorpo"></tbody>
               </table>
             </div>
-            <button class="btn-mestra w-100 py-3" onclick="salvarLotacaoPermanente(this)"><i class="fa-solid fa-floppy-disk me-2"></i> Guardar Lotação Permanente</button>
+            <button class="btn-mestra w-100 py-3" onclick="salvarLotacaoPermanente(this)" title="Guarda a lista de professores e e-mails permitidos para fazer login no sistema"><i class="fa-solid fa-floppy-disk me-2"></i> Guardar Lotação Permanente</button>
         </div>
     </section>
     
-    <!-- PROFESSOR -->
+    <!-- MÓDULO DO PROFESSOR (COM ABAS DE FASES) -->
     <section id="tab-professor" class="view-panel">
       <div class="card-clean">
         <h4 class="fw-bold mb-3"><i class="fa-solid fa-chalkboard-user text-primary me-2"></i>Módulo do Professor (Avaliação e Resultados)</h4>
         
         <div class="row g-3 mb-3">
-          <div class="col-md-4"><label class="form-label fw-bold">O Seu Nome:</label><select id="profNomeSelect" class="form-select" onchange="atualizarFiltrosProfessor()"></select></div>
-          <div class="col-md-3"><label class="form-label fw-bold">Componente:</label><select id="profCompSelect" class="form-select"></select></div>
-          <div class="col-md-3"><label class="form-label fw-bold">Turma:</label><select id="profTurmaSelect" class="form-select"></select></div>
-          <div class="col-md-2">
-              <label class="form-label fw-bold">Fase:</label>
-              <select id="profTrimSelect" class="form-select border-primary" style="font-weight:bold;">
-                  <option value="1º Trimestre">1º Trimestre</option>
-                  <option value="2º Trimestre" selected>2º Trimestre</option>
-                  <option value="3º Trimestre">3º Trimestre</option>
-                  <option value="Estudos Independentes" style="color:#92400e;">Estudos Independentes (EI)</option>
-              </select>
-          </div>
+          <div class="col-md-5"><label class="form-label fw-bold">O Seu Nome:</label><select id="profNomeSelect" class="form-select" onchange="atualizarFiltrosProfessor()"></select></div>
+          <div class="col-md-4"><label class="form-label fw-bold">Componente:</label><select id="profCompSelect" class="form-select" onchange="exibirAbasFasesProf()"></select></div>
+          <div class="col-md-3"><label class="form-label fw-bold">Turma:</label><select id="profTurmaSelect" class="form-select" onchange="exibirAbasFasesProf()"></select></div>
         </div>
         
-        <button class="btn btn-primary mb-3 fw-bold" onclick="carregarTurmaParaProfessor()"><i class="fa-solid fa-magnifying-glass me-2"></i>Procurar Estudantes</button>
-        
-        <div id="areaTrabalhoProfessor" style="display: none;">
-          <div class="table-responsive mb-3 table-container-scroll">
-            <table class="table table-bordered m-0 align-middle">
-              <thead>
-                <tr>
-                  <th style="width: 5%;">Nº</th>
-                  <th style="width: 25%; text-align: left;">Nome do Estudante</th>
-                  <th style="background:#0f172a; color:#facc15; font-size: 0.8rem; border: 2px solid #facc15;">RESULTADO<br>FINAL</th>
-                  <th style="background:#b91c1c;">Abaixo<br>Média</th>
-                  <th style="background:#b45309;">Infre-<br>quente</th>
-                  <th style="background:#b45309;">Motivo Afastamento</th>
-                  <th style="background:#0369a1;">Reforço<br>Escolar</th>
-                  <th style="background:#4338ca;">Prog.<br>Parcial</th>
-                  <th style="background:#475569;">Não<br>Alfab.</th>
-                </tr>
-              </thead>
-              <tbody id="tabelaProfessorCorpo"></tbody>
-            </table>
-          </div>
-          <textarea id="profCaracteristicas" class="input-mestra mb-2" placeholder="Características da turma"></textarea>
-          <select id="profIntervencaoSN" class="form-select mb-2"><option>Sim</option><option>Não</option></select>
-          <textarea id="profMetodologias" class="input-mestra mb-3" placeholder="Metodologias"></textarea>
-          <button class="btn btn-success w-100 py-3 fw-bold shadow-sm" onclick="salvarMatrizProfessor(this)"><i class="fa-solid fa-floppy-disk me-2"></i> Gravar Matriz e Enviar Resultados Oficiais</button>
+        <!-- NOVAS ABAS DE FASE VISÍVEIS -->
+        <div id="containerFasesProfessor" style="display:none;">
+            <label class="form-label fw-bold text-primary mb-2"><i class="fa-solid fa-layer-group me-1"></i> Selecione a Fase da Avaliação:</label>
+            <div class="nav-pills-modern mb-3" style="background: white; border-color: #94a3b8;">
+               <button class="pill-btn active" onclick="mudarFaseProf('1º Trimestre', this)">1º Trim</button>
+               <button class="pill-btn" onclick="mudarFaseProf('2º Trimestre', this)">2º Trim</button>
+               <button class="pill-btn" onclick="mudarFaseProf('3º Trimestre', this)">3º Trim</button>
+               <button class="pill-btn" style="color:#92400e;" onclick="mudarFaseProf('Estudos Independentes', this)">Est. Independentes</button>
+               <button class="pill-btn" style="color:#0f172a; font-weight: 900;" onclick="mudarFaseProf('FINAL', this)">Situação Final <i class="fa-solid fa-eye ms-1"></i></button>
+            </div>
+            
+            <div id="areaTrabalhoProfessor" style="display: none;">
+              <div class="table-responsive mb-3 table-container-scroll">
+                <table class="table table-bordered m-0 align-middle">
+                  <thead>
+                    <tr>
+                      <th style="width: 5%;">Nº</th>
+                      <th style="width: 25%; text-align: left;">Nome do Estudante</th>
+                      <th style="background:#0f172a; color:#facc15; font-size: 0.8rem; border: 2px solid #facc15;">RESULTADO<br>FINAL</th>
+                      <th style="background:#b91c1c;">Abaixo<br>Média</th>
+                      <th style="background:#b45309;">Infre-<br>quente</th>
+                      <th style="background:#b45309;">Motivo Afastamento</th>
+                      <th style="background:#0369a1;">Reforço<br>Escolar</th>
+                      <th style="background:#4338ca;">Prog.<br>Parcial</th>
+                      <th style="background:#475569;">Não<br>Alfab.</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabelaProfessorCorpo"></tbody>
+                </table>
+              </div>
+              
+              <div id="divCaracteristicasProf">
+                  <textarea id="profCaracteristicas" class="input-mestra mb-2" placeholder="Características da turma"></textarea>
+                  <select id="profIntervencaoSN" class="form-select mb-2"><option>Sim</option><option>Não</option></select>
+                  <textarea id="profMetodologias" class="input-mestra mb-3" placeholder="Metodologias"></textarea>
+              </div>
+              <button id="btnSalvarMatrizProf" class="btn btn-success w-100 py-3 fw-bold shadow-sm" onclick="salvarMatrizProfessor(this)" title="Grava as alterações feitas no seu dispositivo e envia para a Nuvem oficial. Sem sobrepor notas dos colegas!"><i class="fa-solid fa-floppy-disk me-2"></i> Gravar Matriz e Enviar Resultados Oficiais</button>
+            </div>
         </div>
       </div>
     </section>
@@ -275,7 +278,7 @@
                 </select>
             </div>
         </div>
-        <button class="btn btn-primary mb-3" onclick="carregarMatrizEspecialista()">Carregar Turma</button>
+        <button class="btn btn-primary mb-3" onclick="carregarMatrizEspecialista()" title="Puxa os relatórios qualitativos da turma e fase selecionada">Carregar Turma</button>
         <div id="areaTrabalhoEspecialista" style="display:none;">
             <textarea id="espIntPedag" class="input-mestra mb-2" placeholder="Intervenção"></textarea>
             <textarea id="espBuscaAtiva" class="input-mestra mb-2" placeholder="Busca Ativa"></textarea>
@@ -283,7 +286,7 @@
             <textarea id="espOutrosEnc" class="input-mestra mb-3" placeholder="Outros Encaminhamentos"></textarea>
             <input type="text" id="espSemLibras" class="input-mestra mb-3" placeholder="Falta Libras">
             <textarea id="espSemPdiAuto" class="input-mestra bg-light text-danger mb-3" readonly></textarea>
-            <button class="btn btn-success w-100 py-3" onclick="salvarMatrizEspecialista(this)">Gravar Matriz Especialista</button>
+            <button class="btn btn-success w-100 py-3" onclick="salvarMatrizEspecialista(this)" title="Gravar as notas da supervisão">Gravar Matriz Especialista</button>
         </div>
       </div>
     </section>
@@ -296,7 +299,6 @@
           <div class="d-flex gap-2 align-items-center">
             <select id="filtroTrimestreBanco" class="form-select fw-bold border-secondary" onchange="renderizarDashboardBanco()">
                 <option>1º Trimestre</option><option selected>2º Trimestre</option><option>3º Trimestre</option>
-                <option>Estudos Independentes</option><option>FINAL</option>
             </select>
             <select id="filtroTurmaBanco" class="form-select fw-bold border-primary" onchange="renderizarDashboardBanco()"></select>
           </div>
@@ -327,13 +329,13 @@
         <p class="text-muted mb-5 mx-auto" style="max-width: 600px;">Aqui o(a) Especialista gere as notas e comunicados de intervenção. Os atalhos abrem noutra aba para segurança do sistema.</p>
         <div class="row g-4 justify-content-center">
            <div class="col-md-8 d-flex flex-column gap-3 text-start">
-             <button class="btn btn-success py-3 fw-bold shadow-sm" onclick="window.open('matriz_resultados.html', '_blank')">
+             <button class="btn btn-success py-3 fw-bold shadow-sm" onclick="window.open('matriz_resultados.html', '_blank')" title="Abre a Matriz Geral para fazer as importações do Excel e marcar resultados">
                  <i class="fa-solid fa-table-list me-2"></i> 1. Matriz de Resultados (Importar DED, Lançar REC e EI)
              </button>
-             <button class="btn btn-outline-success py-3 fw-bold shadow-sm" onclick="window.open('bilhetes_recuperacao.html', '_blank')">
+             <button class="btn btn-outline-success py-3 fw-bold shadow-sm" onclick="window.open('bilhetes_recuperacao.html', '_blank')" title="Abre a página que imprime os bilhetes devidamente enquadrados com a legislação">
                  <i class="fa-solid fa-envelope-open-text me-2"></i> 2. Imprimir Bilhetes (Aprovados, REC e Final)
              </button>
-             <button class="btn btn-outline-dark py-3 fw-bold shadow-sm" onclick="window.open('listas_recuperacao.html', '_blank')">
+             <button class="btn btn-outline-dark py-3 fw-bold shadow-sm" onclick="window.open('listas_recuperacao.html', '_blank')" title="Gera as listas de assinatura com o nome de quem fará a prova no dia">
                  <i class="fa-solid fa-clipboard-list me-2"></i> 3. Gerar Pautas Diárias de Assinatura (Dias de Prova)
              </button>
            </div>
@@ -348,13 +350,13 @@
         <p class="text-muted mb-5">Estas atas referem-se apenas à avaliação descritiva e qualitativa da equipa.</p>
         <div class="row">
            <div class="col-md-6 mx-auto d-flex flex-column gap-3">
-             <button class="btn btn-outline-primary py-3 fw-bold shadow-sm admin-only" onclick="window.open('bilhetes.html', '_blank')">
+             <button class="btn btn-outline-primary py-3 fw-bold shadow-sm admin-only" onclick="window.open('bilhetes.html', '_blank')" title="Imprime o descritivo de comportamentos preenchido via Datashow">
                  <i class="fa-solid fa-file-pdf me-2"></i> Imprimir Bilhetes (Pareceres Descritivos)
              </button>
-             <button class="btn btn-primary py-3 fw-bold shadow-sm admin-only" onclick="window.open('ata.html', '_blank')">
+             <button class="btn btn-primary py-3 fw-bold shadow-sm admin-only" onclick="window.open('ata.html', '_blank')" title="Gera a Ata que resume o conselho de comportamento e avaliações do Datashow">
                  <i class="fa-solid fa-users-rectangle me-2"></i> Gerar Ata Qualitativa e Descritiva
              </button>
-             <button class="btn btn-danger py-3 fw-bold shadow-sm admin-only mt-3" onclick="window.open('ata_final.html', '_blank')">
+             <button class="btn btn-danger py-3 fw-bold shadow-sm admin-only mt-3" onclick="window.open('ata_final.html', '_blank')" title="Gera o documento final oficial para o conselho da direção">
                  <i class="fa-solid fa-file-signature me-2"></i> Gerar ATA OFICIAL FINAL (Resultado Janeiro/Progressão)
              </button>
            </div>
@@ -372,7 +374,6 @@
             <span id="statusRadar" class="pulse-radar" style="font-size: 0.85rem; color: #10b981; font-weight: 800; display: none; background: #ecfdf5; padding: 6px 12px; border-radius: 20px; border: 1px solid #34d399;"><i class="fa-solid fa-satellite-dish"></i> Sincronização ON</span>
             <select id="sessaoTrimestre" class="form-select fw-bold border-secondary">
                 <option>1º Trimestre</option><option selected>2º Trimestre</option><option>3º Trimestre</option>
-                <option>Estudos Independentes</option><option>FINAL</option>
             </select>
           </div>
         </div>
@@ -458,6 +459,7 @@
     var turmaAtivaSessao = ""; var alunoAtivoSessao = null; var timerInterval = null; var segundosRestantes = 180; var perfilLogado = ""; var bancoDeDadosNuvem = {}; 
     var radarTempoRealInterval = null; 
     var tipoLoginAtual = ''; var nomeProfLogado = ''; 
+    var profFaseAtual = '1º Trimestre'; // NOVA VARIÁVEL PARA O PROFESSOR
  
     var criteriosDetalhados = [
       { nome: "Convivência e Comportamento", chave: "convivencia", opcoes: [{ texto: "🟢 Convive bem com todos", escola: [], familia: [] }, { texto: "🟡 Às vezes precisa de orientação para conviver bem", escola: ["Orientar o estudante individualmente."], familia: ["Fortalecer hábitos de estudos em casa."] }, { texto: "🔴 Tem dificuldade de convivência", escola: ["Reforçar os combinados da turma."], familia: ["Fortalecer hábitos de estudos em casa."] }]},
@@ -474,7 +476,6 @@
  
     var encEscolaOpcoes = ["Reforçar os combinados da turma.", "Orientar o estudante individualmente.", "Reforçar positivamente os avanços.", "Propor atividades de reforço.", "Realizar agrupamentos temporários", "Propor atividades diferenciadas.", "Organizar o mapeamento na sala", "Valorizar as contribuições do estudante.", "Solicitar a presença da família.", "Criar oportunidades de participação.", "Orientar sobre rotina de estudos.", "Orientar o estudante sobre planejamento e organização.", "Acompanhar a frequência escolar.", "Orientar sobre a importância da assiduidade.", "Comunicar a família sobre as faltas.", "Monitorar a frequência do estudante.", "Agendar reunião com a família para acompanhamento."];
     var encFamiliaOpcoes = ["Acompanhar a organização dos materiais.", "Estabelecer rotina para realização das tarefas de casa", "Não deixar o filho faltar sem justificativa", "Acompanhar os cadernos do filho", "Visitar a escola de vez em quando", "Fortalecer hábitos de estudos em casa", "Incentivar a leitura em casa", "Verificar sempre o uniforme escolar"];
- 
     var sugestoesObservacao = ["Demonstra respeito às regras de convivência.", "Avança na aprendizagem com apoio e orientação.", "Tem apresentado evolução na organização.", "Realiza as atividades com orientação.", "Tem apresentado melhora no cumprimento das atividades.", "Apresenta dificuldade em seguir combinados.", "Demonstra desrespeito ao professor.", "Tem atitudes que geram conflitos.", "Em alguns momentos, perde o foco.", "Apresenta muita inquietação durante as aulas.", "Não tem demonstrado interesse pelas atividades.", "As muitas faltas têm prejudicado a aprendizagem.", "Demonstra evolução na convivência escolar.", "Envolve-se em confusões.", "Traz brinquedos de casa e por isso perde o foco nas aulas."];
     
     function autoExpand(field) {
@@ -842,6 +843,7 @@
             <td><select class="form-select form-select-sm turno-sel">${tO}</select></td>
             <td><div class="d-flex flex-wrap gap-1">${chks}</div></td>
             <td><div class="d-flex flex-wrap gap-1 cp-container">${cpChks}</div></td>
+            <td class="text-center"><button class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()" title="Excluir este servidor da Lotação"><i class="fa-solid fa-trash"></i></button></td>
         </tr>`; 
       }); 
     }
@@ -869,14 +871,51 @@
     
     function carregarProfessoresSelect() { var s = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); var selProf = document.getElementById('profNomeSelect'); var selEsp = document.getElementById('espNomeSelect'); if(selProf) { selProf.innerHTML = '<option value="">Selecione...</option>'; s.forEach(p => { if(p.cargo !== "Especialista / EEB" && p.cargo !== "Diretor(a)") selProf.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); } if(selEsp) { selEsp.innerHTML = '<option value="">Selecione...</option>'; s.forEach(p => { if(p.cargo === "Especialista / EEB" || p.cargo === "Diretor(a)") selEsp.innerHTML += `<option value="${p.nome}">${p.nome}</option>`; }); } }
     
-    function atualizarFiltrosProfessor() { var profNome = document.getElementById('profNomeSelect').value; var profTurma = document.getElementById('profTurmaSelect'); var profComp = document.getElementById('profCompSelect'); profTurma.innerHTML = '<option value="">Turma...</option>'; profComp.innerHTML = '<option value="">Componente...</option>'; if(!profNome) return; var lotacao = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); var profDados = lotacao.find(p => p.nome === profNome); if(profDados) { var comps = profDados.componentes || []; if(comps.length === 0 && profDados.comp) comps.push(profDados.comp); comps.forEach(c => profComp.innerHTML += `<option value="${c}">${c}</option>`); if(profDados.turmas) { profDados.turmas.forEach(t => profTurma.innerHTML += `<option value="${t}">${t}</option>`); } } }
+    function atualizarFiltrosProfessor() { 
+        var profNome = document.getElementById('profNomeSelect').value; 
+        var profTurma = document.getElementById('profTurmaSelect'); 
+        var profComp = document.getElementById('profCompSelect'); 
+        profTurma.innerHTML = '<option value="">Turma...</option>'; 
+        profComp.innerHTML = '<option value="">Componente...</option>'; 
+        document.getElementById('containerFasesProfessor').style.display = 'none';
+        if(!profNome) return; 
+        var lotacao = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); 
+        var profDados = lotacao.find(p => p.nome === profNome); 
+        if(profDados) { 
+            var comps = profDados.componentes || []; 
+            if(comps.length === 0 && profDados.comp) comps.push(profDados.comp); 
+            comps.forEach(c => profComp.innerHTML += `<option value="${c}">${c}</option>`); 
+            if(profDados.turmas) { profDados.turmas.forEach(t => profTurma.innerHTML += `<option value="${t}">${t}</option>`); } 
+        } 
+    }
+
+    // NOVA GESTÃO DE ABAS (FASES DA AVALIAÇÃO DO PROFESSOR)
+    function exibirAbasFasesProf() {
+        var turma = document.getElementById('profTurmaSelect').value;
+        var comp = document.getElementById('profCompSelect').value;
+        if(turma && comp) {
+            document.getElementById('containerFasesProfessor').style.display = 'block';
+            mudarFaseProf(profFaseAtual, document.getElementById('btnFaseProf_1') || document.querySelector('.pill-btn.active'));
+        } else {
+            document.getElementById('containerFasesProfessor').style.display = 'none';
+            document.getElementById('areaTrabalhoProfessor').style.display = 'none';
+        }
+    }
+
+    function mudarFaseProf(fase, btn) {
+        profFaseAtual = fase;
+        if(btn) {
+            var container = btn.closest('.nav-pills-modern');
+            container.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+        carregarTurmaParaProfessor();
+    }
     
     function carregarTurmaParaProfessor() { 
       var turma = document.getElementById('profTurmaSelect').value; 
       var prof = document.getElementById('profNomeSelect').value; 
       var comp = document.getElementById('profCompSelect').value;
-      var trim = document.getElementById('profTrimSelect').value;
-      
       if(!turma || !prof || !comp) return; 
       
       var alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
@@ -885,12 +924,8 @@
       document.getElementById('areaTrabalhoProfessor').style.display = 'block'; 
       var tbody = document.getElementById('tabelaProfessorCorpo'); tbody.innerHTML = ''; 
       
-      var chaveQualitativa = 'mestra_prof_' + turma + '_' + comp + '_' + trim; 
+      var chaveQualitativa = 'mestra_prof_' + turma + '_' + comp + '_' + profFaseAtual; 
       var dadosSalvos = JSON.parse(localStorage.getItem(chaveQualitativa) || '{"alunos":[], "caracteristicas":"", "intervencaoSN":"Sim", "metodologia":""}'); 
-      
-      var chaveBusca = trim === 'Estudos Independentes' ? '3º Trimestre' : trim;
-      var resultadosOficiais = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + chaveBusca) || '{}');
-      var pontuacoesExatas = JSON.parse(localStorage.getItem('mestra_pontos_' + turma + '_' + chaveBusca) || '{}');
       
       document.getElementById('profCaracteristicas').value = dadosSalvos.caracteristicas || ''; 
       document.getElementById('profIntervencaoSN').value = dadosSalvos.intervencaoSN || 'Sim'; 
@@ -899,71 +934,95 @@
       alunos.forEach(a => { 
         var bd = dadosSalvos.alunos.find(x => x.nome === a.nome) || {}; 
         var statusAtual = 'APROVADO';
-        
-        if(resultadosOficiais[a.nome] && resultadosOficiais[a.nome][comp]) {
-            statusAtual = resultadosOficiais[a.nome][comp];
-        }
-        
-        var pontosHtml = '- pts';
-        if(pontuacoesExatas[a.nome] && pontuacoesExatas[a.nome][comp]) {
-            pontosHtml = pontuacoesExatas[a.nome][comp];
-        }
 
-        var opcoesExtra = '';
-        if (trim === 'Estudos Independentes') {
-            opcoesExtra = `
-                <option value="APROVADO" ${statusAtual==='APROVADO'?'selected':''}>✔ Aprovado</option>
-                <option value="EI" ${statusAtual==='EI'?'selected':''}>🟡 EI (Est. Indep.)</option>
-                <option value="PROVA" ${statusAtual==='PROVA'?'selected':''}>🟠 Prova Eletr. SEE/MG</option>
-                <option value="REP" ${statusAtual==='REP'?'selected':''}>⚫ Reprovado</option>
-            `;
-        } else if (trim === '3º Trimestre') {
-            opcoesExtra = `
-                <option value="APROVADO" ${statusAtual==='APROVADO'?'selected':''}>✔ Aprovado</option>
-                <option value="REC" ${statusAtual==='REC'?'selected':''}>🔴 Recuperação</option>
-                <option value="EI" ${statusAtual==='EI'?'selected':''}>🟡 EI (Est. Indep.)</option>
-                <option value="PROVA" ${statusAtual==='PROVA'?'selected':''}>🟠 Prova Eletr. SEE/MG</option>
-                <option value="REP" ${statusAtual==='REP'?'selected':''}>⚫ Reprovado</option>
-            `;
+        if(profFaseAtual === 'FINAL') {
+             var rFinal = JSON.parse(localStorage.getItem('mestra_resultados_final_' + turma) || '{}');
+             var sitF = rFinal[a.nome] || { status: 'Não Avaliado', prog: '' };
+             var colorFinal = '#0f172a';
+             if(sitF.status.includes('REPROVADO')) colorFinal = '#991b1b';
+             if(sitF.status.includes('JANEIRO')) colorFinal = '#9a3412';
+             if(sitF.status.includes('PROGRESSÃO')) colorFinal = '#92400e';
+             if(sitF.status === 'APROVADO(A)') colorFinal = '#065f46';
+
+             tbody.innerHTML += `
+               <tr>
+                 <td class="text-center text-muted fw-bold">${a.numero}</td>
+                 <td class="fw-bold prof-nome-aluno">${a.nome}</td>
+                 <td colspan="7" class="text-center fw-bold" style="color: ${colorFinal}; background: #f8fafc; padding: 15px;">
+                    Situação Final (Ata do Conselho): ${sitF.status} 
+                    ${sitF.prog ? '<br><span style="font-size:0.75rem; color:#b91c1c;">(Componentes: ' + sitF.prog + ')</span>' : ''}
+                 </td>
+               </tr>
+             `;
         } else {
-            opcoesExtra = `
-                <option value="APROVADO" ${statusAtual==='APROVADO'?'selected':''}>✔ Aprovado</option>
-                <option value="REC" ${statusAtual==='REC'?'selected':''}>🔴 Recuperação</option>
-            `;
-        }
+            var chaveBusca = profFaseAtual === 'Estudos Independentes' ? '3º Trimestre' : profFaseAtual;
+            var resultadosOficiais = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + chaveBusca) || '{}');
+            var pontuacoesExatas = JSON.parse(localStorage.getItem('mestra_pontos_' + turma + '_' + chaveBusca) || '{}');
+            
+            if(resultadosOficiais[a.nome] && resultadosOficiais[a.nome][comp]) {
+                statusAtual = resultadosOficiais[a.nome][comp];
+            }
+            
+            var pontosHtml = '- pts';
+            if(pontuacoesExatas[a.nome] && pontuacoesExatas[a.nome][comp]) {
+                pontosHtml = pontuacoesExatas[a.nome][comp];
+            }
 
-        var corFundo = statusAtual === 'REC' ? '#fee2e2' : (statusAtual === 'EI' ? '#fef3c7' : (statusAtual === 'PROVA' ? '#ffedd5' : (statusAtual === 'REP' ? '#f1f5f9' : '#d1fae5')));
-        var corTexto = statusAtual === 'REC' ? '#991b1b' : (statusAtual === 'EI' ? '#92400e' : (statusAtual === 'PROVA' ? '#9a3412' : (statusAtual === 'REP' ? '#0f172a' : '#065f46')));
-        
-        tbody.innerHTML += `
-          <tr>
-            <td class="text-center text-muted fw-bold">${a.numero}</td>
-            <td class="fw-bold prof-nome-aluno">${a.nome}</td>
-            <td style="padding: 6px; text-align: center;">
-              <div style="font-size: 0.8rem; font-weight: 800; color: #1e293b; margin-bottom: 6px; line-height: 1.2; background: #f1f5f9; padding: 4px; border-radius: 4px; border: 1px solid #cbd5e1;">${pontosHtml}</div>
-              <select class="form-select form-select-sm fw-bold sel-status-prof" style="width: 140px; font-size:0.7rem; background-color: ${corFundo}; color: ${corTexto}; border-color: ${corTexto}; margin: 0 auto;" onchange="
-                 this.style.backgroundColor = this.value === 'REC' ? '#fee2e2' : (this.value === 'EI' ? '#fef3c7' : (this.value === 'PROVA' ? '#ffedd5' : (this.value === 'REP' ? '#f1f5f9' : '#d1fae5'))); 
-                 this.style.color = this.value === 'REC' ? '#991b1b' : (this.value === 'EI' ? '#92400e' : (this.value === 'PROVA' ? '#9a3412' : (this.value === 'REP' ? '#0f172a' : '#065f46'))); 
-                 this.style.borderColor = this.style.color;
-              ">
-                ${opcoesExtra}
-              </select>
-            </td>
-            <td class="text-center"><input class="form-check-input chk-media" type="checkbox" style="transform: scale(1.3);" ${bd.abaixoMedia?'checked':''}></td>
-            <td class="text-center"><input class="form-check-input chk-falta" type="checkbox" style="transform: scale(1.3);" ${bd.falta?'checked':''}></td>
-            <td><input type="text" class="form-control form-control-sm inp-motivo" placeholder="Motivo..." value="${bd.motivoFalta||''}"></td>
-            <td class="text-center"><input class="form-check-input chk-reforco" type="checkbox" style="transform: scale(1.3);" ${bd.reforco?'checked':''}></td>
-            <td class="text-center"><input class="form-check-input chk-prog" type="checkbox" style="transform: scale(1.3);" ${bd.prog?'checked':''}></td>
-            <td class="text-center"><input class="form-check-input chk-alfab" type="checkbox" style="transform: scale(1.3);" ${bd.alfab?'checked':''}></td>
-          </tr>
-        `; 
+            var opcoesExtra = '';
+            if (profFaseAtual === 'Estudos Independentes') {
+                opcoesExtra = `
+                    <option value="APROVADO" ${statusAtual==='APROVADO'?'selected':''}>✔ Aprovado</option>
+                    <option value="EI" ${statusAtual==='EI'?'selected':''}>🟡 EI (Est. Indep.)</option>
+                `;
+            } else {
+                opcoesExtra = `
+                    <option value="APROVADO" ${statusAtual==='APROVADO'?'selected':''}>✔ Aprovado</option>
+                    <option value="REC" ${statusAtual==='REC'?'selected':''}>🔴 Recuperação</option>
+                `;
+            }
+
+            var corFundo = statusAtual === 'REC' ? '#fee2e2' : (statusAtual === 'EI' ? '#fef3c7' : '#d1fae5');
+            var corTexto = statusAtual === 'REC' ? '#991b1b' : (statusAtual === 'EI' ? '#92400e' : '#065f46');
+            
+            tbody.innerHTML += `
+              <tr>
+                <td class="text-center text-muted fw-bold">${a.numero}</td>
+                <td class="fw-bold prof-nome-aluno">${a.nome}</td>
+                <td style="padding: 6px; text-align: center;">
+                  <div style="font-size: 0.8rem; font-weight: 800; color: #1e293b; margin-bottom: 6px; line-height: 1.2; background: #f1f5f9; padding: 4px; border-radius: 4px; border: 1px solid #cbd5e1;">${pontosHtml}</div>
+                  <select class="form-select form-select-sm fw-bold sel-status-prof" style="width: 130px; font-size:0.75rem; background-color: ${corFundo}; color: ${corTexto}; border-color: ${corTexto}; margin: 0 auto;" onchange="
+                     this.style.backgroundColor = this.value === 'REC' ? '#fee2e2' : (this.value === 'EI' ? '#fef3c7' : '#d1fae5'); 
+                     this.style.color = this.value === 'REC' ? '#991b1b' : (this.value === 'EI' ? '#92400e' : '#065f46'); 
+                     this.style.borderColor = this.style.color;
+                  ">
+                    ${opcoesExtra}
+                  </select>
+                </td>
+                <td class="text-center"><input class="form-check-input chk-media" type="checkbox" style="transform: scale(1.3);" ${bd.abaixoMedia?'checked':''}></td>
+                <td class="text-center"><input class="form-check-input chk-falta" type="checkbox" style="transform: scale(1.3);" ${bd.falta?'checked':''}></td>
+                <td><input type="text" class="form-control form-control-sm inp-motivo" placeholder="Motivo..." value="${bd.motivoFalta||''}"></td>
+                <td class="text-center"><input class="form-check-input chk-reforco" type="checkbox" style="transform: scale(1.3);" ${bd.reforco?'checked':''}></td>
+                <td class="text-center"><input class="form-check-input chk-prog" type="checkbox" style="transform: scale(1.3);" ${bd.prog?'checked':''}></td>
+                <td class="text-center"><input class="form-check-input chk-alfab" type="checkbox" style="transform: scale(1.3);" ${bd.alfab?'checked':''}></td>
+              </tr>
+            `; 
+        }
       }); 
+      
+      // OCULTA OS BOTÕES DE GRAVAÇÃO SE ESTIVER NA ABA FINAL (APENAS LEITURA)
+      if(profFaseAtual === 'FINAL') {
+          document.getElementById('btnSalvarMatrizProf').style.display = 'none';
+          document.getElementById('divCaracteristicasProf').style.display = 'none';
+      } else {
+          document.getElementById('btnSalvarMatrizProf').style.display = 'inline-flex';
+          document.getElementById('divCaracteristicasProf').style.display = 'block';
+      }
     }
     
     function salvarMatrizProfessor(btn) { 
       var turma = document.getElementById('profTurmaSelect').value; 
       var comp = document.getElementById('profCompSelect').value; 
-      var trim = document.getElementById('profTrimSelect').value; 
+      var trim = profFaseAtual; 
       var originalText = btn.innerHTML; 
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar na Nuvem...'; 
       
