@@ -81,7 +81,7 @@
 
   <script>
     // =========================================================================
-    // COLE O SEU NOVO LINK AQUI EMBAIXO
+    // COLE O SEU LINK AQUI EMBAIXO
     // =========================================================================
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbycgeZKPTqFmL2WNZo91r1ytnjiL7hvBEOVnmvIbHq3RvWaE0OBuglmP1CDE88xB8RC/exec"; 
     
@@ -107,7 +107,7 @@
         if (sel.value.includes('APROVADO(A) COM PROGRESSÃO')) sel.classList.add('status-ei');
         else if (sel.value.includes('APROVADO')) sel.classList.add('status-aprovado');
         else if (sel.value.includes('EI')) sel.classList.add('status-ei');
-        else if (sel.value.includes('PROVA ELETRÔNICA')) sel.classList.add('status-janeiro');
+        else if (sel.value.includes('PROVA') || sel.value.includes('JANEIRO')) sel.classList.add('status-janeiro');
         else if (sel.value.includes('REPROVADO') || sel.value === 'REP') sel.classList.add('status-rep');
     }
 
@@ -141,10 +141,16 @@
                 mapDisciplinas.forEach(mapItem => {
                     var comp = mapItem.sistema; var valorAtual = dadosAluno[comp] || 'APROVADO';
                     if (trim === 'Estudos Independentes') {
-                        var opcoesSelect = `<option value="APROVADO" ${valorAtual === 'APROVADO' ? 'selected' : ''}>✔ Aprovado</option><option value="EI" ${valorAtual === 'EI' ? 'selected' : ''}>🟡 EI (Estudos Independentes)</option><option value="REP" ${valorAtual === 'REP' ? 'selected' : ''}>⚫ REP (Reprovado)</option>`;
+                        // ADICIONADA A OPÇÃO DE PROVA ELETRÔNICA
+                        var opcoesSelect = `
+                            <option value="APROVADO" ${valorAtual === 'APROVADO' ? 'selected' : ''}>✔ Aprovado</option>
+                            <option value="EI" ${valorAtual === 'EI' ? 'selected' : ''}>🟡 EI (Est. Independentes)</option>
+                            <option value="PROVA" ${valorAtual === 'PROVA' ? 'selected' : ''}>🟠 Prova Eletr. SEE/MG</option>
+                            <option value="REP" ${valorAtual === 'REP' ? 'selected' : ''}>⚫ REP (Reprovado)</option>
+                        `;
                         tr.innerHTML += `<td><select class="status-select sel-trimestre" data-aluno="${a.nome}" data-comp="${comp}" onchange="atualizarCorSelect(this)">${opcoesSelect}</select></td>`;
                     } else {
-                        var isRec = (valorAtual === 'REC' || valorAtual === 'EI'); 
+                        var isRec = (valorAtual === 'REC' || valorAtual === 'EI' || valorAtual === 'PROVA'); 
                         var checkedAttr = isRec ? 'checked' : ''; var extraClass = isRec ? 'is-checked' : ''; var textSpan = isRec ? '🔴 RECUPERAÇÃO' : '✔ Aprovado';
                         tr.innerHTML += `<td><label class="lbl-rec-toggle ${extraClass}"><input type="checkbox" class="chk-trimestre" data-aluno="${a.nome}" data-comp="${comp}" value="REC" ${checkedAttr} onchange="toggleCheckColor(this)"><span>${textSpan}</span></label></td>`;
                     }
@@ -276,7 +282,7 @@
             document.querySelectorAll('.chk-trimestre').forEach(chk => {
                 var aluno = chk.getAttribute('data-aluno'); var comp = chk.getAttribute('data-comp');
                 if (dados[aluno] && dados[aluno][comp]) {
-                    chk.checked = (dados[aluno][comp].status === 'REC' || dados[aluno][comp].status === 'EI'); toggleCheckColor(chk);
+                    chk.checked = (dados[aluno][comp].status === 'REC' || dados[aluno][comp].status === 'EI' || dados[aluno][comp].status === 'PROVA'); toggleCheckColor(chk);
                 }
             });
         }
