@@ -593,13 +593,12 @@
       forcarSincronizacaoGeral();
       carregarTabelaLotacaoSalva(); 
       
-      // AUTO-PREENCHER E BLOQUEAR NOME DO PROFESSOR SE LOGADO COM EMAIL
       if(perfilLogado === 'prof' && nomeProfLogado) {
           var selP = document.getElementById('profNomeSelect');
           if(selP) {
               setTimeout(() => { 
                   selP.value = nomeProfLogado; 
-                  selP.disabled = true; // Segurança!
+                  selP.disabled = true; 
                   atualizarFiltrosProfessor();
               }, 500);
           }
@@ -632,6 +631,13 @@
                   for(var turma in dados.estudantes) { localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(dados.estudantes[turma])); }
                   atualizarTagsTurmasSalvas(); carregarEstudantesParaEdicao();
                   if(turmaAtivaSessao) { carregarAlunosTurmaDatashow(turmaAtivaSessao); }
+              }
+              // CARREGA TODAS AS NOTAS (REC / EI / APROVADOS) QUE OS OUTROS PROFESSORES GRAVARAM
+              if (dados.resultadosTrimestrais) {
+                  for (var key in dados.resultadosTrimestrais) { localStorage.setItem('mestra_resultados_' + key, JSON.stringify(dados.resultadosTrimestrais[key])); }
+              }
+              if (dados.resultadosFinais) {
+                  for (var key in dados.resultadosFinais) { localStorage.setItem('mestra_resultados_final_' + key, JSON.stringify(dados.resultadosFinais[key])); }
               }
               if(dados.avaliacoes) {
                   var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
@@ -746,7 +752,8 @@
       var turma = document.getElementById('selEstudanteTurma').value; 
       var texto = document.getElementById('txtListaEstudantes').value.trim(); 
       if(!turma || !texto) return; 
-      var nomesInput = texto.split('\n').map(n => n.trim().toUpperCase()).filter(n => n !== ""); 
+      var nomesInput = texto.split('
+').map(n => n.trim().toUpperCase()).filter(n => n !== ""); 
       var alunosExistentes = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
       var adicionados = 0;
       nomesInput.forEach(novoNome => {
@@ -785,16 +792,16 @@
       } 
     }
     
-    // NOVA INTELIGÊNCIA NA LOTAÇÃO (ACEITA NOME, E-MAIL E PREENCHE TABELA)
     function gerarTabelaLotacao() { 
       var t = document.getElementById('txtServidoresInput').value.trim(); 
       if(!t) return; 
       var l = []; 
-      t.split('\n').forEach(linha => { 
+      t.split('
+').forEach(linha => { 
         if(linha.trim()) {
-            var partes = linha.split('\t'); // Tenta separar se vier do Excel (Tabulação)
-            if(partes.length < 2) partes = linha.split(','); // Ou separa por vírgula
-            if(partes.length < 2) partes = linha.split(' - '); // Ou traço
+            var partes = linha.split('	'); 
+            if(partes.length < 2) partes = linha.split(','); 
+            if(partes.length < 2) partes = linha.split(' - '); 
             
             var nomeFormatado = partes[0].trim().toUpperCase();
             var emailFormatado = partes.length > 1 ? partes[1].trim().toLowerCase() : '';
@@ -852,7 +859,6 @@
     
     function atualizarFiltrosProfessor() { var profNome = document.getElementById('profNomeSelect').value; var profTurma = document.getElementById('profTurmaSelect'); var profComp = document.getElementById('profCompSelect'); profTurma.innerHTML = '<option value="">Turma...</option>'; profComp.innerHTML = '<option value="">Componente...</option>'; if(!profNome) return; var lotacao = JSON.parse(localStorage.getItem('mestra_lotacao_tabela') || '[]'); var profDados = lotacao.find(p => p.nome === profNome); if(profDados) { var comps = profDados.componentes || []; if(comps.length === 0 && profDados.comp) comps.push(profDados.comp); comps.forEach(c => profComp.innerHTML += `<option value="${c}">${c}</option>`); if(profDados.turmas) { profDados.turmas.forEach(t => profTurma.innerHTML += `<option value="${t}">${t}</option>`); } } }
     
-    // MÓDULO DO PROFESSOR (COM PONTOS VISÍVEIS)
     function carregarTurmaParaProfessor() { 
       var turma = document.getElementById('profTurmaSelect').value; 
       var prof = document.getElementById('profNomeSelect').value; 
@@ -935,33 +941,42 @@
       var comp = document.getElementById('profCompSelect').value; 
       var trim = document.getElementById('profTrimSelect').value; 
       var originalText = btn.innerHTML; 
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar tudo...'; 
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar na Nuvem...'; 
       
       var aval = { turma: turma, componente: comp, trimestre: trim, professor: document.getElementById('profNomeSelect').value, caracteristicas: document.getElementById('profCaracteristicas').value, intervencaoSN: document.getElementById('profIntervencaoSN').value, metodologia: document.getElementById('profMetodologias').value, alunos: [] }; 
       
       var chaveGravar = trim === 'Estudos Independentes' ? '3º Trimestre' : trim;
       var resultadosOficiais = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + chaveGravar) || '{}');
       
+      var pacoteParaNuvem = {};
+
       document.querySelectorAll('#tabelaProfessorCorpo tr').forEach(tr => { 
         var nomeA = tr.querySelector('.prof-nome-aluno').childNodes[0].nodeValue.trim();
         var statusFinal = tr.querySelector('.sel-status-prof').value;
         aval.alunos.push({ 
             nome: nomeA, abaixoMedia: tr.querySelector('.chk-media').checked, falta: tr.querySelector('.chk-falta').checked, motivoFalta: tr.querySelector('.inp-motivo').value, reforco: tr.querySelector('.chk-reforco').checked, prog: tr.querySelector('.chk-prog').checked, alfab: tr.querySelector('.chk-alfab').checked 
         }); 
+        
         if(!resultadosOficiais[nomeA]) resultadosOficiais[nomeA] = {};
         resultadosOficiais[nomeA][comp] = statusFinal;
+        
+        pacoteParaNuvem[nomeA] = {};
+        pacoteParaNuvem[nomeA][comp] = statusFinal;
       }); 
       
       localStorage.setItem('mestra_prof_' + turma + '_' + comp + '_' + trim, JSON.stringify(aval)); 
       localStorage.setItem('mestra_resultados_' + turma + '_' + chaveGravar, JSON.stringify(resultadosOficiais));
       
       chamarApiGoogle('salvarMatrizProfessor', aval, function() { 
-          btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Salvo com Sucesso!'; 
-          setTimeout(() => btn.innerHTML = originalText, 3000); 
+          chamarApiGoogle('salvarResultadosGerais', { turma: turma, trimestre: chaveGravar, avaliacoes: pacoteParaNuvem }, function() {
+             btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Salvo Oficialmente!'; 
+             setTimeout(() => btn.innerHTML = originalText, 3000); 
+          });
       }); 
     }
     
-    function carregarMatrizEspecialista() { var esp = document.getElementById('espNomeSelect').value; var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value; if(!esp || !turma) return; document.getElementById('areaTrabalhoEspecialista').style.display = 'block'; var alBase = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); var noPdi = alBase.filter(a => a.aee && a.pdi === 'Não').map(a => a.nome); document.getElementById('espSemPdiAuto').value = noPdi.length > 0 ? noPdi.join('\n') : 'Não há estudantes marcados como AEE "Sem PDI".'; var chave = 'mestra_esp_' + turma + '_' + trim; var d = JSON.parse(localStorage.getItem(chave) || '{"intP":"","busca":"","prog":"","outros":"","semLibras":""}'); document.getElementById('espIntPedag').value = d.intP || ''; document.getElementById('espBuscaAtiva').value = d.busca || ''; document.getElementById('espProgParcial').value = d.prog || ''; document.getElementById('espOutrosEnc').value = d.outros || ''; document.getElementById('espSemLibras').value = d.semLibras || ''; }
+    function carregarMatrizEspecialista() { var esp = document.getElementById('espNomeSelect').value; var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value; if(!esp || !turma) return; document.getElementById('areaTrabalhoEspecialista').style.display = 'block'; var alBase = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); var noPdi = alBase.filter(a => a.aee && a.pdi === 'Não').map(a => a.nome); document.getElementById('espSemPdiAuto').value = noPdi.length > 0 ? noPdi.join('
+') : 'Não há estudantes marcados como AEE "Sem PDI".'; var chave = 'mestra_esp_' + turma + '_' + trim; var d = JSON.parse(localStorage.getItem(chave) || '{"intP":"","busca":"","prog":"","outros":"","semLibras":""}'); document.getElementById('espIntPedag').value = d.intP || ''; document.getElementById('espBuscaAtiva').value = d.busca || ''; document.getElementById('espProgParcial').value = d.prog || ''; document.getElementById('espOutrosEnc').value = d.outros || ''; document.getElementById('espSemLibras').value = d.semLibras || ''; }
     function salvarMatrizEspecialista(btn) { var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value; var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar...'; var obj = { turma: turma, trimestre: trim, intP: document.getElementById('espIntPedag').value, busca: document.getElementById('espBuscaAtiva').value, prog: document.getElementById('espProgParcial').value, outros: document.getElementById('espOutrosEnc').value, semLibras: document.getElementById('espSemLibras').value }; localStorage.setItem('mestra_esp_' + turma + '_' + trim, JSON.stringify(obj)); chamarApiGoogle('salvarMatrizEspecialista', obj, function() { btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Guardado!'; setTimeout(() => btn.innerHTML = originalText, 3000); }); }
  
     function renderizarDashboardBanco() {
@@ -1261,3 +1276,5 @@
   </script>
 </body>
 </html>
+index.html
+Exibindo index.html.
