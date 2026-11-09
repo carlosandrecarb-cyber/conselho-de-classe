@@ -554,7 +554,6 @@
       carregarTudoAoLogar();
     }
  
-    // AGORA CARREGA A LOTAÇÃO DIRETO DA NUVEM QUANDO A PÁGINA ABRE (Mesmo sem fazer login!)
     window.onload = function() {
        chamarApiGoogle('carregarTudo', null, function(dados) {
            if(dados && dados.lotacao) {
@@ -911,11 +910,19 @@
         }
 
         var opcoesExtra = '';
-        if (trim === 'Estudos Independentes' || trim === '3º Trimestre') {
+        if (trim === 'Estudos Independentes') {
             opcoesExtra = `
                 <option value="APROVADO" ${statusAtual==='APROVADO'?'selected':''}>✔ Aprovado</option>
-                ${trim === '3º Trimestre' ? `<option value="REC" ${statusAtual==='REC'?'selected':''}>🔴 Recuperação</option>` : ''}
                 <option value="EI" ${statusAtual==='EI'?'selected':''}>🟡 EI (Est. Indep.)</option>
+                <option value="PROVA" ${statusAtual==='PROVA'?'selected':''}>🟠 Prova Eletr. SEE/MG</option>
+                <option value="REP" ${statusAtual==='REP'?'selected':''}>⚫ Reprovado</option>
+            `;
+        } else if (trim === '3º Trimestre') {
+            opcoesExtra = `
+                <option value="APROVADO" ${statusAtual==='APROVADO'?'selected':''}>✔ Aprovado</option>
+                <option value="REC" ${statusAtual==='REC'?'selected':''}>🔴 Recuperação</option>
+                <option value="EI" ${statusAtual==='EI'?'selected':''}>🟡 EI (Est. Indep.)</option>
+                <option value="PROVA" ${statusAtual==='PROVA'?'selected':''}>🟠 Prova Eletr. SEE/MG</option>
                 <option value="REP" ${statusAtual==='REP'?'selected':''}>⚫ Reprovado</option>
             `;
         } else {
@@ -925,8 +932,8 @@
             `;
         }
 
-        var corFundo = statusAtual === 'REC' ? '#fee2e2' : (statusAtual === 'EI' ? '#fef3c7' : (statusAtual === 'REP' ? '#f1f5f9' : '#d1fae5'));
-        var corTexto = statusAtual === 'REC' ? '#991b1b' : (statusAtual === 'EI' ? '#92400e' : (statusAtual === 'REP' ? '#0f172a' : '#065f46'));
+        var corFundo = statusAtual === 'REC' ? '#fee2e2' : (statusAtual === 'EI' ? '#fef3c7' : (statusAtual === 'PROVA' ? '#ffedd5' : (statusAtual === 'REP' ? '#f1f5f9' : '#d1fae5')));
+        var corTexto = statusAtual === 'REC' ? '#991b1b' : (statusAtual === 'EI' ? '#92400e' : (statusAtual === 'PROVA' ? '#9a3412' : (statusAtual === 'REP' ? '#0f172a' : '#065f46')));
         
         tbody.innerHTML += `
           <tr>
@@ -934,7 +941,11 @@
             <td class="fw-bold prof-nome-aluno">${a.nome}</td>
             <td style="padding: 6px; text-align: center;">
               <div style="font-size: 0.8rem; font-weight: 800; color: #1e293b; margin-bottom: 6px; line-height: 1.2; background: #f1f5f9; padding: 4px; border-radius: 4px; border: 1px solid #cbd5e1;">${pontosHtml}</div>
-              <select class="form-select form-select-sm fw-bold sel-status-prof" style="width: 130px; font-size:0.75rem; background-color: ${corFundo}; color: ${corTexto}; border-color: ${corTexto}; margin: 0 auto;" onchange="this.style.backgroundColor = this.value === 'REC' ? '#fee2e2' : (this.value === 'EI' ? '#fef3c7' : (this.value === 'REP' ? '#f1f5f9' : '#d1fae5')); this.style.color = this.value === 'REC' ? '#991b1b' : (this.value === 'EI' ? '#92400e' : (this.value === 'REP' ? '#0f172a' : '#065f46')); this.style.borderColor = this.style.color;">
+              <select class="form-select form-select-sm fw-bold sel-status-prof" style="width: 140px; font-size:0.7rem; background-color: ${corFundo}; color: ${corTexto}; border-color: ${corTexto}; margin: 0 auto;" onchange="
+                 this.style.backgroundColor = this.value === 'REC' ? '#fee2e2' : (this.value === 'EI' ? '#fef3c7' : (this.value === 'PROVA' ? '#ffedd5' : (this.value === 'REP' ? '#f1f5f9' : '#d1fae5'))); 
+                 this.style.color = this.value === 'REC' ? '#991b1b' : (this.value === 'EI' ? '#92400e' : (this.value === 'PROVA' ? '#9a3412' : (this.value === 'REP' ? '#0f172a' : '#065f46'))); 
+                 this.style.borderColor = this.style.color;
+              ">
                 ${opcoesExtra}
               </select>
             </td>
