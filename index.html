@@ -449,7 +449,7 @@
     // =========================================================================
     // COLE O SEU LINK DA API DO GOOGLE AQUI EMBAIXO
     // =========================================================================
-    const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbxIHePqCUCNaNzgz4C-5rz5AwQXh02W2A1KUJz3yx9hf0ofth0dZIGuWaurcmL4FN5i/exec"; 
+    const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbycgeZKPTqFmL2WNZo91r1ytnjiL7hvBEOVnmvIbHq3RvWaE0OBuglmP1CDE88xB8RC/exec"; 
     
     var turmasGlobais = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
     var cargosGlobais = ["Professor(a) Regente", "Professor(a) de Apoio", "Especialista / EEB", "Diretor(a)", "Vice-Diretor(a)"];
@@ -457,7 +457,7 @@
     
     var turmaAtivaSessao = ""; var alunoAtivoSessao = null; var timerInterval = null; var segundosRestantes = 180; var perfilLogado = ""; var bancoDeDadosNuvem = {}; 
     var radarTempoRealInterval = null; 
-    var tipoLoginAtual = ''; var nomeProfLogado = ''; // NOVAS VARIÁVEIS DE LOGIN INTELIGENTE
+    var tipoLoginAtual = ''; var nomeProfLogado = ''; 
  
     var criteriosDetalhados = [
       { nome: "Convivência e Comportamento", chave: "convivencia", opcoes: [{ texto: "🟢 Convive bem com todos", escola: [], familia: [] }, { texto: "🟡 Às vezes precisa de orientação para conviver bem", escola: ["Orientar o estudante individualmente."], familia: ["Fortalecer hábitos de estudos em casa."] }, { texto: "🔴 Tem dificuldade de convivência", escola: ["Reforçar os combinados da turma."], familia: ["Fortalecer hábitos de estudos em casa."] }]},
@@ -554,6 +554,15 @@
       carregarTudoAoLogar();
     }
  
+    // AGORA CARREGA A LOTAÇÃO DIRETO DA NUVEM QUANDO A PÁGINA ABRE (Mesmo sem fazer login!)
+    window.onload = function() {
+       chamarApiGoogle('carregarTudo', null, function(dados) {
+           if(dados && dados.lotacao) {
+               localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(dados.lotacao));
+           }
+       });
+    };
+
     function carregarTudoAoLogar() {
       var selectsTurma = ['selEstudanteTurma', 'profTurmaSelect', 'espTurmaSelect', 'filtroTurmaBanco'];
       selectsTurma.forEach(id => { 
@@ -627,18 +636,24 @@
           if(originalTextCustom) { setTimeout(() => btn.innerHTML = originalTextCustom, 3000); }
           if(dados && !dados.erro) {
               bancoDeDadosNuvem = dados;
+              
+              if(dados.lotacao && dados.lotacao.length > 0) {
+                  localStorage.setItem('mestra_lotacao_tabela', JSON.stringify(dados.lotacao));
+              }
+
               if(dados.estudantes && Object.keys(dados.estudantes).length > 0) {
                   for(var turma in dados.estudantes) { localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(dados.estudantes[turma])); }
                   atualizarTagsTurmasSalvas(); carregarEstudantesParaEdicao();
                   if(turmaAtivaSessao) { carregarAlunosTurmaDatashow(turmaAtivaSessao); }
               }
-              // CARREGA TODAS AS NOTAS (REC / EI / APROVADOS) QUE OS OUTROS PROFESSORES GRAVARAM
+
               if (dados.resultadosTrimestrais) {
                   for (var key in dados.resultadosTrimestrais) { localStorage.setItem('mestra_resultados_' + key, JSON.stringify(dados.resultadosTrimestrais[key])); }
               }
               if (dados.resultadosFinais) {
                   for (var key in dados.resultadosFinais) { localStorage.setItem('mestra_resultados_final_' + key, JSON.stringify(dados.resultadosFinais[key])); }
               }
+
               if(dados.avaliacoes) {
                   var dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
                   for(var t in dados.avaliacoes) {
@@ -752,8 +767,7 @@
       var turma = document.getElementById('selEstudanteTurma').value; 
       var texto = document.getElementById('txtListaEstudantes').value.trim(); 
       if(!turma || !texto) return; 
-      var nomesInput = texto.split('
-').map(n => n.trim().toUpperCase()).filter(n => n !== ""); 
+      var nomesInput = texto.split(/\r?\n/).map(n => n.trim().toUpperCase()).filter(n => n !== ""); 
       var alunosExistentes = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
       var adicionados = 0;
       nomesInput.forEach(novoNome => {
@@ -796,10 +810,9 @@
       var t = document.getElementById('txtServidoresInput').value.trim(); 
       if(!t) return; 
       var l = []; 
-      t.split('
-').forEach(linha => { 
+      t.split(/\r?\n/).forEach(linha => { 
         if(linha.trim()) {
-            var partes = linha.split('	'); 
+            var partes = linha.split('\t'); 
             if(partes.length < 2) partes = linha.split(','); 
             if(partes.length < 2) partes = linha.split(' - '); 
             
@@ -975,8 +988,7 @@
       }); 
     }
     
-    function carregarMatrizEspecialista() { var esp = document.getElementById('espNomeSelect').value; var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value; if(!esp || !turma) return; document.getElementById('areaTrabalhoEspecialista').style.display = 'block'; var alBase = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); var noPdi = alBase.filter(a => a.aee && a.pdi === 'Não').map(a => a.nome); document.getElementById('espSemPdiAuto').value = noPdi.length > 0 ? noPdi.join('
-') : 'Não há estudantes marcados como AEE "Sem PDI".'; var chave = 'mestra_esp_' + turma + '_' + trim; var d = JSON.parse(localStorage.getItem(chave) || '{"intP":"","busca":"","prog":"","outros":"","semLibras":""}'); document.getElementById('espIntPedag').value = d.intP || ''; document.getElementById('espBuscaAtiva').value = d.busca || ''; document.getElementById('espProgParcial').value = d.prog || ''; document.getElementById('espOutrosEnc').value = d.outros || ''; document.getElementById('espSemLibras').value = d.semLibras || ''; }
+    function carregarMatrizEspecialista() { var esp = document.getElementById('espNomeSelect').value; var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value; if(!esp || !turma) return; document.getElementById('areaTrabalhoEspecialista').style.display = 'block'; var alBase = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); var noPdi = alBase.filter(a => a.aee && a.pdi === 'Não').map(a => a.nome); document.getElementById('espSemPdiAuto').value = noPdi.length > 0 ? noPdi.join('\n') : 'Não há estudantes marcados como AEE "Sem PDI".'; var chave = 'mestra_esp_' + turma + '_' + trim; var d = JSON.parse(localStorage.getItem(chave) || '{"intP":"","busca":"","prog":"","outros":"","semLibras":""}'); document.getElementById('espIntPedag').value = d.intP || ''; document.getElementById('espBuscaAtiva').value = d.busca || ''; document.getElementById('espProgParcial').value = d.prog || ''; document.getElementById('espOutrosEnc').value = d.outros || ''; document.getElementById('espSemLibras').value = d.semLibras || ''; }
     function salvarMatrizEspecialista(btn) { var turma = document.getElementById('espTurmaSelect').value; var trim = document.getElementById('espTrimSelect').value; var originalText = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar...'; var obj = { turma: turma, trimestre: trim, intP: document.getElementById('espIntPedag').value, busca: document.getElementById('espBuscaAtiva').value, prog: document.getElementById('espProgParcial').value, outros: document.getElementById('espOutrosEnc').value, semLibras: document.getElementById('espSemLibras').value }; localStorage.setItem('mestra_esp_' + turma + '_' + trim, JSON.stringify(obj)); chamarApiGoogle('salvarMatrizEspecialista', obj, function() { btn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Guardado!'; setTimeout(() => btn.innerHTML = originalText, 3000); }); }
  
     function renderizarDashboardBanco() {
@@ -1276,5 +1288,3 @@
   </script>
 </body>
 </html>
-index.html
-Exibindo index.html.
