@@ -28,19 +28,10 @@
     td { padding: 6px; border: 1px solid #e2e8f0; text-align: center; vertical-align: middle; background: white; }
     td:first-child { text-align: left; font-weight: 800; color: #334155; background: #f8fafc; position: sticky; left: 0; z-index: 20; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-right: 2px solid #cbd5e1; padding: 10px; }
     
-    /* ESTILOS DA NOVA CAIXA DE 1 CLIQUE PARA RECUPERAÇÃO */
-    .lbl-rec-toggle {
-        display: block; width: 100%; padding: 10px 5px; border-radius: 6px;
-        background: #f8fafc; border: 1px solid #e2e8f0; color: #94a3b8;
-        cursor: pointer; font-size: 0.75rem; font-weight: 800; text-align: center;
-        transition: all 0.2s ease; user-select: none; margin: 0;
-    }
-    .lbl-rec-toggle input { display: none; } /* Esconde a checkbox feia */
+    .lbl-rec-toggle { display: block; width: 100%; padding: 10px 5px; border-radius: 6px; background: #f8fafc; border: 1px solid #e2e8f0; color: #94a3b8; cursor: pointer; font-size: 0.75rem; font-weight: 800; text-align: center; transition: all 0.2s ease; user-select: none; margin: 0; }
+    .lbl-rec-toggle input { display: none; } 
     .lbl-rec-toggle:hover { background: #f1f5f9; border-color: #cbd5e1; }
-    .lbl-rec-toggle.is-checked {
-        background: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important;
-        box-shadow: inset 0 0 0 1px #ef4444;
-    }
+    .lbl-rec-toggle.is-checked { background: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; box-shadow: inset 0 0 0 1px #ef4444; }
 
     .status-select { width: 100%; padding: 10px 6px; font-size: 0.75rem; font-weight: 800; border-radius: 6px; border: 1px solid #cbd5e1; cursor: pointer; text-align: center; font-family: 'Inter'; }
     .status-aprovado { background-color: #d1fae5; color: #065f46; border-color: #10b981; }
@@ -86,18 +77,15 @@
       </div>
       <div id="resultadoImportacao" style="margin-top: 15px; font-weight: bold; color: #059669;"></div>
   </div>
-
-  <div class="table-container" id="containerMatriz">
-    <table id="tabelaMatriz">
-      <thead id="cabecalhoTabela"></thead>
-      <tbody id="corpoMatriz"></tbody>
-    </table>
-  </div>
+  <div class="table-container" id="containerMatriz"><table id="tabelaMatriz"><thead id="cabecalhoTabela"></thead><tbody id="corpoMatriz"></tbody></table></div>
 
   <script>
-    const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbxIHePqCUCNaNzgz4C-5rz5AwQXh02W2A1KUJz3yx9hf0ofth0dZIGuWaurcmL4FN5i/exec"; 
-    var turmasGlobais = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
+    // =========================================================================
+    // COLE O SEU NOVO LINK AQUI EMBAIXO
+    // =========================================================================
+    const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbycgeZKPTqFmL2WNZo91r1ytnjiL7hvBEOVnmvIbHq3RvWaE0OBuglmP1CDE88xB8RC/exec"; 
     
+    var turmasGlobais = ["6R1", "6R2", "6R3", "6R4", "7R1", "7R2", "7R3", "7R4", "8R1", "8R2", "8R3", "8R4", "9R1", "9R2", "9R3", "9R4"];
     var mapDisciplinas = [
         { excel: "ARTE", sistema: "Arte", sigla: "ART" }, { excel: "CIÊNCIAS", sistema: "Ciências", sigla: "CIÊ" },
         { excel: "EDUCAÇÃO FÍSICA", sistema: "Educação Física", sigla: "EDF" }, { excel: "ENSINO RELIGIOSO", sistema: "Ensino Religioso", sigla: "ER" },
@@ -109,22 +97,10 @@
     var selTurma = document.getElementById('selTurma');
     turmasGlobais.forEach(t => selTurma.innerHTML += `<option value="${t}">${t}</option>`);
 
-    function toggleImportador() {
-        var box = document.getElementById('importadorExcel');
-        box.style.display = box.style.display === 'block' ? 'none' : 'block';
-    }
+    function chamarApiGoogle(funcao, dados = null, callback) { fetch(URL_API_GOOGLE, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ funcao: funcao, dados: dados }) }).then(res => res.json()).then(data => { if(callback) callback(data); }).catch(e => console.error("Erro API:", e)); }
 
-    // Função de clique que alterna visualmente o botão entre Aprovado (cinzento claro) e REC (Vermelho)
-    function toggleCheckColor(chk) {
-        var lbl = chk.parentElement;
-        if (chk.checked) {
-            lbl.classList.add('is-checked');
-            lbl.querySelector('span').innerHTML = '🔴 RECUPERAÇÃO';
-        } else {
-            lbl.classList.remove('is-checked');
-            lbl.querySelector('span').innerHTML = '✔ Aprovado';
-        }
-    }
+    function toggleImportador() { var box = document.getElementById('importadorExcel'); box.style.display = box.style.display === 'block' ? 'none' : 'block'; }
+    function toggleCheckColor(chk) { var lbl = chk.parentElement; if (chk.checked) { lbl.classList.add('is-checked'); lbl.querySelector('span').innerHTML = '🔴 RECUPERAÇÃO'; } else { lbl.classList.remove('is-checked'); lbl.querySelector('span').innerHTML = '✔ Aprovado'; } }
 
     function atualizarCorSelect(sel) {
         sel.classList.remove('status-aprovado', 'status-ei', 'status-rep', 'status-janeiro');
@@ -138,90 +114,42 @@
     function carregarMatriz() {
         var turma = selTurma.value; var trim = document.getElementById('selTrimestre').value;
         if (!turma) return;
-        
         document.getElementById('containerMatriz').style.display = 'none';
-
         var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]');
-        var alunos = []; var vistos = new Set();
-        alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
-        
-        var thead = document.getElementById('cabecalhoTabela');
-        var tbody = document.getElementById('corpoMatriz'); tbody.innerHTML = '';
+        var alunos = []; var vistos = new Set(); alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
+        var thead = document.getElementById('cabecalhoTabela'); var tbody = document.getElementById('corpoMatriz'); tbody.innerHTML = '';
 
         if (trim === 'FINAL') {
             document.getElementById('tabelaMatriz').style.minWidth = '900px';
             thead.innerHTML = `<tr><th>Estudante</th><th style="width: 250px;">SITUAÇÃO GERAL (ATA)</th><th>COMPONENTES NÃO CONSOLIDADOS (Obrigatório marcar os retidos)</th></tr>`;
-            
             var dadosFinais = JSON.parse(localStorage.getItem('mestra_resultados_final_' + turma) || '{}');
-            
             alunos.forEach(a => {
                 var d = dadosFinais[a.nome] || { status: 'APROVADO(A)', prog: '' };
                 var tr = document.createElement('tr');
-                
-                var checkboxesHTML = d.faltasHtml || mapDisciplinas.map(m => {
-                    var chk = d.prog.includes(m.sigla) ? 'checked' : '';
-                    return `<label><input type="checkbox" class="chk-prog-${a.nome.replace(/\s+/g, '_')}" value="${m.sigla}" ${chk}> ${m.sigla}</label>`;
-                }).join('');
-
-                tr.innerHTML = `
-                    <td>${a.nome}</td>
-                    <td>
-                        <select class="status-select sel-status-final" data-aluno="${a.nome}" onchange="atualizarCorSelect(this)">
-                            <option value="APROVADO(A)" ${d.status === 'APROVADO(A)' ? 'selected' : ''}>✔ APROVADO(A)</option>
-                            <option value="APROVADO(A) COM PROGRESSÃO PARCIAL" ${d.status === 'APROVADO(A) COM PROGRESSÃO PARCIAL' ? 'selected' : ''}>🟡 APROVADO COM PROGRESSÃO PARCIAL</option>
-                            <option value="PROVA ELETRÔNICA EM JANEIRO" ${d.status === 'PROVA ELETRÔNICA EM JANEIRO' ? 'selected' : ''}>🟠 PROVA ELETRÔNICA EM JANEIRO</option>
-                            <option value="REPROVADO(A)" ${d.status === 'REPROVADO(A)' ? 'selected' : ''}>⚫ REPROVADO(A)</option>
-                        </select>
-                    </td>
-                    <td class="chks-progressao" id="prog_${a.nome.replace(/\s+/g, '_')}">${checkboxesHTML}</td>
-                `;
-                tbody.appendChild(tr);
-                atualizarCorSelect(tr.querySelector('select'));
+                var checkboxesHTML = d.faltasHtml || mapDisciplinas.map(m => { var chk = d.prog.includes(m.sigla) ? 'checked' : ''; return `<label><input type="checkbox" class="chk-prog-${a.nome.replace(/\s+/g, '_')}" value="${m.sigla}" ${chk}> ${m.sigla}</label>`; }).join('');
+                tr.innerHTML = `<td>${a.nome}</td><td><select class="status-select sel-status-final" data-aluno="${a.nome}" onchange="atualizarCorSelect(this)"><option value="APROVADO(A)" ${d.status === 'APROVADO(A)' ? 'selected' : ''}>✔ APROVADO(A)</option><option value="APROVADO(A) COM PROGRESSÃO PARCIAL" ${d.status === 'APROVADO(A) COM PROGRESSÃO PARCIAL' ? 'selected' : ''}>🟡 APROVADO COM PROGRESSÃO PARCIAL</option><option value="PROVA ELETRÔNICA EM JANEIRO" ${d.status === 'PROVA ELETRÔNICA EM JANEIRO' ? 'selected' : ''}>🟠 PROVA ELETRÔNICA EM JANEIRO</option><option value="REPROVADO(A)" ${d.status === 'REPROVADO(A)' ? 'selected' : ''}>⚫ REPROVADO(A)</option></select></td><td class="chks-progressao" id="prog_${a.nome.replace(/\s+/g, '_')}">${checkboxesHTML}</td>`;
+                tbody.appendChild(tr); atualizarCorSelect(tr.querySelector('select'));
             });
         } else {
             document.getElementById('tabelaMatriz').style.minWidth = '1300px';
             thead.innerHTML = `<tr><th>Estudante</th>` + mapDisciplinas.map(m => `<th>${m.sistema}</th>`).join('') + `</tr>`;
-            
             var chaveBusca = trim === 'Estudos Independentes' ? '3º Trimestre' : trim;
             var notasSalvas = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + chaveBusca) || '{}');
-
             alunos.forEach(a => {
                 var tr = document.createElement('tr'); tr.innerHTML = `<td>${a.nome}</td>`;
                 var dadosAluno = notasSalvas[a.nome] || {};
-                
                 mapDisciplinas.forEach(mapItem => {
-                    var comp = mapItem.sistema;
-                    var valorAtual = dadosAluno[comp] || 'APROVADO';
-                    
+                    var comp = mapItem.sistema; var valorAtual = dadosAluno[comp] || 'APROVADO';
                     if (trim === 'Estudos Independentes') {
-                        // Na fase EI, mantemos o Select porque o aluno pode aprovar, ir para EI ou Reprovar.
-                        var opcoesSelect = `
-                            <option value="APROVADO" ${valorAtual === 'APROVADO' ? 'selected' : ''}>✔ Aprovado</option>
-                            <option value="EI" ${valorAtual === 'EI' ? 'selected' : ''}>🟡 EI (Estudos Independentes)</option>
-                            <option value="REP" ${valorAtual === 'REP' ? 'selected' : ''}>⚫ REP (Reprovado)</option>
-                        `;
-                        tr.innerHTML += `<td>
-                            <select class="status-select sel-trimestre" data-aluno="${a.nome}" data-comp="${comp}" onchange="atualizarCorSelect(this)">
-                                ${opcoesSelect}
-                            </select>
-                        </td>`;
+                        var opcoesSelect = `<option value="APROVADO" ${valorAtual === 'APROVADO' ? 'selected' : ''}>✔ Aprovado</option><option value="EI" ${valorAtual === 'EI' ? 'selected' : ''}>🟡 EI (Estudos Independentes)</option><option value="REP" ${valorAtual === 'REP' ? 'selected' : ''}>⚫ REP (Reprovado)</option>`;
+                        tr.innerHTML += `<td><select class="status-select sel-trimestre" data-aluno="${a.nome}" data-comp="${comp}" onchange="atualizarCorSelect(this)">${opcoesSelect}</select></td>`;
                     } else {
-                        // TRIMESTRES 1, 2 E 3: BOTÃO DE 1 CLIQUE RÁPIDO PARA RECUPERAÇÃO
                         var isRec = (valorAtual === 'REC' || valorAtual === 'EI'); 
-                        var checkedAttr = isRec ? 'checked' : '';
-                        var extraClass = isRec ? 'is-checked' : '';
-                        var textSpan = isRec ? '🔴 RECUPERAÇÃO' : '✔ Aprovado';
-
-                        tr.innerHTML += `<td>
-                            <label class="lbl-rec-toggle ${extraClass}">
-                                <input type="checkbox" class="chk-trimestre" data-aluno="${a.nome}" data-comp="${comp}" value="REC" ${checkedAttr} onchange="toggleCheckColor(this)">
-                                <span>${textSpan}</span>
-                            </label>
-                        </td>`;
+                        var checkedAttr = isRec ? 'checked' : ''; var extraClass = isRec ? 'is-checked' : ''; var textSpan = isRec ? '🔴 RECUPERAÇÃO' : '✔ Aprovado';
+                        tr.innerHTML += `<td><label class="lbl-rec-toggle ${extraClass}"><input type="checkbox" class="chk-trimestre" data-aluno="${a.nome}" data-comp="${comp}" value="REC" ${checkedAttr} onchange="toggleCheckColor(this)"><span>${textSpan}</span></label></td>`;
                     }
                 });
-                tbody.appendChild(tr);
-                tr.querySelectorAll('select').forEach(s => atualizarCorSelect(s));
+                tbody.appendChild(tr); tr.querySelectorAll('select').forEach(s => atualizarCorSelect(s));
             });
         }
         document.getElementById('containerMatriz').style.display = 'block';
@@ -230,7 +158,7 @@
     function salvarMatriz() {
         var turma = selTurma.value; var trim = document.getElementById('selTrimestre').value;
         var btn = document.getElementById('btnSalvar'); var textoOriginal = btn.innerHTML;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando na Nuvem...';
 
         if (trim === 'FINAL') {
             var dadosFinal = {};
@@ -241,6 +169,9 @@
                 dadosFinal[aluno] = { status: sel.value, prog: chks, faltasHtml: faltasHtml }; 
             });
             localStorage.setItem('mestra_resultados_final_' + turma, JSON.stringify(dadosFinal));
+            chamarApiGoogle('salvarResultadosGerais', { turma: turma, trimestre: 'FINAL', avaliacoes: dadosFinal }, function() {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Gravado na Planilha Oficial!'; setTimeout(() => btn.innerHTML = textoOriginal, 3000);
+            });
         } else {
             var dadosTurma = {};
             if (trim === 'Estudos Independentes') {
@@ -250,7 +181,6 @@
                     dadosTurma[aluno][comp] = sel.value; 
                 });
             } else {
-                // Ao salvar trimestres 1, 2 e 3, lemos diretamente do status da checkbox de 1 clique
                 document.querySelectorAll('.chk-trimestre').forEach(chk => {
                     var aluno = chk.getAttribute('data-aluno'); var comp = chk.getAttribute('data-comp');
                     if (!dadosTurma[aluno]) { dadosTurma[aluno] = {}; }
@@ -259,19 +189,16 @@
             }
             var chaveGravar = trim === 'Estudos Independentes' ? '3º Trimestre' : trim;
             localStorage.setItem('mestra_resultados_' + turma + '_' + chaveGravar, JSON.stringify(dadosTurma));
+            chamarApiGoogle('salvarResultadosGerais', { turma: turma, trimestre: chaveGravar, avaliacoes: dadosTurma }, function() {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Gravado na Planilha Oficial!'; setTimeout(() => btn.innerHTML = textoOriginal, 3000);
+            });
         }
-
-        setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-check"></i> Gravado Localmente!'; setTimeout(() => btn.innerHTML = textoOriginal, 3000); }, 500);
     }
 
-    // =========================================================================
-    // IMPORTADOR MÁGICO - MANTIDO, MAS SEM MOSTRAR NÚMEROS NA TELA
-    // =========================================================================
     function processarExcel(e) {
         var file = e.target.files[0]; if (!file) return;
         var trim = document.getElementById('selTrimestre').value;
         var reader = new FileReader();
-        
         document.getElementById('resultadoImportacao').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> A analisar DED...';
 
         reader.onload = function(e) {
@@ -279,38 +206,25 @@
                 var data = new Uint8Array(e.target.result); var workbook = XLSX.read(data, {type: 'array'});
                 var jsonRows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1});
                 var linhaDisciplinas = jsonRows[4]; var indicesDisciplinas = {};
-                
-                for (var i = 0; i < linhaDisciplinas.length; i++) {
-                    var nomeCol = (linhaDisciplinas[i] || "").toString().trim().toUpperCase();
-                    mapDisciplinas.forEach(m => { if (nomeCol === m.excel) indicesDisciplinas[m.sistema] = i; });
-                }
-                
+                for (var i = 0; i < linhaDisciplinas.length; i++) { var nomeCol = (linhaDisciplinas[i] || "").toString().trim().toUpperCase(); mapDisciplinas.forEach(m => { if (nomeCol === m.excel) indicesDisciplinas[m.sistema] = i; }); }
                 var dadosExtraidos = {};
                 
                 for (var r = 6; r < jsonRows.length; r++) {
                     var nomeAluno = (jsonRows[r][0] || "").toString().trim().toUpperCase();
                     if (nomeAluno.length > 3) {
-                        
                         if (trim === 'FINAL') {
                             var materiasPerdidas = [];
                             mapDisciplinas.forEach(m => {
                                 var idx = indicesDisciplinas[m.sistema];
                                 if (idx !== undefined) {
                                     var totalFinal = parseFloat((jsonRows[r][idx + 4] || "0").toString().replace(',', '.')) || 0;
-                                    if (totalFinal < 60) {
-                                        materiasPerdidas.push(m.sigla);
-                                    }
+                                    if (totalFinal < 60) materiasPerdidas.push(m.sigla);
                                 }
                             });
-                            
                             var statusApurado = 'APROVADO(A)';
-                            if (materiasPerdidas.length > 0 && materiasPerdidas.length <= 3) {
-                                statusApurado = 'APROVADO(A) COM PROGRESSÃO PARCIAL';
-                            } else if (materiasPerdidas.length > 3) {
-                                statusApurado = 'REPROVADO(A)'; 
-                            }
+                            if (materiasPerdidas.length > 0 && materiasPerdidas.length <= 3) { statusApurado = 'APROVADO(A) COM PROGRESSÃO PARCIAL'; } 
+                            else if (materiasPerdidas.length > 3) { statusApurado = 'REPROVADO(A)'; }
                             dadosExtraidos[nomeAluno] = { status: statusApurado, prog: materiasPerdidas.join(', ') };
-                            
                         } else {
                             dadosExtraidos[nomeAluno] = {};
                             mapDisciplinas.forEach(m => {
@@ -319,26 +233,17 @@
                                     var notaT1 = parseFloat((jsonRows[r][idx] || "0").toString().replace(',', '.')) || 0;
                                     var notaT2 = parseFloat((jsonRows[r][idx + 1] || "0").toString().replace(',', '.')) || 0;
                                     var notaT3 = parseFloat((jsonRows[r][idx + 2] || "0").toString().replace(',', '.')) || 0;
-                                    
                                     var stat = "APROVADO"; var vis = 0; 
-                                    
-                                    if (trim === '1º Trimestre') { 
-                                        vis = notaT1; if (vis < 20) stat = "REC"; 
-                                    } else if (trim === '2º Trimestre') { 
-                                        vis = notaT1 + notaT2; if (vis < 36) stat = "REC"; 
-                                    } else if (trim === '3º Trimestre') { 
-                                        vis = notaT1 + notaT2 + notaT3; if (vis < 60) stat = "REC"; 
-                                    } else if (trim === 'Estudos Independentes') {
-                                        vis = notaT1 + notaT2 + notaT3; if (vis < 60) stat = "EI"; 
-                                    }
-                                    
+                                    if (trim === '1º Trimestre') { vis = notaT1; if (vis < 20) stat = "REC"; } 
+                                    else if (trim === '2º Trimestre') { vis = notaT1 + notaT2; if (vis < 36) stat = "REC"; } 
+                                    else if (trim === '3º Trimestre') { vis = notaT1 + notaT2 + notaT3; if (vis < 60) stat = "REC"; } 
+                                    else if (trim === 'Estudos Independentes') { vis = notaT1 + notaT2 + notaT3; if (vis < 60) stat = "EI"; }
                                     dadosExtraidos[nomeAluno][m.sistema] = { status: stat };
                                 }
                             });
                         }
                     }
                 }
-                
                 aplicarImportacaoNaTela(dadosExtraidos, trim);
                 document.getElementById('resultadoImportacao').innerHTML = `<i class="fa-solid fa-check"></i> Importação concluída! Verifique as caixas vermelhas e clique em "Gravar Resultados".`;
             } catch(err) { 
@@ -357,11 +262,7 @@
                     sel.value = dados[aluno].status; atualizarCorSelect(sel);
                     var tdProg = document.getElementById('prog_' + aluno.replace(/\s+/g, '_'));
                     if (tdProg) {
-                        var newHtml = mapDisciplinas.map(m => {
-                            var isChecked = dados[aluno].prog.includes(m.sigla);
-                            var checkedAttr = isChecked ? 'checked' : '';
-                            return `<label><input type="checkbox" class="chk-prog-${aluno.replace(/\s+/g, '_')}" value="${m.sigla}" ${checkedAttr}> ${m.sigla}</label>`;
-                        }).join('');
+                        var newHtml = mapDisciplinas.map(m => { var isChecked = dados[aluno].prog.includes(m.sigla); var checkedAttr = isChecked ? 'checked' : ''; return `<label><input type="checkbox" class="chk-prog-${aluno.replace(/\s+/g, '_')}" value="${m.sigla}" ${checkedAttr}> ${m.sigla}</label>`; }).join('');
                         tdProg.innerHTML = newHtml;
                     }
                 }
@@ -369,17 +270,13 @@
         } else if (trim === 'Estudos Independentes') {
             document.querySelectorAll('.sel-trimestre').forEach(sel => {
                 var aluno = sel.getAttribute('data-aluno'); var comp = sel.getAttribute('data-comp');
-                if (dados[aluno] && dados[aluno][comp]) {
-                    sel.value = dados[aluno][comp].status; atualizarCorSelect(sel);
-                }
+                if (dados[aluno] && dados[aluno][comp]) { sel.value = dados[aluno][comp].status; atualizarCorSelect(sel); }
             });
         } else {
-            // Trimestres 1, 2 e 3 marcam automaticamente os botões
             document.querySelectorAll('.chk-trimestre').forEach(chk => {
                 var aluno = chk.getAttribute('data-aluno'); var comp = chk.getAttribute('data-comp');
                 if (dados[aluno] && dados[aluno][comp]) {
-                    chk.checked = (dados[aluno][comp].status === 'REC' || dados[aluno][comp].status === 'EI');
-                    toggleCheckColor(chk);
+                    chk.checked = (dados[aluno][comp].status === 'REC' || dados[aluno][comp].status === 'EI'); toggleCheckColor(chk);
                 }
             });
         }
