@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Conselho de Classe - E.E. Mestra Aurora</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -53,6 +53,7 @@
     .tag-aee { background: #e0e7ff; color: #4f46e5; border: 1px solid #4f46e5; }
     .tag-pdi { background: #fee2e2; color: #b91c1c; border: 1px solid #b91c1c; }
     .tag-sigla { background: #fef3c7; color: #b45309; border: 1px solid #b45309; }
+    
     .dashboard-header { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
     .dash-card { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
     .dash-card .num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 5px; }
@@ -70,12 +71,32 @@
     .aluno-card .tags-mini { display: flex; gap: 5px; margin-bottom: 15px; }
     .aluno-card .btn-dossie { width: 100%; background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; padding: 8px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: 0.2s; }
     .aluno-card .btn-dossie:hover { background: #e2e8f0; color: #0f172a; }
+    
+    /* NOVOS ESTILOS DO PROFESSOR (V2) */
+    .table-custom { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 0.8rem; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; }
+    .table-custom thead th { vertical-align: middle; text-align: center; font-weight: 800; padding: 12px 6px; border: 1px solid #cbd5e1; border-top: none; }
+    .table-custom tbody td { vertical-align: middle; text-align: center; padding: 10px 4px; border: 1px solid #e2e8f0; background: white; font-weight: 600; color: #334155; }
+    .th-dark { background-color: #1e293b !important; color: white; }
+    .th-status { background-color: #f8fafc !important; color: #0f172a !important; border-bottom: 3px solid #cbd5e1 !important; }
+    .th-diag { background-color: #ffffff !important; color: #475569 !important; border-bottom: 3px solid #e2e8f0 !important; font-size: 0.65rem; text-transform: uppercase; letter-spacing: -0.2px; line-height: 1.2; }
+    .th-diag i { font-size: 1.1rem; margin-bottom: 4px; }
+    .super-header { font-size: 0.7rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; background: #f8fafc; color: #0f172a; padding: 6px; border-bottom: 2px solid #cbd5e1; border-top: 1px solid #cbd5e1; }
+    .btn-toggle-status { width: 110px; padding: 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; text-align: center; cursor: pointer; transition: 0.2s; margin: 0 auto; user-select: none; }
+    .btn-toggle-aprovado { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+    .btn-toggle-rec { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
+    .btn-toggle-ei { background: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
+    .chk-giant { width: 18px; height: 18px; cursor: pointer; accent-color: #0f172a; margin: 0; }
+    .fechamento-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 20px; margin-top: 25px; }
+    .fechamento-title { font-size: 0.9rem; font-weight: 900; color: #1e293b; text-transform: uppercase; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+    .form-switch .form-check-input { width: 2.5em; height: 1.2em; cursor: pointer; }
+    .box-metodologia { transition: 0.3s opacity; }
+    .box-metodologia.desativado { opacity: 0.4; pointer-events: none; }
+
     #modalDossie { position: fixed; inset: 0; background: rgba(15,23,42,0.85); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 20px; }
     .modal-content-dossie { background: white; width: 100%; max-width: 800px; max-height: 90vh; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
     .modal-header-dossie { background: #f8fafc; padding: 15px 25px; border-bottom: 1px solid #cbd5e1; display: flex; justify-content: space-between; align-items: center; }
     .modal-body-dossie { padding: 25px; overflow-y: auto; background: #f1f5f9; }
     .btn-close-modal { background: none; border: none; font-size: 1.5rem; color: #64748b; cursor: pointer; }
-    .btn-close-modal:hover { color: #dc2626; }
     .pulse-radar { animation: pulseRadar 2s infinite; }
     @keyframes pulseRadar { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
     @media (max-width: 992px) {
@@ -136,10 +157,10 @@
         <button class="pill-btn active" onclick="switchTab('tab-dashboard', this)"><i class="fa-solid fa-chart-pie"></i> Início</button>
         <button class="pill-btn" onclick="switchTab('tab-estudantes', this)"><i class="fa-solid fa-address-book"></i> Estudantes</button>
         <button class="pill-btn" onclick="switchTab('tab-equipe', this)"><i class="fa-solid fa-users-gear"></i> Lotação</button>
-        <button class="pill-btn" onclick="switchTab('tab-professor', this)"><i class="fa-solid fa-chalkboard-user"></i> Professor</button>
+        <button class="pill-btn" onclick="switchTab('tab-professor', this)"><i class="fa-solid fa-chalkboard-user"></i> C. de Classe Trimestral e Final</button>
         <button class="pill-btn admin-only" onclick="switchTab('tab-especialista', this)"><i class="fa-solid fa-user-tie"></i> Especialista</button>
         <button class="pill-btn" onclick="switchTab('tab-datashow', this)"><i class="fa-solid fa-display"></i> Datashow</button>
-        <button class="pill-btn admin-only" style="color: #059669; font-weight: 800;" onclick="switchTab('tab-resultados', this)"><i class="fa-solid fa-graduation-cap"></i> C. de Classe Trimestral/Final</button>
+        <button class="pill-btn admin-only" style="color: #059669; font-weight: 800;" onclick="switchTab('tab-resultados', this)"><i class="fa-solid fa-graduation-cap"></i> Matriz Consolidada</button>
         <button class="pill-btn admin-only" onclick="switchTab('tab-banco', this)"><i class="fa-solid fa-database"></i> Banco</button>
         <button class="pill-btn admin-only" onclick="switchTab('tab-relatorios', this)"><i class="fa-solid fa-print"></i> Relatórios</button>
         <button class="pill-btn text-danger ms-2" onclick="location.reload()" title="Sair da sua conta e voltar à tela inicial"><i class="fa-solid fa-power-off"></i> Sair</button>
@@ -158,7 +179,7 @@
       </div>
     </section>
     
-    <!-- ESTUDANTES -->
+    <!-- ESTUDANTES (COM PROGRESSÃO, REFORÇO E ALFABETIZAÇÃO) -->
     <section id="tab-estudantes" class="view-panel">
         <div class="card-clean">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -183,16 +204,27 @@
                <div id="tagsTurmasSalvas" class="d-flex gap-2 mt-1 flex-wrap"></div>
             </div>
             <div class="table-responsive mb-3 admin-lock table-container-scroll">
-              <table class="table table-striped align-middle m-0">
-                <thead><tr><th width="5%" class="text-center">Nº</th><th width="45%">Nome do Estudante</th><th width="10%" class="text-center">AEE?</th><th width="15%" class="text-center">PDI?</th><th width="25%" class="text-center">Sigla</th></tr></thead>
-                <tbody id="tabelaEstudantesCorpo"><tr><td colspan="5" class="text-center fw-bold py-4 text-muted">Selecione a turma acima ou Clique em Sincronizar.</td></tr></tbody>
+              <table class="table table-striped align-middle m-0" style="font-size:0.85rem;">
+                <thead>
+                    <tr>
+                        <th width="4%" class="text-center">Nº</th>
+                        <th width="30%">Nome do Estudante</th>
+                        <th width="6%" class="text-center">AEE?</th>
+                        <th width="8%" class="text-center">PDI?</th>
+                        <th width="10%" class="text-center">Sigla</th>
+                        <th width="16%" class="text-center">Prog. Parcial (Comp.)</th>
+                        <th width="8%" class="text-center">Reforço?</th>
+                        <th width="8%" class="text-center">Não Alfab?</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaEstudantesCorpo"><tr><td colspan="8" class="text-center fw-bold py-4 text-muted">Selecione a turma acima ou Clique em Sincronizar.</td></tr></tbody>
               </table>
             </div>
             <button class="btn-mestra w-100 py-3 admin-only" onclick="salvarBaseEstudantes(this)" title="Envia e salva as alterações feitas na tabela acima para a Nuvem"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Guardar Modificações e Enviar para a Planilha</button>
         </div>
     </section>
     
-    <!-- LOTAÇÃO OTIMIZADA PARA IMPORTAR E-MAILS DO EXCEL COM LIXEIRA -->
+    <!-- LOTAÇÃO -->
     <section id="tab-equipe" class="view-panel admin-only">
         <div class="card-clean">
             <h4 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-users-gear text-primary me-2"></i>Lotação de Profissionais</h4>
@@ -210,10 +242,10 @@
         </div>
     </section>
     
-    <!-- MÓDULO DO PROFESSOR (COM ABAS DE FASES) -->
+    <!-- MÓDULO DO PROFESSOR (CONSELHO DE CLASSE TRIMESTRAL E FINAL) -->
     <section id="tab-professor" class="view-panel">
       <div class="card-clean">
-        <h4 class="fw-bold mb-3"><i class="fa-solid fa-chalkboard-user text-primary me-2"></i>Módulo do Professor (Avaliação e Resultados)</h4>
+        <h4 class="fw-bold mb-3"><i class="fa-solid fa-chalkboard-user text-primary me-2"></i>Conselho de Classe Trimestral e Final</h4>
         
         <div class="row g-3 mb-3">
           <div class="col-md-5"><label class="form-label fw-bold">O Seu Nome:</label><select id="profNomeSelect" class="form-select" onchange="atualizarFiltrosProfessor()"></select></div>
@@ -221,43 +253,65 @@
           <div class="col-md-3"><label class="form-label fw-bold">Turma:</label><select id="profTurmaSelect" class="form-select" onchange="exibirAbasFasesProf()"></select></div>
         </div>
         
-        <!-- NOVAS ABAS DE FASE VISÍVEIS -->
         <div id="containerFasesProfessor" style="display:none;">
             <label class="form-label fw-bold text-primary mb-2"><i class="fa-solid fa-layer-group me-1"></i> Selecione a Fase da Avaliação:</label>
-            <div class="nav-pills-modern mb-3" style="background: white; border-color: #94a3b8;">
-               <button class="pill-btn active" onclick="mudarFaseProf('1º Trimestre', this)">1º Trim</button>
-               <button class="pill-btn" onclick="mudarFaseProf('2º Trimestre', this)">2º Trim</button>
-               <button class="pill-btn" onclick="mudarFaseProf('3º Trimestre', this)">3º Trim</button>
-               <button class="pill-btn" style="color:#92400e;" onclick="mudarFaseProf('Estudos Independentes', this)">Est. Independentes</button>
-               <button class="pill-btn" style="color:#0f172a; font-weight: 900;" onclick="mudarFaseProf('FINAL', this)">Situação Final <i class="fa-solid fa-eye ms-1"></i></button>
+            <div class="nav-pills-modern mb-3" style="background: white; border-color: #94a3b8;" title="Clique numa aba para preencher ou consultar a situação da turma nessa fase.">
+               <button class="pill-btn active" onclick="mudarFaseProf('1º Trimestre', this)"><i class="fa-regular fa-calendar-check me-1"></i> 1º Trim</button>
+               <button class="pill-btn" onclick="mudarFaseProf('2º Trimestre', this)"><i class="fa-regular fa-calendar-check me-1"></i> 2º Trim</button>
+               <button class="pill-btn" onclick="mudarFaseProf('3º Trimestre', this)"><i class="fa-regular fa-calendar-check me-1"></i> 3º Trim</button>
+               <button class="pill-btn" style="color:#92400e;" onclick="mudarFaseProf('Estudos Independentes', this)"><i class="fa-solid fa-book-open me-1"></i> Est. Independentes</button>
+               <button class="pill-btn" style="color:#0f172a; font-weight: 900;" onclick="mudarFaseProf('FINAL', this)"><i class="fa-solid fa-eye me-1"></i> Situação Final</button>
             </div>
             
             <div id="areaTrabalhoProfessor" style="display: none;">
-              <div class="table-responsive mb-3 table-container-scroll">
-                <table class="table table-bordered m-0 align-middle">
+              <div class="table-responsive mb-3 table-container-scroll" style="border-radius: 8px;">
+                <table class="table-custom">
                   <thead>
                     <tr>
-                      <th style="width: 5%;">Nº</th>
-                      <th style="width: 25%; text-align: left;">Nome do Estudante</th>
-                      <th style="background:#0f172a; color:#facc15; font-size: 0.8rem; border: 2px solid #facc15;">RESULTADO<br>FINAL</th>
-                      <th style="background:#b91c1c;">Abaixo<br>Média</th>
-                      <th style="background:#b45309;">Infre-<br>quente</th>
-                      <th style="background:#b45309;">Motivo Afastamento</th>
-                      <th style="background:#0369a1;">Reforço<br>Escolar</th>
-                      <th style="background:#4338ca;">Prog.<br>Parcial</th>
-                      <th style="background:#475569;">Não<br>Alfab.</th>
+                        <th colspan="3" style="border:none; background:transparent;"></th>
+                        <th colspan="6" class="super-header">DIAGNÓSTICO DA TURMA NO TRIMESTRE</th>
+                    </tr>
+                    <tr>
+                        <th class="th-dark" style="width: 4%;">Nº</th>
+                        <th class="th-dark" style="width: 25%; text-align: left;">Nome do Estudante</th>
+                        <th class="th-status" style="width: 14%;">Situação</th>
+                        
+                        <th class="th-diag" style="border-bottom-color: #ef4444 !important;" title="Estudante obteve nota abaixo da média"><i class="fa-solid fa-chart-line text-danger"></i><br>Abaixo<br>Média</th>
+                        <th class="th-diag" style="border-bottom-color: #f59e0b !important;" title="Estudante possui muitas faltas/infrequência"><i class="fa-solid fa-user-clock text-warning"></i><br>Infre-<br>quente</th>
+                        <th class="th-diag" style="border-bottom-color: #3b82f6 !important;" title="Estudante encaminhado para Reforço Escolar (Preenchido pela Supervisão)"><i class="fa-solid fa-book-medical text-primary"></i><br>Reforço<br>Escolar</th>
+                        <th class="th-diag" style="border-bottom-color: #8b5cf6 !important;" title="Estudante encontra-se em Progressão Parcial (Preenchido pela Supervisão)"><i class="fa-solid fa-tasks text-purple"></i><br>Prog.<br>Parcial</th>
+                        <th class="th-diag" style="border-bottom-color: #64748b !important;" title="Estudante não está alfabetizado (Preenchido pela Supervisão)"><i class="fa-solid fa-font text-secondary"></i><br>Não<br>Alfab.</th>
+                        <th class="th-diag" style="border-bottom-color: #06b6d4 !important;" title="Estudante é público AEE mas Não possui PDI"><i class="fa-solid fa-file-circle-xmark text-info"></i><br>Sem<br>PDI</th>
                     </tr>
                   </thead>
                   <tbody id="tabelaProfessorCorpo"></tbody>
                 </table>
               </div>
               
-              <div id="divCaracteristicasProf">
-                  <textarea id="profCaracteristicas" class="input-mestra mb-2" placeholder="Características da turma"></textarea>
-                  <select id="profIntervencaoSN" class="form-select mb-2"><option>Sim</option><option>Não</option></select>
-                  <textarea id="profMetodologias" class="input-mestra mb-3" placeholder="Metodologias"></textarea>
+              <!-- NOVO PAINEL DE FECHAMENTO -->
+              <div id="divCaracteristicasProf" class="fechamento-box">
+                  <div class="fechamento-title"><i class="fa-solid fa-clipboard-check text-primary"></i> Relatório Final da Turma na Fase</div>
+                  
+                  <div class="mb-3">
+                      <label class="fw-bold mb-1 text-dark" style="font-size:0.85rem;">1. Características relevantes da turma que sejam importantes:</label>
+                      <textarea id="profCaracteristicas" class="form-control" rows="2" style="font-size:0.85rem; border-color:#cbd5e1;" placeholder="Ex: Turma participativa, porém com dificuldades de concentração..."></textarea>
+                  </div>
+          
+                  <div class="d-flex flex-column flex-md-row align-items-start gap-3 p-3 mt-3" style="background: white; border-radius: 8px; border: 1px solid #cbd5e1;">
+                      <div class="form-check form-switch pt-1 me-4">
+                          <input class="form-check-input mt-1" type="checkbox" id="chkIntervencao" checked onchange="toggleMetodologiasProf()">
+                          <label class="form-check-label ms-2 fw-bold text-dark" for="chkIntervencao" style="cursor: pointer; user-select: none; font-size:0.85rem;">
+                              2. Foram realizadas Intervenções Pedagógicas importantes?
+                          </label>
+                      </div>
+                      <div class="flex-grow-1 w-100 box-metodologia" id="caixaMetodologia">
+                          <label class="fw-bold mb-1 text-primary" style="font-size:0.8rem;">Quais metodologias, estratégias ou ações foram implementadas?</label>
+                          <textarea id="profMetodologias" class="form-control" rows="2" style="font-size:0.85rem; border-color:#cbd5e1;" placeholder="Ex: Aulas de reforço no contra-turno, trabalhos em pares, uso de jogos..."></textarea>
+                      </div>
+                  </div>
               </div>
-              <button id="btnSalvarMatrizProf" class="btn btn-success w-100 py-3 fw-bold shadow-sm" onclick="salvarMatrizProfessor(this)" title="Grava as alterações feitas no seu dispositivo e envia para a Nuvem oficial. Sem sobrepor notas dos colegas!"><i class="fa-solid fa-floppy-disk me-2"></i> Gravar Matriz e Enviar Resultados Oficiais</button>
+              
+              <button id="btnSalvarMatrizProf" class="btn btn-success w-100 py-3 mt-3 fw-bold shadow-sm" onclick="salvarMatrizProfessor(this)" title="Grava os dados preenchidos localmente e envia de forma segura para a Nuvem da Escola, sem apagar os dados dos seus colegas."><i class="fa-solid fa-floppy-disk me-2"></i> Gravar Diagnóstico e Enviar Resultados Oficiais</button>
             </div>
         </div>
       </div>
@@ -459,7 +513,7 @@
     var turmaAtivaSessao = ""; var alunoAtivoSessao = null; var timerInterval = null; var segundosRestantes = 180; var perfilLogado = ""; var bancoDeDadosNuvem = {}; 
     var radarTempoRealInterval = null; 
     var tipoLoginAtual = ''; var nomeProfLogado = ''; 
-    var profFaseAtual = '1º Trimestre'; // NOVA VARIÁVEL PARA O PROFESSOR
+    var profFaseAtual = '1º Trimestre'; // GESTÃO DE FASES NO PROFESSOR
  
     var criteriosDetalhados = [
       { nome: "Convivência e Comportamento", chave: "convivencia", opcoes: [{ texto: "🟢 Convive bem com todos", escola: [], familia: [] }, { texto: "🟡 Às vezes precisa de orientação para conviver bem", escola: ["Orientar o estudante individualmente."], familia: ["Fortalecer hábitos de estudos em casa."] }, { texto: "🔴 Tem dificuldade de convivência", escola: ["Reforçar os combinados da turma."], familia: ["Fortalecer hábitos de estudos em casa."] }]},
@@ -476,6 +530,7 @@
  
     var encEscolaOpcoes = ["Reforçar os combinados da turma.", "Orientar o estudante individualmente.", "Reforçar positivamente os avanços.", "Propor atividades de reforço.", "Realizar agrupamentos temporários", "Propor atividades diferenciadas.", "Organizar o mapeamento na sala", "Valorizar as contribuições do estudante.", "Solicitar a presença da família.", "Criar oportunidades de participação.", "Orientar sobre rotina de estudos.", "Orientar o estudante sobre planejamento e organização.", "Acompanhar a frequência escolar.", "Orientar sobre a importância da assiduidade.", "Comunicar a família sobre as faltas.", "Monitorar a frequência do estudante.", "Agendar reunião com a família para acompanhamento."];
     var encFamiliaOpcoes = ["Acompanhar a organização dos materiais.", "Estabelecer rotina para realização das tarefas de casa", "Não deixar o filho faltar sem justificativa", "Acompanhar os cadernos do filho", "Visitar a escola de vez em quando", "Fortalecer hábitos de estudos em casa", "Incentivar a leitura em casa", "Verificar sempre o uniforme escolar"];
+ 
     var sugestoesObservacao = ["Demonstra respeito às regras de convivência.", "Avança na aprendizagem com apoio e orientação.", "Tem apresentado evolução na organização.", "Realiza as atividades com orientação.", "Tem apresentado melhora no cumprimento das atividades.", "Apresenta dificuldade em seguir combinados.", "Demonstra desrespeito ao professor.", "Tem atitudes que geram conflitos.", "Em alguns momentos, perde o foco.", "Apresenta muita inquietação durante as aulas.", "Não tem demonstrado interesse pelas atividades.", "As muitas faltas têm prejudicado a aprendizagem.", "Demonstra evolução na convivência escolar.", "Envolve-se em confusões.", "Traz brinquedos de casa e por isso perde o foco nas aulas."];
     
     function autoExpand(field) {
@@ -772,23 +827,35 @@
       var adicionados = 0;
       nomesInput.forEach(novoNome => {
          var jaExiste = alunosExistentes.some(a => a.nome === novoNome);
-         if(!jaExiste) { alunosExistentes.push({ numero: alunosExistentes.length + 1, nome: novoNome, aee: false, pdi: "Não", sigla: "" }); adicionados++; }
+         if(!jaExiste) { alunosExistentes.push({ numero: alunosExistentes.length + 1, nome: novoNome, aee: false, pdi: "Não", sigla: "", prog: "", reforco: false, alfab: false }); adicionados++; }
       });
       localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunosExistentes)); 
       document.getElementById('txtListaEstudantes').value = ''; carregarEstudantesParaEdicao(); alert(adicionados + " novos alunos adicionados à turma " + turma + "!");
     }
     
+    // GESTÃO DE ESTUDANTES: AGORA COM COLUNAS DE PROGRESSÃO, REFORÇO E ALFABETIZAÇÃO
     function carregarEstudantesParaEdicao() { 
       var turma = document.getElementById('selEstudanteTurma').value; 
       var tbody = document.getElementById('tabelaEstudantesCorpo'); 
-      if(!turma) { tbody.innerHTML = '<tr><td colspan="5" class="text-center fw-bold py-4 text-muted">Selecione uma turma acima.</td></tr>'; return; } 
+      if(!turma) { tbody.innerHTML = '<tr><td colspan="8" class="text-center fw-bold py-4 text-muted">Selecione uma turma acima.</td></tr>'; return; } 
       var alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]'); 
       var alunos = []; var vistos = new Set();
       alunosRaw.forEach(a => { if(!vistos.has(a.nome)){ vistos.add(a.nome); alunos.push(a); }});
       localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos));
-      if(alunos.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center fw-bold py-4 text-muted">Nenhum estudante registado nesta turma.</td></tr>'; return; } 
+      if(alunos.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="text-center fw-bold py-4 text-muted">Nenhum estudante registado nesta turma.</td></tr>'; return; } 
       tbody.innerHTML = ''; 
-      alunos.forEach((a, i) => { tbody.innerHTML += `<tr><td class="fw-bold text-muted text-center">${i+1}</td><td class="fw-bold nome-aluno-td">${a.nome}</td><td class="text-center"><input class="form-check-input aee-chk" type="checkbox" style="transform: scale(1.3);" ${a.aee ? 'checked' : ''}></td><td class="text-center"><select class="form-select form-select-sm pdi-sel fw-bold text-center"><option value="Não" ${a.pdi !== 'Sim' ? 'selected' : ''}>Não</option><option value="Sim" ${a.pdi === 'Sim' ? 'selected' : ''}>Sim</option></select></td><td class="text-center"><select class="form-select form-select-sm sigla-sel fw-bold text-center"><option value="" ${!a.sigla ? 'selected' : ''}>Nenhuma</option><option value="CL" ${a.sigla==='CL'?'selected':''}>CL</option><option value="DSL" ${a.sigla==='DSL'?'selected':''}>DSL</option><option value="CLA" ${a.sigla==='CLA'?'selected':''}>CLA</option></select></td></tr>`; }); 
+      alunos.forEach((a, i) => { 
+        tbody.innerHTML += `<tr>
+            <td class="fw-bold text-muted text-center">${i+1}</td>
+            <td class="fw-bold nome-aluno-td">${a.nome}</td>
+            <td class="text-center"><input class="form-check-input aee-chk" type="checkbox" style="transform: scale(1.3);" ${a.aee ? 'checked' : ''}></td>
+            <td class="text-center"><select class="form-select form-select-sm pdi-sel fw-bold text-center"><option value="Não" ${a.pdi !== 'Sim' ? 'selected' : ''}>Não</option><option value="Sim" ${a.pdi === 'Sim' ? 'selected' : ''}>Sim</option></select></td>
+            <td class="text-center"><select class="form-select form-select-sm sigla-sel fw-bold text-center"><option value="" ${!a.sigla ? 'selected' : ''}>Nenhuma</option><option value="CL" ${a.sigla==='CL'?'selected':''}>CL</option><option value="DSL" ${a.sigla==='DSL'?'selected':''}>DSL</option><option value="CLA" ${a.sigla==='CLA'?'selected':''}>CLA</option></select></td>
+            <td><input type="text" class="form-control form-control-sm prog-input fw-bold" placeholder="Ex: MAT, HIST" value="${a.prog||''}"></td>
+            <td class="text-center"><input class="form-check-input ref-chk" type="checkbox" style="transform: scale(1.3);" ${a.reforco ? 'checked' : ''}></td>
+            <td class="text-center"><input class="form-check-input alfab-chk" type="checkbox" style="transform: scale(1.3);" ${a.alfab ? 'checked' : ''}></td>
+        </tr>`; 
+      }); 
     }
     
     function salvarBaseEstudantes(btn) { 
@@ -798,7 +865,15 @@
       var alunos = []; 
       document.querySelectorAll('#tabelaEstudantesCorpo tr').forEach((tr, i) => { 
         var nomeTd = tr.querySelector('.nome-aluno-td'); if(!nomeTd) return; 
-        alunos.push({ numero: i+1, nome: nomeTd.innerText, aee: tr.querySelector('.aee-chk').checked, pdi: tr.querySelector('.pdi-sel').value, sigla: tr.querySelector('.sigla-sel').value }); 
+        alunos.push({ 
+            numero: i+1, nome: nomeTd.innerText, 
+            aee: tr.querySelector('.aee-chk').checked, 
+            pdi: tr.querySelector('.pdi-sel').value, 
+            sigla: tr.querySelector('.sigla-sel').value,
+            prog: tr.querySelector('.prog-input').value,
+            reforco: tr.querySelector('.ref-chk').checked,
+            alfab: tr.querySelector('.alfab-chk').checked
+        }); 
       }); 
       if(alunos.length > 0) { 
         localStorage.setItem('mestra_estudantes_' + turma, JSON.stringify(alunos)); 
@@ -912,6 +987,51 @@
         carregarTurmaParaProfessor();
     }
     
+    // BOTÃO DE 1 CLIQUE 
+    function toggleProfessorStatus(btn) {
+        if(profFaseAtual === 'FINAL') return; 
+        
+        if(profFaseAtual === 'Estudos Independentes') {
+            // No EI, o clique alterna apenas entre Aprovado e EI
+            if(btn.dataset.val === 'APROVADO') {
+                btn.dataset.val = 'EI';
+                btn.className = 'btn-toggle-status btn-toggle-ei';
+                btn.innerHTML = '🟡 Estudos Indep.';
+            } else {
+                btn.dataset.val = 'APROVADO';
+                btn.className = 'btn-toggle-status btn-toggle-aprovado';
+                btn.innerHTML = '✔ Aprovado';
+            }
+        } else {
+            // Nos Trimestres 1, 2, 3 alterna entre Aprovado e REC
+            if(btn.dataset.val === 'APROVADO') {
+                btn.dataset.val = 'REC';
+                btn.className = 'btn-toggle-status btn-toggle-rec';
+                btn.innerHTML = '🔴 Recuperação';
+            } else {
+                btn.dataset.val = 'APROVADO';
+                btn.className = 'btn-toggle-status btn-toggle-aprovado';
+                btn.innerHTML = '✔ Aprovado';
+            }
+        }
+    }
+
+    // LÓGICA DO SWITCH DE INTERVENÇÕES
+    function toggleMetodologiasProf() {
+        var chk = document.getElementById('chkIntervencao');
+        var caixa = document.getElementById('caixaMetodologia');
+        var textarea = document.getElementById('profMetodologias');
+        
+        if(chk.checked) {
+            caixa.classList.remove('desativado');
+            textarea.disabled = false;
+        } else {
+            caixa.classList.add('desativado');
+            textarea.disabled = true;
+            textarea.value = ''; 
+        }
+    }
+
     function carregarTurmaParaProfessor() { 
       var turma = document.getElementById('profTurmaSelect').value; 
       var prof = document.getElementById('profNomeSelect').value; 
@@ -928,8 +1048,11 @@
       var dadosSalvos = JSON.parse(localStorage.getItem(chaveQualitativa) || '{"alunos":[], "caracteristicas":"", "intervencaoSN":"Sim", "metodologia":""}'); 
       
       document.getElementById('profCaracteristicas').value = dadosSalvos.caracteristicas || ''; 
-      document.getElementById('profIntervencaoSN').value = dadosSalvos.intervencaoSN || 'Sim'; 
+      
+      var chkInterv = document.getElementById('chkIntervencao');
+      chkInterv.checked = (dadosSalvos.intervencaoSN !== "Não");
       document.getElementById('profMetodologias').value = dadosSalvos.metodologia || ''; 
+      toggleMetodologiasProf();
       
       alunos.forEach(a => { 
         var bd = dadosSalvos.alunos.find(x => x.nome === a.nome) || {}; 
@@ -957,59 +1080,45 @@
         } else {
             var chaveBusca = profFaseAtual === 'Estudos Independentes' ? '3º Trimestre' : profFaseAtual;
             var resultadosOficiais = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + chaveBusca) || '{}');
-            var pontuacoesExatas = JSON.parse(localStorage.getItem('mestra_pontos_' + turma + '_' + chaveBusca) || '{}');
             
             if(resultadosOficiais[a.nome] && resultadosOficiais[a.nome][comp]) {
                 statusAtual = resultadosOficiais[a.nome][comp];
             }
             
-            var pontosHtml = '- pts';
-            if(pontuacoesExatas[a.nome] && pontuacoesExatas[a.nome][comp]) {
-                pontosHtml = pontuacoesExatas[a.nome][comp];
-            }
+            // Força a garantir que as opções inválidas não aparecem no toggle
+            if (profFaseAtual === 'Estudos Independentes' && statusAtual !== 'EI') statusAtual = 'APROVADO';
+            if (profFaseAtual !== 'Estudos Independentes' && statusAtual !== 'REC') statusAtual = 'APROVADO';
 
-            var opcoesExtra = '';
-            if (profFaseAtual === 'Estudos Independentes') {
-                opcoesExtra = `
-                    <option value="APROVADO" ${statusAtual==='APROVADO'?'selected':''}>✔ Aprovado</option>
-                    <option value="EI" ${statusAtual==='EI'?'selected':''}>🟡 EI (Est. Indep.)</option>
-                `;
-            } else {
-                opcoesExtra = `
-                    <option value="APROVADO" ${statusAtual==='APROVADO'?'selected':''}>✔ Aprovado</option>
-                    <option value="REC" ${statusAtual==='REC'?'selected':''}>🔴 Recuperação</option>
-                `;
-            }
-
-            var corFundo = statusAtual === 'REC' ? '#fee2e2' : (statusAtual === 'EI' ? '#fef3c7' : '#d1fae5');
-            var corTexto = statusAtual === 'REC' ? '#991b1b' : (statusAtual === 'EI' ? '#92400e' : '#065f46');
+            var btnClass = statusAtual === 'REC' ? 'btn-toggle-rec' : (statusAtual === 'EI' ? 'btn-toggle-ei' : 'btn-toggle-aprovado');
+            var btnText = statusAtual === 'REC' ? '🔴 Recuperação' : (statusAtual === 'EI' ? '🟡 Estudos Indep.' : '✔ Aprovado');
             
+            // MARCAÇÕES AUTOMÁTICAS VINDAS DO ESPECIALISTA (AEE, Reforço, Prog e Alfab)
+            var tagAEE = a.aee ? `<span class="badge bg-primary ms-1" style="font-size:0.65rem;" title="Atendimento Educacional Especializado (Vindo da Supervisão)">AEE</span>` : '';
+            var refChecked = a.reforco ? 'checked onclick="return false;" title="Marcado pela Supervisão"' : (bd.reforco?'checked':'');
+            var progChecked = a.prog ? 'checked onclick="return false;" title="Marcado pela Supervisão"' : (bd.prog?'checked':'');
+            var alfabChecked = a.alfab ? 'checked onclick="return false;" title="Marcado pela Supervisão"' : (bd.alfab?'checked':'');
+            
+            // "Sem PDI" é condicional
+            var semPdiChecked = (a.aee && a.pdi === 'Não') ? 'checked onclick="return false;" title="Calculado automaticamente"' : (bd.sempdi?'checked':'');
+
             tbody.innerHTML += `
               <tr>
                 <td class="text-center text-muted fw-bold">${a.numero}</td>
-                <td class="fw-bold prof-nome-aluno">${a.nome}</td>
-                <td style="padding: 6px; text-align: center;">
-                  <div style="font-size: 0.8rem; font-weight: 800; color: #1e293b; margin-bottom: 6px; line-height: 1.2; background: #f1f5f9; padding: 4px; border-radius: 4px; border: 1px solid #cbd5e1;">${pontosHtml}</div>
-                  <select class="form-select form-select-sm fw-bold sel-status-prof" style="width: 130px; font-size:0.75rem; background-color: ${corFundo}; color: ${corTexto}; border-color: ${corTexto}; margin: 0 auto;" onchange="
-                     this.style.backgroundColor = this.value === 'REC' ? '#fee2e2' : (this.value === 'EI' ? '#fef3c7' : '#d1fae5'); 
-                     this.style.color = this.value === 'REC' ? '#991b1b' : (this.value === 'EI' ? '#92400e' : '#065f46'); 
-                     this.style.borderColor = this.style.color;
-                  ">
-                    ${opcoesExtra}
-                  </select>
+                <td class="fw-bold prof-nome-aluno" style="text-align: left;">${a.nome} ${tagAEE}</td>
+                <td>
+                  <div class="btn-toggle-status ${btnClass}" data-val="${statusAtual}" onclick="toggleProfessorStatus(this)">${btnText}</div>
                 </td>
-                <td class="text-center"><input class="form-check-input chk-media" type="checkbox" style="transform: scale(1.3);" ${bd.abaixoMedia?'checked':''}></td>
-                <td class="text-center"><input class="form-check-input chk-falta" type="checkbox" style="transform: scale(1.3);" ${bd.falta?'checked':''}></td>
-                <td><input type="text" class="form-control form-control-sm inp-motivo" placeholder="Motivo..." value="${bd.motivoFalta||''}"></td>
-                <td class="text-center"><input class="form-check-input chk-reforco" type="checkbox" style="transform: scale(1.3);" ${bd.reforco?'checked':''}></td>
-                <td class="text-center"><input class="form-check-input chk-prog" type="checkbox" style="transform: scale(1.3);" ${bd.prog?'checked':''}></td>
-                <td class="text-center"><input class="form-check-input chk-alfab" type="checkbox" style="transform: scale(1.3);" ${bd.alfab?'checked':''}></td>
+                <td><input type="checkbox" class="chk-giant chk-media" ${bd.abaixoMedia?'checked':''}></td>
+                <td><input type="checkbox" class="chk-giant chk-falta" ${bd.falta?'checked':''}></td>
+                <td><input type="checkbox" class="chk-giant chk-reforco" ${refChecked}></td>
+                <td><input type="checkbox" class="chk-giant chk-prog" ${progChecked}></td>
+                <td><input type="checkbox" class="chk-giant chk-alfab" ${alfabChecked}></td>
+                <td><input type="checkbox" class="chk-giant chk-sempdi" ${semPdiChecked}></td>
               </tr>
             `; 
         }
       }); 
       
-      // OCULTA OS BOTÕES DE GRAVAÇÃO SE ESTIVER NA ABA FINAL (APENAS LEITURA)
       if(profFaseAtual === 'FINAL') {
           document.getElementById('btnSalvarMatrizProf').style.display = 'none';
           document.getElementById('divCaracteristicasProf').style.display = 'none';
@@ -1026,7 +1135,8 @@
       var originalText = btn.innerHTML; 
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> A guardar na Nuvem...'; 
       
-      var aval = { turma: turma, componente: comp, trimestre: trim, professor: document.getElementById('profNomeSelect').value, caracteristicas: document.getElementById('profCaracteristicas').value, intervencaoSN: document.getElementById('profIntervencaoSN').value, metodologia: document.getElementById('profMetodologias').value, alunos: [] }; 
+      var formInterv = document.getElementById('chkIntervencao').checked ? "Sim" : "Não";
+      var aval = { turma: turma, componente: comp, trimestre: trim, professor: document.getElementById('profNomeSelect').value, caracteristicas: document.getElementById('profCaracteristicas').value, intervencaoSN: formInterv, metodologia: document.getElementById('profMetodologias').value, alunos: [] }; 
       
       var chaveGravar = trim === 'Estudos Independentes' ? '3º Trimestre' : trim;
       var resultadosOficiais = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + chaveGravar) || '{}');
@@ -1035,9 +1145,16 @@
 
       document.querySelectorAll('#tabelaProfessorCorpo tr').forEach(tr => { 
         var nomeA = tr.querySelector('.prof-nome-aluno').childNodes[0].nodeValue.trim();
-        var statusFinal = tr.querySelector('.sel-status-prof').value;
+        var statusFinal = tr.querySelector('.btn-toggle-status').dataset.val;
+        
         aval.alunos.push({ 
-            nome: nomeA, abaixoMedia: tr.querySelector('.chk-media').checked, falta: tr.querySelector('.chk-falta').checked, motivoFalta: tr.querySelector('.inp-motivo').value, reforco: tr.querySelector('.chk-reforco').checked, prog: tr.querySelector('.chk-prog').checked, alfab: tr.querySelector('.chk-alfab').checked 
+            nome: nomeA, 
+            abaixoMedia: tr.querySelector('.chk-media').checked, 
+            falta: tr.querySelector('.chk-falta').checked, 
+            reforco: tr.querySelector('.chk-reforco').checked, 
+            prog: tr.querySelector('.chk-prog').checked, 
+            alfab: tr.querySelector('.chk-alfab').checked,
+            sempdi: tr.querySelector('.chk-sempdi').checked
         }); 
         
         if(!resultadosOficiais[nomeA]) resultadosOficiais[nomeA] = {};
