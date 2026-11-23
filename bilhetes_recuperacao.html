@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Bilhetes Oficiais de Resultados - E.E. Mestra Aurora</title>
+  <title>Bilhetes Oficiais de Resultados e Recuperação - E.E. Mestra Aurora</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -16,17 +16,17 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
     .no-print select, .no-print input {
-      padding: 8px 10px; border-radius: 7px; border: none; font-weight: 700; font-family: 'Inter'; font-size: 0.85rem; outline: none;
+      padding: 8px 10px; border-radius: 7px; border: none; font-weight: 700; font-family: 'Inter'; font-size: 0.84rem; outline: none;
     }
     .btn-acao {
       background: #10b981; color: #fff; border: none; padding: 9px 15px; font-weight: 800;
-      border-radius: 7px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; font-size: 0.85rem;
+      border-radius: 7px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; font-size: 0.84rem;
     }
     .status-bar { width: 100%; text-align: center; color: #cbd5e1; font-size: 0.8rem; font-weight: 600; }
 
     #relatorioContainer { display: flex; flex-direction: column; align-items: center; padding: 18px 0 30px 0; }
 
-    /* 2 bilhetes bem estruturados por folha A4 (meia página cada, com canhoto) */
+    /* 2 bilhetes bem distribuídos por folha A4 (sem canhoto de devolução) */
     .pagina-a4 {
       width: 210mm; height: 297mm; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       margin-bottom: 18px; page-break-after: always; page-break-inside: avoid;
@@ -34,37 +34,47 @@
     }
 
     .bilhete {
-      width: 100%; height: 148.5mm; padding: 7mm 12mm 5mm 12mm;
-      border-bottom: 2px dashed #64748b;
+      width: 100%; height: 148.5mm; padding: 9mm 14mm 8mm 14mm;
+      border-bottom: 1.8px dashed #94a3b8;
       display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
     }
     .bilhete:nth-child(2) { border-bottom: none; }
     .bilhete-vazio { visibility: hidden; border: none; }
 
-    .topo-conteudo { display: flex; flex-direction: column; gap: 5px; }
+    .topo-conteudo { display: flex; flex-direction: column; gap: 7px; }
 
-    .header-b { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #0f172a; padding-bottom: 4px; }
+    .header-b { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #0f172a; padding-bottom: 5px; gap: 8px; }
     .header-esq { display: flex; align-items: center; gap: 10px; }
-    .header-b img { height: 34px; object-fit: contain; }
-    .header-b h2 { margin: 0; font-size: 9.5pt; font-weight: 900; text-transform: uppercase; color: #0f172a; }
-    .header-b p { margin: 1px 0 0 0; font-size: 7.2pt; color: #475569; font-weight: 600; }
-    .badge-fase { background: #e0e7ff; color: #3730a3; padding: 3px 8px; border-radius: 5px; font-size: 7.5pt; font-weight: 900; text-transform: uppercase; }
+    .header-b img { height: 38px; object-fit: contain; }
+    .header-b h2 { margin: 0; font-size: 10pt; font-weight: 900; text-transform: uppercase; color: #0f172a; }
+    .header-b p { margin: 1px 0 0 0; font-size: 7.5pt; color: #475569; font-weight: 600; }
+
+    .faixa-tipo {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;
+      padding: 5px 10px; border-radius: 6px; font-size: 8.2pt; font-weight: 900; text-transform: uppercase;
+      border: 1.5px solid #cbd5e1; background: #f1f5f9; color: #0f172a;
+    }
+    .faixa-trimestral { background: #eff6ff; border-color: #3b82f6; color: #1e3a8a; }
+    .faixa-final { background: #fef2f2; border-color: #ef4444; color: #7f1d1d; }
+    .faixa-ei { background: #fffbeb; border-color: #f59e0b; color: #78350f; }
+    .faixa-online { background: #fff7ed; border-color: #f97316; color: #9a3412; }
+    .faixa-resultado { background: #ecfdf5; border-color: #10b981; color: #065f46; }
 
     .tarja-estudante {
-      background: #f8fafc; border: 1.2px solid #cbd5e1; padding: 5px 9px; border-radius: 5px;
-      font-size: 8.8pt; font-weight: 900; color: #0f172a; display: flex; justify-content: space-between; align-items: center;
+      background: #f8fafc; border: 1.2px solid #cbd5e1; padding: 6px 10px; border-radius: 6px;
+      font-size: 9.2pt; font-weight: 900; color: #0f172a; display: flex; justify-content: space-between; align-items: center;
     }
 
-    .texto-oficial { font-size: 7.8pt; color: #1e293b; line-height: 1.32; text-align: justify; }
+    .texto-oficial { font-size: 8.2pt; color: #1e293b; line-height: 1.38; text-align: justify; }
     .texto-sucesso {
-      font-size: 7.8pt; color: #065f46; font-weight: 700; line-height: 1.32;
-      background: #ecfdf5; padding: 5px 8px; border-radius: 5px; border: 1px solid #10b981;
+      font-size: 8.2pt; color: #065f46; font-weight: 700; line-height: 1.38;
+      background: #ecfdf5; padding: 6px 9px; border-radius: 6px; border: 1px solid #10b981;
     }
 
-    .disciplinas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 2px; }
-    .disp-item { padding: 4px 5px; border: 1px solid #cbd5e1; border-radius: 5px; text-align: center; display: flex; flex-direction: column; gap: 1.5px; }
-    .disp-nome { font-size: 7pt; font-weight: 900; text-transform: uppercase; color: #334155; }
-    .disp-status { font-size: 6.3pt; font-weight: 800; }
+    .disciplinas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 2px; }
+    .disp-item { padding: 5px 6px; border: 1px solid #cbd5e1; border-radius: 5px; text-align: center; display: flex; flex-direction: column; gap: 2px; }
+    .disp-nome { font-size: 7.4pt; font-weight: 900; text-transform: uppercase; color: #334155; }
+    .disp-status { font-size: 6.6pt; font-weight: 800; }
 
     .disp-aprovado { background: #f0fdf4; border-color: #86efac; }
     .disp-aprovado .disp-nome { color: #14532d; } .disp-aprovado .disp-status { color: #166534; }
@@ -72,21 +82,20 @@
     .disp-rec .disp-nome { color: #7f1d1d; } .disp-rec .disp-status { color: #991b1b; }
     .disp-ei { background: #fef3c7; border-color: #f59e0b; }
     .disp-ei .disp-nome { color: #78350f; } .disp-ei .disp-status { color: #92400e; }
-    .disp-janeiro { background: #ffedd5; border-color: #f97316; }
-    .disp-janeiro .disp-nome { color: #9a3412; } .disp-janeiro .disp-status { color: #c2410c; }
+    .disp-online { background: #ffedd5; border-color: #f97316; }
+    .disp-online .disp-nome { color: #9a3412; } .disp-online .disp-status { color: #c2410c; }
 
-    .assinatura-escola { text-align: center; padding-top: 4px; }
-    .assinatura-escola span { display: inline-block; width: 52%; border-top: 1.2px solid #0f172a; padding-top: 2px; font-size: 7pt; font-weight: 800; }
-
-    .canhoto {
-      border-top: 1.5px dashed #94a3b8; padding-top: 4px; background: #fafafa;
-      padding: 4px 6px; border-radius: 4px;
+    .mensagem-final-box {
+      padding: 6px 10px; border-radius: 6px; font-size: 8pt; line-height: 1.35; font-weight: 600;
+      border-left: 4px solid #0f172a; background: #f8fafc; color: #1e293b;
     }
-    .canhoto-topo { display: flex; justify-content: space-between; font-size: 6.8pt; font-weight: 900; text-transform: uppercase; color: #0f172a; margin-bottom: 2px; }
-    .canhoto-msg { font-size: 7pt; color: #334155; margin-bottom: 9px; line-height: 1.25; }
-    .canhoto-rodape { display: flex; justify-content: space-between; gap: 14px; font-size: 6.8pt; font-weight: 700; }
-    .canhoto-ass { flex: 1; text-align: center; border-top: 1px solid #0f172a; padding-top: 2px; }
-    .canhoto-data { width: 30%; text-align: center; border-top: 1px solid #0f172a; padding-top: 2px; }
+    .msg-aprovado { border-left-color: #10b981; background: #f0fdf4; color: #065f46; }
+    .msg-progressao { border-left-color: #f59e0b; background: #fffbeb; color: #78350f; }
+    .msg-online { border-left-color: #f97316; background: #fff7ed; color: #9a3412; }
+    .msg-retido { border-left-color: #ef4444; background: #fef2f2; color: #7f1d1d; }
+
+    .assinatura-escola { text-align: center; padding-top: 8px; }
+    .assinatura-escola span { display: inline-block; width: 54%; border-top: 1.2px solid #0f172a; padding-top: 3px; font-size: 7.5pt; font-weight: 800; color: #0f172a; }
 
     @media print {
       body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -100,16 +109,18 @@
 
   <div class="no-print">
     <select id="selTurma"></select>
-    <select id="selTrimestre">
-      <option value="1º Trimestre">1º Trimestre (Recuperação)</option>
-      <option value="2º Trimestre" selected>2º Trimestre (Recuperação)</option>
-      <option value="3º Trimestre">3º Trimestre (Recuperação)</option>
-      <option value="Estudos Independentes">★ Estudos Independentes</option>
-      <option value="FINAL">★ Situação Final</option>
+    <select id="selModalidade">
+      <option value="REC_T1">Recuperação Trimestral — 1º Trimestre</option>
+      <option value="REC_T2" selected>Recuperação Trimestral — 2º Trimestre</option>
+      <option value="REC_T3">Recuperação Trimestral — 3º Trimestre</option>
+      <option value="REC_FINAL">Recuperação Final — 3º Trimestre</option>
+      <option value="EI">Estudos Independentes — 3º Trimestre</option>
+      <option value="ONLINE">Avaliação On-line (SEE/MG)</option>
+      <option value="RESULTADO_FINAL">★ Resultado Final do Ano Letivo</option>
     </select>
     <select id="selFiltro">
       <option value="TODOS">Todos os estudantes da turma</option>
-      <option value="INTERVENCAO">Apenas com Recuperação / EI / Pendência</option>
+      <option value="INTERVENCAO">Apenas em Recuperação / Pendência</option>
     </select>
     <input type="text" id="inpAno" value="2026" style="width: 72px; text-align: center;">
     <button class="btn-acao" id="btnGerar" style="background:#4f46e5;" onclick="buscarEGerar()">
@@ -121,7 +132,7 @@
     <button class="btn-acao" style="background:#ef4444;" onclick="window.close()">
       <i class="fa-solid fa-xmark"></i> Fechar
     </button>
-    <div class="status-bar" id="statusBar">Escolha a turma e a fase e clique em "Buscar na Planilha e Gerar".</div>
+    <div class="status-bar" id="statusBar">Escolha a turma e o tipo de recuperação/comunicado e clique em "Buscar na Planilha e Gerar".</div>
   </div>
 
   <div id="relatorioContainer">
@@ -132,7 +143,7 @@
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbycgeZKPTqFmL2WNZo91r1ytnjiL7hvBEOVnmvIbHq3RvWaE0OBuglmP1CDE88xB8RC/exec";
 
     const turmasGlobais = ["6R1","6R2","6R3","6R4","7R1","7R2","7R3","7R4","8R1","8R2","8R3","8R4","9R1","9R2","9R3","9R4"];
-    const selTurma = document.getElementById('selTurma');
+    const selTurma = document.getElementById("selTurma");
     turmasGlobais.forEach(t => selTurma.innerHTML += `<option value="${t}">${t}</option>`);
 
     const componentes = [
@@ -144,36 +155,36 @@
       "GEO":"Geografia", "HIST":"História", "LI":"Língua Inglesa", "LP":"Língua Portuguesa", "MAT":"Matemática"
     };
 
-    function normNome(s) { return (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' '); }
+    function normNome(s) { return (s || "").toString().trim().toUpperCase().replace(/\s+/g, " "); }
 
     async function buscarEGerar() {
-      const btn = document.getElementById('btnGerar');
-      const status = document.getElementById('statusBar');
+      const btn = document.getElementById("btnGerar");
+      const status = document.getElementById("statusBar");
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sincronizando...';
-      status.innerText = 'Buscando estudantes e resultados atualizados da Planilha Google...';
+      status.innerText = "Buscando estudantes e resultados atualizados da Planilha Google...";
 
       try {
         const res = await fetch(URL_API_GOOGLE, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ funcao: 'carregarTudo', dados: null })
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ funcao: "carregarTudo", dados: null })
         });
         const dados = await res.json();
         if (dados && !dados.erro) {
           if (dados.estudantes) {
-            for (const t in dados.estudantes) localStorage.setItem('mestra_estudantes_' + t, JSON.stringify(dados.estudantes[t]));
+            for (const t in dados.estudantes) localStorage.setItem("mestra_estudantes_" + t, JSON.stringify(dados.estudantes[t]));
           }
           if (dados.resultadosTrimestrais) {
-            for (const k in dados.resultadosTrimestrais) localStorage.setItem('mestra_resultados_' + k, JSON.stringify(dados.resultadosTrimestrais[k]));
+            for (const k in dados.resultadosTrimestrais) localStorage.setItem("mestra_resultados_" + k, JSON.stringify(dados.resultadosTrimestrais[k]));
           }
           if (dados.resultadosFinais) {
-            for (const k in dados.resultadosFinais) localStorage.setItem('mestra_resultados_final_' + k, JSON.stringify(dados.resultadosFinais[k]));
+            for (const k in dados.resultadosFinais) localStorage.setItem("mestra_resultados_final_" + k, JSON.stringify(dados.resultadosFinais[k]));
           }
         }
       } catch (e) {
         console.error(e);
-        status.innerText = 'Sem conexão — usando os dados guardados neste navegador.';
+        status.innerText = "Sem conexão — usando os dados guardados neste navegador.";
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i> Buscar na Planilha e Gerar';
@@ -183,15 +194,14 @@
 
     function gerarBilhetes() {
       const turma = selTurma.value;
-      const trim = document.getElementById('selTrimestre').value;
-      const filtro = document.getElementById('selFiltro').value;
-      const ano = document.getElementById('inpAno').value;
-      const container = document.getElementById('relatorioContainer');
-      const status = document.getElementById('statusBar');
+      const mod = document.getElementById("selModalidade").value;
+      const filtro = document.getElementById("selFiltro").value;
+      const ano = document.getElementById("inpAno").value;
+      const container = document.getElementById("relatorioContainer");
+      const status = document.getElementById("statusBar");
 
-      const alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]');
-      const alunos = [];
-      const vistos = new Set();
+      const alunosRaw = JSON.parse(localStorage.getItem("mestra_estudantes_" + turma) || "[]");
+      const alunos = [], vistos = new Set();
       alunosRaw.forEach(a => { const n = normNome(a.nome); if (n && !vistos.has(n)) { vistos.add(n); alunos.push(n); } });
 
       if (alunos.length === 0) {
@@ -201,100 +211,155 @@
 
       const bilhetesHtml = [];
 
-      if (trim === 'FINAL') {
-        const notasSalvas = JSON.parse(localStorage.getItem('mestra_resultados_final_' + turma) || '{}');
+      if (mod === "RESULTADO_FINAL" || mod === "ONLINE") {
+        const notasSalvas = JSON.parse(localStorage.getItem("mestra_resultados_final_" + turma) || "{}");
+        const notasT3 = JSON.parse(localStorage.getItem("mestra_resultados_" + turma + "_3º Trimestre") || "{}");
+
         alunos.forEach(nome => {
-          const d = notasSalvas[nome] || { status: 'APROVADO(A)', prog: '' };
-          const temPendencia = d.status !== 'APROVADO(A)';
-          if (filtro === 'INTERVENCAO' && !temPendencia) return;
+          const d = notasSalvas[nome] || { status: "APROVADO(A)", prog: "" };
+          const isOnline = d.status.includes("JANEIRO") || d.status.includes("ON-LINE") || d.status.includes("ELETRÔNICA");
+          const isProg = d.status.includes("PROGRESSÃO");
+          const isRep = d.status.includes("REPROVADO") || d.status.includes("RETIDO");
+          const temPendencia = isOnline || isProg || isRep;
 
-          let baseLegal = '', acaoTexto = '', classeTexto = 'texto-oficial';
-          if (d.status.includes('JANEIRO')) {
-            baseLegal = 'Resolução SEE nº 5.209/2025 (Art. 3º, inciso V e § 1º)';
-            acaoTexto = 'O(a) estudante necessita consolidar aprendizagens essenciais e realizará os <strong>Estudos com Apoio Direcionado e Prova Eletrônica</strong> antes do início do próximo ano letivo nos componentes destacados.';
-          } else if (d.status.includes('PROGRESSÃO')) {
-            baseLegal = 'Resolução SEE nº 4.948/2024 (Arts. 118 a 122)';
-            acaoTexto = 'O(a) estudante foi <strong>APROVADO(A) COM PROGRESSÃO PARCIAL</strong>, devendo cumprir estudos orientados no próximo ano letivo nos componentes destacados.';
-          } else if (d.status.includes('REPROVADO')) {
-            baseLegal = 'Resolução SEE nº 4.948/2024 (Art. 105, § 3º e Art. 110)';
-            acaoTexto = 'Comunicamos que, após todas as oportunidades de intervenção pedagógica, o(a) estudante foi <strong>RETIDO(A) / REPROVADO(A)</strong> nos componentes destacados.';
-          } else {
-            baseLegal = 'Resolução SEE nº 4.948/2024 (Art. 105, § 3º e Art. 110)';
-            acaoTexto = 'Parabéns! O(a) estudante foi <strong>APROVADO(A)</strong> em todos os componentes curriculares. Agradecemos a parceria da família!';
-            classeTexto = 'texto-sucesso';
-          }
+          if (mod === "ONLINE" && !isOnline && filtro === "INTERVENCAO") return;
+          if (filtro === "INTERVENCAO" && !temPendencia) return;
 
-          const avisoLegal = `Senhor(a) Responsável, em cumprimento à <strong>${baseLegal}</strong>, comunicamos o resultado final do ano letivo de ${ano}. ${acaoTexto}`;
-          const siglasRetidas = d.prog ? d.prog.split(',').map(x => x.trim()).filter(Boolean) : [];
+          const siglasRetidas = d.prog ? d.prog.split(",").map(x => x.trim()).filter(Boolean) : [];
+          let gridHtml = "";
 
-          let gridHtml = '';
           componentes.forEach(c => {
             const sigla = Object.keys(mapSiglas).find(k => mapSiglas[k] === c);
-            const retido = siglasRetidas.includes(sigla) || siglasRetidas.includes(c);
-            let css = 'disp-aprovado', txt = 'APROVADO(A)';
+            const retido = siglasRetidas.includes(sigla) || siglasRetidas.includes(c) || (notasT3[nome] && notasT3[nome][c] === "PROVA");
+            let css = "disp-aprovado", txt = "APROVADO(A)";
             if (retido) {
-              if (d.status.includes('PROGRESSÃO')) { css = 'disp-ei'; txt = 'PROGRESSÃO PARCIAL'; }
-              else if (d.status.includes('JANEIRO')) { css = 'disp-janeiro'; txt = 'PROVA ELETRÔNICA'; }
-              else if (d.status.includes('REPROVADO')) { css = 'disp-rec'; txt = 'RETIDO(A)'; }
+              if (mod === "ONLINE" || isOnline) { css = "disp-online"; txt = "AVALIAÇÃO ON-LINE"; }
+              else if (isProg) { css = "disp-ei"; txt = "PROGRESSÃO PARCIAL"; }
+              else if (isRep) { css = "disp-rec"; txt = "RETIDO(A)"; }
             }
             gridHtml += `<div class="disp-item ${css}"><span class="disp-nome">${c}</span><span class="disp-status">${txt}</span></div>`;
           });
 
-          bilhetesHtml.push(montarBilhete(nome, turma, 'Situação Final', ano, classeTexto, avisoLegal, gridHtml));
+          if (mod === "ONLINE") {
+            const baseLegal = "Resolução SEE nº 5.234/2026 (Art. 17, inciso IV) e Resolução SEE nº 5.209/2025";
+            const aviso = isOnline
+              ? `Senhor(a) Responsável, em cumprimento à <strong>${baseLegal}</strong>, comunicamos que o(a) estudante foi encaminhado(a) para os Estudos com Apoio Direcionado e <strong>Avaliação On-line (SEE/MG)</strong> nos componentes destacados, a ser realizada antes do início do próximo ano letivo.`
+              : `Senhor(a) Responsável, comunicamos que o(a) estudante <strong>não necessita realizar a Avaliação On-line (SEE/MG)</strong>, tendo concluído esta etapa com aproveitamento satisfatório.`;
+            const msgExtra = isOnline
+              ? `<div class="mensagem-final-box msg-online"><strong>Mensagem à Família:</strong> Esta é uma oportunidade importante para consolidar as aprendizagens essenciais. Contamos com o acompanhamento e o incentivo da família na participação da Avaliação On-line.</div>`
+              : `<div class="mensagem-final-box msg-aprovado"><strong>Parabéns!</strong> Agradecemos o empenho do(a) estudante e a parceria constante da família ao longo do ano letivo.</div>`;
+
+            bilhetesHtml.push(montarBilhete({
+              nome, turma, ano,
+              faixaClasse: "faixa-online",
+              faixaEsq: "Tipo: Avaliação On-line (SEE/MG)",
+              faixaDir: `Encerramento • Ano Letivo ${ano}`,
+              classeTexto: isOnline ? "texto-oficial" : "texto-sucesso",
+              avisoLegal: aviso,
+              gridHtml,
+              mensagemExtra: msgExtra
+            }));
+          } else {
+            let baseLegal = "", aviso = "", classeTexto = "texto-oficial", msgExtra = "";
+            if (isOnline) {
+              baseLegal = "Resolução SEE nº 5.234/2026 (Art. 17, inciso IV e Art. 22) e Resolução SEE nº 5.209/2025";
+              aviso = `Senhor(a) Responsável, em cumprimento à <strong>${baseLegal}</strong>, comunicamos o resultado final do ano letivo de ${ano}: o(a) estudante deverá realizar a <strong>Avaliação On-line (SEE/MG)</strong> nos componentes destacados.`;
+              msgExtra = `<div class="mensagem-final-box msg-online"><strong>Orientação:</strong> Ainda há tempo de avançar! A Avaliação On-line é uma oportunidade oficial para consolidar as aprendizagens pendentes. Procure a secretaria/supervisão para conferir as datas e horários.</div>`;
+            } else if (isProg) {
+              baseLegal = "Resolução SEE nº 5.234/2026 (Art. 22) e Resolução SEE nº 5.243/2026 (Arts. 98 a 102)";
+              aviso = `Senhor(a) Responsável, em cumprimento à <strong>${baseLegal}</strong>, comunicamos o resultado final do ano letivo de ${ano}: o(a) estudante foi <strong>APROVADO(A) COM PROGRESSÃO PARCIAL</strong> nos componentes destacados.`;
+              msgExtra = `<div class="mensagem-final-box msg-progressao"><strong>Mensagem à Família:</strong> O(a) estudante avançará para o próximo ano de escolaridade e contará com estudos orientados de Progressão Parcial nos componentes em destaque. Com organização e parceria entre escola e família, superará essa etapa com sucesso!</div>`;
+            } else if (isRep) {
+              baseLegal = "Resolução SEE nº 5.234/2026 (Art. 15, § 3º e Art. 22)";
+              aviso = `Senhor(a) Responsável, em cumprimento à <strong>${baseLegal}</strong>, comunicamos o resultado final do ano letivo de ${ano}: após todas as oportunidades de intervenção e recuperação ofertadas, o(a) estudante foi <strong>RETIDO(A) / REPROVADO(A)</strong> nos componentes destacados.`;
+              msgExtra = `<div class="mensagem-final-box msg-retido"><strong>Mensagem à Família:</strong> Sabemos que este resultado exige atenção, mas cada estudante tem seu tempo de aprendizagem. Nossa escola segue de portas abertas para acolher, reorganizar a rotina de estudos e caminhar junto com a família no próximo ano letivo.</div>`;
+            } else {
+              baseLegal = "Resolução SEE nº 5.234/2026 (Art. 15, § 3º e Art. 22)";
+              aviso = `Senhor(a) Responsável, em cumprimento à <strong>${baseLegal}</strong>, comunicamos o resultado final do ano letivo de ${ano}: o(a) estudante foi <strong>APROVADO(A)</strong> em todos os componentes curriculares.`;
+              classeTexto = "texto-sucesso";
+              msgExtra = `<div class="mensagem-final-box msg-aprovado"><strong>🌟 Parabéns pela Aprovação!</strong> Celebramos a dedicação e as conquistas do(a) estudante ao longo de ${ano}. Agradecemos profundamente a parceria da família e desejamos excelentes férias e um próximo ano de ainda mais sucesso!</div>`;
+            }
+
+            bilhetesHtml.push(montarBilhete({
+              nome, turma, ano,
+              faixaClasse: "faixa-resultado",
+              faixaEsq: "Comunicado: Resultado Final",
+              faixaDir: `Ano Letivo ${ano}`,
+              classeTexto,
+              avisoLegal: aviso,
+              gridHtml,
+              mensagemExtra: msgExtra
+            }));
+          }
         });
       } else {
-        const chaveBusca = trim === 'Estudos Independentes' ? '3º Trimestre' : trim;
-        const notasSalvas = JSON.parse(localStorage.getItem('mestra_resultados_' + turma + '_' + chaveBusca) || '{}');
+        const configMod = {
+          "REC_T1": { chave: "1º Trimestre", tipo: "Recuperação Trimestral", periodo: "1º Trimestre", faixa: "faixa-trimestral", legal: "Resolução SEE nº 5.234/2026 (Art. 17, incisos I e II, e Art. 18)" },
+          "REC_T2": { chave: "2º Trimestre", tipo: "Recuperação Trimestral", periodo: "2º Trimestre", faixa: "faixa-trimestral", legal: "Resolução SEE nº 5.234/2026 (Art. 17, incisos I e II, e Art. 18)" },
+          "REC_T3": { chave: "3º Trimestre", tipo: "Recuperação Trimestral", periodo: "3º Trimestre", faixa: "faixa-trimestral", legal: "Resolução SEE nº 5.234/2026 (Art. 17, incisos I e II, e Art. 18)" },
+          "REC_FINAL": { chave: "3º Trimestre", tipo: "Recuperação Final", periodo: "3º Trimestre", faixa: "faixa-final", legal: "Resolução SEE nº 5.234/2026 (Art. 17, incisos II e III, e Art. 18)" },
+          "EI": { chave: "3º Trimestre", tipo: "Estudos Independentes", periodo: "3º Trimestre (Pós-Conselho)", faixa: "faixa-ei", legal: "Resolução SEE nº 5.234/2026 (Art. 17, inciso III, e Art. 22)" }
+        }[mod];
+
+        const notasSalvas = JSON.parse(localStorage.getItem("mestra_resultados_" + turma + "_" + configMod.chave) || "{}");
 
         alunos.forEach(nome => {
           const dadosAluno = notasSalvas[nome] || {};
           let temProblema = false;
-          let gridHtml = '';
+          let gridHtml = "";
 
           componentes.forEach(c => {
-            const st = dadosAluno[c] || 'APROVADO';
-            let css = 'disp-aprovado', txt = 'APROVADO(A)';
-            if (trim === 'Estudos Independentes') {
-              if (st === 'EI') { css = 'disp-ei'; txt = 'ESTUDOS INDEPENDENTES'; temProblema = true; }
-              else if (st === 'REP') { css = 'disp-rec'; txt = 'RETIDO(A)'; temProblema = true; }
+            const st = dadosAluno[c] || "APROVADO";
+            let css = "disp-aprovado", txt = "APROVADO(A)";
+            if (mod === "EI") {
+              if (st === "EI") { css = "disp-ei"; txt = "ESTUDOS INDEPENDENTES"; temProblema = true; }
+              else if (st === "REP") { css = "disp-rec"; txt = "RETIDO(A)"; temProblema = true; }
+            } else if (mod === "REC_FINAL") {
+              if (st === "REC" || st === "EI") { css = "disp-rec"; txt = "RECUPERAÇÃO FINAL"; temProblema = true; }
+              else if (st === "REP") { css = "disp-rec"; txt = "RETIDO(A)"; temProblema = true; }
             } else {
-              if (st === 'REC') { css = 'disp-rec'; txt = 'RECUPERAÇÃO'; temProblema = true; }
-              else if (st === 'EI') { css = 'disp-ei'; txt = 'ESTUDOS INDEPENDENTES'; temProblema = true; }
-              else if (st === 'REP') { css = 'disp-rec'; txt = 'RETIDO(A)'; temProblema = true; }
+              if (st === "REC") { css = "disp-rec"; txt = "RECUPERAÇÃO TRIMESTRAL"; temProblema = true; }
+              else if (st === "EI") { css = "disp-ei"; txt = "ESTUDOS INDEPENDENTES"; temProblema = true; }
+              else if (st === "REP") { css = "disp-rec"; txt = "RETIDO(A)"; temProblema = true; }
             }
             gridHtml += `<div class="disp-item ${css}"><span class="disp-nome">${c}</span><span class="disp-status">${txt}</span></div>`;
           });
 
-          if (filtro === 'INTERVENCAO' && !temProblema) return;
-
-          const baseLegal = trim === 'Estudos Independentes'
-            ? 'Resolução SEE nº 5.209/2025 (Art. 3º, inciso IV e § 3º)'
-            : 'Resolução SEE nº 5.209/2025 (Art. 3º, incisos I e II)';
+          if (filtro === "INTERVENCAO" && !temProblema) return;
 
           const avisoLegal = temProblema
-            ? `Senhor(a) Responsável, em cumprimento à <strong>${baseLegal}</strong>, comunicamos que o(a) estudante encontra-se em intervenção pedagógica — <strong>${trim === 'Estudos Independentes' ? 'Estudos Independentes de Recuperação' : 'Recuperação do ' + trim}</strong> — nos componentes destacados. O acompanhamento da família é fundamental.`
-            : `Senhor(a) Responsável, em cumprimento à <strong>${baseLegal}</strong>, comunicamos que o(a) estudante alcançou desempenho satisfatório em todos os componentes curriculares nesta etapa. Parabéns e agradecemos a parceria da família!`;
+            ? `Senhor(a) Responsável, em cumprimento à <strong>${configMod.legal}</strong>, comunicamos que o(a) estudante encontra-se em <strong>${configMod.tipo}</strong> (${configMod.periodo}) nos componentes destacados. É fundamental o acompanhamento da família para a superação das dificuldades de aprendizagem.`
+            : `Senhor(a) Responsável, em cumprimento à <strong>${configMod.legal}</strong>, comunicamos que o(a) estudante obteve aproveitamento satisfatório em todos os componentes curriculares no <strong>${configMod.periodo}</strong>. Parabéns e agradecemos a parceria da família!`;
 
-          bilhetesHtml.push(montarBilhete(nome, turma, trim, ano, temProblema ? 'texto-oficial' : 'texto-sucesso', avisoLegal, gridHtml));
+          bilhetesHtml.push(montarBilhete({
+            nome, turma, ano,
+            faixaClasse: configMod.faixa,
+            faixaEsq: `Tipo: ${configMod.tipo}`,
+            faixaDir: `${configMod.periodo} • ${ano}`,
+            classeTexto: temProblema ? "texto-oficial" : "texto-sucesso",
+            avisoLegal,
+            gridHtml,
+            mensagemExtra: ""
+          }));
         });
       }
 
       if (bilhetesHtml.length === 0) {
-        container.innerHTML = `<h3 style="text-align:center; color:#475569; margin-top:50px;">Nenhum bilhete encontrado para o filtro escolhido.</h3>`;
-        status.innerText = 'Nenhum estudante corresponde ao filtro atual.';
+        container.innerHTML = `<h3 style="text-align:center; color:#475569; margin-top:50px;">Nenhum bilhete encontrado para o filtro selecionado.</h3>`;
+        status.innerText = "Nenhum estudante corresponde ao filtro atual.";
         return;
       }
 
-      let paginas = '';
+      let paginas = "";
       for (let i = 0; i < bilhetesHtml.length; i += 2) {
         const segundo = bilhetesHtml[i + 1] || '<div class="bilhete bilhete-vazio"></div>';
         paginas += `<div class="pagina-a4">${bilhetesHtml[i]}${segundo}</div>`;
       }
       container.innerHTML = paginas;
-      status.innerText = `Pronto! ${bilhetesHtml.length} bilhete(s) gerado(s) para ${turma} (${trim}) — 2 por folha A4 com canhoto.`;
+      status.innerText = `Pronto! ${bilhetesHtml.length} bilhete(s) gerado(s) para ${turma} — 2 por folha A4.`;
     }
 
-    function montarBilhete(nome, turma, fase, ano, classeTexto, avisoLegal, gridHtml) {
+    function montarBilhete(cfg) {
       return `
       <div class="bilhete">
         <div class="topo-conteudo">
@@ -306,34 +371,25 @@
                 <p>Comunicado Oficial de Resultados de Aprendizagem</p>
               </div>
             </div>
-            <span class="badge-fase">${fase} • ${ano}</span>
+          </div>
+
+          <div class="faixa-tipo ${cfg.faixaClasse}">
+            <span>${cfg.faixaEsq}</span>
+            <span>${cfg.faixaDir}</span>
           </div>
 
           <div class="tarja-estudante">
-            <span>ESTUDANTE: ${nome}</span>
-            <span>TURMA: ${turma}</span>
+            <span>ESTUDANTE: ${cfg.nome}</span>
+            <span>TURMA: ${cfg.turma}</span>
           </div>
 
-          <div class="${classeTexto}">${avisoLegal}</div>
-          <div class="disciplinas-grid">${gridHtml}</div>
-
-          <div class="assinatura-escola">
-            <span>Equipe Pedagógica / Especialista em Educação Básica</span>
-          </div>
+          <div class="${cfg.classeTexto}">${cfg.avisoLegal}</div>
+          <div class="disciplinas-grid">${cfg.gridHtml}</div>
+          ${cfg.mensagemExtra || ""}
         </div>
 
-        <div class="canhoto">
-          <div class="canhoto-topo">
-            <span>✂ Canhoto de Ciência — Destacar e Devolver à Escola</span>
-            <span>Turma: ${turma} • ${fase} / ${ano}</span>
-          </div>
-          <div class="canhoto-msg">
-            Recebi e tomei ciência do Comunicado Oficial de Resultados referente ao(à) estudante <strong>${nome}</strong>.
-          </div>
-          <div class="canhoto-rodape">
-            <div class="canhoto-ass">Assinatura do(a) Responsável Legal</div>
-            <div class="canhoto-data">Data: ____ / ____ / ${ano}</div>
-          </div>
+        <div class="assinatura-escola">
+          <span>Equipe Pedagógica / Especialista em Educação Básica</span>
         </div>
       </div>`;
     }
