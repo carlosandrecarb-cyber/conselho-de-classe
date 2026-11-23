@@ -26,90 +26,77 @@
     .btn-gerar { background: #4f46e5; }
     .btn-imprimir { background: #10b981; }
     .btn-fechar { background: #ef4444; }
-    .status-bar {
-      width: 100%; text-align: center; color: #cbd5e1; font-size: 0.8rem; font-weight: 600; margin-top: 2px;
-    }
+    .status-bar { width: 100%; text-align: center; color: #cbd5e1; font-size: 0.8rem; font-weight: 600; margin-top: 2px; }
 
     #relatorioContainer { display: flex; flex-direction: column; align-items: center; gap: 18px; padding-bottom: 30px; }
 
-    /* Folha A4 travada para nunca vazar para a próxima página */
     .pagina-a4 {
       width: 200mm; height: 287mm; max-height: 287mm; overflow: hidden;
       background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px;
-      padding: 6mm 7mm; display: flex; flex-direction: column; justify-content: space-between;
+      padding: 8mm 9mm; display: flex; flex-direction: column; justify-content: space-between;
       page-break-after: always; page-break-inside: avoid; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
 
-    .conteudo-principal { display: flex; flex-direction: column; gap: 5px; flex: 1; overflow: hidden; }
+    .conteudo-principal { display: flex; flex-direction: column; gap: 7px; flex: 1; overflow: hidden; }
 
     .header-top {
       display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 2px solid #0f172a; padding-bottom: 5px;
+      border-bottom: 2px solid #0f172a; padding-bottom: 6px;
     }
-    .logo { height: 38px; object-fit: contain; }
+    .logo { height: 42px; object-fit: contain; }
     .school-title { text-align: center; flex-grow: 1; padding: 0 8px; }
     .school-title .sub { font-size: 7.5pt; font-weight: 800; color: #475569; text-transform: uppercase; }
-    .school-title h1 { font-size: 10.5pt; font-weight: 900; margin: 1px 0 0 0; color: #0f172a; }
+    .school-title h1 { font-size: 11pt; font-weight: 900; margin: 2px 0 0 0; color: #0f172a; }
+    .school-title .legal { font-size: 6.6pt; font-weight: 600; color: #64748b; margin-top: 2px; }
     .meta-badges { display: flex; flex-direction: column; gap: 3px; align-items: flex-end; }
-    .badge-trim { background: #fef3c7; color: #92400e; font-weight: 800; padding: 2px 8px; border-radius: 5px; font-size: 8.5pt; border: 1px solid #f59e0b; }
-    .badge-ano { font-size: 7.2pt; font-weight: 700; color: #475569; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; border: 1px solid #cbd5e1; }
+    .badge-trim { background: #fef3c7; color: #92400e; font-weight: 900; padding: 3px 9px; border-radius: 6px; font-size: 9pt; border: 1px solid #f59e0b; }
+    .badge-ano { font-size: 7.5pt; font-weight: 700; color: #475569; background: #f1f5f9; padding: 2px 7px; border-radius: 4px; border: 1px solid #cbd5e1; }
 
     .student-banner {
-      background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 7px;
-      padding: 5px 10px; display: flex; justify-content: space-between; align-items: center;
+      background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px;
+      padding: 7px 12px; display: flex; justify-content: space-between; align-items: center;
     }
-    .student-name { font-size: 10.5pt; font-weight: 900; color: #0f172a; }
-    .student-turma { font-size: 8.5pt; background: #e0e7ff; color: #3730a3; padding: 3px 9px; border-radius: 6px; font-weight: 800; }
+    .student-name { font-size: 11.5pt; font-weight: 900; color: #0f172a; }
+    .student-turma { font-size: 9pt; background: #e0e7ff; color: #3730a3; padding: 4px 10px; border-radius: 6px; font-weight: 800; }
 
-    .grid-layout { display: flex; gap: 8px; flex: 1; overflow: hidden; }
-    .coluna-esquerda { width: 39%; display: flex; flex-direction: column; gap: 3.5px; }
-    .coluna-direita { width: 61%; display: flex; flex-direction: column; gap: 5px; }
+    .grid-layout { display: flex; gap: 10px; flex: 1; overflow: hidden; }
+    .coluna-esquerda { width: 39%; display: flex; flex-direction: column; gap: 4.5px; }
+    .coluna-direita { width: 61%; display: flex; flex-direction: column; gap: 7px; }
 
-    .titulo-sec { font-size: 6.8pt; font-weight: 900; color: #475569; text-transform: uppercase; letter-spacing: 0.3px; }
-    .crit-item { display: flex; flex-direction: column; gap: 1px; }
-    .crit-label { font-size: 5.8pt; font-weight: 800; color: #475569; text-transform: uppercase; }
+    .titulo-sec { font-size: 7.2pt; font-weight: 900; color: #475569; text-transform: uppercase; letter-spacing: 0.3px; }
+    .crit-item { display: flex; flex-direction: column; gap: 1.5px; }
+    .crit-label { font-size: 6pt; font-weight: 800; color: #475569; text-transform: uppercase; }
 
     .box-criterio-valor {
-      font-size: 7.2pt; font-weight: 700; color: #065f46; background: #d1fae5;
-      padding: 2.5px 5px; border-radius: 4px; border-left: 3px solid #10b981; line-height: 1.15;
+      font-size: 7.6pt; font-weight: 700; color: #065f46; background: #d1fae5;
+      padding: 3px 6px; border-radius: 4px; border-left: 3px solid #10b981; line-height: 1.2;
     }
     .box-criterio-valor.amarelo { background: #fef3c7; color: #92400e; border-left-color: #f59e0b; }
     .box-criterio-valor.vermelho { background: #fee2e2; color: #991b1b; border-left-color: #ef4444; }
 
-    .box-bloco { border: 1.2px solid #cbd5e1; border-radius: 7px; padding: 5px 7px; background: #fff; }
+    .box-bloco { border: 1.2px solid #cbd5e1; border-radius: 8px; padding: 7px 9px; background: #fff; }
     .box-bloco-escuro { border: 1.5px solid #0f172a; }
     .box-bloco-titulo {
-      font-size: 7.8pt; font-weight: 900; color: #0f172a; text-transform: uppercase;
-      border-bottom: 1.5px solid #e2e8f0; padding-bottom: 2px; margin-bottom: 4px;
+      font-size: 8.2pt; font-weight: 900; color: #0f172a; text-transform: uppercase;
+      border-bottom: 1.5px solid #e2e8f0; padding-bottom: 3px; margin-bottom: 5px;
     }
 
-    .resumo-duplo { display: flex; gap: 6px; margin-top: 4px; }
-    .resumo-col { flex: 1; padding: 5px; border-radius: 5px; }
+    .resumo-duplo { display: flex; gap: 7px; margin-top: 5px; }
+    .resumo-col { flex: 1; padding: 6px; border-radius: 6px; }
     .resumo-pos { background: #f0fdf4; border: 1px solid #bbf7d0; }
     .resumo-ate { background: #fef2f2; border: 1px solid #fecaca; }
-    .resumo-sub { font-size: 6.3pt; font-weight: 900; text-transform: uppercase; margin-bottom: 3px; }
-    .criterio-resumo { font-size: 6.8pt; margin-bottom: 1.5px; display: flex; align-items: flex-start; gap: 4px; line-height: 1.15; }
-    .bullet { width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; margin-top: 2.5px; }
+    .resumo-sub { font-size: 6.6pt; font-weight: 900; text-transform: uppercase; margin-bottom: 4px; }
+    .criterio-resumo { font-size: 7.2pt; margin-bottom: 2px; display: flex; align-items: flex-start; gap: 4px; line-height: 1.2; }
+    .bullet { width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; margin-top: 3px; }
     .bg-green { background-color: #10b981; } .bg-yellow { background-color: #f59e0b; } .bg-red { background-color: #ef4444; }
 
-    .box-dupla { display: flex; gap: 6px; }
-    .box-dupla > div { flex: 1; border: 1px solid #e2e8f0; border-radius: 5px; padding: 5px 6px; background: #f8fafc; }
-    .lista-enc { margin: 0; padding-left: 11px; font-size: 6.7pt; line-height: 1.18; }
-    .lista-enc li { margin-bottom: 1px; }
+    .box-dupla { display: flex; gap: 7px; }
+    .box-dupla > div { flex: 1; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 7px; background: #f8fafc; }
+    .lista-enc { margin: 0; padding-left: 12px; font-size: 7.2pt; line-height: 1.22; }
+    .lista-enc li { margin-bottom: 1.5px; }
 
-    .assinatura-escola { text-align: center; padding-top: 8px; }
-    .linha-ass { width: 45%; margin: 0 auto; border-top: 1.2px solid #0f172a; padding-top: 2px; font-size: 7.2pt; font-weight: 700; color: #0f172a; }
-
-    /* Canhoto destacável dos responsáveis */
-    .canhoto {
-      border-top: 1.8px dashed #475569; padding-top: 5px; margin-top: 4px;
-      background: #fafafa; padding-left: 6px; padding-right: 6px; padding-bottom: 4px; border-radius: 4px;
-    }
-    .canhoto-topo { display: flex; justify-content: space-between; align-items: center; font-size: 7.2pt; font-weight: 900; color: #0f172a; text-transform: uppercase; margin-bottom: 3px; }
-    .canhoto-texto { font-size: 7.2pt; color: #334155; line-height: 1.3; margin-bottom: 10px; }
-    .canhoto-campos { display: flex; justify-content: space-between; align-items: flex-end; gap: 15px; font-size: 7.2pt; font-weight: 700; }
-    .canhoto-ass { flex: 1; text-align: center; border-top: 1px solid #0f172a; padding-top: 2px; }
-    .canhoto-data { width: 32%; text-align: center; border-top: 1px solid #0f172a; padding-top: 2px; }
+    .assinatura-escola { text-align: center; padding-top: 12px; border-top: 1.2px dashed #94a3b8; margin-top: 6px; }
+    .linha-ass { width: 48%; margin: 0 auto; border-top: 1.2px solid #0f172a; padding-top: 3px; font-size: 7.8pt; font-weight: 700; color: #0f172a; }
 
     @media print {
       body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -152,21 +139,21 @@
     const URL_API_GOOGLE = "https://script.google.com/macros/s/AKfycbycgeZKPTqFmL2WNZo91r1ytnjiL7hvBEOVnmvIbHq3RvWaE0OBuglmP1CDE88xB8RC/exec";
 
     const turmasGlobais = ["6R1","6R2","6R3","6R4","7R1","7R2","7R3","7R4","8R1","8R2","8R3","8R4","9R1","9R2","9R3","9R4"];
-    const selTurma = document.getElementById('selTurma');
+    const selTurma = document.getElementById("selTurma");
     selTurma.innerHTML = '<option value="">Selecione a Turma...</option>';
     turmasGlobais.forEach(t => selTurma.innerHTML += `<option value="${t}">${t}</option>`);
 
     const criteriosDetalhados = [
-      { nome: "Convivência e Comportamento", chave: "convivencia", apiKey: "disciplina" },
-      { nome: "Atenção", chave: "atencao", apiKey: "atencao" },
-      { nome: "Conversa", chave: "conversa", apiKey: "conversa" },
-      { nome: "Interesse", chave: "interesse", apiKey: "interesse" },
-      { nome: "Participação", chave: "participacao", apiKey: "participacao" },
-      { nome: "Aprendizagem", chave: "aprendizagem", apiKey: "aprendizagem" },
-      { nome: "Organização", chave: "organizacao", apiKey: "organizacao" },
-      { nome: "Atividades em Sala", chave: "ativ_sala", apiKey: "atividades_sala" },
-      { nome: "Tarefas de Casa", chave: "tarefas_casa", apiKey: "tarefa_casa" },
-      { nome: "Frequência", chave: "frequencia", apiKey: "presenca" }
+      { nome: "Convivência e Comportamento", chave: "convivencia" },
+      { nome: "Atenção", chave: "atencao" },
+      { nome: "Conversa", chave: "conversa" },
+      { nome: "Interesse", chave: "interesse" },
+      { nome: "Participação", chave: "participacao" },
+      { nome: "Aprendizagem", chave: "aprendizagem" },
+      { nome: "Organização", chave: "organizacao" },
+      { nome: "Atividades em Sala", chave: "ativ_sala" },
+      { nome: "Tarefas de Casa", chave: "tarefas_casa" },
+      { nome: "Frequência", chave: "frequencia" }
     ];
 
     const encFamiliaPadrao = [
@@ -180,34 +167,30 @@
       "Verificar sempre o uniforme escolar."
     ];
 
-    function normNome(s) {
-      return (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' ');
-    }
+    function normNome(s) { return (s || "").toString().trim().toUpperCase().replace(/\s+/g, " "); }
 
     function chamarApi(funcao, dados) {
       return fetch(URL_API_GOOGLE, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({ funcao: funcao, dados: dados })
       }).then(r => r.json());
     }
 
     function popularFiltroEstudantes() {
       const turma = selTurma.value;
-      const selEst = document.getElementById('selEstudante');
+      const selEst = document.getElementById("selEstudante");
       selEst.innerHTML = '<option value="TODOS">Todos os estudantes avaliados</option>';
       if (!turma) return;
-      const alunos = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]');
-      alunos.forEach(a => {
-        selEst.innerHTML += `<option value="${normNome(a.nome)}">${a.nome}</option>`;
-      });
+      const alunos = JSON.parse(localStorage.getItem("mestra_estudantes_" + turma) || "[]");
+      alunos.forEach(a => { selEst.innerHTML += `<option value="${normNome(a.nome)}">${a.nome}</option>`; });
     }
 
     async function buscarEGerarBilhetes() {
       const turma = selTurma.value;
-      const trimestre = document.getElementById('selTrimestre').value;
-      const status = document.getElementById('statusBar');
-      const btn = document.getElementById('btnGerar');
+      const trimestre = document.getElementById("selTrimestre").value;
+      const status = document.getElementById("statusBar");
+      const btn = document.getElementById("btnGerar");
 
       if (!turma) { alert("Selecione a turma primeiro."); return; }
 
@@ -217,48 +200,41 @@
 
       try {
         const [resTudo, resAv] = await Promise.all([
-          chamarApi('carregarTudo', null),
-          chamarApi('carregarAvaliacoesTurma', { turma: turma, trimestre: trimestre })
+          chamarApi("carregarTudo", null),
+          chamarApi("carregarAvaliacoesTurma", { turma: turma, trimestre: trimestre })
         ]);
 
         if (resTudo && resTudo.estudantes) {
-          for (const t in resTudo.estudantes) {
-            localStorage.setItem('mestra_estudantes_' + t, JSON.stringify(resTudo.estudantes[t]));
-          }
+          for (const t in resTudo.estudantes) localStorage.setItem("mestra_estudantes_" + t, JSON.stringify(resTudo.estudantes[t]));
         }
 
-        const dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
+        const dbLocal = JSON.parse(localStorage.getItem("mestra_banco_registros") || "{}");
         if (resAv && resAv.avaliacoes && resAv.avaliacoes[turma]) {
           const avTurma = resAv.avaliacoes[turma];
           for (const aluno in avTurma) {
             const reg = avTurma[aluno][trimestre];
             if (reg) {
-              const k = turma + '_' + normNome(aluno) + '_' + trimestre;
-              dbLocal[k] = {
-                turma: turma,
-                estudante: normNome(aluno),
-                trimestre: trimestre,
+              const n = normNome(aluno);
+              dbLocal[turma + "_" + n + "_" + trimestre] = {
+                turma: turma, estudante: n, trimestre: trimestre,
                 criterios: {
                   convivencia: reg.disciplina, atencao: reg.atencao, conversa: reg.conversa,
                   interesse: reg.interesse, participacao: reg.participacao, aprendizagem: reg.aprendizagem,
                   organizacao: reg.organizacao, ativ_sala: reg.atividades_sala,
                   tarefas_casa: reg.tarefa_casa, frequencia: reg.presenca
                 },
-                conclusao: reg.caracteristica,
-                observacoes: reg.observacoes,
-                outrasSituacoes: reg.outras_situacoes,
-                encEscola: reg.acoes_escola ? reg.acoes_escola.split(';').map(x => x.trim()).filter(Boolean) : [],
-                encFamilia: reg.acoes_familia ? reg.acoes_familia.split(';').map(x => x.trim()).filter(Boolean) : []
+                conclusao: reg.caracteristica, observacoes: reg.observacoes, outrasSituacoes: reg.outras_situacoes,
+                encEscola: reg.acoes_escola ? reg.acoes_escola.split(";").map(x => x.trim()).filter(Boolean) : [],
+                encFamilia: reg.acoes_familia ? reg.acoes_familia.split(";").map(x => x.trim()).filter(Boolean) : []
               };
             }
           }
-          localStorage.setItem('mestra_banco_registros', JSON.stringify(dbLocal));
+          localStorage.setItem("mestra_banco_registros", JSON.stringify(dbLocal));
         }
 
-        const filtroAtual = document.getElementById('selEstudante').value;
+        const filtroAtual = document.getElementById("selEstudante").value;
         popularFiltroEstudantes();
-        document.getElementById('selEstudante').value = filtroAtual;
-
+        document.getElementById("selEstudante").value = filtroAtual;
         renderizarBilhetes();
       } catch (err) {
         console.error(err);
@@ -272,24 +248,18 @@
 
     function renderizarBilhetes() {
       const turma = selTurma.value;
-      const trimestre = document.getElementById('selTrimestre').value;
-      const filtroEst = document.getElementById('selEstudante').value;
-      const anoAtual = document.getElementById('inpAno').value;
-      const container = document.getElementById('relatorioContainer');
-      const status = document.getElementById('statusBar');
+      const trimestre = document.getElementById("selTrimestre").value;
+      const filtroEst = document.getElementById("selEstudante").value;
+      const anoAtual = document.getElementById("inpAno").value;
+      const container = document.getElementById("relatorioContainer");
+      const status = document.getElementById("statusBar");
 
-      const alunosRaw = JSON.parse(localStorage.getItem('mestra_estudantes_' + turma) || '[]');
-      const dbLocal = JSON.parse(localStorage.getItem('mestra_banco_registros') || '{}');
+      const alunosRaw = JSON.parse(localStorage.getItem("mestra_estudantes_" + turma) || "[]");
+      const dbLocal = JSON.parse(localStorage.getItem("mestra_banco_registros") || "{}");
 
-      // Monta lista ordenada pelos estudantes da turma + eventuais avaliados extras
-      const listaFinal = [];
-      const vistos = new Set();
-      alunosRaw.forEach(a => {
-        const n = normNome(a.nome);
-        if (n && !vistos.has(n)) { vistos.add(n); listaFinal.push(n); }
-      });
-      const prefixo = turma + '_';
-      const sufixo = '_' + trimestre;
+      const listaFinal = [], vistos = new Set();
+      alunosRaw.forEach(a => { const n = normNome(a.nome); if (n && !vistos.has(n)) { vistos.add(n); listaFinal.push(n); } });
+      const prefixo = turma + "_", sufixo = "_" + trimestre;
       Object.keys(dbLocal).forEach(k => {
         if (k.startsWith(prefixo) && k.endsWith(sufixo)) {
           const n = normNome(dbLocal[k].estudante);
@@ -297,55 +267,54 @@
         }
       });
 
-      let htmlFinal = '';
-      let totalGerados = 0;
+      let htmlFinal = "", totalGerados = 0;
 
       listaFinal.forEach(nomeAluno => {
-        if (filtroEst !== 'TODOS' && nomeAluno !== filtroEst) return;
-        const reg = dbLocal[turma + '_' + nomeAluno + '_' + trimestre];
+        if (filtroEst !== "TODOS" && nomeAluno !== filtroEst) return;
+        const reg = dbLocal[turma + "_" + nomeAluno + "_" + trimestre];
         if (!reg) return;
 
         totalGerados++;
         const crit = reg.criterios || {};
-        let verdesHtml = '', atencaoHtml = '', criteriosEsqHtml = '';
+        let verdesHtml = "", atencaoHtml = "", criteriosEsqHtml = "";
 
         criteriosDetalhados.forEach(ck => {
           const val = (crit[ck.chave] || "🟢 Acompanhado(a)").toString().trim();
-          const classeCor = val.startsWith('🟡') ? "amarelo" : (val.startsWith('🔴') ? "vermelho" : "");
+          const classeCor = val.startsWith("🟡") ? "amarelo" : (val.startsWith("🔴") ? "vermelho" : "");
           criteriosEsqHtml += `
             <div class="crit-item">
               <div class="crit-label">${ck.nome}</div>
               <div class="box-criterio-valor ${classeCor}">${val}</div>
             </div>`;
 
-          const bulletColor = val.startsWith('🟢') ? 'bg-green' : (val.startsWith('🟡') ? 'bg-yellow' : 'bg-red');
-          const valLimpo = val.replace(/🟢|🟡|🔴/g, '').trim();
+          const bulletColor = val.startsWith("🟢") ? "bg-green" : (val.startsWith("🟡") ? "bg-yellow" : "bg-red");
+          const valLimpo = val.replace(/🟢|🟡|🔴/g, "").trim();
           const innerItem = `<div class="criterio-resumo"><span class="bullet ${bulletColor}"></span><span>${valLimpo}</span></div>`;
-          if (val.startsWith('🟢')) verdesHtml += innerItem;
+          if (val.startsWith("🟢")) verdesHtml += innerItem;
           else atencaoHtml += innerItem;
         });
 
-        if (!verdesHtml) verdesHtml = '<p style="font-size:6.8pt; margin:0; color:#64748b;">Nenhum destaque registrado.</p>';
-        if (!atencaoHtml) atencaoHtml = '<p style="font-size:6.8pt; margin:0; color:#64748b;">Nenhum ponto de atenção.</p>';
+        if (!verdesHtml) verdesHtml = '<p style="font-size:7pt; margin:0; color:#64748b;">Nenhum destaque registrado.</p>';
+        if (!atencaoHtml) atencaoHtml = '<p style="font-size:7pt; margin:0; color:#64748b;">Nenhum ponto de atenção.</p>';
 
         const concVal = (reg.conclusao || "BOM/BOA").toString().trim();
-        const isAtencao = concVal.toUpperCase().includes('PRECISA');
+        const isAtencao = concVal.toUpperCase().includes("PRECISA");
 
         const encEscArr = Array.isArray(reg.encEscola) ? reg.encEscola.filter(Boolean) : [];
         const encFamArr = (Array.isArray(reg.encFamilia) && reg.encFamilia.length > 0) ? reg.encFamilia.filter(Boolean) : encFamiliaPadrao;
 
         const escolaHtml = encEscArr.length > 0
-          ? '<ul class="lista-enc">' + encEscArr.map(e => `<li>${e}</li>`).join('') + '</ul>'
-          : '<p style="font-size:6.8pt; margin:0; color:#64748b;">Acompanhamento pedagógico regular.</p>';
+          ? '<ul class="lista-enc">' + encEscArr.map(e => `<li>${e}</li>`).join("") + "</ul>"
+          : '<p style="font-size:7pt; margin:0; color:#64748b;">Acompanhamento pedagógico regular.</p>';
 
-        const familiaHtml = '<ul class="lista-enc">' + encFamArr.map(f => `<li>${f}</li>`).join('') + '</ul>';
+        const familiaHtml = '<ul class="lista-enc">' + encFamArr.map(f => `<li>${f}</li>`).join("") + "</ul>";
 
-        let outrasFormatadas = (reg.outrasSituacoes || '').toString().trim();
+        let outrasFormatadas = (reg.outrasSituacoes || "").toString().trim();
         if (outrasFormatadas) {
-          outrasFormatadas = outrasFormatadas.split('|').map(s => s.trim()).filter(Boolean).join(' • ');
-          if (outrasFormatadas.includes('Parabéns! Você é um(a) estudante nota 10!')) {
+          outrasFormatadas = outrasFormatadas.split("|").map(s => s.trim()).filter(Boolean).join(" • ");
+          if (outrasFormatadas.includes("Parabéns! Você é um(a) estudante nota 10!")) {
             outrasFormatadas = outrasFormatadas.replace(
-              'Parabéns! Você é um(a) estudante nota 10!',
+              "Parabéns! Você é um(a) estudante nota 10!",
               '<span style="background:#d1fae5; color:#065f46; font-weight:900; padding:1px 6px; border-radius:4px; border:1px solid #10b981; display:inline-block;">🌟 Parabéns! Você é um(a) estudante nota 10!</span>'
             );
           }
@@ -359,6 +328,7 @@
               <div class="school-title">
                 <div class="sub">Escola Estadual Mestra Aurora — Gestão Pedagógica</div>
                 <h1>CONSOLIDADO E ENCAMINHAMENTOS DO CONSELHO DE CLASSE</h1>
+                <div class="legal">Resolução SEE nº 5.234/2026 (Arts. 18 e 19)</div>
               </div>
               <div class="meta-badges">
                 <div class="badge-trim">${trimestre}</div>
@@ -368,7 +338,7 @@
 
             <div class="student-banner">
               <div>
-                <div style="font-size:6.2pt; color:#64748b; font-weight:700;">ESTUDANTE:</div>
+                <div style="font-size:6.5pt; color:#64748b; font-weight:700;">ESTUDANTE:</div>
                 <div class="student-name">${nomeAluno}</div>
               </div>
               <span class="student-turma">Turma: ${turma}</span>
@@ -383,8 +353,8 @@
               <div class="coluna-direita">
                 <div class="box-bloco">
                   <div class="box-bloco-titulo">Situação Geral do(a) Estudante</div>
-                  <div class="box-criterio-valor ${isAtencao ? 'vermelho' : ''}" style="display:inline-block; font-size:8pt; padding:3px 8px;">
-                    ${isAtencao ? '🔴 ' : '🟢 '}${concVal}
+                  <div class="box-criterio-valor ${isAtencao ? "vermelho" : ""}" style="display:inline-block; font-size:8.4pt; padding:3px 9px;">
+                    ${isAtencao ? "🔴 " : "🟢 "}${concVal}
                   </div>
                   <div class="resumo-duplo">
                     <div class="resumo-col resumo-pos">
@@ -400,43 +370,29 @@
 
                 ${outrasFormatadas ? `
                 <div class="box-bloco">
-                  <div class="box-bloco-titulo" style="font-size:7pt;">Observações Complementares</div>
-                  <div style="font-size:7pt; line-height:1.25; color:#1e293b;">${outrasFormatadas}</div>
-                </div>` : ''}
+                  <div class="box-bloco-titulo" style="font-size:7.4pt;">Observações Complementares</div>
+                  <div style="font-size:7.4pt; line-height:1.3; color:#1e293b;">${outrasFormatadas}</div>
+                </div>` : ""}
 
                 <div class="box-bloco box-bloco-escuro" style="flex:1;">
                   <div class="box-bloco-titulo">Parecer e Encaminhamentos</div>
                   <div class="box-dupla">
                     <div>
-                      <div style="font-size:6.8pt; font-weight:900; color:#4f46e5; border-bottom:1px solid #cbd5e1; margin-bottom:3px; padding-bottom:2px;">AÇÕES DA ESCOLA</div>
+                      <div style="font-size:7.2pt; font-weight:900; color:#4f46e5; border-bottom:1px solid #cbd5e1; margin-bottom:4px; padding-bottom:2px;">AÇÕES DA ESCOLA</div>
                       ${escolaHtml}
                     </div>
                     <div>
-                      <div style="font-size:6.8pt; font-weight:900; color:#059669; border-bottom:1px solid #cbd5e1; margin-bottom:3px; padding-bottom:2px;">PARA A FAMÍLIA</div>
+                      <div style="font-size:7.2pt; font-weight:900; color:#059669; border-bottom:1px solid #cbd5e1; margin-bottom:4px; padding-bottom:2px;">PARA A FAMÍLIA</div>
                       ${familiaHtml}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="assinatura-escola">
-              <div class="linha-ass">Equipe Pedagógica / Especialista em Educação Básica</div>
-            </div>
           </div>
 
-          <div class="canhoto">
-            <div class="canhoto-topo">
-              <span>✂ Canhoto de Ciência do Responsável — Destacar e Devolver à Escola</span>
-              <span>Turma: ${turma} • ${trimestre} / ${anoAtual}</span>
-            </div>
-            <div class="canhoto-texto">
-              Declaro que recebi e tomei ciência do Consolidado e dos Encaminhamentos do Conselho de Classe referente ao(à) estudante <strong>${nomeAluno}</strong>.
-            </div>
-            <div class="canhoto-campos">
-              <div class="canhoto-ass">Assinatura do(a) Responsável Legal</div>
-              <div class="canhoto-data">Data: ____ / ____ / ${anoAtual}</div>
-            </div>
+          <div class="assinatura-escola">
+            <div class="linha-ass">Equipe Pedagógica / Especialista em Educação Básica</div>
           </div>
         </div>`;
       });
@@ -446,7 +402,7 @@
         status.innerText = `Nenhum registro encontrado para ${turma} (${trimestre}).`;
       } else {
         container.innerHTML = htmlFinal;
-        status.innerText = `Pronto! ${totalGerados} comunicado(s) gerado(s) da turma ${turma} (${trimestre}) — 1 por folha A4 com canhoto.`;
+        status.innerText = `Pronto! ${totalGerados} comunicado(s) gerado(s) da turma ${turma} (${trimestre}) — 1 por folha A4.`;
       }
     }
   </script>
